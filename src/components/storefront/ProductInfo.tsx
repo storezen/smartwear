@@ -89,15 +89,32 @@ export function ProductInfo({ description, specs, tags, rating, reviewCount, cla
 function DescriptionTab({ content }: { content: string }) {
   if (!content) {
     return (
-      <p className="text-sm text-neutral-400 italic">No description provided.</p>
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="size-12 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
+          <svg className="size-6 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+          </svg>
+        </div>
+        <p className="text-sm text-neutral-500 font-medium">No description provided for this product.</p>
+      </div>
     )
   }
 
   return (
-    <div className="prose prose-sm prose-gray max-w-none prose-headings:text-neutral-900 prose-headings:font-semibold prose-p:text-neutral-600 prose-p:leading-relaxed prose-li:text-neutral-600 prose-strong:text-neutral-900 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-table:text-sm prose-th:text-neutral-900 prose-td:text-neutral-600 prose-ul:pl-4 prose-ol:pl-4">
+    <div className="prose prose-neutral max-w-none 
+      prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-neutral-900 
+      prose-p:text-neutral-600 prose-p:leading-loose prose-p:text-[15px]
+      prose-a:text-blue-600 prose-a:font-medium prose-a:no-underline hover:prose-a:underline
+      prose-strong:font-bold prose-strong:text-neutral-900
+      prose-ul:list-disc prose-ul:pl-5 prose-li:text-neutral-600 prose-li:marker:text-neutral-300
+      prose-table:w-full prose-table:text-sm prose-table:border-collapse prose-table:overflow-hidden prose-table:rounded-xl prose-table:border prose-table:border-neutral-200/60
+      prose-th:bg-neutral-50 prose-th:px-4 prose-th:py-3 prose-th:text-left prose-th:font-semibold prose-th:text-neutral-900 prose-th:border-b prose-th:border-neutral-200/60
+      prose-td:px-4 prose-td:py-3 prose-td:text-neutral-600 prose-td:border-b prose-td:border-neutral-200/40 last:prose-td:border-0
+      [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
+    >
       <div
         dangerouslySetInnerHTML={{ __html: content }}
-        className="text-sm leading-relaxed text-neutral-600 [&_img]:rounded-lg [&_img]:border [&_img]:border-neutral-200/50"
+        className="[&_img]:rounded-2xl [&_img]:border [&_img]:border-neutral-200/50 [&_img]:shadow-sm [&_img]:mx-auto [&_img]:my-8 [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-2xl"
       />
     </div>
   )
@@ -106,36 +123,35 @@ function DescriptionTab({ content }: { content: string }) {
 function SpecificationsTab({ specs }: { specs: Spec[] }) {
   if (!specs || specs.length === 0) {
     return (
-      <p className="text-sm text-neutral-400 italic">No specifications available.</p>
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="size-12 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
+          <svg className="size-6 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+          </svg>
+        </div>
+        <p className="text-sm text-neutral-500 font-medium">No specifications available for this product.</p>
+      </div>
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-neutral-200/50 bg-white shadow-sm">
-      <table className="w-full border-collapse">
-        <tbody>
-          {specs.map((spec, i) => (
-            <motion.tr
-              key={`${spec.label}-${i}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: i * 0.04, duration: 0.25, ease: easePremium }}
-              className={cn(
-                "transition-colors",
-                i % 2 === 0 ? "bg-white" : "bg-neutral-50/50",
-                i < specs.length - 1 && "border-b border-neutral-200/40"
-              )}
-            >
-              <td className="px-5 py-3.5 text-sm font-medium text-neutral-500 w-[180px] sm:w-[220px] align-top border-r border-neutral-200/30">
-                {spec.label}
-              </td>
-              <td className="px-5 py-3.5 text-sm font-semibold text-neutral-900">
-                {spec.value}
-              </td>
-            </motion.tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+      {specs.map((spec, i) => (
+        <motion.div
+          key={`${spec.label}-${i}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.03, duration: 0.3, ease: easePremium }}
+          className="flex flex-col p-4 sm:p-5 rounded-2xl bg-neutral-50/50 border border-neutral-100 hover:bg-neutral-50 hover:border-neutral-200 transition-colors"
+        >
+          <dt className="text-[13px] font-semibold text-neutral-400 uppercase tracking-wider mb-1.5">
+            {spec.label}
+          </dt>
+          <dd className="text-[15px] font-medium text-neutral-900 leading-snug">
+            {spec.value}
+          </dd>
+        </motion.div>
+      ))}
     </div>
   )
 }

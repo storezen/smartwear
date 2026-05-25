@@ -6,7 +6,6 @@ import { motion, useScroll, useTransform, useSpring, animate } from "framer-moti
 import { ArrowUpRight, ShoppingBag, Shield, Truck, PackageCheck, Zap, Star } from "lucide-react"
 import type { HeroData, SectionStyle } from "@/lib/sections"
 import { resolveMediaUrl } from "@/lib/media/utils"
-import { useMouseParallax } from "@/lib/hooks/useMouseParallax"
 
 function AnimatedCounter({ to, duration = 1.5, suffix = "" }: { to: number; duration?: number; suffix?: string }) {
   const [count, setCount] = useState(0)
@@ -47,96 +46,97 @@ export function HeroSectionRenderer({ data, style }: { data: HeroData; style: Se
       return <FullscreenHero data={data} style={style} />
     case "bento":
     default:
-      return <BentoHero data={data} style={style} />
+      return <ImageBannerHero data={data} style={style} />
   }
 }
 
-// 1. Bento Layout (Original)
-function BentoHero({ data, style }: { data: HeroData; style: SectionStyle }) {
+// 1. Image Banner Layout (Shopify Impulse Style)
+function ImageBannerHero({ data, style }: { data: HeroData; style: SectionStyle }) {
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] })
-  const watchY = useTransform(scrollYProgress, [0, 1], [0, -80])
-  const smoothWatchY = useSpring(watchY, { stiffness: 65, damping: 22 })
-  const { x: mouseX, rotateX: watchTiltX, rotateY: watchTiltY } = useMouseParallax({ strength: 0.4 })
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0])
   const words = data.title?.split(" ") || []
-  const springTransition = { duration: 0.3, ease: "easeOut" as const }
 
   return (
-    <section ref={heroRef} className="relative min-h-[85vh] flex items-center justify-center py-12 lg:py-20 bg-[#F6F8FA] overflow-hidden">
-      <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-blue-500/3 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/3 blur-[100px] rounded-full pointer-events-none" />
+    <section ref={heroRef} className="relative h-[85vh] lg:h-[90vh] min-h-[600px] w-full flex items-center justify-center overflow-hidden bg-black">
+      {/* Background Image with Parallax */}
+      <motion.div style={{ y }} className="absolute inset-0 w-full h-full">
+        <img
+          src={resolveMediaUrl(data.featuredImage)}
+          alt={data.title || "Hero Banner"}
+          className="w-full h-full object-cover object-center"
+        />
+        {/* Gradient Overlay for Text Legibility */}
+        <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+      </motion.div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={springTransition} className="lg:col-span-8 bg-white rounded-[32px] p-8 sm:p-12 border border-neutral-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.03)] relative overflow-hidden flex flex-col justify-between min-h-[500px]">
-            <div className="flex items-center gap-3 relative z-20">
-              {data.badge && (
-                <span className="inline-flex items-center gap-1.5 bg-neutral-100 text-neutral-600 px-3 py-1.5 text-xs font-semibold rounded-full">
-                  <Zap className="size-3.5" /> {data.badge}
-                </span>
-              )}
-            </div>
-            <div className="relative z-20 mt-8 max-w-xl">
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-neutral-950 leading-[1.05]">
-                {words.map((word, i) => (
-                  <span key={i} className="inline-block mr-[0.25em]">{word}</span>
-                ))}
-                {data.highlightedWord && <span className="inline-block text-blue-600">{data.highlightedWord}</span>}
-              </h1>
-              <p className="mt-6 text-lg text-neutral-500 font-medium max-w-md">{data.description}</p>
-              <div className="mt-10 flex items-center gap-4">
-                <Link href={data.primaryButtonUrl}>
-                  <button className="flex items-center gap-2 h-[48px] px-8 bg-neutral-950 text-white font-bold rounded-2xl transition-transform hover:scale-105 active:scale-95 shadow-md">
-                    <ShoppingBag className="size-4" /> {data.primaryButtonText}
-                  </button>
-                </Link>
-                <Link href={data.secondaryButtonUrl}>
-                  <button className="flex items-center justify-center size-[48px] bg-neutral-100 text-neutral-950 rounded-2xl transition-transform hover:scale-105 active:scale-95 hover:bg-neutral-200">
-                    <ArrowUpRight className="size-5" />
-                  </button>
-                </Link>
-              </div>
-            </div>
-            <motion.div style={{ y: smoothWatchY, x: mouseX, rotateX: watchTiltX, rotateY: watchTiltY, transformPerspective: 1200 }} className="absolute right-[-10%] bottom-[-10%] w-[350px] sm:w-[450px] lg:w-[550px] pointer-events-none z-10">
-              <img src={resolveMediaUrl(data.featuredImage)} alt="Featured Product" className="w-full h-auto object-contain drop-shadow-2xl" />
-            </motion.div>
-          </motion.div>
+      {/* Content */}
+      <motion.div
+        style={{ opacity }}
+        className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center mt-16"
+      >
+        {data.badge && (
+          <motion.span
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 text-xs font-bold tracking-widest uppercase rounded-full mb-6"
+          >
+            <Zap className="size-3.5 text-blue-400" /> {data.badge}
+          </motion.span>
+        )}
 
-          <div className="lg:col-span-4 flex flex-col gap-6">
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ ...springTransition, delay: 0.1 }} className="bg-white rounded-[32px] p-6 sm:p-8 border border-neutral-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex flex-col justify-center flex-1">
-              <h3 className="text-sm font-semibold text-neutral-400 uppercase tracking-widest mb-6">Guaranteed</h3>
-              <div className="space-y-5">
-                {[{ icon: Truck, text: "Free Fast Delivery" }, { icon: PackageCheck, text: "Cash on Delivery" }, { icon: Shield, text: "7-Day Warranty" }].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4">
-                    <div className="flex items-center justify-center size-10 rounded-xl bg-[#F6F8FA] text-blue-600"><item.icon className="size-5" /></div>
-                    <span className="font-semibold text-neutral-800">{item.text}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ ...springTransition, delay: 0.2 }} className="bg-white rounded-[32px] p-6 sm:p-8 border border-neutral-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.03)] relative overflow-hidden flex-1 group">
-              <div className="relative z-10 h-full flex flex-col justify-between">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 bg-rose-50 text-rose-600 px-2.5 py-1 text-[10px] font-bold rounded-full uppercase tracking-wider mb-3">
-                    <Star className="size-3 fill-rose-600" /> Popular
-                  </div>
-                  <h3 className="text-xl font-bold text-neutral-900 leading-tight max-w-[150px]">Most Loved by Users</h3>
-                </div>
-                <div className="mt-4 flex items-center gap-2">
-                  <div className="flex -space-x-2">{[1,2,3].map((i) => (<div key={i} className="size-8 rounded-full border-2 border-white bg-neutral-200" />))}</div>
-                  <div className="text-xs font-bold text-neutral-600"><AnimatedCounter to={12} suffix="K+" /> reviews</div>
-                </div>
-              </div>
-              <motion.div whileHover={{ scale: 1.05 }} className="absolute right-[-20%] bottom-[-20%] w-[180px] h-[180px] rounded-full bg-[#F6F8FA] flex items-center justify-center p-4">
-                <img src={resolveMediaUrl(data.bgImage)} className="w-full h-full object-cover rounded-full shadow-inner" alt="Secondary" />
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </div>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+          className="text-5xl sm:text-6xl lg:text-8xl font-extrabold tracking-tight text-white leading-[1.05] drop-shadow-xl"
+        >
+          {words.map((word, i) => (
+            <span key={i} className="inline-block mr-[0.25em]">{word}</span>
+          ))}
+          {data.highlightedWord && <span className="inline-block text-blue-400">{data.highlightedWord}</span>}
+        </motion.h1>
+
+        {data.description && (
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="mt-6 text-lg sm:text-xl text-neutral-200 font-medium max-w-2xl drop-shadow-md"
+          >
+            {data.description}
+          </motion.p>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+          className="mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center"
+        >
+          {data.primaryButtonText && (
+            <Link href={data.primaryButtonUrl || "/products"}>
+              <button className="flex items-center justify-center gap-2 h-[52px] min-w-[200px] px-8 bg-white text-black font-bold tracking-wide uppercase text-sm rounded-sm transition-all hover:bg-neutral-200 hover:scale-105 active:scale-95 shadow-lg">
+                <ShoppingBag className="size-4" /> {data.primaryButtonText}
+              </button>
+            </Link>
+          )}
+          
+          {data.secondaryButtonText && (
+            <Link href={data.secondaryButtonUrl || "/categories"}>
+              <button className="flex items-center justify-center gap-2 h-[52px] min-w-[200px] px-8 bg-transparent text-white border-2 border-white font-bold tracking-wide uppercase text-sm rounded-sm transition-all hover:bg-white/10 hover:scale-105 active:scale-95">
+                {data.secondaryButtonText} <ArrowUpRight className="size-4" />
+              </button>
+            </Link>
+          )}
+        </motion.div>
+      </motion.div>
     </section>
   )
 }
+
 
 // 2. Centered Layout
 function CenteredHero({ data, style }: { data: HeroData; style: SectionStyle }) {
