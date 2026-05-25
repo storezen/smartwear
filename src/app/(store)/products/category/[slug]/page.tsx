@@ -5,8 +5,6 @@ import Link from "next/link"
 import Image from "next/image"
 import { ChevronLeft, Search, X, SlidersHorizontal, Package } from "lucide-react"
 import { SITE_URL } from "@/lib/constants"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import { ProductCard } from "@/components/ProductCard"
 import { Pagination } from "@/components/Pagination"
 import { PageMeta } from "@/components/PageMeta"
@@ -85,7 +83,7 @@ export default function CategoryPage({
   const breadcrumbItems = category
     ? [
         { label: "Home", href: "/" },
-        { label: "Categories", href: "/categories" },
+        { label: "Products", href: "/products" },
         { label: category.name },
       ]
     : [
@@ -116,7 +114,7 @@ export default function CategoryPage({
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Categories", item: `${SITE_URL}/categories` },
+      { "@type": "ListItem", position: 2, name: "Products", item: `${SITE_URL}/products` },
       { "@type": "ListItem", position: 3, name: category.name, item: `${SITE_URL}/products/category/${slug}` },
     ],
   } : null
@@ -130,40 +128,53 @@ export default function CategoryPage({
       {categoryJsonLd && <JsonLd data={categoryJsonLd} />}
       {breadcrumbJsonLd && <JsonLd data={breadcrumbJsonLd} />}
       <PageTransition>
-        <div className="min-h-screen bg-background">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+        <div className="min-h-screen bg-[#FAFAFA]">
+          <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
             <Breadcrumbs items={breadcrumbItems} className="mb-6" />
 
             {category?.image && (
-              <div className="relative mb-8 overflow-hidden rounded-2xl aspect-[3/1] sm:aspect-[4/1] bg-muted shadow-sm">
+              <div className="relative mb-12 overflow-hidden rounded-2xl aspect-[3/1] sm:aspect-[4/1] bg-neutral-200">
                 <Image src={category.image} alt={category.name} fill className="object-cover" sizes="100vw" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 to-transparent" />
+                <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10">
+                  <h1 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">{category.name}</h1>
+                  {category.description && <p className="mt-2 text-white/80 max-w-xl">{category.description}</p>}
+                </div>
               </div>
             )}
 
-            <div className="mb-8">
-              <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">{category?.name || "Category"}</h1>
-                {category?.description && <p className="text-base text-muted-foreground">{category.description}</p>}
+            {!category?.image && (
+              <div className="mb-12">
+                <h1 className="text-4xl font-bold tracking-tight text-[#0A0A0A] sm:text-5xl lg:text-6xl">
+                  {category?.name || "Category"}
+                </h1>
+                {category?.description && (
+                  <p className="mt-4 text-[#0A0A0A]/60 font-medium max-w-2xl">
+                    {category.description}
+                  </p>
+                )}
+                <p className="mt-4 text-sm font-medium text-[#0A0A0A]/60">
+                  {filtered.length} product{filtered.length !== 1 ? "s" : ""}
+                </p>
               </div>
-            </div>
+            )}
 
             {/* Filters */}
-            <div className="mb-6 space-y-4">
+            <div className="mb-10 space-y-4">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:flex-wrap">
                 {/* Search */}
                 <div className="relative flex-1 max-w-sm">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
+                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0A0A0A]/40 pointer-events-none" />
+                  <input
                     placeholder="Search in this category..."
                     value={search}
                     onChange={(e) => handleFilterChange(setSearch, e.target.value)}
-                    className="pl-9 pr-8"
+                    className="h-[48px] w-full bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl pl-11 pr-11 text-sm text-[#0A0A0A] placeholder:text-[#0A0A0A]/40 outline-none transition-all duration-200"
                   />
                   {search && (
                     <button
                       onClick={() => setSearch("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#0A0A0A]/40 hover:text-[#0A0A0A] transition-colors"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -172,49 +183,48 @@ export default function CategoryPage({
 
                 {/* Price Range */}
                 <div className="flex items-center gap-2">
-                  <Input
+                  <input
                     type="number"
-                    placeholder="Min"
+                    placeholder="Min Rs"
                     value={minPrice}
                     onChange={(e) => handleFilterChange(setMinPrice, e.target.value)}
-                    className="w-22 h-10 text-sm"
+                    className="h-[48px] w-24 bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl px-4 text-sm text-[#0A0A0A] placeholder:text-[#0A0A0A]/40 outline-none transition-all duration-200"
                     min={0}
                   />
-                  <span className="text-muted-foreground/50 text-sm">—</span>
-                  <Input
+                  <span className="text-[#0A0A0A]/30 text-sm">—</span>
+                  <input
                     type="number"
-                    placeholder="Max"
+                    placeholder="Max Rs"
                     value={maxPrice}
                     onChange={(e) => handleFilterChange(setMaxPrice, e.target.value)}
-                    className="w-22 h-10 text-sm"
+                    className="h-[48px] w-24 bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl px-4 text-sm text-[#0A0A0A] placeholder:text-[#0A0A0A]/40 outline-none transition-all duration-200"
                     min={0}
                   />
                 </div>
 
                 {/* Sort & Clear */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <div className="relative">
                     <select
                       value={sortBy}
                       onChange={(e) => handleFilterChange(setSortBy, e.target.value)}
-                      className="h-10 appearance-none rounded-lg border border-border bg-card px-3 pr-8 text-sm text-foreground cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent/30"
+                      className="h-[48px] appearance-none bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl px-4 pr-10 text-sm font-medium text-[#0A0A0A] outline-none transition-all duration-200 cursor-pointer"
                     >
                       <option value="default">Latest</option>
                       <option value="price-low">Price: Low to High</option>
                       <option value="price-high">Price: High to Low</option>
                       <option value="name">Name: A to Z</option>
                     </select>
-                    <SlidersHorizontal className="absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 pointer-events-none text-muted-foreground" />
+                    <SlidersHorizontal className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 pointer-events-none text-[#0A0A0A]/40" />
                   </div>
                   {hasFilters && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    <button
                       onClick={clearFilters}
-                      className="text-xs text-muted-foreground hover:text-foreground"
+                      className="flex items-center gap-1.5 text-xs font-semibold text-[#0A0A0A]/60 hover:text-[#0A0A0A] transition-colors"
                     >
-                      Clear
-                    </Button>
+                      <X className="size-3" strokeWidth={2} />
+                      Clear filters
+                    </button>
                   )}
                 </div>
               </div>
@@ -231,18 +241,21 @@ export default function CategoryPage({
               />
             ) : (
               <>
-                <StaggerGrid className="grid gap-5 sm:gap-6 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <StaggerGrid className="grid gap-6 sm:gap-8 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {paginated.map((product) => (
                     <StaggerItem key={product.id}>
                       <ProductCard product={product} />
                     </StaggerItem>
                   ))}
                 </StaggerGrid>
-                <Pagination
-                  currentPage={page}
-                  totalPages={totalPages}
-                  onPageChange={setPage}
-                />
+                
+                <div className="mt-16">
+                  <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                  />
+                </div>
               </>
             )}
           </div>

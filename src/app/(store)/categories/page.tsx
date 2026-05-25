@@ -109,7 +109,7 @@ export default function AllCategoriesPage() {
 
             {/* Header */}
             <div className="mb-8">
-              <h1 className="font-heading text-4xl font-extrabold tracking-tight text-[#0A0A0A] sm:text-5xl leading-[1.05] uppercase">Collections</h1>
+              <h1 className="text-4xl font-extrabold tracking-tight text-[#0A0A0A] sm:text-5xl leading-[1.05] uppercase">Collections</h1>
               <p className="mt-2 text-sm font-semibold tracking-wider uppercase text-[#0A0A0A]/50">Explore our curated collections</p>
             </div>
 

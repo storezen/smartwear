@@ -11,27 +11,28 @@ export function Footer() {
       title: "Shop",
       links: [
         { label: "All Products", href: "/products" },
-        { label: "Accessories", href: "/categories/accessories" },
-        { label: "Charging", href: "/categories/charging" },
-        { label: "Watch Accessories", href: "/categories/watch-accessories" },
-        { label: "Acrylic Glass", href: "/categories/acrylic-glass" },
+        { label: "Accessories", href: "/products/category/accessories" },
+        { label: "Charging", href: "/products/category/charging" },
+        { label: "Watch Accessories", href: "/products/category/watch-accessories" },
+        { label: "Acrylic Glass", href: "/products/category/acrylic-glass" },
       ]
     },
     {
       title: "Support",
       links: [
-        { label: "Help & Policies", href: "/pages/help-and-policies" },
-        { label: "Contact Us", href: "/pages/contact-us" },
-        { label: "Shipping Info", href: "/pages/shipping-info" },
-        { label: "Returns & Exchanges", href: "/pages/returns-and-exchanges" },
-        { label: "Warranty", href: "/pages/warranty" },
+        { label: "Help & FAQ", href: "/contact" },
+        { label: "Contact Us", href: "/contact" },
+        { label: "Shipping Info", href: "/shipping" },
+        { label: "Returns & Exchanges", href: "/returns" },
+        { label: "Warranty", href: "/warranty" },
       ]
     },
     {
       title: "Company",
       links: [
-        { label: "About Us", href: "/pages/about-us" },
-        { label: "Privacy Policy", href: "/pages/privacy-policy" },
+        { label: "About Us", href: "/about" },
+        { label: "Privacy Policy", href: "/privacy" },
+        { label: "Terms of Service", href: "/terms" },
       ]
     }
   ]

@@ -101,38 +101,34 @@ export default function ProductsPage() {
       />
       <JsonLd data={productsJsonLd} />
       <PageTransition>
-        <div className="min-h-screen bg-[#F6F8FA]">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+        <div className="min-h-screen bg-[#FAFAFA]">
+          <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
             {/* Header */}
-            <div className="mb-8">
-              <p className="text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground">
-                Collection
-              </p>
-              <h1 className="font-heading mt-2 text-4xl font-extrabold tracking-tight text-neutral-900 sm:text-5xl lg:text-6xl leading-[1.05]">
+            <div className="mb-12">
+              <h1 className="text-4xl font-bold tracking-tight text-[#0A0A0A] sm:text-5xl lg:text-6xl">
                 All Products
               </h1>
-              <div className="mt-3 h-px w-12 bg-accent/40" />
-              <p className="mt-3 text-sm text-muted-foreground">
+              <p className="mt-4 text-sm font-medium text-[#0A0A0A]/60">
                 {filtered.length} product{filtered.length !== 1 ? "s" : ""}
               </p>
             </div>
 
             {/* Filters */}
-            <div className="mb-6 space-y-4">
+            <div className="mb-10 space-y-4">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:flex-wrap">
                 {/* Search */}
                 <div className="relative flex-1 max-w-sm">
-                  <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0A0A0A]/40 pointer-events-none" />
                   <input
                     placeholder="Search products..."
                     value={search}
                     onChange={(e) => handleFilterChange(setSearch, e.target.value)}
-                    className="h-[48px] w-full bg-neutral-50 border border-neutral-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-xl pl-10 pr-9 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition-all duration-150"
+                    className="h-[48px] w-full bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl pl-11 pr-11 text-sm text-[#0A0A0A] placeholder:text-[#0A0A0A]/40 outline-none transition-all duration-200"
                   />
                   {search && (
                     <button
                       onClick={() => setSearch("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#0A0A0A]/40 hover:text-[#0A0A0A] transition-colors"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -146,22 +142,22 @@ export default function ProductsPage() {
                     placeholder="Min Rs"
                     value={minPrice}
                     onChange={(e) => handleFilterChange(setMinPrice, e.target.value)}
-                    className="h-[48px] w-24 bg-neutral-50 border border-neutral-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-xl px-3 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition-all duration-150"
+                    className="h-[48px] w-24 bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl px-4 text-sm text-[#0A0A0A] placeholder:text-[#0A0A0A]/40 outline-none transition-all duration-200"
                     min={0}
                   />
-                  <span className="text-neutral-300 text-sm">—</span>
+                  <span className="text-[#0A0A0A]/30 text-sm">—</span>
                   <input
                     type="number"
                     placeholder="Max Rs"
                     value={maxPrice}
                     onChange={(e) => handleFilterChange(setMaxPrice, e.target.value)}
-                    className="h-[48px] w-24 bg-neutral-50 border border-neutral-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-xl px-3 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition-all duration-150"
+                    className="h-[48px] w-24 bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl px-4 text-sm text-[#0A0A0A] placeholder:text-[#0A0A0A]/40 outline-none transition-all duration-200"
                     min={0}
                   />
                 </div>
 
                 {/* Sort */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <div className="relative">
                     <select
                       value={sortBy}
@@ -169,18 +165,18 @@ export default function ProductsPage() {
                         setSortBy(e.target.value)
                         setPage(1)
                       }}
-                      className="h-[48px] appearance-none bg-neutral-50 border border-neutral-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-xl px-4 pr-9 text-sm text-neutral-900 outline-none transition-all duration-150 cursor-pointer"
+                      className="h-[48px] appearance-none bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl px-4 pr-10 text-sm font-medium text-[#0A0A0A] outline-none transition-all duration-200 cursor-pointer"
                     >
                       <option value="newest">Newest</option>
                       <option value="price-low">Price: Low to High</option>
                       <option value="price-high">Price: High to Low</option>
                       <option value="name">Name: A to Z</option>
                     </select>
-                    <SlidersHorizontal className="absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 pointer-events-none text-muted-foreground" />
+                    <SlidersHorizontal className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 pointer-events-none text-[#0A0A0A]/40" />
                   </div>
 
                   {/* In Stock Toggle */}
-                  <label className="inline-flex items-center gap-2 text-sm text-muted-foreground cursor-pointer select-none whitespace-nowrap">
+                  <label className="inline-flex items-center gap-2 text-sm font-medium text-[#0A0A0A] cursor-pointer select-none whitespace-nowrap">
                     <input
                       type="checkbox"
                       checked={inStockOnly}
@@ -188,9 +184,9 @@ export default function ProductsPage() {
                         setInStockOnly(e.target.checked)
                         setPage(1)
                       }}
-                      className="h-4 w-4 rounded border-border text-accent focus:ring-accent/30 focus:ring-offset-0"
+                      className="h-5 w-5 rounded-md border-[#E5E5E5] text-[#0A0A0A] focus:ring-[#0A0A0A] cursor-pointer"
                     />
-                    In Stock Only
+                    In Stock
                   </label>
                 </div>
               </div>
@@ -200,10 +196,10 @@ export default function ProductsPage() {
                 <div className="flex">
                   <button
                     onClick={clearFilters}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition-colors px-3 py-1.5"
+                    className="flex items-center gap-1.5 text-xs font-semibold text-[#0A0A0A]/60 hover:text-[#0A0A0A] transition-colors"
                   >
                     <X className="size-3" strokeWidth={2} />
-                    Clear all filters
+                    Clear filters
                   </button>
                 </div>
               )}
@@ -211,7 +207,7 @@ export default function ProductsPage() {
 
             {/* Product Grid or Empty State */}
             {!hydrated && products.length === 0 ? (
-              <div className="grid gap-5 sm:gap-6 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid gap-6 sm:gap-8 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {Array.from({ length: 8 }).map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
@@ -226,18 +222,22 @@ export default function ProductsPage() {
               />
             ) : (
               <>
-                <StaggerGrid className="grid gap-5 sm:gap-6 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <StaggerGrid className="grid gap-6 sm:gap-8 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {paginated.map((product) => (
                     <StaggerItem key={product.id}>
                       <ProductCard product={product} />
                     </StaggerItem>
                   ))}
                 </StaggerGrid>
-                <Pagination
-                  currentPage={page}
-                  totalPages={totalPages}
-                  onPageChange={setPage}
-                />
+                
+                {/* Minimal Pagination */}
+                <div className="mt-16">
+                  <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                  />
+                </div>
               </>
             )}
           </div>
