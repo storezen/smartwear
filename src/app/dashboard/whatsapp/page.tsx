@@ -198,12 +198,12 @@ export default function WhatsAppPage() {
       className="space-y-6 max-w-7xl mx-auto"
     >
       {/* Title Header */}
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between border-b border-neutral-200/50 pb-5">
+      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between border-b border-border pb-5">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-neutral-900 flex items-center gap-2">
-            WhatsApp Command Center <Sparkles className="size-5 text-neutral-500" />
+          <h1 className="font-heading text-2xl font-bold text-foreground flex items-center gap-2">
+            WhatsApp Command Center <Sparkles className="size-5 text-muted-foreground" />
           </h1>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-muted-foreground">
             Control automated order confirmations, PostEx delivery updates, and custom keyword responders.
           </p>
         </div>
@@ -215,15 +215,15 @@ export default function WhatsAppPage() {
               toast.success("State refreshed!")
             }}
             variant="outline"
-            className="rounded-xl border-neutral-200/60 h-10 gap-1.5 font-semibold text-neutral-700 bg-white"
+            className="rounded-xl border-border h-10 gap-1.5 font-semibold text-foreground bg-card"
           >
-            <RefreshCw className="size-4 text-neutral-500" />
+            <RefreshCw className="size-4 text-muted-foreground" />
             Refresh State
           </Button>
           <Button 
             onClick={handleRestart}
             variant="outline"
-            className="rounded-xl border-neutral-200/60 h-10 gap-1.5 font-semibold text-red-600 bg-white hover:bg-red-50/50"
+            className="rounded-xl border-border h-10 gap-1.5 font-semibold text-red-600 bg-card hover:bg-red-50/50"
           >
             <Play className="size-4" />
             Restart Bot Process
@@ -238,12 +238,12 @@ export default function WhatsAppPage() {
         <div className="lg:col-span-5 space-y-6">
           
           {/* Connection Status Card */}
-          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
-            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6">
+          <Card className="rounded-2xl border-border bg-card shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-border bg-muted py-5 px-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-base font-bold text-neutral-900">Bot Connection</CardTitle>
-                  <CardDescription className="text-xs text-neutral-400">whatsapp-web.js session state</CardDescription>
+                  <CardTitle className="text-base font-bold text-foreground">Bot Connection</CardTitle>
+                  <CardDescription className="text-xs text-muted-foreground">whatsapp-web.js session state</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
@@ -270,8 +270,8 @@ export default function WhatsAppPage() {
                       <CheckCircle className="size-8" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-neutral-900 text-lg">System Fully Linked</h4>
-                      <p className="text-xs font-semibold text-neutral-500 mt-1 max-w-[280px]">
+                      <h4 className="font-bold text-foreground text-lg">System Fully Linked</h4>
+                      <p className="text-xs font-semibold text-muted-foreground mt-1 max-w-[280px]">
                         The bot is running as a headless daemon on port 3001 and actively syncing with Shopify/PostEx hooks.
                       </p>
                     </div>
@@ -286,7 +286,7 @@ export default function WhatsAppPage() {
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="text-center space-y-4 w-full flex flex-col items-center"
                   >
-                    <div className="bg-white p-3 rounded-2xl border border-neutral-200/80 shadow-inner">
+                    <div className="bg-card p-3 rounded-2xl border border-border shadow-inner">
                       <img 
                         src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrCode)}`}
                         alt="WhatsApp Bot Scan QR"
@@ -294,10 +294,10 @@ export default function WhatsAppPage() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <h4 className="font-bold text-neutral-900 flex items-center justify-center gap-1.5">
+                      <h4 className="font-bold text-foreground flex items-center justify-center gap-1.5">
                         <QrCode className="size-4 text-blue-600" /> Link WhatsApp Account
                       </h4>
-                      <p className="text-xs text-neutral-500 font-semibold max-w-[300px] leading-relaxed">
+                      <p className="text-xs text-muted-foreground font-semibold max-w-[300px] leading-relaxed">
                         Open WhatsApp on your mobile phone &gt; Settings &gt; Linked Devices &gt; Link Device and scan this QR code to authenticate.
                       </p>
                     </div>
@@ -314,8 +314,8 @@ export default function WhatsAppPage() {
                   >
                     <Loader2 className="size-10 text-amber-500 animate-spin mx-auto" />
                     <div>
-                      <h4 className="font-bold text-neutral-900">Spawning Chromium</h4>
-                      <p className="text-xs text-neutral-500 mt-1 max-w-[240px]">
+                      <h4 className="font-bold text-foreground">Spawning Chromium</h4>
+                      <p className="text-xs text-muted-foreground mt-1 max-w-[240px]">
                         Starting Chromium environment and creating localized auth session folder...
                       </p>
                     </div>
@@ -334,14 +334,14 @@ export default function WhatsAppPage() {
                       <AlertTriangle className="size-8" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-neutral-900">Bot Server Offline</h4>
-                      <p className="text-xs text-neutral-500 mt-1 max-w-[260px]">
+                      <h4 className="font-bold text-foreground">Bot Server Offline</h4>
+                      <p className="text-xs text-muted-foreground mt-1 max-w-[260px]">
                         The standalone bridge server on port 3001 is offline or currently inaccessible.
                       </p>
                     </div>
                     <Button 
                       onClick={handleRestart} 
-                      className="rounded-full bg-neutral-950 font-bold hover:bg-neutral-800 text-white h-9 px-5 text-xs"
+                      className="rounded-full bg-primary font-bold hover:bg-primary/90 text-primary-foreground h-9 px-5 text-xs"
                     >
                       Initialize Bot Session
                     </Button>
@@ -352,35 +352,35 @@ export default function WhatsAppPage() {
           </Card>
 
           {/* Platform Consistency Hub */}
-          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
-            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6">
-              <CardTitle className="text-base font-bold text-neutral-900 flex items-center gap-2">
-                <Database className="size-4 text-neutral-400" /> Platform Consistency
+          <Card className="rounded-2xl border-border bg-card shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-border bg-muted py-5 px-6">
+              <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+                <Database className="size-4 text-muted-foreground" /> Platform Consistency
               </CardTitle>
-              <CardDescription className="text-xs text-neutral-400">Shopify synced orders vs sent WhatsApp alerts</CardDescription>
+              <CardDescription className="text-xs text-muted-foreground">Shopify synced orders vs sent WhatsApp alerts</CardDescription>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               {/* Stat Metric Comparison */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-neutral-50/55 border border-neutral-200/40 rounded-2xl p-4 text-center">
-                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wide">Shopify Orders</span>
-                  <div className="text-2xl font-bold text-neutral-900 mt-1">{platformOrderCount}</div>
+                <div className="bg-muted border border-border rounded-2xl p-4 text-center">
+                  <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wide">Shopify Orders</span>
+                  <div className="text-2xl font-bold text-foreground mt-1">{platformOrderCount}</div>
                 </div>
-                <div className="bg-neutral-50/55 border border-neutral-200/40 rounded-2xl p-4 text-center">
-                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wide">WhatsApp Sent</span>
-                  <div className="text-2xl font-bold text-neutral-900 mt-1">{whatsappSentCount}</div>
+                <div className="bg-muted border border-border rounded-2xl p-4 text-center">
+                  <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wide">WhatsApp Sent</span>
+                  <div className="text-2xl font-bold text-foreground mt-1">{whatsappSentCount}</div>
                 </div>
               </div>
 
               {/* Sync Parity Bar */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="text-neutral-500">Parity Target Match</span>
-                  <span className="text-neutral-950 flex items-center gap-1">
+                  <span className="text-muted-foreground">Parity Target Match</span>
+                  <span className="text-foreground flex items-center gap-1">
                     <TrendingUp className="size-3 text-emerald-500" /> {parityPercentage}% Synced
                   </span>
                 </div>
-                <div className="h-2 w-full bg-neutral-100 rounded-full overflow-hidden border border-neutral-200/20">
+                <div className="h-2 w-full bg-muted/80 rounded-full overflow-hidden border border-border">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${parityPercentage}%` }}
@@ -391,7 +391,7 @@ export default function WhatsAppPage() {
                     )}
                   />
                 </div>
-                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider mt-1 text-center">
+                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-1 text-center">
                   {parityPercentage === 100 
                     ? "✓ 100% Platform Consistency Reached. Zero missed notifications."
                     : `${platformOrderCount - whatsappSentCount} orders pending sync.`}
@@ -401,36 +401,36 @@ export default function WhatsAppPage() {
           </Card>
 
           {/* Send Test Message */}
-          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
-            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6">
-              <CardTitle className="text-base font-bold text-neutral-900 flex items-center gap-2">
-                <Send className="size-4 text-neutral-400" /> Test Connection
+          <Card className="rounded-2xl border-border bg-card shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-border bg-muted py-5 px-6">
+              <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+                <Send className="size-4 text-muted-foreground" /> Test Connection
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-4">
               <div className="space-y-2">
-                <Label className="text-xs font-bold text-neutral-700 uppercase tracking-wide">Recipient Phone</Label>
+                <Label className="text-xs font-bold text-foreground uppercase tracking-wide">Recipient Phone</Label>
                 <Input 
                   value={testNumber}
                   onChange={(e) => setTestNumber(e.target.value)}
                   placeholder="+923001234567"
-                  className="h-11 rounded-xl border-neutral-200/60 bg-neutral-50/50 shadow-inner font-bold text-neutral-900"
+                  className="h-11 rounded-xl border-border bg-muted shadow-inner font-bold text-foreground"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-bold text-neutral-700 uppercase tracking-wide">Test Message</Label>
+                <Label className="text-xs font-bold text-foreground uppercase tracking-wide">Test Message</Label>
                 <textarea 
                   value={testMessage}
                   onChange={(e) => setTestMessage(e.target.value)}
                   placeholder="Hello from SmartWear bot!"
                   rows={2}
-                  className="w-full text-sm font-medium rounded-xl border border-neutral-200/60 bg-neutral-50/50 p-3 shadow-inner focus:outline-none focus:ring-2 focus:ring-neutral-950 resize-none text-neutral-900"
+                  className="w-full text-sm font-medium rounded-xl border border-border bg-muted p-3 shadow-inner focus:outline-none focus:ring-2 focus:ring-neutral-950 resize-none text-foreground"
                 />
               </div>
               <Button
                 onClick={handleSendTest}
                 disabled={sendingTest || botStatus !== "CONNECTED"}
-                className="w-full rounded-full bg-neutral-950 text-white font-bold hover:bg-neutral-800 disabled:opacity-50"
+                className="w-full rounded-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 disabled:opacity-50"
               >
                 {sendingTest ? <Loader2 className="size-4 animate-spin mr-1" /> : <Send className="size-4 mr-1" />}
                 Fire Test Message
@@ -444,16 +444,16 @@ export default function WhatsAppPage() {
         <div className="lg:col-span-7 space-y-6">
           
           {/* Automation Control Center & Custom Keywords */}
-          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
-            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6 flex flex-row items-center justify-between">
+          <Card className="rounded-2xl border-border bg-card shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-border bg-muted py-5 px-6 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-base font-bold text-neutral-900">Automation Control Center</CardTitle>
-                <CardDescription className="text-xs text-neutral-400">Manage real-time execution switches</CardDescription>
+                <CardTitle className="text-base font-bold text-foreground">Automation Control Center</CardTitle>
+                <CardDescription className="text-xs text-muted-foreground">Manage real-time execution switches</CardDescription>
               </div>
               <Button
                 onClick={handleSaveSettings}
                 disabled={isSaving}
-                className="rounded-full bg-neutral-950 text-white font-bold h-9 px-5 text-xs hover:bg-neutral-800"
+                className="rounded-full bg-primary text-primary-foreground font-bold h-9 px-5 text-xs hover:bg-primary/90"
               >
                 {isSaving ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Save className="size-3.5 mr-1.5" />}
                 Save Engine Rules
@@ -463,10 +463,10 @@ export default function WhatsAppPage() {
               
               {/* Switches Area */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
+                <div className="flex items-center justify-between border-b border-border pb-4">
                   <div className="space-y-0.5">
-                    <Label className="text-sm font-bold text-neutral-900">Auto-Confirmation (Shopify Orders)</Label>
-                    <p className="text-xs text-neutral-400 font-semibold">Sends instant WhatsApp notifications on Shopify checkout.</p>
+                    <Label className="text-sm font-bold text-foreground">Auto-Confirmation (Shopify Orders)</Label>
+                    <p className="text-xs text-muted-foreground font-semibold">Sends instant WhatsApp notifications on Shopify checkout.</p>
                   </div>
                   <Switch 
                     checked={localAutoConfirm}
@@ -475,8 +475,8 @@ export default function WhatsAppPage() {
                 </div>
                 <div className="flex items-center justify-between pb-2">
                   <div className="space-y-0.5">
-                    <Label className="text-sm font-bold text-neutral-900">Auto-Tracking Updates (PostEx Integration)</Label>
-                    <p className="text-xs text-neutral-400 font-semibold">Triggers shipment notification alert when order status changes to SHIPPED.</p>
+                    <Label className="text-sm font-bold text-foreground">Auto-Tracking Updates (PostEx Integration)</Label>
+                    <p className="text-xs text-muted-foreground font-semibold">Triggers shipment notification alert when order status changes to SHIPPED.</p>
                   </div>
                   <Switch 
                     checked={localAutoTracking}
@@ -486,10 +486,10 @@ export default function WhatsAppPage() {
               </div>
 
               {/* Keyword Responders Section */}
-              <div className="space-y-4 pt-6 border-t border-neutral-100">
+              <div className="space-y-4 pt-6 border-t border-border">
                 <div>
-                  <h4 className="text-sm font-bold text-neutral-900">Custom Keyword Responders</h4>
-                  <p className="text-xs text-neutral-400 font-semibold mt-0.5">Define automated responses to specific incoming client words.</p>
+                  <h4 className="text-sm font-bold text-foreground">Custom Keyword Responders</h4>
+                  <p className="text-xs text-muted-foreground font-semibold mt-0.5">Define automated responses to specific incoming client words.</p>
                 </div>
 
                 {/* Form to add row */}
@@ -498,40 +498,40 @@ export default function WhatsAppPage() {
                     value={newKeyword}
                     onChange={(e) => setNewKeyword(e.target.value)}
                     placeholder="Keyword (e.g. price)"
-                    className="h-10 rounded-xl border-neutral-200/60 bg-neutral-50/50 shadow-inner font-semibold text-neutral-900"
+                    className="h-10 rounded-xl border-border bg-muted shadow-inner font-semibold text-foreground"
                   />
                   <Input 
                     value={newReply}
                     onChange={(e) => setNewReply(e.target.value)}
                     placeholder="Response (e.g. Our watch prices start from...)"
-                    className="h-10 rounded-xl border-neutral-200/60 bg-neutral-50/50 shadow-inner text-neutral-900 flex-1"
+                    className="h-10 rounded-xl border-border bg-muted shadow-inner text-foreground flex-1"
                   />
                   <Button 
                     onClick={handleAddKeyword}
                     variant="outline" 
-                    className="h-10 rounded-xl border-neutral-200/60 font-semibold text-neutral-800 bg-white"
+                    className="h-10 rounded-xl border-border font-semibold text-neutral-800 bg-card"
                   >
-                    <Plus className="size-4 mr-1 text-neutral-500" /> Add Trigger
+                    <Plus className="size-4 mr-1 text-muted-foreground" /> Add Trigger
                   </Button>
                 </div>
 
                 {/* Responders List */}
                 <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
                   {localKeywords.length === 0 ? (
-                    <div className="text-center py-6 border border-dashed border-neutral-200 rounded-xl bg-neutral-50/30">
-                      <p className="text-xs font-semibold text-neutral-400">No keyword responders configured.</p>
+                    <div className="text-center py-6 border border-dashed border-border rounded-xl bg-muted">
+                      <p className="text-xs font-semibold text-muted-foreground">No keyword responders configured.</p>
                     </div>
                   ) : (
                     localKeywords.map((kr, idx) => (
                       <div 
                         key={idx}
-                        className="flex items-center justify-between gap-3 p-3 bg-neutral-50 border border-neutral-200/40 rounded-xl"
+                        className="flex items-center justify-between gap-3 p-3 bg-muted border border-border rounded-xl"
                       >
                         <div className="flex-1 min-w-0">
-                          <span className="inline-block px-2 py-0.5 bg-neutral-200/60 border border-neutral-300/40 rounded-md text-[10px] font-bold text-neutral-700 font-mono">
+                          <span className="inline-block px-2 py-0.5 bg-neutral-200/60 border border-border rounded-md text-[10px] font-bold text-foreground font-mono">
                             {kr.keyword}
                           </span>
-                          <p className="text-xs font-medium text-neutral-600 truncate mt-1.5">{kr.reply}</p>
+                          <p className="text-xs font-medium text-muted-foreground truncate mt-1.5">{kr.reply}</p>
                         </div>
                         <Button 
                           onClick={() => handleDeleteKeyword(idx)}
@@ -550,17 +550,17 @@ export default function WhatsAppPage() {
           </Card>
 
           {/* Live Sync Console Logs */}
-          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
-            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6">
-              <CardTitle className="text-base font-bold text-neutral-900 flex items-center gap-2">
-                <Terminal className="size-4 text-neutral-400" /> Live Sync & Console logs
+          <Card className="rounded-2xl border-border bg-card shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-border bg-muted py-5 px-6">
+              <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+                <Terminal className="size-4 text-muted-foreground" /> Live Sync & Console logs
               </CardTitle>
-              <CardDescription className="text-xs text-neutral-400">Real-time incoming / outgoing synchronization reports</CardDescription>
+              <CardDescription className="text-xs text-muted-foreground">Real-time incoming / outgoing synchronization reports</CardDescription>
             </CardHeader>
-            <CardContent className="p-0 bg-neutral-950 font-mono text-xs text-neutral-300 leading-relaxed overflow-hidden">
+            <CardContent className="p-0 bg-primary font-mono text-xs text-neutral-300 leading-relaxed overflow-hidden">
               <div className="p-4 max-h-[300px] min-h-[220px] overflow-y-auto space-y-2 custom-scrollbar">
                 {logs.length === 0 ? (
-                  <div className="text-neutral-500 py-12 text-center">
+                  <div className="text-muted-foreground py-12 text-center">
                     [SYSTEM_LOG] Awaiting live logs ...
                   </div>
                 ) : (
@@ -570,8 +570,8 @@ export default function WhatsAppPage() {
                     const isFailed = logItem.status === "failed"
 
                     return (
-                      <div key={logItem.id} className="border-b border-neutral-900 pb-1.5">
-                        <span className="text-neutral-500 font-semibold mr-1.5">[{dateStr}]</span>
+                      <div key={logItem.id} className="border-b border-border pb-1.5">
+                        <span className="text-muted-foreground font-semibold mr-1.5">[{dateStr}]</span>
                         
                         <span className={cn(
                           "px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider mr-1.5",
@@ -582,7 +582,7 @@ export default function WhatsAppPage() {
                           {logItem.messageType}
                         </span>
 
-                        <span className="text-neutral-400 mr-1.5">
+                        <span className="text-muted-foreground mr-1.5">
                           {logItem.recipient}:
                         </span>
 

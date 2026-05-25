@@ -31,16 +31,16 @@ export function TestimonialsSection({ data, style }: { data: TestimonialsData; s
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-50 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-widest text-blue-600 mb-4"
+            className="inline-flex items-center gap-1.5 rounded border border-neutral-200 bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.2em] text-neutral-900 mb-4 shadow-sm"
           >
-            <MessageSquare className="size-3" strokeWidth={2} /> Customer Reviews
+            <MessageSquare className="size-2.5 text-neutral-400" /> Customer Reviews
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900"
+            className="font-heading text-4xl sm:text-5xl font-bold tracking-tight text-neutral-950"
           >
             {data.title}
           </motion.h2>
@@ -50,7 +50,7 @@ export function TestimonialsSection({ data, style }: { data: TestimonialsData; s
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="mt-3 text-neutral-500 max-w-md mx-auto text-sm"
+              className="mt-4 text-[15px] leading-relaxed text-neutral-500 max-w-2xl mx-auto"
             >
               {data.description}
             </motion.p>

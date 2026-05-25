@@ -7,39 +7,33 @@
 /* ─── Light Premium Design Tokens ─────────────────────────────── */
 
 @theme {
-  /* Core Palette — Premium Light Lifestyle */
-  --color-background: #F6F8FA;
+  /* Core Slate/Gray/White Light Theme */
+  --color-background: #F8FAFC;
   --color-foreground: #0F172A;
   --color-card: #FFFFFF;
   --color-card-foreground: #0F172A;
   --color-popover: #FFFFFF;
   --color-popover-foreground: #0F172A;
 
-  /* Brand Accent — Pitch Black for CTAs */
+  /* Primary Action Accent (Sleek Slate/Black by default) */
   --color-primary: #0F172A;
   --color-primary-foreground: #FFFFFF;
-
-  /* Secondary — Light Neutral Surface */
+  
+  /* Secondary / Muted */
   --color-secondary: #F1F5F9;
-  --color-secondary-foreground: #0F172A;
-
-  /* Muted / Subtext */
-  --color-muted: #F8FAFC;
+  --color-secondary-foreground: #334155;
+  --color-muted: #F1F5F9;
   --color-muted-foreground: #64748B;
 
-  /* Accent — Electric Cobalt Blue */
-  --color-accent: #2563EB;
-  --color-accent-foreground: #FFFFFF;
+  /* Borders & Inputs */
+  --color-border: #E2E8F0;
+  --color-input: #E2E8F0;
+  --color-ring: #0F172A;
 
   /* Status Colors */
   --color-destructive: #EF4444;
   --color-success: #10B981;
   --color-warning: #F59E0B;
-
-  /* Borders — Ultra-fine soft gray */
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-input: rgba(0, 0, 0, 0.06);
-  --color-ring: #0F172A;
 
   /* Sidebar (Dashboard) */
   --color-sidebar: #FFFFFF;
@@ -48,28 +42,17 @@
   --color-sidebar-primary-foreground: #FFFFFF;
   --color-sidebar-accent: #F1F5F9;
   --color-sidebar-accent-foreground: #0F172A;
-  --color-sidebar-border: rgba(0, 0, 0, 0.08);
+  --color-sidebar-border: #E2E8F0;
   --color-sidebar-ring: #0F172A;
 
   /* Chart Colors */
-  --color-chart-1: #2563EB;
-  --color-chart-2: #10B981;
-  --color-chart-3: #F59E0B;
-  --color-chart-4: #8B5CF6;
-  --color-chart-5: #EF4444;
+  --color-chart-1: #0F172A;
+  --color-chart-2: #334155;
+  --color-chart-3: #64748B;
+  --color-chart-4: #94A3B8;
+  --color-chart-5: #CBD5E1;
 
-  /* ─── Extended Brand Tokens ─── */
-  --color-sapphire: #2563EB;
-  --color-sapphire-dim: #1D4ED8;
-  --color-sapphire-glow: rgba(37, 99, 235, 0.25);
-  --color-emerald: #10B981;
-  --color-emerald-dim: #059669;
-  --color-emerald-glow: rgba(16, 185, 129, 0.2);
-  --color-obsidian: #0F172A;
-  --color-pitch: #FFFFFF;
-  --color-surface: #F1F5F9;
-
-  /* ─── Typography ─── */
+  /* Typography Scale */
   --font-sans: var(--font-inter);
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --font-heading: var(--font-heading);
@@ -87,22 +70,19 @@
   --font-size-7xl: 4.5rem;
   --font-size-8xl: 6rem;
 
-  /* ─── Radius ─── */
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  /* Radius System (Unified for both store & dashboard) */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-4xl: 2.5rem;
 
   /* ─── Shadows — Soft diffused premium ─── */
   --shadow-card: 0 8px 30px rgb(0 0 0 / 0.04);
   --shadow-card-hover: 0 20px 40px -12px rgb(0 0 0 / 0.08), 0 8px 16px -8px rgb(0 0 0 / 0.04);
-  --shadow-sapphire: 0 0 30px -4px rgba(37, 99, 235, 0.2), 0 0 60px -12px rgba(37, 99, 235, 0.1);
-  --shadow-emerald: 0 0 20px -4px rgba(16, 185, 129, 0.2);
   --shadow-button: 0 4px 16px 0 rgb(15 23 42 / 0.15);
-  --shadow-glow: 0 0 30px -8px rgba(37, 99, 235, 0.15);
 
   /* ─── Animations ─── */
   --animate-fade-in: fade-in 0.4s ease-out;

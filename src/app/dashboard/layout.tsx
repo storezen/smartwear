@@ -22,21 +22,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <ProductsProvider>
     <CategoriesProvider>
     <OrdersProvider>
-      <div className="flex min-h-screen bg-[#F6F8FA]">
+      <div className="flex min-h-screen bg-background text-foreground">
         <div className="hidden lg:block">
-          <div className="fixed left-0 top-0 z-30 h-full">
+          <div className="fixed left-0 top-0 z-30 h-full border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
             <Sidebar />
           </div>
         </div>
 
         <div className="flex flex-1 flex-col lg:pl-64">
           <div className="lg:hidden">
-            <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-neutral-200/60 bg-white/80 px-4 backdrop-blur-xl sm:px-6">
+            <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-border bg-background/80 px-4 backdrop-blur-xl sm:px-6">
               <Sheet>
-                <SheetTrigger className="inline-flex items-center justify-center rounded-lg p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 lg:hidden">
+                <SheetTrigger className="inline-flex items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:hidden">
                   <Menu className="h-5 w-5" strokeWidth={1.5} />
                 </SheetTrigger>
-                <SheetContent side="left" className="w-64 p-0">
+                <SheetContent side="left" className="w-64 p-0 bg-sidebar border-r border-sidebar-border text-sidebar-foreground">
                   <SheetHeader className="sr-only">
                     <SheetTitle>Navigation</SheetTitle>
                   </SheetHeader>
@@ -44,8 +44,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </SheetContent>
               </Sheet>
               <div className="flex flex-1 items-center justify-between">
-                <span className="font-heading text-sm font-semibold tracking-tight text-neutral-900">SmartWear Admin</span>
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-950 text-xs font-bold text-white shadow-sm">
+                <span className="font-heading text-sm font-semibold tracking-tight text-foreground">SmartWear Admin</span>
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground shadow-sm">
                   S
                 </div>
               </div>

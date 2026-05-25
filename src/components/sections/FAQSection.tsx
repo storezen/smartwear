@@ -49,22 +49,22 @@ export function FAQSection({ data, style }: { data: FAQData; style: SectionStyle
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
       <div className="mx-auto max-w-3xl px-4 lg:px-8">
-        <div className="mb-10 text-center">
+        <div className="mb-12 sm:mb-16 text-center">
           <motion.span
             initial={{ opacity: 0, y: -8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-50 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-blue-600 mb-3"
+            className="inline-flex items-center gap-1.5 rounded border border-neutral-200 bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.2em] text-neutral-900 mb-4 shadow-sm"
           >
-            <HelpCircle className="size-3" /> FAQ
+            <HelpCircle className="size-2.5 text-neutral-400" /> FAQ
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900"
+            className="font-heading text-4xl sm:text-5xl font-bold tracking-tight text-neutral-950"
           >
             {data.title}
           </motion.h2>
@@ -74,7 +74,7 @@ export function FAQSection({ data, style }: { data: FAQData; style: SectionStyle
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1, duration: 0.4 }}
-              className="mt-3 text-neutral-500 max-w-md mx-auto text-sm"
+              className="mt-4 text-[15px] leading-relaxed text-neutral-500 max-w-2xl mx-auto"
             >
               {data.description}
             </motion.p>
