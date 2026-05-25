@@ -94,26 +94,26 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          "sticky top-0 z-50 transition-all duration-500 will-change-transform",
+          "sticky top-0 z-50 transition-all duration-500 will-change-transform bg-white/80 backdrop-blur-xl border-b",
           scrolled
-            ? "glass-navbar shadow-[0_4px_24px_rgba(0,0,0,0.06)] border-b border-neutral-200/60"
-            : "border-b border-transparent bg-transparent"
+            ? "border-neutral-200/60 shadow-sm"
+            : "border-neutral-200/40"
         )}
       >
         <MarqueeTrustStrip />
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 sm:h-20 max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           {/* Logo */}
-          <Link href="/" className="group flex items-center gap-3 shrink-0">
-            <div className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-blue-600 shadow-[0_0_16px_rgba(37,99,235,0.5)] transition-all duration-300 group-hover:shadow-[0_0_24px_rgba(37,99,235,0.8)] group-hover:scale-105">
-              <span className="text-sm font-extrabold text-white tracking-widest">S</span>
+          <Link href="/" className="group flex items-center gap-2.5 shrink-0">
+            <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded bg-neutral-950 transition-transform duration-300 group-hover:scale-105">
+              <span className="text-sm font-bold text-white tracking-widest">S</span>
             </div>
-              <span className="font-heading text-lg font-bold tracking-tight text-neutral-900 transition-colors group-hover:text-blue-600">
+            <span className="font-heading text-lg sm:text-xl font-bold tracking-[0.1em] text-neutral-950 uppercase transition-colors group-hover:text-neutral-600">
               SMARTWEAR
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-6 lg:flex">
             {desktopLinks.map((link) => {
               const active = isActive(link.href)
               return (
@@ -121,19 +121,19 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "group relative px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-lg",
+                    "group relative text-[13px] font-bold uppercase tracking-[0.08em] transition-colors duration-200 py-2",
                     active
-                      ? "text-neutral-900"
-                      : "text-neutral-500 hover:text-neutral-900 hover:bg-black/5"
+                      ? "text-neutral-950"
+                      : "text-neutral-500 hover:text-neutral-950"
                   )}
                 >
                   {link.label}
-                    <span
-                      className={cn(
-                        "absolute inset-x-4 -bottom-px h-[2px] rounded-full bg-blue-600 transition-all duration-300",
-                        active ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-70"
-                      )}
-                    />
+                  <span
+                    className={cn(
+                      "absolute inset-x-0 -bottom-1 h-0.5 bg-neutral-950 transition-transform duration-300 origin-left",
+                      active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                    )}
+                  />
                 </Link>
               )
             })}

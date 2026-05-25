@@ -451,7 +451,7 @@ export const defaultData: SectionData = {
       },
     ])
   ) as Record<string, SectionStyle>,
-  productCardLayout: "bento",
+  productCardLayout: "minimal",
 }
 
 const STORAGE_KEY = "smartwear-sections"

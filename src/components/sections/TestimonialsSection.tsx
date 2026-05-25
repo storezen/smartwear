@@ -18,7 +18,7 @@ export function TestimonialsSection({ data, style }: { data: TestimonialsData; s
   return (
     <AnimatedSection
       style={{ paddingTop: py, paddingBottom: py }}
-      className="relative overflow-hidden bg-[#F6F8FA]"
+      className="relative overflow-hidden bg-white"
     >
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-80 w-[700px] rounded-full bg-blue-500/4 blur-[120px]" />

@@ -108,7 +108,7 @@ export function Footer() {
           </motion.div>
 
           {/* Links Grid */}
-          <div className="grid grid-cols-2 gap-8 sm:col-span-2 lg:col-span-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:col-span-2 lg:col-span-3 sm:grid-cols-3">
             {/* Shop */}
             <motion.div variants={itemVariants}>
               <h4 className="text-[11px] font-extrabold tracking-widest text-neutral-400 uppercase mb-4">Shop</h4>
@@ -128,11 +128,11 @@ export function Footer() {
               </ul>
             </motion.div>
 
-            {/* Support */}
+            {/* Help & Policies */}
             <motion.div variants={itemVariants}>
-              <h4 className="text-[11px] font-extrabold tracking-widest text-neutral-400 uppercase mb-4">Support</h4>
+              <h4 className="text-[11px] font-extrabold tracking-widest text-neutral-400 uppercase mb-4">Help & Policies</h4>
               <ul className="space-y-2.5">
-                {supportLinks.map((link) => (
+                {[...supportLinks, ...companyLinks].slice(0, 6).map((link) => (
                   <li key={link.label}>
                     <Link href={link.href} className="text-sm text-neutral-400 hover:text-white transition-colors">
                       {link.label}
@@ -142,27 +142,30 @@ export function Footer() {
               </ul>
             </motion.div>
 
-            {/* Company */}
+            {/* Newsletter */}
             <motion.div variants={itemVariants}>
-              <h4 className="text-[11px] font-extrabold tracking-widest text-neutral-400 uppercase mb-4">Company</h4>
-              <ul className="space-y-2.5">
-                {companyLinks.map((link) => (
-                  <li key={link.label}>
-                    <Link href={link.href} className="text-sm text-neutral-400 hover:text-white transition-colors">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <h4 className="text-[11px] font-extrabold tracking-widest text-neutral-400 uppercase mb-4">Newsletter</h4>
+              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
+                Subscribe to receive updates, access to exclusive deals, and more.
+              </p>
+              <form className="relative" onSubmit={(e) => e.preventDefault()}>
+                <input 
+                  type="email" 
+                  placeholder="Enter your email address" 
+                  className="w-full bg-white/5 border border-white/15 rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-white/40 focus:bg-white/10 transition-all"
+                />
+                <button 
+                  type="submit" 
+                  className="absolute right-1.5 top-1.5 bottom-1.5 px-5 bg-white text-neutral-950 font-bold text-xs rounded-md hover:bg-neutral-100 transition-colors tracking-wide"
+                >
+                  Subscribe
+                </button>
+              </form>
 
               {/* Location */}
-              <div className="mt-6 flex items-start gap-2 text-xs text-neutral-400">
+              <div className="mt-8 flex items-start gap-2 text-xs text-neutral-400">
                 <MapPin className="size-3.5 shrink-0 mt-0.5 text-neutral-500" strokeWidth={1.5} />
                 <span>Lahore, Punjab<br />Pakistan</span>
-              </div>
-              <div className="mt-2 flex items-start gap-2 text-xs text-neutral-400">
-                <Phone className="size-3.5 shrink-0 mt-0.5 text-neutral-500" strokeWidth={1.5} />
-                <span>0300-1234567</span>
               </div>
             </motion.div>
           </div>

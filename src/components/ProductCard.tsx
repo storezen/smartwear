@@ -134,16 +134,16 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           style={{ x: mouseXSpring, y: mouseYSpring }}
           className={cn(
             "group relative flex flex-col h-full bg-white transition-all duration-300 outline-none",
-            productCardLayout === "bento" && "rounded-[32px] p-4 border border-neutral-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)]",
+            productCardLayout === "bento" && "rounded-2xl border border-transparent hover:border-neutral-200/60 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)]",
             productCardLayout === "minimal" && "p-2 border-transparent shadow-none hover:bg-neutral-50/50",
-            productCardLayout === "bordered" && "p-4 border border-neutral-300 rounded-sm shadow-none",
+            productCardLayout === "bordered" && "p-4 border border-neutral-200 rounded-xl shadow-none",
             productCardLayout === "glass" && "p-4 rounded-2xl border border-white/20 bg-white/40 backdrop-blur-md shadow-lg"
           )}
         >
           <Link href={`/products/${product.id}`} className="flex flex-col flex-1 relative z-10 outline-none">
 
             {/* Image */}
-            <div className="relative aspect-[4/3] rounded-[16px] overflow-hidden bg-[#F6F8FA] flex items-center justify-center">
+            <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-[#F6F8FA] flex items-center justify-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeImage}
@@ -230,7 +230,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               </div>
 
               {/* Title */}
-              <h3 className="font-heading font-semibold text-sm leading-snug line-clamp-1 text-neutral-900 group-hover:text-emerald-700 transition-colors duration-200">
+              <h3 className="font-sans font-semibold text-[15px] leading-snug line-clamp-2 text-neutral-900 group-hover:text-neutral-700 transition-colors duration-200 mt-1">
                 {product.name}
               </h3>
 
@@ -298,12 +298,12 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               )}
 
               {/* Price row */}
-              <div className="flex items-baseline gap-2">
-                <span className="text-base font-extrabold text-neutral-900 font-heading">
+              <div className="flex items-baseline gap-2 mt-1">
+                <span className="text-[15px] font-bold text-neutral-800">
                     {formatPrice(product.price)}
                 </span>
                 {product.originalPrice && (
-                  <span className="text-[11px] text-neutral-400 line-through">
+                  <span className="text-xs text-neutral-400 line-through">
                     {formatPrice(product.originalPrice)}
                   </span>
                 )}
@@ -314,9 +314,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                 whileTap={{ scale: 0.98 }}
                 onClick={handleCOD}
                 disabled={!product.inStock}
-                className="h-[40px] w-full bg-neutral-950 hover:bg-neutral-800 text-white font-bold rounded-full transition-all duration-200 active:scale-[0.98] flex items-center justify-center text-xs tracking-wide shadow-sm disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+                className="h-[42px] w-full bg-neutral-950 hover:bg-neutral-800 text-white font-medium rounded-lg transition-all duration-200 active:scale-[0.98] flex items-center justify-center text-sm tracking-wide shadow-sm disabled:opacity-50 disabled:cursor-not-allowed mt-2"
               >
-                <Banknote className="size-4" strokeWidth={2} />
                 Order Now — Pay on Delivery
               </motion.button>
 

@@ -183,7 +183,7 @@ function CenteredHero({ data, style }: { data: HeroData; style: SectionStyle }) 
 function SplitHero({ data, style }: { data: HeroData; style: SectionStyle }) {
   const words = data.title?.split(" ") || []
   return (
-    <section className="relative min-h-[90vh] flex items-center bg-[#F6F8FA]">
+    <section className="relative min-h-[90vh] flex items-center bg-white">
       <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2">
         <div className="flex flex-col justify-center px-6 sm:px-12 lg:px-24 py-20 z-10">
           {data.badge && (

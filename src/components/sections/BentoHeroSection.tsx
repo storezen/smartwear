@@ -54,7 +54,7 @@ export function BentoHeroSection({ data, style }: { data: HeroData; style: Secti
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[85vh] flex items-center justify-center py-12 lg:py-20 bg-[#F6F8FA] overflow-hidden"
+      className="relative min-h-[85vh] flex items-center justify-center py-12 lg:py-20 bg-white overflow-hidden"
     >
       {/* Background ambient glow matching Light Paradigm */}
       <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-blue-500/3 blur-[120px] rounded-full pointer-events-none" />
