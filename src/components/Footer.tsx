@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ShieldCheck, Truck, CreditCard, Facebook, Instagram } from "lucide-react"
+import { ShieldCheck, Truck, CreditCard } from "lucide-react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -55,13 +55,6 @@ export function Footer() {
             <p className="text-[#0A0A0A]/60 text-sm max-w-xs font-medium leading-relaxed mb-6">
               Premium smartwatches engineered for the modern aesthetic. Available nationwide.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E5E5] hover:border-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white transition-all duration-300">
-                <Instagram className="h-4 w-4" />
-              </a>
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E5E5] hover:border-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white transition-all duration-300">
-                <Facebook className="h-4 w-4" />
-              </a>
             </div>
           </div>
 
