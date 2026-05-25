@@ -102,15 +102,15 @@ export default function AllCategoriesPage() {
           ogImage="/og-default.jpg"
         />
       <PageTransition>
-        <div className="min-h-screen bg-[#F6F8FA]">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+        <div className="min-h-screen bg-[#FAFAFA]">
+          <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-8 lg:py-12">
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Categories" }]} className="mb-6" />
             <div className="mb-6">
 
             {/* Header */}
             <div className="mb-8">
-              <h1 className="font-heading text-4xl font-extrabold tracking-tight text-neutral-900 sm:text-5xl leading-[1.05]">Categories</h1>
-              <p className="mt-2 text-base text-neutral-500">Explore our product categories</p>
+              <h1 className="font-heading text-4xl font-extrabold tracking-tight text-[#0A0A0A] sm:text-5xl leading-[1.05] uppercase">Collections</h1>
+              <p className="mt-2 text-sm font-semibold tracking-wider uppercase text-[#0A0A0A]/50">Explore our curated collections</p>
             </div>
 
               {/* Search + Sort */}
@@ -157,46 +157,46 @@ export default function AllCategoriesPage() {
                     <StaggerItem key={cat.id}>
                       <Link
                         href={`/products/category/${cat.slug}`}
-                        className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                        className="group block h-full focus-visible:outline-none"
                       >
-                        <div className="relative flex h-full flex-col rounded-[24px] border border-neutral-200/60 bg-white p-3 shadow-[0_8px_30px_rgb(0,0,0,0.03)] transition-all duration-500 ease-out hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)] group-hover:border-neutral-300/60">
+                        <div className="relative flex h-full flex-col border border-[#E5E5E5] bg-transparent p-0 transition-all duration-500 ease-out hover:border-[#0A0A0A] overflow-hidden">
                           {/* Image */}
-                          <div className="relative aspect-[16/9] rounded-[16px] overflow-hidden bg-[#F6F8FA] flex items-center justify-center">
+                          <div className="relative aspect-square overflow-hidden bg-[#E5E5E5]/20 flex items-center justify-center">
                             {cat.image ? (
                               <img
                                 src={cat.image}
                                 alt={cat.name}
-                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
                                 loading="lazy"
                               />
                             ) : (
                               <div className="flex h-full items-center justify-center">
-                                <Tags className="h-8 w-8 text-muted-foreground/20" />
+                                <Tags className="h-8 w-8 text-[#0A0A0A]/20" />
                               </div>
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                            <div className="absolute bottom-3 left-3">
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-foreground shadow-sm backdrop-blur-sm">
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                            <div className="absolute bottom-4 left-4">
+                              <span className="inline-flex items-center gap-1.5 rounded-sm bg-[#0A0A0A] px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-[#FAFAFA]">
                                 <Package className="size-3" />
-                                {count} product{count !== 1 ? "s" : ""}
+                                {count}
                               </span>
                             </div>
                           </div>
 
                           {/* Info */}
-                          <div className="flex items-center justify-between p-4">
+                          <div className="flex items-center justify-between p-5 bg-[#FAFAFA]">
                             <div className="min-w-0">
-                              <h3 className="text-sm font-bold text-neutral-900 group-hover:text-blue-600 transition-colors duration-300">
+                              <h3 className="text-sm font-bold uppercase tracking-wider text-[#0A0A0A] group-hover:text-[#0A0A0A] transition-colors duration-300">
                                 {cat.name}
                               </h3>
                               {cat.description && (
-                                <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                                <p className="mt-1 truncate text-xs font-semibold text-[#0A0A0A]/50">
                                   {cat.description}
                                 </p>
                               )}
                             </div>
-                            <div className="flex size-7 shrink-0 items-center justify-center rounded-full border border-neutral-200/60 bg-neutral-50 transition-all duration-300 group-hover:border-blue-500/30 group-hover:bg-blue-50 ml-2">
-                              <ChevronRight className="h-3.5 w-3.5 text-neutral-400 transition-all duration-300 group-hover:text-blue-600 group-hover:translate-x-0.5" strokeWidth={2.5} />
+                            <div className="flex size-8 shrink-0 items-center justify-center rounded-full border border-[#0A0A0A] bg-transparent transition-all duration-300 group-hover:bg-[#0A0A0A] group-hover:text-white ml-2">
+                              <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
                             </div>
                           </div>
                         </div>

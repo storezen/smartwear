@@ -23,7 +23,9 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
         Skip to content
       </a>
       <Navbar />
-      <main id="main-content" className="flex-1 animate-fade-up pb-16 lg:pb-0">{children}</main>
+      <main id="main-content" className="flex-1 animate-fade-up pb-16 lg:pb-0 bg-[#FAFAFA] min-h-screen">
+        {children}
+      </main>
       <MobileBottomNav />
       <FloatingWhatsApp />
       <Footer />

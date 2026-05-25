@@ -72,10 +72,10 @@ export default function DashboardPage() {
           Array.from({ length: 4 }).map((_, i) => <StatCardSkeleton key={i} />)
         ) : (
           <>
-            <StatCard label="Total Revenue" value={`Rs. ${totalRevenue.toLocaleString()}`} icon={DollarSign} iconBg="bg-emerald-50 border border-emerald-100" iconColor="text-emerald-600" />
-            <StatCard label="Total Orders" value={orders.length} icon={ShoppingBag} iconBg="bg-blue-50 border border-blue-100" iconColor="text-blue-600" />
-            <StatCard label="Pending" value={pendingOrders.length} icon={Clock} iconBg="bg-amber-50 border border-amber-100" iconColor="text-amber-600" />
-            <StatCard label="Products" value={products.length} icon={Package} iconBg="bg-purple-50 border border-purple-100" iconColor="text-purple-600" />
+            <StatCard label="Total Revenue" value={`Rs. ${totalRevenue.toLocaleString()}`} icon={DollarSign} iconBg="bg-transparent" iconColor="text-[#0A0A0A]" />
+            <StatCard label="Total Orders" value={orders.length} icon={ShoppingBag} iconBg="bg-transparent" iconColor="text-[#0A0A0A]" />
+            <StatCard label="Pending" value={pendingOrders.length} icon={Clock} iconBg="bg-transparent" iconColor="text-[#0A0A0A]" />
+            <StatCard label="Products" value={products.length} icon={Package} iconBg="bg-transparent" iconColor="text-[#0A0A0A]" />
           </>
         )}
       </motion.div>

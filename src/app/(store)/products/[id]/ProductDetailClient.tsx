@@ -121,29 +121,29 @@ export default function ProductDetailClient({ product, related }: ProductDetailC
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#F6F8FA]">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+      <div className="min-h-screen bg-[#FAFAFA]">
+        <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-8 lg:py-12">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 text-sm text-neutral-500 mb-6 overflow-x-auto bg-white/60 backdrop-blur-md px-4 py-2.5 rounded-2xl w-max border border-neutral-200/60 shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
-            <Link href="/" className="transition-colors hover:text-neutral-900 whitespace-nowrap">Home</Link>
+          <nav className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0A0A0A]/50 mb-8 overflow-x-auto">
+            <Link href="/" className="transition-colors hover:text-[#0A0A0A] whitespace-nowrap">Home</Link>
             <ChevronRight className="h-3.5 w-3.5 shrink-0" />
-            <Link href="/categories" className="transition-colors hover:text-foreground whitespace-nowrap">Categories</Link>
+            <Link href="/categories" className="transition-colors hover:text-[#0A0A0A] whitespace-nowrap">Categories</Link>
             <ChevronRight className="h-3.5 w-3.5 shrink-0" />
             {productCategory ? (
-              <Link href={`/products/category/${productCategory.slug}`} className="transition-colors hover:text-foreground whitespace-nowrap">{product.category}</Link>
+              <Link href={`/products/category/${productCategory.slug}`} className="transition-colors hover:text-[#0A0A0A] whitespace-nowrap">{product.category}</Link>
             ) : (
-              <span className="text-foreground font-medium truncate max-w-[150px] sm:max-w-[200px]">{product.category}</span>
+              <span className="text-[#0A0A0A] font-bold truncate">{product.category}</span>
             )}
             {product.status !== "published" && (
-              <span className="rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[10px] font-medium text-amber-700 ml-2">
+              <span className="rounded bg-[#0A0A0A] px-2 py-0.5 text-[10px] font-bold text-[#FAFAFA] ml-2">
                 {product.status === "archived" ? "Archived" : "Draft"}
               </span>
             )}
           </nav>
 
-          <div className="grid gap-6 lg:grid-cols-12">
+          <div className="grid gap-8 lg:grid-cols-12">
             {/* Left — Image Gallery */}
-            <div className="lg:col-span-7 space-y-4 relative bg-white rounded-[32px] p-4 sm:p-8 border border-neutral-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex flex-col justify-center min-h-[500px] overflow-hidden">
+            <div className="lg:col-span-7 space-y-4 relative bg-transparent p-0 flex flex-col justify-center min-h-[500px]">
               {/* Dynamic Ambient Glow */}
               <motion.div
                 animate={{ backgroundColor: ambientGlowColor }}
@@ -159,7 +159,7 @@ export default function ProductDetailClient({ product, related }: ProductDetailC
             </div>
 
             {/* Right — Product Info */}
-            <div className="lg:col-span-5 bg-white rounded-[32px] p-6 sm:p-8 border border-neutral-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex flex-col lg:sticky lg:top-24 lg:self-start space-y-6 relative overflow-hidden">
+            <div className="lg:col-span-5 bg-transparent p-0 flex flex-col lg:sticky lg:top-24 lg:self-start space-y-8 relative">
               {/* Header */}
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
@@ -303,10 +303,10 @@ export default function ProductDetailClient({ product, related }: ProductDetailC
                     disabled={!displayInStock || (needsVariantSelection && !allOptionsSelected)}
                     onClick={handleAddToCart}
                     variant="outline"
-                    className={`flex-1 h-12 rounded-full text-base font-bold transition-all border-neutral-200 shadow-sm ${added ? "bg-blue-50 border-blue-200 text-blue-600" : ""}`}
+                    className={`flex-1 h-12 rounded-full text-base font-bold transition-all border-[#E5E5E5] text-[#0A0A0A] hover:bg-[#0A0A0A]/5 ${added ? "bg-[#0A0A0A] text-white border-[#0A0A0A]" : ""}`}
                   >
                     {added ? (
-                      <><Check className="h-5 w-5 mr-2" /> Added to Cart</>
+                      <><Check className="h-5 w-5 mr-2" /> Added</>
                     ) : (
                       <><ShoppingBag className="h-5 w-5 mr-2" /> Add to Cart</>
                     )}
@@ -319,17 +319,17 @@ export default function ProductDetailClient({ product, related }: ProductDetailC
                     size="lg"
                     disabled={!displayInStock || (needsVariantSelection && !allOptionsSelected)}
                     onClick={() => setCodModalOpen(true)}
-                    className="group relative w-full h-[48px] overflow-hidden rounded-full bg-neutral-950 text-sm font-bold text-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:bg-neutral-800"
+                    className="group relative w-full h-14 overflow-hidden rounded-full bg-[#0A0A0A] text-sm font-bold uppercase tracking-wider text-[#FAFAFA] hover:bg-[#0A0A0A]/90"
                   >
                     <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-                    <Zap className="mr-2 h-5 w-5 animate-pulse" /> Order Now — Pay on Delivery
+                    <Zap className="mr-2 h-5 w-5" /> Order Now (COD)
                   </Button>
                   
                   <Link href="https://wa.me/923000000000" target="_blank" className="block w-full">
                     <Button
                       size="lg"
                       variant="outline"
-                      className="w-full h-[48px] rounded-full border-emerald-200 bg-emerald-50 text-sm font-bold text-emerald-700 hover:bg-emerald-100 hover:border-emerald-300 shadow-sm"
+                      className="w-full h-14 rounded-full border-[#10B981] bg-transparent text-sm font-bold uppercase tracking-wider text-[#10B981] hover:bg-[#10B981] hover:text-[#FAFAFA] transition-colors"
                     >
                       <MessageCircle className="mr-2 h-5 w-5" /> Order via WhatsApp
                     </Button>

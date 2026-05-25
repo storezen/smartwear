@@ -112,18 +112,18 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="flex h-full w-64 flex-col border-r border-sidebar-border bg-sidebar">
-      <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary text-sm font-bold text-primary-foreground shadow-sm">
+    <aside className="flex h-full w-64 flex-col border-r border-[#E5E5E5] bg-[#FAFAFA]">
+      <div className="flex h-16 items-center gap-3 border-b border-[#E5E5E5] px-5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[#0A0A0A] text-sm font-bold text-white shadow-sm">
           S
         </div>
         <div>
-          <span className="font-heading text-sm font-semibold tracking-tight text-sidebar-foreground">SmartWear</span>
-          <span className="ml-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Admin</span>
+          <span className="font-heading text-sm font-bold tracking-widest text-[#0A0A0A] uppercase">SmartWear</span>
+          <span className="ml-2 rounded-sm bg-[#E5E5E5] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] text-[#0A0A0A]/70">Admin</span>
         </div>
       </div>
 
-      <nav className="flex-1 overflow-y-auto p-3 space-y-5">
+      <nav className="flex-1 overflow-y-auto p-3 space-y-5 hide-scrollbar">
         {navGroups.map((group) => {
           const groupActive = group.items.some((item) => {
             if ("subItems" in item && item.subItems) {
@@ -135,8 +135,8 @@ export function Sidebar() {
           return (
             <div key={group.label}>
               <div className={cn(
-                "px-3 mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground",
-                groupActive ? "text-sidebar-foreground" : ""
+                "px-3 mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#0A0A0A]/40",
+                groupActive ? "text-[#0A0A0A]/80" : ""
               )}>
                 {group.label}
               </div>
@@ -162,16 +162,16 @@ export function Sidebar() {
                       >
                         <div className={cn(
                           "relative flex items-center gap-3 rounded-[12px] px-3 py-2 text-sm font-semibold transition-colors",
-                          active && "bg-sidebar-accent text-sidebar-foreground shadow-sm border border-sidebar-border",
-                          !active && "text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                          active && "bg-[#0A0A0A] text-white shadow-md",
+                          !active && "text-[#0A0A0A]/60 hover:text-[#0A0A0A] hover:bg-[#E5E5E5]/50"
                         )}>
                           <span className="shrink-0">
-                            <Icon className={cn("h-4.5 w-4.5", active ? "text-sidebar-primary" : "text-muted-foreground")} strokeWidth={active ? 2 : 1.5} />
+                            <Icon className={cn("h-4 w-4", active ? "text-white" : "text-[#0A0A0A]/40")} strokeWidth={active ? 2 : 1.5} />
                           </span>
                           <span className="flex-1">{item.label}</span>
                           {hasSubItems && (
                             <ChevronDown className={cn(
-                              "h-3.5 w-3.5 transition-transform text-muted-foreground",
+                              "h-3.5 w-3.5 transition-transform text-[#0A0A0A]/40",
                               isExpanded && "rotate-180"
                             )} />
                           )}
@@ -179,7 +179,7 @@ export function Sidebar() {
                       </Link>
 
                       {hasSubItems && isExpanded && (
-                        <div className="ml-6 mt-0.5 space-y-0.5">
+                        <div className="ml-6 mt-1 space-y-1">
                           {item.subItems!.map((sub) => {
                             const subActive = pathname === sub.href
                             return (
@@ -191,8 +191,8 @@ export function Sidebar() {
                                 <div className={cn(
                                   "flex items-center gap-3 rounded-[8px] px-3 py-1.5 text-sm transition-colors font-medium",
                                   subActive
-                                    ? "text-sidebar-primary bg-sidebar-accent"
-                                    : "text-muted-foreground hover:text-sidebar-foreground"
+                                    ? "text-[#0A0A0A] font-bold"
+                                    : "text-[#0A0A0A]/50 hover:text-[#0A0A0A]"
                                 )}>
                                   <span className="size-1 rounded-full bg-current" />
                                   {sub.label}
@@ -211,18 +211,18 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-sidebar-border p-3 space-y-1">
+      <div className="border-t border-[#E5E5E5] p-3 space-y-1">
         <Link href="/">
-          <div className="flex items-center gap-3 rounded-[12px] px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground">
-            <ExternalLink className="h-4.5 w-4.5 shrink-0" strokeWidth={1.5} />
+          <div className="flex items-center gap-3 rounded-[12px] px-3 py-2 text-sm font-bold text-[#0A0A0A]/50 transition-colors hover:bg-[#E5E5E5]/50 hover:text-[#0A0A0A]">
+            <ExternalLink className="h-4.5 w-4.5 shrink-0" strokeWidth={2} />
             View Store
           </div>
         </Link>
         <button
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-[12px] px-3 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 hover:text-destructive"
+          className="flex w-full items-center gap-3 rounded-[12px] px-3 py-2 text-sm font-bold text-[#EF4444]/80 transition-colors hover:bg-[#EF4444]/10 hover:text-[#EF4444]"
         >
-          <LogOut className="h-4.5 w-4.5 shrink-0" strokeWidth={1.5} />
+          <LogOut className="h-4.5 w-4.5 shrink-0" strokeWidth={2} />
           Logout
         </button>
       </div>

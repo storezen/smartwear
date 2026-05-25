@@ -30,18 +30,18 @@ export function StatCard({ label, value, icon: Icon, iconBg = "bg-primary/10", i
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: "easeOut" }}
-      className={cn("flex items-center gap-5 rounded-[24px] bg-white p-6 border border-neutral-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)] hover:-translate-y-1", className)}
+      className={cn("flex items-center gap-5 rounded-[24px] bg-[#FAFAFA] p-6 border border-[#E5E5E5] transition-all duration-300 hover:border-[#0A0A0A]", className)}
     >
-      <div className={cn("flex h-14 w-14 shrink-0 items-center justify-center rounded-[16px] transition-colors border border-neutral-200/60", iconBg, iconColor)}>
+      <div className={cn("flex h-14 w-14 shrink-0 items-center justify-center rounded-[16px] transition-colors border border-[#E5E5E5]", iconBg, iconColor)}>
         <Icon className="h-6 w-6" strokeWidth={1.5} />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold text-neutral-500">{label}</p>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#0A0A0A]/50">{label}</p>
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: delay + 0.2 }}
-          className="mt-0.5 text-3xl font-extrabold tracking-tight text-neutral-900"
+          className="mt-1 text-3xl font-extrabold tracking-tight text-[#0A0A0A]"
         >
           {value}
         </motion.p>
