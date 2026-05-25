@@ -86,7 +86,6 @@ export function ProductImageGallery({ images: allImages, productName, discount =
       <div className={cn("space-y-3", className)}>
         <motion.div
           className="relative overflow-hidden rounded-[24px] bg-[#F6F8FA] cursor-crosshair group"
-          style={{ rotateX, rotateY, transformPerspective: 1000 } as any}
           onMouseEnter={() => setZoom(true)}
           onMouseLeave={handleMouseLeave}
           onMouseMove={handleMouseMove}

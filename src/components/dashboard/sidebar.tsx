@@ -23,6 +23,7 @@ import {
   Video,
   MessageCircle,
   Truck,
+  Activity,
   Upload,
   Database,
   ChevronDown,
@@ -52,6 +53,7 @@ const navGroups = [
   {
     label: "Sales & Insights",
     items: [
+      { href: "/dashboard/analytics/live", label: "Live View", icon: Activity },
       { href: "/dashboard/reports", label: "Reports", icon: BarChart3 },
       { href: "/dashboard/customers", label: "Customers", icon: Users },
       { href: "/dashboard/payments", label: "Payments", icon: CreditCard },
@@ -69,9 +71,7 @@ const navGroups = [
   {
     label: "Integrations",
     items: [
-      { href: "/dashboard/postex", label: "PostEx", icon: Truck },
-      { href: "/dashboard/whatsapp", label: "WhatsApp", icon: MessageCircle },
-      { href: "/dashboard/tiktok", label: "TikTok", icon: Video },
+      { href: "/dashboard/integrations", label: "App Hub", icon: Sparkles },
     ],
   },
   {

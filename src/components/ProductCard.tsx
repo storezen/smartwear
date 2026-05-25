@@ -69,8 +69,8 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             disabled={!available}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0A0A0A] py-3 text-sm font-semibold text-white shadow-lg transition-transform active:scale-95 disabled:bg-[#0A0A0A]/50 disabled:cursor-not-allowed hover:bg-[#0A0A0A]/90"
           >
-            <ShoppingBag className="h-4 w-4" strokeWidth={2} />
-            {available ? "Quick Add" : "Sold Out"}
+            <Banknote className="h-4 w-4 text-[#10B981]" strokeWidth={2} />
+            {available ? "Order Now (COD)" : "Sold Out"}
           </button>
         </div>
       </Link>
