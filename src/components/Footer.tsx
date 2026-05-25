@@ -55,7 +55,6 @@ export function Footer() {
             <p className="text-[#0A0A0A]/60 text-sm max-w-xs font-medium leading-relaxed mb-6">
               Premium smartwatches engineered for the modern aesthetic. Available nationwide.
             </p>
-            </div>
           </div>
 
           {/* Links Columns */}
