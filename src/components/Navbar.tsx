@@ -21,8 +21,8 @@ export function Navbar() {
 
   const links = [
     { href: "/products", label: "Shop All" },
-    { href: "/categories/accessories", label: "Accessories" },
-    { href: "/categories/charging", label: "Charging" }
+    { href: "/products/category/accessories", label: "Accessories" },
+    { href: "/products/category/charging", label: "Charging" }
   ]
 
   useEffect(() => {

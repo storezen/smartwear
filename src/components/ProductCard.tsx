@@ -55,12 +55,12 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
         {/* Product Image */}
         <Image
-          src={product.image}
+          src={product.image || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80"}
           alt={product.name}
           fill
           priority={priority}
           sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover object-center transition-all duration-500 cubic-bezier(0.23, 1, 0.32, 1) group-hover:scale-105"
+          className="object-cover object-center transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-105"
         />
 
         {/* Slide-up Quick Add Button */}

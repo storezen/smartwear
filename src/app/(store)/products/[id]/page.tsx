@@ -9,7 +9,13 @@ import Link from "next/link"
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   try {
-    const dbProduct = await prisma.product.findUnique({ where: { id } })
+    let dbProduct = await prisma.product.findUnique({ where: { id } })
+    if (!dbProduct) {
+      dbProduct = await prisma.product.findFirst({ where: { handle: id } })
+    }
+    if (!dbProduct) {
+      dbProduct = await prisma.product.findFirst({ where: { sku: id } })
+    }
     if (dbProduct) {
       return {
         title: dbProduct.metaTitle || `${dbProduct.name} — SMARTWEAR`,
@@ -33,7 +39,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  const dbProduct = await prisma.product.findUnique({ where: { id } })
+  let dbProduct = await prisma.product.findUnique({ where: { id } })
+  if (!dbProduct) {
+    dbProduct = await prisma.product.findFirst({ where: { handle: id } })
+  }
+  if (!dbProduct) {
+    dbProduct = await prisma.product.findFirst({ where: { sku: id } })
+  }
   if (!dbProduct) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center bg-background px-4 sm:px-6">
