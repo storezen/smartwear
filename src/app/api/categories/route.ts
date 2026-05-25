@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db/prisma"
+import { revalidatePath } from "next/cache"
 
 const ALLOWED_CATEGORY_FIELDS = [
   "name", "slug", "description", "image",
@@ -35,6 +36,7 @@ export async function POST(req: Request) {
   try {
     const data = await req.json()
     const category = await prisma.category.create({ data: pickCategoryFields(data) as any })
+    revalidatePath("/", "layout")
     return NextResponse.json(category, { status: 201 })
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to create category"
@@ -50,6 +52,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Missing category id" }, { status: 400 })
     }
     const category = await prisma.category.update({ where: { id }, data: pickCategoryFields(fields) as any })
+    revalidatePath("/", "layout")
     return NextResponse.json(category)
   } catch {
     return NextResponse.json({ error: "Failed to update" }, { status: 500 })

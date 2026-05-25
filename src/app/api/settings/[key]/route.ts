@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db/prisma"
+import { revalidatePath } from "next/cache"
 
 export async function GET(
   _req: Request,
@@ -29,6 +30,7 @@ export async function PUT(
       update: { value },
       create: { key, value },
     })
+    revalidatePath("/", "layout")
     return NextResponse.json(setting)
   } catch {
     return NextResponse.json({ error: "Failed to save setting" }, { status: 500 })
