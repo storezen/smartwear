@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  name             String
+  price            Float
+  originalPrice    Float?
+  image            String   @default("")
+  images           Json     @default("[]")
+  category         String   @default("")
+  description      String   @default("")
+  inStock          Boolean  @default(true)
+  featured         Boolean  @default(false)
+  specs            Json     @default("[]")
+  sku              String   @default("")
+  quantity         Int      @default(100)
+  lowStockThreshold Int    @default(10)
+  rating           Float?
+  reviews          Int?
+  metaTitle        String?
+  metaDescription  String?
+  variants         Json     @default("[]")
+  optionNames      Json     @default("[]")
+  status           String   @default("published")
+  handle           String?
+  tags             Json     @default("[]")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Category {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  description    String?
+  image          String?
+  showInNavbar   Boolean  @default(false)
+  showOnHomepage Boolean  @default(false)
+  active         Boolean  @default(true)
+  sortOrder      Int      @default(99)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Order {
+  id           String   @id
+  productId    String
+  productName  String
+  productPrice Float
+  productImage String   @default("")
+  quantity     Int
+  total        Float
+  customerName String
+  phone        String
+  address      String
+  city         String
+  notes        String?
+  status       String   @default("pending")
+  statusHistory Json    @default("[]")
+  financials   Json?    // { cogs, shipping, adSpend, revenue, netProfit }
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Coupon {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  discount  Float
+  type      String   @default("percentage")
+  minOrder  Float?
+  expiresAt DateTime?
+  active    Boolean  @default(true)
+  usageCount Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model StoreSetting {
+  key   String @id
+  value String
+}
+
+model MessageLog {
+  id              String   @id @default(cuid())
+  orderId         String?
+  recipient       String
+  messageType     String
+  status          String   @default("sent") // sent, failed
+  responsePayload String?
+  createdAt       DateTime @default(now())
+}
+
+model MessageQueue {
+  id              String   @id @default(cuid())
+  orderId         String?
+  recipient       String
+  messageType     String
+  payload         String
+  retryCount      Int      @default(0)
+  nextRetryAt     DateTime
+  status          String   @default("pending") // pending, completed, failed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model LiveSession {
+  id              String   @id @default(cuid())
+  source          String   @default("organic") // e.g., tiktok, organic
+  currentStep     String   @default("Catalog") // Catalog, Cart, Checkout_Initiated, Purchase_Complete
+  cartData        String?  // JSON string of cart contents
+  customerName    String?
+  phone           String?
+  lastPingAt      DateTime @default(now())
+  createdAt       DateTime @default(now())
+}
+
+model ProfitSummary {
+  date          String   @id // YYYY-MM-DD
+  totalRevenue  Float    @default(0)
+  totalCOGS     Float    @default(0)
+  totalShipping Float    @default(0)
+  totalAdSpend  Float    @default(0)
+  netProfit     Float    @default(0)
+  lossRecovery  Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
