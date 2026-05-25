@@ -91,7 +91,7 @@ function normalizeHeaders(headers: string[]): Record<number, string> {
   }
 
   for (let i = 0; i < headers.length; i++) {
-    const normalized = headers[i].toLowerCase().replace(/[:\-–—]/g, " ").replace(/\s+/g, " ").trim()
+    const normalized = headers[i].toLowerCase().replace(/[:\-–—()]/g, " ").replace(/\s+/g, " ").trim()
     map[i] = headerMappings[normalized] || camelCase(headers[i])
   }
 

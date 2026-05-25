@@ -276,7 +276,7 @@ function parseSpecs(main: CsvRow, title: string, bodyHtml: string, tags: string[
   }
 
   // 5. Detect from table rows (<tr><td>...</td><td>...</td></tr>)
-  const trMatches = bodyHtml.matchAll(/<tr[^>]*>\s*<td[^>]*>(.*?)<\/td>\s*<td[^>]*>(.*?)<\/td>\s*<\/tr>/gi)
+  const trMatches = bodyHtml.matchAll(/<tr[^>]*>[\s\S]*?<td[^>]*>([\s\S]*?)<\/td>[\s\S]*?<td[^>]*>([\s\S]*?)<\/td>[\s\S]*?<\/?tr[^>]*>/gi)
   for (const match of trMatches) {
     const label = match[1].replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").trim()
     const value = match[2].replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").trim()
