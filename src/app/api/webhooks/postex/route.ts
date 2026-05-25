@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { verifyPostExSignature } from "@/lib/integrations/postex"
+import { SITE_URL } from "@/lib/constants"
 import { prisma } from "@/lib/db/prisma"
 import { queueWhatsAppMessage } from "@/lib/db/message-queue"
 import { financialService } from "@/services/financialService"
@@ -31,13 +32,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 })
     }
 
-    // Update order status in DB
-    const history = JSON.parse(order.statusHistory as string || "[]")
+    const history = Array.isArray(order.statusHistory) ? order.statusHistory : []
     history.push({ status, timestamp: new Date().toISOString(), location: payload.location, description: payload.description })
-    
+
     await prisma.order.update({
       where: { id: orderId },
-      data: { status, statusHistory: JSON.stringify(history) }
+      data: { status, statusHistory: history }
     })
 
     // Prepare WhatsApp Message payload
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     let templatePayload: any = null
 
     // Domain root for tracking link
-    const domain = process.env.NEXT_PUBLIC_APP_URL || "https://your-store.com"
+    const domain = SITE_URL
     const trackingUrl = `${domain}/track?orderId=${order.id}&phone=${order.phone}`
 
     switch (status) {
@@ -187,7 +187,13 @@ export async function POST(req: Request) {
         break
     }
 
-    if (templatePayload) {
+    // Check Auto-Tracking Switch before sending
+    const autoTrackingSetting = await prisma.storeSetting.findUnique({
+      where: { key: "WHATSAPP_AUTO_TRACKING" }
+    })
+    const isAutoTrackingEnabled = autoTrackingSetting?.value === "true"
+
+    if (templatePayload && isAutoTrackingEnabled) {
       await queueWhatsAppMessage(order.phone, messageType, templatePayload, order.id)
     }
 

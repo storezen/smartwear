@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { Search, X, SlidersHorizontal, FilterX } from "lucide-react"
+import { SITE_URL } from "@/lib/constants"
 import { ProductCard } from "@/components/ProductCard"
 import { Pagination } from "@/components/Pagination"
 import { PageMeta } from "@/components/PageMeta"
@@ -82,12 +83,12 @@ export default function ProductsPage() {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "All Products — SMARTWEAR",
-    url: "https://smartwear.com/products",
+    url: `${SITE_URL}/products`,
     numberOfItems: filtered.length,
     itemListElement: filtered.slice(0, 20).map((p, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `https://smartwear.com/products/${p.id}`,
+      url: `${SITE_URL}/products/${p.id}`,
     })),
   }
 

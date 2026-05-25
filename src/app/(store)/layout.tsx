@@ -2,8 +2,6 @@
 
 import { CartProvider } from "@/lib/cart-context"
 import { OrdersProvider } from "@/lib/orders-context"
-import { ProductsProvider } from "@/lib/products-context"
-import { CategoriesProvider } from "@/lib/categories-context"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { MobileBottomNav } from "@/components/MobileBottomNav"
@@ -14,8 +12,6 @@ import { cn } from "@/lib/utils"
 export default function StoreLayout({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
-      <ProductsProvider>
-      <CategoriesProvider>
       <OrdersProvider>
       <a
         href="#main-content"
@@ -33,8 +29,6 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
       <Footer />
       <Toaster position="top-right" richColors closeButton />
     </OrdersProvider>
-    </CategoriesProvider>
-    </ProductsProvider>
     </CartProvider>
   )
 }

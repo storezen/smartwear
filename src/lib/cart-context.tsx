@@ -1,6 +1,5 @@
 "use client"
 
-import { type ReactNode } from "react"
 import { useStore } from "@/lib/store"
 
 export interface CartItem {
@@ -13,15 +12,13 @@ export interface CartItem {
   variantSku?: string
 }
 
-export function CartProvider({ children }: { children: ReactNode }) {
-  // CartProvider is kept for API compatibility, Zustand manages the state directly.
+export function CartProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
 export function useCart() {
   const store = useStore()
 
-  // Map Zustand cart structure to useCart React context structure
   const items: CartItem[] = store.cart.map((item) => {
     let label = ""
     if (item.selectedStrap && item.selectedColor) {

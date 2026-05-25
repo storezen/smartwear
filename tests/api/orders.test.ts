@@ -21,7 +21,7 @@ export async function testOrders() {
     })
     assert(status === 200 || status === 201, `create returns 200/201, got ${status}`)
     createdId = body?.id
-    assert(createdId, "create returns id")
+    assert(!!createdId, "create returns id")
     ok("POST /api/orders creates order")
   } catch (e) { fail("POST /api/orders", e); return }
 

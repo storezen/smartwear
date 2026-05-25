@@ -42,8 +42,8 @@ export const useOrderStore = create<OrderStore>()((set) => ({
       }
       const data: TrackedOrder = await res.json()
       set({ order: data, isLoading: false })
-    } catch (err: any) {
-      set({ error: err.message || "An unexpected error occurred", isLoading: false })
+    } catch (err: unknown) {
+      set({ error: err instanceof Error ? err.message : "An unexpected error occurred", isLoading: false })
     }
   },
   clearOrder: () => set({ order: null, error: null })

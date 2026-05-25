@@ -48,6 +48,10 @@ interface OrdersContextType {
   deleteOrder: (id: string) => void
   getOrderById: (id: string) => CODOrder | undefined
   bulkUpdateOrders: (ids: string[], action: string, newStatus?: OrderStatus) => Promise<void>
+  totalOrders: number
+  totalPages: number
+  currentPage: number
+  setPage: (page: number) => void
 }
 
 const OrdersContext = createContext<OrdersContextType | null>(null)
@@ -70,7 +74,9 @@ function loadLocal(): CODOrder[] {
 }
 
 function saveLocal(orders: CODOrder[]) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(orders)) } catch {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(orders)) } catch (err) {
+    console.error("Failed to save orders to localStorage:", err)
+  }
 }
 
 async function api<T = unknown>(path: string, init?: RequestInit): Promise<T | null> {
@@ -80,52 +86,66 @@ async function api<T = unknown>(path: string, init?: RequestInit): Promise<T | n
       ...init,
     })
     return res.ok ? res.json() : null
-  } catch { return null }
+  } catch (err) {
+    console.error("Orders API error:", err)
+    return null
+  }
 }
 
 export function OrdersProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<CODOrder[]>([])
   const [isReady, setIsReady] = useState(false)
   const [hydrated, setHydrated] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalOrders, setTotalOrders] = useState(0)
+  const [totalPages, setTotalPages] = useState(1)
+
+  const fetchOrders = useCallback(async (page: number) => {
+    const data = await api<{ orders: CODOrder[]; total: number; totalPages: number }>(`/?page=${page}&limit=50`)
+    if (!data) return
+    setOrders(data.orders.map(migrateOrder))
+    setTotalOrders(data.total)
+    setTotalPages(data.totalPages)
+  }, [])
 
   useEffect(() => {
     let mounted = true
-    const initLocal = async () => {
-      const local = loadLocal()
-      if (mounted) {
+    const local = loadLocal()
+    if (mounted) {
+      if (local.length > 0) {
         setOrders(local)
-        setIsReady(true)
       }
+      setIsReady(true)
     }
-    initLocal()
-
-    api<CODOrder[]>("/").then((data) => {
-      if (!mounted) return
-      if (data && data.length > 0) {
-        setOrders(data.map(migrateOrder))
-        saveLocal(data)
-      }
-      setHydrated(true)
+    fetchOrders(1).then(() => {
+      if (mounted) setHydrated(true)
     })
     return () => { mounted = false }
-  }, [])
+  }, [fetchOrders])
 
   useEffect(() => {
     if (!isReady) return
     saveLocal(orders)
   }, [orders, isReady])
 
-  const addOrder = useCallback((data: OrderInput) => {
+  const addOrder = useCallback((data: OrderInput | CODOrder) => {
+    if ("id" in data && data.id) {
+      setOrders((prev) => [data as CODOrder, ...prev])
+      return
+    }
+    const input = data as OrderInput
     const now = new Date().toISOString()
     const order: CODOrder = {
-      ...data,
+      ...input,
       id: `COD-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       status: "pending",
       statusHistory: [{ status: "pending", timestamp: now }],
       createdAt: now,
     }
     setOrders((prev) => [order, ...prev])
-    api("/", { method: "POST", body: JSON.stringify(order) })
+    api("/", { method: "POST", body: JSON.stringify(order) }).catch((err) =>
+      console.error("Failed to sync order to server:", err)
+    )
   }, [])
 
   const updateOrderStatus = useCallback((id: string, newStatus: OrderStatus) => {
@@ -174,8 +194,13 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
 
   const getOrderById = useCallback((id: string) => orders.find((o) => o.id === id), [orders])
 
+  const setPage = useCallback((page: number) => {
+    setCurrentPage(page)
+    fetchOrders(page)
+  }, [fetchOrders])
+
   return (
-    <OrdersContext.Provider value={{ orders, hydrated, addOrder, updateOrderStatus, deleteOrder, getOrderById, bulkUpdateOrders }}>
+    <OrdersContext.Provider value={{ orders, hydrated, addOrder, updateOrderStatus, deleteOrder, getOrderById, bulkUpdateOrders, totalOrders, totalPages, currentPage, setPage }}>
       {children}
     </OrdersContext.Provider>
   )

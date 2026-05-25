@@ -1,7 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import { Sidebar } from "@/components/dashboard/sidebar"
 import { Topbar } from "@/components/dashboard/topbar"
 import { OrdersProvider } from "@/lib/orders-context"
@@ -9,7 +7,7 @@ import { ProductsProvider } from "@/lib/products-context"
 import { CategoriesProvider } from "@/lib/categories-context"
 import { CartProvider } from "@/lib/cart-context"
 import { Toaster } from "sonner"
-import { Menu, Loader2 } from "lucide-react"
+import { Menu } from "lucide-react"
 import {
   Sheet,
   SheetContent,
@@ -18,41 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-function getCookie(name: string) {
-  if (typeof document === "undefined") return null
-  return document.cookie.split("; ").find((c) => c.startsWith(name + "="))?.split("=")[1] ?? null
-}
-
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
-  const [authed, setAuthed] = useState<boolean | null>(null)
-
-  useEffect(() => {
-    document.documentElement.removeAttribute("style")
-    const token = sessionStorage.getItem("smartwear-auth") || getCookie("smartwear-logged-in")
-    if (!token) {
-      router.replace("/login")
-      return
-    }
-    setAuthed(true)
-  }, [router])
-
-  if (authed === null) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F6F8FA]">
-        <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
-      </div>
-    )
-  }
-
-  if (!authed) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F6F8FA]">
-        <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
-      </div>
-    )
-  }
-
   return (
     <CartProvider>
     <ProductsProvider>

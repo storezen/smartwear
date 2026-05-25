@@ -14,6 +14,8 @@ const PAKISTANI_CITIES = [
   "Multan", "Peshawar", "Quetta", "Sialkot", "Gujranwala",
 ]
 
+// NOTE: Scarcity data is synthetically generated client-side for conversion optimization.
+// In production, replace with real inventory + live viewer data from your analytics source.
 // Deterministic seed from productId for stable initial values
 function seededRand(seed: string, offset: number = 0): number {
   let hash = 0

@@ -28,7 +28,9 @@ export function getSeoData(): SeoData {
         return { ...DEFAULT_SEO, ...legacy.seo }
       }
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to load SEO data:", err)
+  }
   return { ...DEFAULT_SEO }
 }
 
@@ -41,7 +43,7 @@ export function saveSeoData(data: SeoData): void {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ value: JSON.stringify(data) }),
-  }).catch(() => {})
+  }).catch((err) => console.error("Failed to save SEO data:", err))
 }
 
 export async function initSeoFromApi(): Promise<void> {
@@ -54,5 +56,7 @@ export async function initSeoFromApi(): Promise<void> {
     if (!existing) {
       localStorage.setItem(STORAGE_KEY, value)
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to init SEO from API:", err)
+  }
 }

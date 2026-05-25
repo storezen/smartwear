@@ -23,7 +23,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://smartwear.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://smartwear.com"),
   title: {
     default: "SMARTWEAR — Premium Smart Watches & Accessories",
     template: "%s — SMARTWEAR",
@@ -45,7 +45,6 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
   },
   robots: {
     index: true,

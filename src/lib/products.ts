@@ -44,18 +44,6 @@ export interface Product {
   tags?: string[]
 }
 
-export const products: Product[] = []
-
 export function formatPrice(price: number) {
   return `Rs. ${price.toLocaleString("en-PK")}`;
-}
-
-export function getProduct(id: string) {
-  return products.find((p) => p.id === id);
-}
-
-export function getRelatedProducts(category: string, excludeId: string) {
-  return products
-    .filter((p) => p.category === category && p.id !== excludeId)
-    .slice(0, 4);
 }

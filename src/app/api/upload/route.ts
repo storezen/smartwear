@@ -6,7 +6,11 @@ import { existsSync } from "node:fs"
 export async function POST(request: Request) {
   try {
     const origin = request.headers.get("origin") || ""
-    if (origin && !origin.includes(process.env.NEXT_PUBLIC_SITE_URL || "localhost")) {
+    const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL
+    if (!allowedOrigin) {
+      return NextResponse.json({ error: "Upload not configured" }, { status: 500 })
+    }
+    if (origin && origin !== allowedOrigin && !origin.startsWith(allowedOrigin)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 

@@ -276,7 +276,9 @@ export async function initThemeFromApi(): Promise<void> {
       localStorage.setItem(STORAGE_KEY, value)
       loadAndApplyTheme()
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to init theme from API:", err)
+  }
 }
 
 export function applyThemeMode(data: SavedThemeData): void {

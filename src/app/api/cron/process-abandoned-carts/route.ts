@@ -5,8 +5,7 @@ export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get("authorization")
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      // return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-      // Disabled strictly for testing without tokens, re-enable in prod
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const processed = await automationService.processAbandonedCarts()

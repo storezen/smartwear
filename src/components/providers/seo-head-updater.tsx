@@ -12,7 +12,9 @@ export function SEOHeadUpdater() {
         const data = JSON.parse(raw)
         if (data?.seo) setSeo(data.seo)
       }
-    } catch {}
+    } catch (err) {
+      console.error("Failed to load SEO from localStorage:", err)
+    }
   }, [])
 
   useEffect(() => {

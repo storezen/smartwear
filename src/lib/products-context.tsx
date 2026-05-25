@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import type { Product } from "@/lib/products"
-import { products as defaultProducts } from "@/lib/products"
 
 const API = "/api/products"
 const STORAGE_KEY = "smartwear-products"
@@ -24,21 +23,25 @@ interface ProductsContextType {
 const ProductsContext = createContext<ProductsContextType | null>(null)
 
 function loadLocal(): Product[] {
-  if (typeof window === "undefined") return defaultProducts
+  if (typeof window === "undefined") return []
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       const parsed: Product[] = JSON.parse(stored)
-      return parsed.length > 0 ? parsed : defaultProducts
+      return parsed.length > 0 ? parsed : []
     }
-  } catch {}
-  return defaultProducts
+  } catch (err) {
+    console.error("Failed to load products from localStorage:", err)
+  }
+  return []
 }
 
 function saveLocal(products: Product[]) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(products))
-  } catch {}
+  } catch (err) {
+    console.error("Failed to save products to localStorage:", err)
+  }
 }
 
 async function api<T = unknown>(path: string, init?: RequestInit): Promise<T | null> {
@@ -48,32 +51,32 @@ async function api<T = unknown>(path: string, init?: RequestInit): Promise<T | n
       ...init,
     })
     return res.ok ? res.json() : null
-  } catch {
+  } catch (err) {
+    console.error("Products API error:", err)
     return null
   }
 }
 
 export function ProductsProvider({ children }: { children: ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(defaultProducts)
+  const [products, setProducts] = useState<Product[]>([])
   const [isReady, setIsReady] = useState(false)
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
     let mounted = true
-    const initLocal = async () => {
-      const local = loadLocal()
-      if (mounted) {
+    const local = loadLocal()
+    if (mounted) {
+      if (local.length > 0) {
         setProducts(local)
-        setIsReady(true)
       }
+      setIsReady(true)
     }
-    initLocal()
 
-    api<Product[]>("/").then((data) => {
+    api<{ products: Product[] }>("/?page=1&limit=200").then((data) => {
       if (!mounted) return
-      if (data && data.length > 0) {
-        setProducts(data)
-        saveLocal(data)
+      if (data && data.products.length > 0) {
+        setProducts(data.products)
+        saveLocal(data.products)
       }
       setHydrated(true)
     })

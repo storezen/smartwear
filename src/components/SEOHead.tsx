@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { SITE_URL } from "@/lib/constants"
 
 interface SEOHeadProps {
   title: string
@@ -9,7 +10,7 @@ interface SEOHeadProps {
 }
 
 export function buildMetadata({ title, description, path, ogImage, noindex }: SEOHeadProps): Metadata {
-  const baseUrl = "https://smartwear.com"
+  const baseUrl = SITE_URL
   const url = `${baseUrl}${path}`
   const image = ogImage || "/og-default.jpg"
   const imageUrl = image.startsWith("http") ? image : `${baseUrl}${image}`

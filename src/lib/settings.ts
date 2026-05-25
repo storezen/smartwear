@@ -6,10 +6,13 @@ export async function getSetting(key: string): Promise<string | null> {
       const data = await res.json()
       if (data.value) return data.value
     }
-  } catch {}
+  } catch (err) {
+    console.error(`Failed to fetch setting "${key}" from API:`, err)
+  }
   try {
     return localStorage.getItem(key)
-  } catch {
+  } catch (err) {
+    console.error(`Failed to read setting "${key}" from localStorage:`, err)
     return null
   }
 }
@@ -18,7 +21,9 @@ export async function setSetting(key: string, value: string): Promise<void> {
   if (typeof window !== "undefined") {
     try {
       localStorage.setItem(key, value)
-    } catch {}
+    } catch (err) {
+      console.error(`Failed to save setting "${key}" to localStorage:`, err)
+    }
   }
   try {
     await fetch(`/api/settings/${encodeURIComponent(key)}`, {
@@ -26,7 +31,9 @@ export async function setSetting(key: string, value: string): Promise<void> {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value }),
     })
-  } catch {}
+  } catch (err) {
+    console.error(`Failed to save setting "${key}" to API:`, err)
+  }
 }
 
 export async function getSettingJSON<T>(key: string, fallback: T): Promise<T> {
@@ -34,7 +41,8 @@ export async function getSettingJSON<T>(key: string, fallback: T): Promise<T> {
   if (!raw) return fallback
   try {
     return JSON.parse(raw) as T
-  } catch {
+  } catch (err) {
+    console.error(`Failed to parse setting "${key}" JSON:`, err)
     return fallback
   }
 }

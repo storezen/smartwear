@@ -4,6 +4,7 @@ import { useState, useMemo, use } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ChevronLeft, Search, X, SlidersHorizontal, Package } from "lucide-react"
+import { SITE_URL } from "@/lib/constants"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ProductCard } from "@/components/ProductCard"
@@ -101,12 +102,12 @@ export default function CategoryPage({
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: `${category.name} Products`,
-    url: `https://smartwear.com/products/category/${slug}`,
+    url: `${SITE_URL}/products/category/${slug}`,
     numberOfItems: filtered.length,
     itemListElement: filtered.slice(0, 20).map((p, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `https://smartwear.com/products/${p.id}`,
+      url: `${SITE_URL}/products/${p.id}`,
     })),
   } : null
 
@@ -114,9 +115,9 @@ export default function CategoryPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://smartwear.com/" },
-      { "@type": "ListItem", position: 2, name: "Categories", item: "https://smartwear.com/categories" },
-      { "@type": "ListItem", position: 3, name: category.name, item: `https://smartwear.com/products/category/${slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Categories", item: `${SITE_URL}/categories` },
+      { "@type": "ListItem", position: 3, name: category.name, item: `${SITE_URL}/products/category/${slug}` },
     ],
   } : null
 

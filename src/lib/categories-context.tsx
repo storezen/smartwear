@@ -51,12 +51,16 @@ function loadLocal(): ProductCategory[] {
       if (parsed.length === 0) return DEFAULT_CATEGORIES
       return parsed
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to load categories from localStorage:", err)
+  }
   return DEFAULT_CATEGORIES
 }
 
 function saveLocal(categories: ProductCategory[]) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(categories)) } catch {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(categories)) } catch (err) {
+    console.error("Failed to save categories to localStorage:", err)
+  }
 }
 
 async function api<T = unknown>(path: string, init?: RequestInit): Promise<T | null> {
@@ -66,7 +70,10 @@ async function api<T = unknown>(path: string, init?: RequestInit): Promise<T | n
       ...init,
     })
     return res.ok ? res.json() : null
-  } catch { return null }
+  } catch (err) {
+    console.error("Categories API error:", err)
+    return null
+  }
 }
 
 function dedupe(arr: ProductCategory[]): ProductCategory[] {
@@ -94,11 +101,11 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
     }
     initLocal()
 
-    api<ProductCategory[]>("/").then((data) => {
+    api<{ categories: ProductCategory[] }>("/?page=1&limit=100").then((data) => {
       if (!mounted) return
-      if (data && data.length > 0) {
-        setCategories(dedupe(data))
-        saveLocal(data)
+      if (data && data.categories.length > 0) {
+        setCategories(dedupe(data.categories))
+        saveLocal(data.categories)
       }
       setHydrated(true)
     })

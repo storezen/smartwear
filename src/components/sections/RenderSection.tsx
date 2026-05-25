@@ -1,6 +1,8 @@
 "use client"
 
+import type { ReactNode } from "react"
 import type { SectionData, SectionStyle } from "@/lib/sections"
+import { SectionErrorBoundary } from "@/components/SectionErrorBoundary"
 import { HeroSection } from "./HeroSection"
 import { HeroSectionRenderer } from "./HeroSectionRenderer"
 import { CategoriesSection } from "./CategoriesSection"
@@ -28,42 +30,65 @@ interface RenderSectionProps {
 }
 
 export function RenderSection({ sectionKey, sections, style }: RenderSectionProps) {
+  let section: ReactNode
   switch (sectionKey) {
     case "hero":
-      return <HeroSectionRenderer data={sections.hero} style={style} />
+      section = <HeroSectionRenderer data={sections.hero} style={style} />
+      break
     case "categories":
-      return <CategoriesSection data={sections.categories} style={style} />
+      section = <CategoriesSection data={sections.categories} style={style} />
+      break
     case "newArrivals":
-      return <NewArrivalsSection data={sections.newArrivals} style={style} />
+      section = <NewArrivalsSection data={sections.newArrivals} style={style} />
+      break
     case "bestSellers":
-      return <BestSellersSection data={sections.bestSellers} style={style} />
+      section = <BestSellersSection data={sections.bestSellers} style={style} />
+      break
     case "features":
-      return <TrustBadgesSection data={sections.features} style={style} />
+      section = <TrustBadgesSection data={sections.features} style={style} />
+      break
     case "promoBanner":
-      return <PromoBannerSection data={sections.promoBanner} style={style} />
+      section = <PromoBannerSection data={sections.promoBanner} style={style} />
+      break
     case "newsletter":
-      return <NewsletterSection data={sections.newsletter} style={style} />
+      section = <NewsletterSection data={sections.newsletter} style={style} />
+      break
     case "testimonials":
-      return <TestimonialsSection data={sections.testimonials} style={style} />
+      section = <TestimonialsSection data={sections.testimonials} style={style} />
+      break
     case "faq":
-      return <FAQSection data={sections.faq} style={style} />
+      section = <FAQSection data={sections.faq} style={style} />
+      break
     case "brandStory":
-      return <BrandStorySection data={sections.brandStory} style={style} />
+      section = <BrandStorySection data={sections.brandStory} style={style} />
+      break
     case "instagram":
-      return <InstagramSection data={sections.instagram} style={style} />
+      section = <InstagramSection data={sections.instagram} style={style} />
+      break
     case "featuredCollection":
-      return <FeaturedCollectionSection data={sections.featuredCollection} style={style} />
+      section = <FeaturedCollectionSection data={sections.featuredCollection} style={style} />
+      break
     case "brandLogos":
-      return <BrandLogosSection data={sections.brandLogos} style={style} />
+      section = <BrandLogosSection data={sections.brandLogos} style={style} />
+      break
     case "stats":
-      return <StatsSection data={sections.stats} style={style} />
+      section = <StatsSection data={sections.stats} style={style} />
+      break
     case "lookbook":
-      return <LookbookSection data={sections.lookbook} style={style} />
+      section = <LookbookSection data={sections.lookbook} style={style} />
+      break
     case "process":
-      return <ProcessSection data={sections.process} style={style} />
+      section = <ProcessSection data={sections.process} style={style} />
+      break
     case "press":
-      return <PressSection data={sections.press} style={style} />
+      section = <PressSection data={sections.press} style={style} />
+      break
     default:
-      return null
+      section = null
   }
+  return (
+    <SectionErrorBoundary sectionKey={sectionKey}>
+      {section}
+    </SectionErrorBoundary>
+  )
 }

@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import type { ReactNode } from "react"
+import { SITE_URL } from "@/lib/constants"
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+const API = process.env.NEXT_PUBLIC_API_URL || SITE_URL
 
 interface ProductData {
   id: string
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
   const title = product.metaTitle || `${product.name} — SMARTWEAR`
   const description = product.metaDescription || product.description.slice(0, 160)
-  const url = `https://smartwear.com/products/${id}`
+  const url = `${SITE_URL}/products/${id}`
   return {
     title,
     description,

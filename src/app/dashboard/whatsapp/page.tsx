@@ -1,405 +1,608 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
-import { Send, Clock, CheckCircle, XCircle, Loader2, Sparkles, MessageCircle, Save, History } from "lucide-react"
+import { 
+  Send, 
+  CheckCircle, 
+  XCircle, 
+  Loader2, 
+  Sparkles, 
+  MessageCircle, 
+  Save, 
+  RefreshCw, 
+  Plus, 
+  Trash2, 
+  Database,
+  QrCode,
+  AlertTriangle,
+  Play,
+  Terminal,
+  ArrowRight,
+  TrendingUp
+} from "lucide-react"
 import { cn } from "@/lib/utils"
-
-const HISTORY_KEY = "smartwear-whatsapp-history"
-
-interface SentMessage {
-  to: string
-  message: string
-  status: "sent" | "failed"
-  timestamp: string
-  error?: string
-}
-
-function getHistory(): SentMessage[] {
-  if (typeof window === "undefined") return []
-  try {
-    return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]")
-  } catch {
-    return []
-  }
-}
-
-function saveHistory(msgs: SentMessage[]) {
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(msgs))
-}
-
-function WhatsAppSettingsForm({ onSaved }: { onSaved: () => void }) {
-  const [token, setToken] = useState("")
-  const [phoneId, setPhoneId] = useState("")
-  const [saving, setSaving] = useState(false)
-
-  const handleSave = async () => {
-    setSaving(true)
-    try {
-      await Promise.all([
-        fetch("/api/settings/WHATSAPP_ACCESS_TOKEN", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ value: token }),
-        }),
-        fetch("/api/settings/WHATSAPP_PHONE_NUMBER_ID", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ value: phoneId }),
-        })
-      ])
-      toast.success("God Mode Active: WhatsApp API connected!")
-      onSaved()
-    } catch {
-      toast.error("Failed to save credentials")
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label className="text-xs font-bold uppercase tracking-wider text-neutral-700">Access Token</Label>
-        <Input
-          type="password"
-          placeholder="EAXXXXXXXXXXXX"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          className="h-[48px] rounded-xl border-neutral-200/60 bg-neutral-50/50 shadow-inner font-mono font-bold text-neutral-900 focus-visible:ring-emerald-500"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label className="text-xs font-bold uppercase tracking-wider text-neutral-700">Phone Number ID</Label>
-        <Input
-          placeholder="1234567890"
-          value={phoneId}
-          onChange={(e) => setPhoneId(e.target.value)}
-          className="h-[48px] rounded-xl border-neutral-200/60 bg-neutral-50/50 shadow-inner font-mono font-bold text-neutral-900 focus-visible:ring-emerald-500"
-        />
-      </div>
-      <Button onClick={handleSave} disabled={saving || !token || !phoneId} className="w-full gap-2 h-[48px] rounded-full font-bold bg-emerald-600 text-white hover:bg-emerald-700 shadow-[0_8px_30px_rgb(16,185,129,0.2)]">
-        {saving ? <Loader2 className="size-4 animate-spin" strokeWidth={2} /> : <CheckCircle className="size-4" strokeWidth={2} />}
-        {saving ? "Connecting..." : "Connect WhatsApp"}
-      </Button>
-    </div>
-  )
-}
-
-import type { WhatsAppNotificationConfig } from "@/lib/integrations/whatsapp"
-import { DEFAULT_WHATSAPP_NOTIFICATION_CONFIG } from "@/lib/integrations/whatsapp"
+import { useWhatsAppBotStore } from "@/store/useWhatsAppBotStore"
 
 export default function WhatsAppPage() {
+  const {
+    botStatus,
+    qrCode,
+    platformOrderCount,
+    whatsappSentCount,
+    logs,
+    autoConfirm,
+    autoTracking,
+    keywords,
+    isLoading,
+    isSaving,
+    error,
+    fetchBotStatus,
+    restartSession,
+    fetchSyncStats,
+    fetchSettings,
+    saveSettings,
+    sendTestMessage,
+    startPolling,
+    stopPolling
+  } = useWhatsAppBotStore()
+
+  // Local state for testing message
   const [testNumber, setTestNumber] = useState("")
   const [testMessage, setTestMessage] = useState("")
-  const [sending, setSending] = useState(false)
-  const [history, setHistory] = useState<SentMessage[]>([])
-  const [configStatus, setConfigStatus] = useState<"checking" | "configured" | "missing">("checking")
-  const [notificationConfig, setNotificationConfig] = useState<WhatsAppNotificationConfig>(DEFAULT_WHATSAPP_NOTIFICATION_CONFIG)
-  const [savingConfig, setSavingConfig] = useState(false)
+  const [sendingTest, setSendingTest] = useState(false)
 
+  // Local state for adding keyword
+  const [newKeyword, setNewKeyword] = useState("")
+  const [newReply, setNewReply] = useState("")
+
+  // Local copy of keywords for UI editing
+  const [localKeywords, setLocalKeywords] = useState<{ keyword: string; reply: string }[]>([])
+  const [localAutoConfirm, setLocalAutoConfirm] = useState(false)
+  const [localAutoTracking, setLocalAutoTracking] = useState(false)
+
+  // Start polling on mount, stop on unmount
   useEffect(() => {
-    setHistory(getHistory())
-    Promise.all([
-      fetch("/api/integrations/whatsapp/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to: "+921234567890", message: "ping" }),
-      }).then(res => res.status),
-      fetch("/api/settings/WHATSAPP_CONFIG").then(res => res.json())
-    ]).then(([sendResStatus, configRes]) => {
-      if (sendResStatus === 400) setConfigStatus("configured")
-      else if (sendResStatus === 500) setConfigStatus("missing")
-      else setConfigStatus("checking")
-
-      if (configRes?.value) {
-        try { setNotificationConfig(JSON.parse(configRes.value)) } catch {}
-      }
-    }).catch(() => setConfigStatus("missing"))
+    startPolling()
+    fetchSettings()
+    return () => stopPolling()
   }, [])
 
-  const handleSaveConfig = useCallback(async () => {
-    setSavingConfig(true)
-    try {
-      await fetch("/api/settings/WHATSAPP_CONFIG", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value: JSON.stringify(notificationConfig) }),
-      })
-      toast.success("God Mode Active: Notification Engine updated!")
-    } catch {
-      toast.error("Failed to save Notification Engine settings")
-    } finally {
-      setSavingConfig(false)
-    }
-  }, [notificationConfig])
+  // Sync store settings to local state when loaded
+  useEffect(() => {
+    setLocalKeywords(keywords)
+    setLocalAutoConfirm(autoConfirm)
+    setLocalAutoTracking(autoTracking)
+  }, [keywords, autoConfirm, autoTracking])
 
-  const handleTestSend = useCallback(async () => {
-    if (!testNumber || !testMessage) {
-      toast.error("Please enter a phone number and message")
+  // Display errors if any
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+    }
+  }, [error])
+
+  // Handle restarting bot
+  const handleRestart = async () => {
+    toast.promise(restartSession(), {
+      loading: "Stopping existing WhatsApp process and launching Puppeteer...",
+      success: "WhatsApp Bot restarted! Generating new session...",
+      error: "Failed to restart session."
+    })
+  }
+
+  // Handle adding a keyword responder
+  const handleAddKeyword = () => {
+    if (!newKeyword.trim() || !newReply.trim()) {
+      toast.error("Please enter both a keyword and a response.")
       return
     }
-    setSending(true)
-    try {
-      const res = await fetch("/api/integrations/whatsapp/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to: testNumber, message: testMessage }),
-      })
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || "Failed to send")
-      }
-      const entry: SentMessage = { to: testNumber, message: testMessage, status: "sent", timestamp: new Date().toISOString() }
-      const updated = [entry, ...history].slice(0, 20)
-      setHistory(updated)
-      saveHistory(updated)
-      toast.success("Test message sent!")
-    } catch (e) {
-      const errMsg = e instanceof Error ? e.message : "Failed to send"
-      const entry: SentMessage = { to: testNumber, message: testMessage, status: "failed", timestamp: new Date().toISOString(), error: errMsg }
-      const updated = [entry, ...history].slice(0, 20)
-      setHistory(updated)
-      saveHistory(updated)
-      toast.error(errMsg)
-    } finally {
-      setSending(false)
+
+    if (localKeywords.some(k => k.keyword.toLowerCase().trim() === newKeyword.toLowerCase().trim())) {
+      toast.error("This keyword trigger already exists.")
+      return
     }
-  }, [testNumber, testMessage, history])
+
+    setLocalKeywords([...localKeywords, { keyword: newKeyword.trim(), reply: newReply.trim() }])
+    setNewKeyword("")
+    setNewReply("")
+    toast.success("Keyword rule added to local draft.")
+  }
+
+  // Handle deleting a keyword responder
+  const handleDeleteKeyword = (index: number) => {
+    const updated = localKeywords.filter((_, i) => i !== index)
+    setLocalKeywords(updated)
+    toast.success("Keyword rule removed from local draft.")
+  }
+
+  // Handle saving the settings
+  const handleSaveSettings = async () => {
+    const success = await saveSettings({
+      autoConfirm: localAutoConfirm,
+      autoTracking: localAutoTracking,
+      keywords: localKeywords
+    })
+
+    if (success) {
+      toast.success("God Mode Activated: Automation engine settings synced successfully!")
+    } else {
+      toast.error("Failed to save settings.")
+    }
+  }
+
+  // Handle sending test message
+  const handleSendTest = async () => {
+    if (!testNumber.trim() || !testMessage.trim()) {
+      toast.error("Please fill in both the phone number and message.")
+      return
+    }
+    setSendingTest(true)
+    const success = await sendTestMessage(testNumber.trim(), testMessage.trim())
+    setSendingTest(false)
+    if (success) {
+      toast.success("Test message sent successfully!")
+      setTestMessage("")
+    }
+  }
+
+  // Calculations for sync parity
+  const parityPercentage = platformOrderCount > 0 
+    ? Math.min(Math.round((whatsappSentCount / platformOrderCount) * 100), 100) 
+    : 100
+
+  // Format Status Badge Styles
+  const getStatusConfig = () => {
+    switch (botStatus) {
+      case "CONNECTED":
+        return {
+          label: "Active & Connected",
+          colorClass: "bg-emerald-500 text-emerald-950 border-emerald-500/20",
+          pulseClass: "bg-emerald-400"
+        }
+      case "QR_RECEIVED":
+        return {
+          label: "Awaiting QR Scan",
+          colorClass: "bg-blue-500 text-blue-950 border-blue-500/20",
+          pulseClass: "bg-blue-400"
+        }
+      case "INITIALIZING":
+        return {
+          label: "Initializing Puppeteer...",
+          colorClass: "bg-amber-500 text-amber-950 border-amber-500/20",
+          pulseClass: "bg-amber-400"
+        }
+      case "DISCONNECTED":
+      default:
+        return {
+          label: "Disconnected (Offline)",
+          colorClass: "bg-red-500 text-red-950 border-red-500/20",
+          pulseClass: "bg-red-400"
+        }
+    }
+  }
+
+  const statusConfig = getStatusConfig()
 
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="space-y-6">
-      <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
-        <h1 className="font-heading text-xl font-semibold text-foreground flex items-center gap-2">
-          WhatsApp API <Sparkles className="size-5 text-emerald-500" />
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">God Mode automated notifications and API connections.</p>
-      </motion.div>
+    <motion.div 
+      initial={{ opacity: 0, y: 8 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.3 }} 
+      className="space-y-6 max-w-7xl mx-auto"
+    >
+      {/* Title Header */}
+      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between border-b border-neutral-200/50 pb-5">
+        <div>
+          <h1 className="font-heading text-2xl font-bold text-neutral-900 flex items-center gap-2">
+            WhatsApp Command Center <Sparkles className="size-5 text-neutral-500" />
+          </h1>
+          <p className="text-sm text-neutral-500">
+            Control automated order confirmations, PostEx delivery updates, and custom keyword responders.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button 
+            onClick={() => {
+              fetchBotStatus()
+              fetchSyncStats()
+              toast.success("State refreshed!")
+            }}
+            variant="outline"
+            className="rounded-xl border-neutral-200/60 h-10 gap-1.5 font-semibold text-neutral-700 bg-white"
+          >
+            <RefreshCw className="size-4 text-neutral-500" />
+            Refresh State
+          </Button>
+          <Button 
+            onClick={handleRestart}
+            variant="outline"
+            className="rounded-xl border-neutral-200/60 h-10 gap-1.5 font-semibold text-red-600 bg-white hover:bg-red-50/50"
+          >
+            <Play className="size-4" />
+            Restart Bot Process
+          </Button>
+        </div>
+      </div>
 
-      {configStatus === "missing" && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-white border border-neutral-200/60 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.03)] overflow-hidden">
-          <div className="p-6 border-b border-neutral-200/60 bg-gradient-to-r from-emerald-50/50 to-blue-50/50">
-            <h3 className="text-lg font-bold text-neutral-900 flex items-center gap-2">
-              <CheckCircle className="size-5 text-emerald-500" strokeWidth={2} /> WhatsApp God Mode Setup
-            </h3>
-            <p className="text-sm font-medium text-neutral-500 mt-1">Connect your WhatsApp Business Account in 3 easy steps. No coding required.</p>
-          </div>
-          <div className="grid lg:grid-cols-2">
-            <div className="p-6 lg:border-r border-neutral-200/60 bg-neutral-50/30">
-              <div className="space-y-5">
-                <div className="flex gap-4">
-                  <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs">1</div>
-                  <div>
-                    <p className="text-sm font-bold text-neutral-900">Create an App</p>
-                    <p className="text-xs text-neutral-500 mt-1">Go to <a href="https://developers.facebook.com/" target="_blank" className="text-blue-500 hover:underline font-semibold">Meta for Developers</a>, create a new App, and add the WhatsApp product.</p>
-                  </div>
+      {/* Main Layout Grid */}
+      <div className="grid gap-6 lg:grid-cols-12">
+        
+        {/* Left Column - Connection & Parity Stats */}
+        <div className="lg:col-span-5 space-y-6">
+          
+          {/* Connection Status Card */}
+          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-base font-bold text-neutral-900">Bot Connection</CardTitle>
+                  <CardDescription className="text-xs text-neutral-400">whatsapp-web.js session state</CardDescription>
                 </div>
-                <div className="flex gap-4">
-                  <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs">2</div>
-                  <div>
-                    <p className="text-sm font-bold text-neutral-900">Get Phone Number ID</p>
-                    <p className="text-xs text-neutral-500 mt-1">Under WhatsApp &gt; API Setup, copy the <strong>Phone Number ID</strong> (not the standard phone number).</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs">3</div>
-                  <div>
-                    <p className="text-sm font-bold text-neutral-900">Generate Access Token</p>
-                    <p className="text-xs text-neutral-500 mt-1">Generate a permanent System User Token or use the temporary token provided in the dashboard.</p>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", statusConfig.pulseClass)}></span>
+                    <span className={cn("relative inline-flex rounded-full h-2 w-2", statusConfig.pulseClass)}></span>
+                  </span>
+                  <span className={cn("text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 border rounded-full", statusConfig.colorClass)}>
+                    {statusConfig.label}
+                  </span>
                 </div>
               </div>
-            </div>
-            <div className="p-6 space-y-5">
-              <WhatsAppSettingsForm onSaved={() => setConfigStatus("configured")} />
-            </div>
-          </div>
-        </motion.div>
-      )}
+            </CardHeader>
+            <CardContent className="p-6 flex flex-col items-center justify-center min-h-[300px]">
+              <AnimatePresence mode="wait">
+                {botStatus === "CONNECTED" && (
+                  <motion.div 
+                    key="connected"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="text-center space-y-4"
+                  >
+                    <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">
+                      <CheckCircle className="size-8" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-neutral-900 text-lg">System Fully Linked</h4>
+                      <p className="text-xs font-semibold text-neutral-500 mt-1 max-w-[280px]">
+                        The bot is running as a headless daemon on port 3001 and actively syncing with Shopify/PostEx hooks.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
 
-      {configStatus === "configured" && (
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
-          <div className="bg-white border border-neutral-200/60 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.03)] overflow-hidden">
-            <div className="p-6 border-b border-neutral-200/60 bg-gradient-to-r from-emerald-50/50 to-blue-50/50 flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-bold text-neutral-900 flex items-center gap-2">
-                  <MessageCircle className="size-5 text-emerald-500" strokeWidth={2} /> Automated Notification Engine
-                </h3>
-                <p className="text-sm font-medium text-neutral-500 mt-1">Configure messages to send automatically on specific events.</p>
-              </div>
-              <Button onClick={handleSaveConfig} disabled={savingConfig} className="gap-2 h-10 rounded-full font-bold bg-neutral-950 text-white hover:bg-neutral-800">
-                {savingConfig ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-                Save Engine Rules
-              </Button>
-            </div>
-            
-            <div className="p-6 space-y-8">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-sm font-bold text-neutral-900">Order Placed Template</Label>
-                    <p className="text-xs font-medium text-neutral-500">Sent instantly when a customer successfully checks out.</p>
-                  </div>
-                  <Switch 
-                    checked={notificationConfig.orderPlaced.enabled} 
-                    onCheckedChange={(v) => setNotificationConfig({...notificationConfig, orderPlaced: {...notificationConfig.orderPlaced, enabled: v}})}
-                  />
+                {botStatus === "QR_RECEIVED" && qrCode && (
+                  <motion.div 
+                    key="qr"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="text-center space-y-4 w-full flex flex-col items-center"
+                  >
+                    <div className="bg-white p-3 rounded-2xl border border-neutral-200/80 shadow-inner">
+                      <img 
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrCode)}`}
+                        alt="WhatsApp Bot Scan QR"
+                        className="size-[200px] object-contain"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-bold text-neutral-900 flex items-center justify-center gap-1.5">
+                        <QrCode className="size-4 text-blue-600" /> Link WhatsApp Account
+                      </h4>
+                      <p className="text-xs text-neutral-500 font-semibold max-w-[300px] leading-relaxed">
+                        Open WhatsApp on your mobile phone &gt; Settings &gt; Linked Devices &gt; Link Device and scan this QR code to authenticate.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+
+                {botStatus === "INITIALIZING" && (
+                  <motion.div 
+                    key="initializing"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-center space-y-3"
+                  >
+                    <Loader2 className="size-10 text-amber-500 animate-spin mx-auto" />
+                    <div>
+                      <h4 className="font-bold text-neutral-900">Spawning Chromium</h4>
+                      <p className="text-xs text-neutral-500 mt-1 max-w-[240px]">
+                        Starting Chromium environment and creating localized auth session folder...
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+
+                {botStatus === "DISCONNECTED" && (
+                  <motion.div 
+                    key="disconnected"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-center space-y-4"
+                  >
+                    <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-red-50 text-red-500 border border-red-100">
+                      <AlertTriangle className="size-8" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-neutral-900">Bot Server Offline</h4>
+                      <p className="text-xs text-neutral-500 mt-1 max-w-[260px]">
+                        The standalone bridge server on port 3001 is offline or currently inaccessible.
+                      </p>
+                    </div>
+                    <Button 
+                      onClick={handleRestart} 
+                      className="rounded-full bg-neutral-950 font-bold hover:bg-neutral-800 text-white h-9 px-5 text-xs"
+                    >
+                      Initialize Bot Session
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </CardContent>
+          </Card>
+
+          {/* Platform Consistency Hub */}
+          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6">
+              <CardTitle className="text-base font-bold text-neutral-900 flex items-center gap-2">
+                <Database className="size-4 text-neutral-400" /> Platform Consistency
+              </CardTitle>
+              <CardDescription className="text-xs text-neutral-400">Shopify synced orders vs sent WhatsApp alerts</CardDescription>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              {/* Stat Metric Comparison */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-neutral-50/55 border border-neutral-200/40 rounded-2xl p-4 text-center">
+                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wide">Shopify Orders</span>
+                  <div className="text-2xl font-bold text-neutral-900 mt-1">{platformOrderCount}</div>
                 </div>
-                <div className="relative">
-                  <textarea 
-                    value={notificationConfig.orderPlaced.template}
-                    onChange={(e) => setNotificationConfig({...notificationConfig, orderPlaced: {...notificationConfig.orderPlaced, template: e.target.value}})}
-                    disabled={!notificationConfig.orderPlaced.enabled}
-                    className="w-full h-[100px] p-4 rounded-2xl border-neutral-200/60 bg-neutral-50/50 shadow-inner text-sm font-medium focus-visible:ring-emerald-500 disabled:opacity-50 resize-none"
-                  />
-                  <div className="absolute bottom-3 right-3 flex gap-1">
-                    <span className="text-[10px] font-bold px-2 py-1 bg-white border border-neutral-200 rounded-md text-neutral-500">{`{{name}}`}</span>
-                    <span className="text-[10px] font-bold px-2 py-1 bg-white border border-neutral-200 rounded-md text-neutral-500">{`{{order_id}}`}</span>
-                    <span className="text-[10px] font-bold px-2 py-1 bg-white border border-neutral-200 rounded-md text-neutral-500">{`{{total}}`}</span>
-                  </div>
+                <div className="bg-neutral-50/55 border border-neutral-200/40 rounded-2xl p-4 text-center">
+                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wide">WhatsApp Sent</span>
+                  <div className="text-2xl font-bold text-neutral-900 mt-1">{whatsappSentCount}</div>
                 </div>
               </div>
 
-              <div className="space-y-4 pt-6 border-t border-neutral-200/60">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-sm font-bold text-neutral-900">Order Shipped Template</Label>
-                    <p className="text-xs font-medium text-neutral-500">Sent when you mark an order as shipped and provide tracking.</p>
-                  </div>
-                  <Switch 
-                    checked={notificationConfig.orderShipped.enabled} 
-                    onCheckedChange={(v) => setNotificationConfig({...notificationConfig, orderShipped: {...notificationConfig.orderShipped, enabled: v}})}
-                  />
-                </div>
-                <div className="relative">
-                  <textarea 
-                    value={notificationConfig.orderShipped.template}
-                    onChange={(e) => setNotificationConfig({...notificationConfig, orderShipped: {...notificationConfig.orderShipped, template: e.target.value}})}
-                    disabled={!notificationConfig.orderShipped.enabled}
-                    className="w-full h-[100px] p-4 rounded-2xl border-neutral-200/60 bg-neutral-50/50 shadow-inner text-sm font-medium focus-visible:ring-emerald-500 disabled:opacity-50 resize-none"
-                  />
-                  <div className="absolute bottom-3 right-3 flex gap-1">
-                    <span className="text-[10px] font-bold px-2 py-1 bg-white border border-neutral-200 rounded-md text-neutral-500">{`{{name}}`}</span>
-                    <span className="text-[10px] font-bold px-2 py-1 bg-white border border-neutral-200 rounded-md text-neutral-500">{`{{order_id}}`}</span>
-                    <span className="text-[10px] font-bold px-2 py-1 bg-white border border-neutral-200 rounded-md text-neutral-500">{`{{tracking_id}}`}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
-          <div className="bg-white border border-neutral-200/60 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.03)] overflow-hidden h-full">
-            <div className="p-6 border-b border-neutral-200/60 bg-neutral-50/50">
-              <h3 className="text-lg font-bold text-neutral-900 flex items-center gap-2">
-                <Send className="size-5 text-neutral-500" strokeWidth={2} /> Send Test Message
-              </h3>
-              <p className="text-sm font-medium text-neutral-500 mt-1">Send a test WhatsApp message to verify integration.</p>
-            </div>
-            <div className="p-6 space-y-5">
+              {/* Sync Parity Bar */}
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-wider text-neutral-700">Recipient Phone</Label>
-                <Input
+                <div className="flex items-center justify-between text-xs font-semibold">
+                  <span className="text-neutral-500">Parity Target Match</span>
+                  <span className="text-neutral-950 flex items-center gap-1">
+                    <TrendingUp className="size-3 text-emerald-500" /> {parityPercentage}% Synced
+                  </span>
+                </div>
+                <div className="h-2 w-full bg-neutral-100 rounded-full overflow-hidden border border-neutral-200/20">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${parityPercentage}%` }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className={cn(
+                      "h-full rounded-full",
+                      parityPercentage === 100 ? "bg-emerald-500" : "bg-blue-500"
+                    )}
+                  />
+                </div>
+                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider mt-1 text-center">
+                  {parityPercentage === 100 
+                    ? "✓ 100% Platform Consistency Reached. Zero missed notifications."
+                    : `${platformOrderCount - whatsappSentCount} orders pending sync.`}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Send Test Message */}
+          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6">
+              <CardTitle className="text-base font-bold text-neutral-900 flex items-center gap-2">
+                <Send className="size-4 text-neutral-400" /> Test Connection
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-neutral-700 uppercase tracking-wide">Recipient Phone</Label>
+                <Input 
                   value={testNumber}
                   onChange={(e) => setTestNumber(e.target.value)}
                   placeholder="+923001234567"
-                  className="h-[48px] rounded-xl border-neutral-200/60 bg-neutral-50/50 shadow-inner font-bold text-neutral-900"
+                  className="h-11 rounded-xl border-neutral-200/60 bg-neutral-50/50 shadow-inner font-bold text-neutral-900"
                 />
-                <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-wide mt-1">Include country code (e.g., +92 for Pakistan)</p>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-wider text-neutral-700">Message</Label>
-                <textarea
+                <Label className="text-xs font-bold text-neutral-700 uppercase tracking-wide">Test Message</Label>
+                <textarea 
                   value={testMessage}
                   onChange={(e) => setTestMessage(e.target.value)}
-                  placeholder="Type your test message..."
-                  rows={4}
-                  className="w-full rounded-xl border border-neutral-200/60 bg-neutral-50/50 p-4 text-sm font-medium text-neutral-900 placeholder:text-neutral-400 shadow-inner focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/30 transition-all resize-none"
+                  placeholder="Hello from SmartWear bot!"
+                  rows={2}
+                  className="w-full text-sm font-medium rounded-xl border border-neutral-200/60 bg-neutral-50/50 p-3 shadow-inner focus:outline-none focus:ring-2 focus:ring-neutral-950 resize-none text-neutral-900"
                 />
               </div>
-              <Button onClick={handleTestSend} disabled={sending} className="w-full sm:w-auto gap-2 h-[48px] px-8 rounded-full font-bold bg-neutral-950 text-white hover:bg-neutral-800 shadow-[0_8px_30px_rgb(0,0,0,0.08)] disabled:opacity-60 disabled:cursor-not-allowed">
-                {sending ? <Loader2 className="size-4 animate-spin" strokeWidth={2} /> : <Send className="size-4" strokeWidth={2} />}
-                {sending ? "Sending..." : "Send Test"}
+              <Button
+                onClick={handleSendTest}
+                disabled={sendingTest || botStatus !== "CONNECTED"}
+                className="w-full rounded-full bg-neutral-950 text-white font-bold hover:bg-neutral-800 disabled:opacity-50"
+              >
+                {sendingTest ? <Loader2 className="size-4 animate-spin mr-1" /> : <Send className="size-4 mr-1" />}
+                Fire Test Message
               </Button>
-            </div>
-          </div>
-        </motion.div>
+            </CardContent>
+          </Card>
 
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}>
-          <div className="bg-white border border-neutral-200/60 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.03)] overflow-hidden h-full">
-            <div className="p-6 border-b border-neutral-200/60 bg-neutral-50/50">
-              <h3 className="text-lg font-bold text-neutral-900 flex items-center gap-2">
-                <History className="size-5 text-neutral-500" strokeWidth={2} /> Message History
-              </h3>
-            </div>
-            <div className="p-6">
-              {history.length === 0 ? (
-                <div className="flex flex-col items-center py-10 text-neutral-400">
-                  <Send className="size-8 mb-3 opacity-50" strokeWidth={1.5} />
-                  <p className="text-sm font-medium">No messages sent yet</p>
+        </div>
+
+        {/* Right Column - Automation Switches & Keywords & Logs */}
+        <div className="lg:col-span-7 space-y-6">
+          
+          {/* Automation Control Center & Custom Keywords */}
+          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-bold text-neutral-900">Automation Control Center</CardTitle>
+                <CardDescription className="text-xs text-neutral-400">Manage real-time execution switches</CardDescription>
+              </div>
+              <Button
+                onClick={handleSaveSettings}
+                disabled={isSaving}
+                className="rounded-full bg-neutral-950 text-white font-bold h-9 px-5 text-xs hover:bg-neutral-800"
+              >
+                {isSaving ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Save className="size-3.5 mr-1.5" />}
+                Save Engine Rules
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              
+              {/* Switches Area */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-bold text-neutral-900">Auto-Confirmation (Shopify Orders)</Label>
+                    <p className="text-xs text-neutral-400 font-semibold">Sends instant WhatsApp notifications on Shopify checkout.</p>
+                  </div>
+                  <Switch 
+                    checked={localAutoConfirm}
+                    onCheckedChange={setLocalAutoConfirm}
+                  />
                 </div>
-              ) : (
-                <div className="space-y-3 max-h-[380px] overflow-y-auto pr-2">
-                  {history.map((msg, i) => (
-                    <div key={i} className="rounded-2xl border border-neutral-200/60 bg-neutral-50/50 p-4 transition-colors hover:bg-neutral-100/80">
-                      <div className="flex items-center justify-between gap-3 mb-2">
-                        <span className="text-sm font-bold text-neutral-900 truncate">{msg.to}</span>
-                        <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide border shadow-sm shrink-0", 
-                          msg.status === "sent" ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-red-50 text-red-700 border-red-100"
+                <div className="flex items-center justify-between pb-2">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-bold text-neutral-900">Auto-Tracking Updates (PostEx Integration)</Label>
+                    <p className="text-xs text-neutral-400 font-semibold">Triggers shipment notification alert when order status changes to SHIPPED.</p>
+                  </div>
+                  <Switch 
+                    checked={localAutoTracking}
+                    onCheckedChange={setLocalAutoTracking}
+                  />
+                </div>
+              </div>
+
+              {/* Keyword Responders Section */}
+              <div className="space-y-4 pt-6 border-t border-neutral-100">
+                <div>
+                  <h4 className="text-sm font-bold text-neutral-900">Custom Keyword Responders</h4>
+                  <p className="text-xs text-neutral-400 font-semibold mt-0.5">Define automated responses to specific incoming client words.</p>
+                </div>
+
+                {/* Form to add row */}
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Input 
+                    value={newKeyword}
+                    onChange={(e) => setNewKeyword(e.target.value)}
+                    placeholder="Keyword (e.g. price)"
+                    className="h-10 rounded-xl border-neutral-200/60 bg-neutral-50/50 shadow-inner font-semibold text-neutral-900"
+                  />
+                  <Input 
+                    value={newReply}
+                    onChange={(e) => setNewReply(e.target.value)}
+                    placeholder="Response (e.g. Our watch prices start from...)"
+                    className="h-10 rounded-xl border-neutral-200/60 bg-neutral-50/50 shadow-inner text-neutral-900 flex-1"
+                  />
+                  <Button 
+                    onClick={handleAddKeyword}
+                    variant="outline" 
+                    className="h-10 rounded-xl border-neutral-200/60 font-semibold text-neutral-800 bg-white"
+                  >
+                    <Plus className="size-4 mr-1 text-neutral-500" /> Add Trigger
+                  </Button>
+                </div>
+
+                {/* Responders List */}
+                <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                  {localKeywords.length === 0 ? (
+                    <div className="text-center py-6 border border-dashed border-neutral-200 rounded-xl bg-neutral-50/30">
+                      <p className="text-xs font-semibold text-neutral-400">No keyword responders configured.</p>
+                    </div>
+                  ) : (
+                    localKeywords.map((kr, idx) => (
+                      <div 
+                        key={idx}
+                        className="flex items-center justify-between gap-3 p-3 bg-neutral-50 border border-neutral-200/40 rounded-xl"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <span className="inline-block px-2 py-0.5 bg-neutral-200/60 border border-neutral-300/40 rounded-md text-[10px] font-bold text-neutral-700 font-mono">
+                            {kr.keyword}
+                          </span>
+                          <p className="text-xs font-medium text-neutral-600 truncate mt-1.5">{kr.reply}</p>
+                        </div>
+                        <Button 
+                          onClick={() => handleDeleteKeyword(idx)}
+                          size="icon"
+                          variant="ghost" 
+                          className="size-8 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 shrink-0"
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Live Sync Console Logs */}
+          <Card className="rounded-[24px] border-neutral-200/60 bg-white shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-neutral-100 bg-neutral-50/50 py-5 px-6">
+              <CardTitle className="text-base font-bold text-neutral-900 flex items-center gap-2">
+                <Terminal className="size-4 text-neutral-400" /> Live Sync & Console logs
+              </CardTitle>
+              <CardDescription className="text-xs text-neutral-400">Real-time incoming / outgoing synchronization reports</CardDescription>
+            </CardHeader>
+            <CardContent className="p-0 bg-neutral-950 font-mono text-xs text-neutral-300 leading-relaxed overflow-hidden">
+              <div className="p-4 max-h-[300px] min-h-[220px] overflow-y-auto space-y-2 custom-scrollbar">
+                {logs.length === 0 ? (
+                  <div className="text-neutral-500 py-12 text-center">
+                    [SYSTEM_LOG] Awaiting live logs ...
+                  </div>
+                ) : (
+                  logs.map((logItem) => {
+                    const dateStr = new Date(logItem.createdAt).toLocaleTimeString()
+                    const isIncoming = logItem.messageType === "incoming"
+                    const isFailed = logItem.status === "failed"
+
+                    return (
+                      <div key={logItem.id} className="border-b border-neutral-900 pb-1.5">
+                        <span className="text-neutral-500 font-semibold mr-1.5">[{dateStr}]</span>
+                        
+                        <span className={cn(
+                          "px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider mr-1.5",
+                          isIncoming && "bg-blue-900/60 text-blue-300 border border-blue-800/40",
+                          !isIncoming && !isFailed && "bg-emerald-950 text-emerald-400 border border-emerald-800/40",
+                          isFailed && "bg-red-950 text-red-400 border border-red-800/40"
                         )}>
-                          {msg.status === "sent" ? <CheckCircle className="size-3" strokeWidth={2.5} /> : <XCircle className="size-3" strokeWidth={2.5} />}
-                          {msg.status}
+                          {logItem.messageType}
+                        </span>
+
+                        <span className="text-neutral-400 mr-1.5">
+                          {logItem.recipient}:
+                        </span>
+
+                        <span className={cn(
+                          isFailed && "text-red-400 font-semibold",
+                          isIncoming && "text-neutral-200"
+                        )}>
+                          {logItem.responsePayload || "Empty payload"}
                         </span>
                       </div>
-                      <p className="text-xs font-medium text-neutral-600 line-clamp-2 leading-relaxed bg-white rounded-xl p-3 border border-neutral-200/60 mb-2">{msg.message}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-neutral-400">{new Date(msg.timestamp).toLocaleString("en-PK")}</span>
-                        {msg.error && <span className="text-[10px] font-bold text-red-500 truncate max-w-[150px] uppercase tracking-wide">{msg.error}</span>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      </div>
+                    )
+                  })
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}>
-        <div className="bg-white border border-neutral-200/60 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.03)] overflow-hidden">
-          <div className="p-6 border-b border-neutral-200/60 bg-neutral-50/50">
-            <h3 className="text-lg font-bold text-neutral-900 flex items-center gap-2">
-              <MessageCircle className="size-5 text-neutral-500" strokeWidth={2} /> Automated Notifications
-            </h3>
-          </div>
-          <div className="p-6">
-            <div className="grid gap-4 sm:grid-cols-3">
-              {[
-                { title: "Order Confirmation", desc: "Sent when customer places an order", template: "order_confirmation" },
-                { title: "Shipment Update", desc: "Sent when order status changes to shipped", template: "shipment_update" },
-                { title: "Delivery Confirmation", desc: "Sent when order is delivered", template: "delivery_confirmation" },
-              ].map((n) => (
-                <div key={n.template} className="rounded-2xl border border-neutral-200/60 p-5 bg-white shadow-sm flex flex-col items-start hover:shadow-md transition-shadow">
-                  <p className="text-sm font-bold text-neutral-900">{n.title}</p>
-                  <p className="text-[11px] font-medium text-neutral-500 mt-1 flex-1 leading-relaxed">{n.desc}</p>
-                  <div className="mt-4 inline-flex items-center rounded-lg bg-neutral-100 px-2.5 py-1 text-[10px] font-bold text-neutral-600 font-mono border border-neutral-200/60">
-                    {n.template}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
-      </motion.div>
+
+      </div>
     </motion.div>
   )
 }

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma"
 import { defaultData, getSectionStyle, type SectionData } from "@/lib/sections"
 import { RenderSection } from "@/components/sections/RenderSection"
 import { JsonLd } from "@/components/JsonLd"
+import { SITE_URL } from "@/lib/constants"
 import type { Metadata } from "next"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,7 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
         }
       }
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to load SEO metadata:", err)
+  }
   return {
     title: "SMARTWEAR — Premium Smart Watches & Accessories",
     description: "Premium smart watches and accessories curated for those who demand more from their tech.",
@@ -38,18 +41,20 @@ export default async function HomePage() {
     if (sectionsSetting) {
       sections = JSON.parse(sectionsSetting.value)
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to load homepage sections:", err)
+  }
 
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: sections.siteName || "SMARTWEAR",
-    url: "https://smartwear.com",
+    url: SITE_URL,
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://smartwear.com/search?q={search_term_string}",
+        urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -59,7 +64,7 @@ export default async function HomePage() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: sections.siteName || "SMARTWEAR",
-    url: "https://smartwear.com",
+    url: SITE_URL,
     description: sections.seo?.metaDescription || "Premium smart watches and accessories curated for those who demand more from their tech.",
   }
 

@@ -1,4 +1,8 @@
-const SECRET = process.env.ADMIN_PASSWORD || "fallback-secret-smartwear-123"
+const SECRET = process.env.AUTH_SECRET || process.env.ADMIN_PASSWORD
+
+if (!SECRET) {
+  throw new Error("AUTH_SECRET or ADMIN_PASSWORD environment variable must be set")
+}
 
 const encoder = new TextEncoder()
 

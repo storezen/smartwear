@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma"
+import { SITE_URL } from "@/lib/constants"
 import { queueWhatsAppMessage } from "@/lib/db/message-queue"
 
 export const automationService = {
@@ -69,7 +70,7 @@ export const automationService = {
         } catch (e) {}
       }
 
-      const domain = process.env.NEXT_PUBLIC_APP_URL || "https://your-store.com"
+      const domain = SITE_URL
       const checkoutUrl = `${domain}/checkout?recover=${session.id}`
 
       const templatePayload = {

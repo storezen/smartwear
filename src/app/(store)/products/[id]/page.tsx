@@ -21,7 +21,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         }
       }
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to load product metadata:", err)
+  }
   return {
     title: "Product Not Found — SMARTWEAR",
     description: "The requested product could not be found.",

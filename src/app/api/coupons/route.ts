@@ -24,8 +24,9 @@ export async function POST(req: Request) {
       },
     })
     return NextResponse.json(coupon, { status: 201 })
-  } catch (e: any) {
-    if (e?.code === "P2002") {
+  } catch (e: unknown) {
+    const prismaErr = e as { code?: string }
+    if (prismaErr?.code === "P2002") {
       return NextResponse.json({ error: "Coupon code already exists" }, { status: 409 })
     }
     return NextResponse.json({ error: "Failed to create coupon" }, { status: 500 })

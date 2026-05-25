@@ -518,7 +518,9 @@ export function getSections(): SectionData {
         })
       }
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to load sections:", err)
+  }
   return defaultData
 }
 
@@ -530,7 +532,7 @@ export function saveSections(data: SectionData): void {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ value: JSON.stringify(data) }),
-  }).catch(() => {})
+  }).catch((err) => console.error("Failed to save sections:", err))
 }
 
 export async function initSectionsFromApi(): Promise<void> {
@@ -544,7 +546,9 @@ export async function initSectionsFromApi(): Promise<void> {
       localStorage.setItem(STORAGE_KEY, value)
       window.dispatchEvent(new Event("smartwear-sections-changed"))
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to init sections from API:", err)
+  }
 }
 
 export function subscribe(callback: () => void): () => void {

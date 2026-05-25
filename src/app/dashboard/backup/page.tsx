@@ -144,11 +144,16 @@ export default function BackupPage() {
             <div className="grid gap-3 sm:grid-cols-2">
               {STORAGE_KEYS.map((key) => {
                 let size = "0 KB"
-                try {
-                  const val = localStorage.getItem(key)
-                  if (val) size = `${(new Blob([val]).size / 1024).toFixed(1)} KB`
-                } catch { /* */ }
-                const exists = localStorage.getItem(key) !== null
+                let exists = false
+                if (typeof window !== "undefined") {
+                  try {
+                    const val = localStorage.getItem(key)
+                    if (val) {
+                      size = `${(new Blob([val]).size / 1024).toFixed(1)} KB`
+                      exists = true
+                    }
+                  } catch { /* */ }
+                }
                 return (
                   <div key={key} className="flex items-center justify-between rounded-[20px] border border-neutral-200/60 bg-white p-4 transition-colors hover:bg-neutral-50">
                     <div className="flex items-center gap-3">

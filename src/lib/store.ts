@@ -39,7 +39,7 @@ interface StoreState {
   setCheckoutModal: (open: boolean) => void
   setSuccessModal: (open: boolean) => void
   updateCheckoutForm: (form: Partial<CheckoutForm>) => void
-  applyCoupon: (code: string) => boolean
+  applyCoupon: (code: string) => Promise<boolean>
   updateProductChoices: (productId: string, strap: string, color: string, image: string) => void
   
   // Computations
@@ -119,15 +119,23 @@ export const useStore = create<StoreState>()(
           checkoutForm: { ...state.checkoutForm, ...form },
         })),
 
-      applyCoupon: (code) => {
-        const cleanCode = code.toUpperCase().trim()
-        if (cleanCode === "SMART20" || cleanCode === "LAUNCH10" || cleanCode === "LUMS25") {
-          let discount = 10
-          if (cleanCode === "SMART20") discount = 20
-          if (cleanCode === "LUMS25") discount = 25
-          set({ couponCode: cleanCode, appliedDiscount: discount })
-          return true
+      applyCoupon: async (code) => {
+        try {
+          const res = await fetch("/api/coupons/validate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code }),
+          })
+          const data = await res.json()
+          if (data.valid) {
+            const discount = data.type === "percentage" ? data.discount : 0
+            set({ couponCode: data.code, appliedDiscount: discount })
+            return true
+          }
+        } catch (err) {
+          console.error("Coupon validation error:", err)
         }
+        set({ couponCode: "", appliedDiscount: 0 })
         return false
       },
 

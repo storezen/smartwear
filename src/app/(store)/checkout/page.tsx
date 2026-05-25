@@ -72,15 +72,15 @@ export default function CheckoutPage() {
   const shipping = store.getDeliveryFee()
   const total = store.getTotal()
 
-  function handlePromoApply(e: React.FormEvent) {
+  async function handlePromoApply(e: React.FormEvent) {
     e.preventDefault()
     if (!promoInput.trim()) return
-    const success = store.applyCoupon(promoInput)
+    const success = await store.applyCoupon(promoInput)
     if (success) {
       setCouponApplied(true)
       toast.success("Coupon code applied successfully!")
     } else {
-      toast.error("Invalid coupon code. Try 'SMART20' or 'LUMS25'")
+      toast.error("Invalid coupon code.")
     }
   }
 
@@ -101,28 +101,39 @@ export default function CheckoutPage() {
 
     setLoading(true)
     store.updateCheckoutForm({ fullName: name.trim(), phone: phone.trim(), address: address.trim(), city, notes: "" })
-    await new Promise((r) => setTimeout(r, 1200))
 
     try {
-      for (const item of cartItems) {
-        addOrder({
-          productId: item.id,
-          productName: item.name,
-          productPrice: item.price,
-          productImage: item.image,
-          quantity: item.quantity,
-          total: item.price * item.quantity,
-          customerName: name.trim(),
-          phone: phone.trim(),
-          address: address.trim(),
-          city,
+      const orderPromises = cartItems.map((item) =>
+        fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            productId: item.id,
+            productName: item.name,
+            productPrice: item.price,
+            productImage: item.image,
+            quantity: item.quantity,
+            total: item.price * item.quantity,
+            customerName: name.trim(),
+            phone: phone.trim(),
+            address: address.trim(),
+            city,
+          }),
+        }).then((res) => {
+          if (!res.ok) throw new Error(`Order failed: ${res.status}`)
+          return res.json()
         })
+      )
+      const serverOrders = await Promise.all(orderPromises)
+      for (const order of serverOrders) {
+        addOrder(order)
       }
       setLoading(false)
       setSuccessOpen(true)
       store.clearCart()
-    } catch {
-      toast.error("Failed to place order. Please try again.")
+    } catch (err) {
+      console.error("Order submission failed:", err)
+      toast.error("Failed to place order. The server rejected the request.")
       setLoading(false)
     }
   }

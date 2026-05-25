@@ -35,8 +35,6 @@ export default function LoginPage() {
         setLoading(false)
         return
       }
-      const { token } = await res.json()
-      sessionStorage.setItem("smartwear-auth", token)
       router.push("/dashboard")
     } catch {
       toast.error("Could not connect. Try again.")

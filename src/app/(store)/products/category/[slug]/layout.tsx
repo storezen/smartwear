@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import type { ReactNode } from "react"
+import { SITE_URL } from "@/lib/constants"
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+const API = process.env.NEXT_PUBLIC_API_URL || SITE_URL
 
 interface CategoryData {
   name: string
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const category = await getCategory(slug)
   const name = category?.name || slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
   const description = category?.description || `Shop ${name} at SMARTWEAR.`
-  const url = `https://smartwear.com/products/category/${slug}`
+  const url = `${SITE_URL}/products/category/${slug}`
   const ogImage = category?.image || "/og-default.jpg"
   return {
     title: `${name} — SMARTWEAR`,

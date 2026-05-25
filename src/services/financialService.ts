@@ -1,43 +1,49 @@
 import { prisma } from "@/lib/db/prisma"
 
+async function getFinancialDefaults() {
+  const [adSpendSetting, shippingSetting] = await Promise.all([
+    prisma.storeSetting.findUnique({ where: { key: "DEFAULT_AD_SPEND" } }),
+    prisma.storeSetting.findUnique({ where: { key: "DEFAULT_SHIPPING_COST" } }),
+  ])
+  return {
+    adSpend: parseFloat(adSpendSetting?.value || "150"),
+    shipping: parseFloat(shippingSetting?.value || "250"),
+  }
+}
+
 export const financialService = {
-  /**
-   * Calculates profit for a DELIVERED order and aggregates it into the daily summary.
-   */
-  async calculateOrderProfit(orderId: string, customCogs?: number, customShipping?: number) {
+  async calculateOrderProfit(orderId: string, customShipping?: number) {
     const order = await prisma.order.findUnique({
       where: { id: orderId }
     })
 
     if (!order) return null
 
-    // For simplicity, assuming default values if not explicitly provided
-    // In a real scenario, COGS would be fetched from the Product model
-    const cogs = customCogs || (order.total * 0.4) // Assuming 40% margin as default fallback
-    const shipping = customShipping || 250 // Average PostEx shipping cost
-    const adSpend = 150 // Estimated TikTok CPA per order
+    const [product, defaults] = await Promise.all([
+      prisma.product.findUnique({ where: { id: order.productId } }),
+      getFinancialDefaults(),
+    ])
+
+    const cogs = (product?.cost ?? order.total * 0.4) * order.quantity
+    const shipping = customShipping ?? defaults.shipping
+    const adSpend = defaults.adSpend
     const revenue = order.total
     const netProfit = revenue - (cogs + shipping + adSpend)
 
     const financials = { cogs, shipping, adSpend, revenue, netProfit }
 
-    // Update order with financial data
     await prisma.order.update({
       where: { id: orderId },
-      data: { financials: JSON.stringify(financials) }
+      data: { financials }
     })
 
-    // Aggregate into daily ProfitSummary
-    const today = new Date().toISOString().split("T")[0] // YYYY-MM-DD
-    
+    const today = new Date().toISOString().split("T")[0]
+
     await this.upsertProfitSummary(today, financials)
 
     return financials
   },
 
-  /**
-   * Records a loss for an RTO/FAILED order.
-   */
   async recordRtoLoss(orderId: string) {
     const order = await prisma.order.findUnique({
       where: { id: orderId }
@@ -45,34 +51,32 @@ export const financialService = {
 
     if (!order) return null
 
-    // RTO means we lose shipping cost (both ways in some cases) plus packaging
-    const shippingLoss = 250 * 2 // Two-way shipping
+    const defaults = await getFinancialDefaults()
+    const shippingLoss = defaults.shipping * 2
     const packagingLoss = 50
     const totalLoss = shippingLoss + packagingLoss
 
-    const financials = { cogs: 0, shipping: totalLoss, adSpend: 150, revenue: 0, netProfit: -totalLoss, isLoss: true }
+    const financials = { cogs: 0, shipping: totalLoss, adSpend: defaults.adSpend, revenue: 0, netProfit: -totalLoss, isLoss: true }
 
-    // Update order
     await prisma.order.update({
       where: { id: orderId },
-      data: { financials: JSON.stringify(financials) }
+      data: { financials }
     })
 
     const today = new Date().toISOString().split("T")[0]
-    
-    // We update the lossRecovery column and subtract from netProfit
+
     await prisma.profitSummary.upsert({
       where: { date: today },
       update: {
         lossRecovery: { increment: totalLoss },
         netProfit: { decrement: totalLoss },
-        totalAdSpend: { increment: 150 }
+        totalAdSpend: { increment: defaults.adSpend }
       },
       create: {
         date: today,
         lossRecovery: totalLoss,
         netProfit: -totalLoss,
-        totalAdSpend: 150
+        totalAdSpend: defaults.adSpend
       }
     })
 

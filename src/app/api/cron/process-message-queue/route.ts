@@ -14,8 +14,7 @@ export async function GET(req: Request) {
     // Optional: Protect cron route using a secret header
     const authHeader = req.headers.get("authorization")
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      // return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-      // Commented out to allow easy manual testing without secret, but re-enable in prod
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const pendingMessages = await prisma.messageQueue.findMany({

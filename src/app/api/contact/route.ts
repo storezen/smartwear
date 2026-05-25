@@ -1,25 +1,8 @@
 import { NextResponse } from "next/server"
-import { writeFile, readFile, mkdir } from "node:fs/promises"
-import { join } from "node:path"
-import { existsSync } from "node:fs"
+import { prisma } from "@/lib/db/prisma"
 
-const DATA_DIR = join(process.cwd(), "data")
-const CONTACTS_FILE = join(DATA_DIR, "contacts.json")
-
-async function saveContact(data: Record<string, string>) {
-  if (!existsSync(DATA_DIR)) {
-    await mkdir(DATA_DIR, { recursive: true })
-    await writeFile(join(DATA_DIR, ".gitkeep"), "")
-  }
-  let contacts: Record<string, unknown>[] = []
-  try {
-    const raw = await readFile(CONTACTS_FILE, "utf-8")
-    contacts = JSON.parse(raw)
-  } catch {
-    contacts = []
-  }
-  contacts.push({ ...data, createdAt: new Date().toISOString() })
-  await writeFile(CONTACTS_FILE, JSON.stringify(contacts, null, 2))
+function stripHtml(s: string): string {
+  return s.replace(/<[^>]*>/g, "").replace(/[&<>"']/g, "")
 }
 
 export async function POST(req: Request) {
@@ -35,10 +18,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid email address" }, { status: 400 })
     }
 
-    await saveContact({ name: name.trim(), email: email.trim(), subject: subject.trim(), message: message.trim() })
+    await prisma.contactSubmission.create({
+      data: {
+        name: stripHtml(name.trim()),
+        email: email.trim(),
+        subject: stripHtml(subject.trim()),
+        message: stripHtml(message.trim()),
+      }
+    })
 
     return NextResponse.json({ success: true })
-  } catch {
+  } catch (err) {
+    console.error("Contact form error:", err)
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 })
   }
 }

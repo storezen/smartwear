@@ -11,6 +11,7 @@ model Product {
   name             String
   price            Float
   originalPrice    Float?
+  cost             Float    @default(0)
   image            String   @default("")
   images           Json     @default("[]")
   category         String   @default("")

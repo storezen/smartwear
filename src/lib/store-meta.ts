@@ -34,7 +34,9 @@ export function getStoreMeta(): StoreMeta {
         }
       }
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to load store meta:", err)
+  }
   return { ...DEFAULT_META }
 }
 
@@ -47,7 +49,7 @@ export function saveStoreMeta(data: StoreMeta): void {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ value: JSON.stringify(data) }),
-  }).catch(() => {})
+  }).catch((err) => console.error("Failed to save store meta:", err))
 }
 
 export async function initMetaFromApi(): Promise<void> {
@@ -60,5 +62,7 @@ export async function initMetaFromApi(): Promise<void> {
     if (!existing) {
       localStorage.setItem(STORAGE_KEY, value)
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to init meta from API:", err)
+  }
 }
