@@ -13,7 +13,6 @@ services:
     runtime: node
     buildCommand: npm install --include=dev && npx prisma generate && npx prisma db push && npm run build
     startCommand: npm run start
-    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
