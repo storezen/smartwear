@@ -9,7 +9,8 @@
     "lint": "eslint",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "test": "tsx tests/run.ts"
+    "test": "tsx tests/run.ts",
+    "bot": "tsx scripts/whatsapp-bot-server.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
