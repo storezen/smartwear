@@ -17,7 +17,11 @@ function createPrismaClient() {
   } else {
     const { Pool }: typeof import("pg") = require("pg")
     const { PrismaPg }: typeof import("@prisma/adapter-pg") = require("@prisma/adapter-pg")
-    const pool = new Pool({ connectionString: url, ssl: { rejectUnauthorized: false } })
+    const isSsl = url.includes("sslmode=require") || url.includes("ssl=true")
+    const pool = new Pool({ 
+      connectionString: url, 
+      ssl: isSsl ? { rejectUnauthorized: false } : undefined 
+    })
     const adapter = new PrismaPg(pool)
     return new PrismaClient({ adapter })
   }
