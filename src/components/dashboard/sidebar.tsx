@@ -28,6 +28,7 @@ import {
   Database,
   ChevronDown,
   Gift,
+  Sparkles,
 } from "lucide-react"
 import { useState } from "react"
 
