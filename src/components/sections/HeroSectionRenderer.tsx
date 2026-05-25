@@ -81,9 +81,9 @@ function ImageBannerHero({ data, style }: { data: HeroData; style: SectionStyle 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 text-xs font-bold tracking-widest uppercase rounded-full mb-6"
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 text-xs font-bold tracking-widest uppercase rounded-full mb-6 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
           >
-            <Zap className="size-3.5 text-blue-400" /> {data.badge}
+            <Zap className="size-3.5 text-neutral-300" /> {data.badge}
           </motion.span>
         )}
 
@@ -91,7 +91,7 @@ function ImageBannerHero({ data, style }: { data: HeroData; style: SectionStyle 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-          className="text-5xl sm:text-6xl lg:text-8xl font-extrabold tracking-tight text-white leading-[1.05] drop-shadow-xl"
+          className="text-6xl sm:text-7xl lg:text-9xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-neutral-100 to-neutral-400 leading-[1.0] drop-shadow-lg"
         >
           {words.map((word, i) => (
             <span key={i} className="inline-block mr-[0.25em]">{word}</span>
@@ -104,7 +104,7 @@ function ImageBannerHero({ data, style }: { data: HeroData; style: SectionStyle 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="mt-6 text-lg sm:text-xl text-neutral-200 font-medium max-w-2xl drop-shadow-md"
+            className="mt-8 text-lg sm:text-2xl text-neutral-300/90 font-medium max-w-3xl leading-relaxed tracking-wide drop-shadow-sm"
           >
             {data.description}
           </motion.p>
@@ -118,7 +118,7 @@ function ImageBannerHero({ data, style }: { data: HeroData; style: SectionStyle 
         >
           {data.primaryButtonText && (
             <Link href={data.primaryButtonUrl || "/products"}>
-              <button className="flex items-center justify-center gap-2 h-[52px] min-w-[200px] px-8 bg-white text-black font-bold tracking-wide uppercase text-sm rounded-sm transition-all hover:bg-neutral-200 hover:scale-105 active:scale-95 shadow-lg">
+              <button className="flex items-center justify-center gap-2 h-[56px] min-w-[200px] px-8 bg-white text-black font-bold tracking-wide uppercase text-sm rounded-full transition-all hover:bg-neutral-100 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
                 <ShoppingBag className="size-4" /> {data.primaryButtonText}
               </button>
             </Link>
@@ -126,7 +126,7 @@ function ImageBannerHero({ data, style }: { data: HeroData; style: SectionStyle 
           
           {data.secondaryButtonText && (
             <Link href={data.secondaryButtonUrl || "/categories"}>
-              <button className="flex items-center justify-center gap-2 h-[52px] min-w-[200px] px-8 bg-transparent text-white border-2 border-white font-bold tracking-wide uppercase text-sm rounded-sm transition-all hover:bg-white/10 hover:scale-105 active:scale-95">
+              <button className="flex items-center justify-center gap-2 h-[56px] min-w-[200px] px-8 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold tracking-wide uppercase text-sm rounded-full transition-all hover:bg-white/20 hover:scale-105 active:scale-95">
                 {data.secondaryButtonText} <ArrowUpRight className="size-4" />
               </button>
             </Link>

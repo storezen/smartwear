@@ -289,10 +289,10 @@ export const defaultData: SectionData = {
     description: "Our top-rated products, chosen by people like you",
   },
   hero: {
-    badge: "Summer 2026",
-    title: "Tech that defines",
-    highlightedWord: "your edge.",
-    description: "Premium smart watches and accessories engineered for those who demand more from their tech.",
+    badge: "FLAGSHIP SERIES",
+    title: "Master your",
+    highlightedWord: "momentum.",
+    description: "Experience a revolutionary leap in wearable technology. Impeccable design meets unprecedented performance, crafted for those who refuse to compromise.",
     primaryButtonText: "Shop Now",
     primaryButtonUrl: "/contact",
     secondaryButtonText: "View Products",
@@ -454,8 +454,8 @@ export const defaultData: SectionData = {
   productCardLayout: "minimal",
 }
 
-const STORAGE_KEY = "smartwear-sections"
-const SETTINGS_KEY = "sections"
+const STORAGE_KEY = "smartwear-sections-v2"
+const SETTINGS_KEY = "sections-v2"
 
 export function getDefaultSectionStyle(): SectionStyle {
   return { ...DEFAULT_SECTION_STYLE }
