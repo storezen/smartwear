@@ -56,7 +56,7 @@ export function NewArrivalsSection({ data, style }: { data: ProductSectionData; 
 
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {sorted.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
@@ -122,7 +122,7 @@ export function BestSellersSection({ data, style }: { data: ProductSectionData; 
 
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {sorted.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 

@@ -9,19 +9,22 @@ export default async function HomePage() {
   const featuredProducts = await prisma.product.findMany({
     where: { status: "ACTIVE" },
     take: 6,
-    include: { images: true }
   })
 
   // Format products for ProductCard
-  const productsForCards = featuredProducts.map(p => ({
-    id: p.id,
-    title: p.name,
-    handle: p.handle,
-    price: p.price,
-    compareAtPrice: p.compareAtPrice || undefined,
-    image: p.images[0]?.url || "/placeholder.jpg",
-    isAvailable: p.status === "ACTIVE"
-  }))
+  const productsForCards = featuredProducts.map((p) => {
+    const parsedImages: { url?: string }[] =
+      typeof p.images === "string" ? JSON.parse(p.images) : (p.images as { url?: string }[])
+    return {
+      id: p.id,
+      name: p.name,
+      handle: p.handle ?? p.id,
+      price: p.price,
+      originalPrice: p.originalPrice ?? undefined,
+      image: parsedImages[0]?.url || p.image || "/placeholder.jpg",
+      inStock: p.status === "ACTIVE",
+    }
+  })
 
   return (
     <div className="flex flex-col bg-[#FAFAFA] min-h-screen">
