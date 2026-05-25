@@ -6,7 +6,7 @@ export default function StoreLoading() {
       {/* Hero skeleton */}
       <div className="relative min-h-[60vh] bg-muted overflow-hidden sm:min-h-[55vh]">
         <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-muted via-muted-foreground/5 to-muted" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 lg:px-8">
+        <div className="relative z-10 mx-auto max-w-[1600px] px-4 py-20 lg:px-8">
           <div className="max-w-xl space-y-5">
             <div className="h-5 w-24 rounded-full skeleton" />
             <div className="h-12 w-full max-w-lg skeleton" />
@@ -20,7 +20,7 @@ export default function StoreLoading() {
       </div>
 
       {/* Featured products skeleton */}
-      <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 py-16 lg:px-8">
         <div className="mb-8 space-y-3">
           <div className="h-4 w-20 skeleton" />
           <div className="h-8 w-56 skeleton" />
@@ -31,7 +31,7 @@ export default function StoreLoading() {
 
       {/* Categories skeleton */}
       <div className="bg-muted/30 py-16">
-        <div className="mx-auto max-w-7xl px-4 lg:px-8 space-y-8">
+        <div className="mx-auto max-w-[1600px] px-4 lg:px-8 space-y-8">
           <div className="space-y-3">
             <div className="h-4 w-20 skeleton" />
             <div className="h-8 w-48 skeleton" />

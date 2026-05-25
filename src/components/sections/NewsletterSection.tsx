@@ -32,7 +32,7 @@ export function NewsletterSection({ data, style }: { data: NewsletterData; style
       style={{ paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}
       className="bg-[#F6F8FA]"
     >
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="relative overflow-hidden rounded-3xl bg-neutral-900 border border-neutral-800/60 px-8 py-16 sm:px-16 text-center shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)]">
 
           {/* Dark Dot mesh texture */}

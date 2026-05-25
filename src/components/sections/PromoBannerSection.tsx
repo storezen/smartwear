@@ -8,7 +8,7 @@ import { getBgStyle, paddingVals } from "./section-utils"
 export function PromoBannerSection({ data, style }: { data: PromoBannerData; style: SectionStyle }) {
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <Link href={data.buttonUrl} className="group block">
           <div
             className="relative overflow-hidden rounded-xl px-6 py-5 shadow-sm transition-all group-hover:shadow-md"

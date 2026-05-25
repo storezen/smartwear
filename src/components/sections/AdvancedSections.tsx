@@ -21,7 +21,7 @@ export function BrandStorySection({ data, style }: { data: SectionData["brandSto
   const { ref, y, opacity } = useParallax(0.3, 80)
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <motion.div ref={ref} style={{ y, opacity }} className="order-2 lg:order-1">
             <Badge className="inline-flex border-0 bg-primary/5 text-primary text-overline gap-1.5 mb-4">
@@ -57,7 +57,7 @@ export function BrandStorySection({ data, style }: { data: SectionData["brandSto
 export function InstagramSection({ data, style }: { data: SectionData["instagram"]; style: SectionStyle }) {
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="mb-8 text-center">
           <Badge className="inline-flex border-0 bg-primary/5 text-primary text-overline gap-1.5 mb-3">
             <Camera className="size-3" /> Instagram
@@ -96,7 +96,7 @@ export function InstagramSection({ data, style }: { data: SectionData["instagram
 export function FeaturedCollectionSection({ data, style }: { data: SectionData["featuredCollection"]; style: SectionStyle }) {
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="group relative overflow-hidden rounded-2xl">
           <div className="absolute inset-0">
             {data.image && (
@@ -135,7 +135,7 @@ export function FeaturedCollectionSection({ data, style }: { data: SectionData["
 export function BrandLogosSection({ data, style }: { data: SectionData["brandLogos"]; style: SectionStyle }) {
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="mb-8 text-center">
           <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">{data.title}</p>
           <div className="mx-auto mt-2 h-px w-12 bg-border" />
@@ -159,7 +159,7 @@ export function BrandLogosSection({ data, style }: { data: SectionData["brandLog
 export function StatsSection({ data, style }: { data: SectionData["stats"]; style: SectionStyle }) {
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="mb-10 text-center">
           <Badge className="inline-flex border-0 bg-primary/5 text-primary text-overline gap-1.5 mb-3">
             <TrendingUp className="size-3" /> Stats
@@ -187,7 +187,7 @@ export function StatsSection({ data, style }: { data: SectionData["stats"]; styl
 export function LookbookSection({ data, style }: { data: SectionData["lookbook"]; style: SectionStyle }) {
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="mb-10 text-center">
           <Badge className="inline-flex border-0 bg-primary/5 text-primary text-overline gap-1.5 mb-3">
             <LayoutGrid className="size-3" /> Lookbook
@@ -228,7 +228,7 @@ export function LookbookSection({ data, style }: { data: SectionData["lookbook"]
 export function ProcessSection({ data, style }: { data: SectionData["process"]; style: SectionStyle }) {
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="mb-12 text-center">
           <Badge className="inline-flex border-0 bg-primary/5 text-primary text-overline gap-1.5 mb-3">
             <Shuffle className="size-3" /> How It Works
@@ -263,7 +263,7 @@ export function ProcessSection({ data, style }: { data: SectionData["process"]; 
 export function PressSection({ data, style }: { data: SectionData["press"]; style: SectionStyle }) {
   return (
     <AnimatedSection style={{ ...getBgStyle(style), paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }}>
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="mb-10 text-center">
           <Badge className="inline-flex border-0 bg-primary/5 text-primary text-overline gap-1.5 mb-3">
             <Newspaper className="size-3" /> Press

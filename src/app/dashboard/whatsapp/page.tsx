@@ -195,7 +195,7 @@ export default function WhatsAppPage() {
       initial={{ opacity: 0, y: 8 }} 
       animate={{ opacity: 1, y: 0 }} 
       transition={{ duration: 0.3 }} 
-      className="space-y-6 max-w-7xl mx-auto"
+      className="space-y-6 max-w-[1600px] mx-auto"
     >
       {/* Title Header */}
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between border-b border-border pb-5">

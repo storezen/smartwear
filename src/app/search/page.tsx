@@ -58,7 +58,7 @@ export default function SearchPage() {
        <PageMeta title="Search" description="Search for your favorite smart watches and accessories." ogImage="/og-default.jpg" />
       <PageTransition>
         <div className="min-h-screen bg-[#F6F8FA]">
-          <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-[1600px] px-4 py-10 sm:px-6 lg:px-8">
             <Link
               href="/"
               className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-neutral-500 hover:text-neutral-900 transition-colors"

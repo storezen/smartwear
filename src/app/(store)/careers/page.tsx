@@ -35,7 +35,7 @@ export default function CareersPage() {
       <PageMeta title="Careers" description="Join the SMARTWEAR team — build the future of wearable tech ecommerce." ogImage="/og-default.jpg" />
 
       <div className="min-h-screen bg-[#F6F8FA]">
-        <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+        <section className="mx-auto max-w-[1600px] px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
           <div className="flex items-start gap-5">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[16px] bg-white border border-neutral-200/60 shadow-sm">
               <Users className="h-6 w-6 text-neutral-500" strokeWidth={1.5} />
@@ -51,7 +51,7 @@ export default function CareersPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
+        <section className="mx-auto max-w-[1600px] px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
           <div className="grid gap-5 sm:grid-cols-2">
             {perks.map((p) => {
               const Icon = p.icon

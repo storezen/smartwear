@@ -236,7 +236,7 @@ function FullscreenHero({ data, style }: { data: HeroData; style: SectionStyle }
         <img src={resolveMediaUrl(data.featuredImage)} alt="Background" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
       </div>
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         {data.badge && (
           <span className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-2 text-xs font-semibold rounded-full mb-8">
             {data.badge}

@@ -60,7 +60,7 @@ export function BentoHeroSection({ data, style }: { data: HeroData; style: Secti
       <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-blue-500/3 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/3 blur-[100px] rounded-full pointer-events-none" />
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* Main Hero Tile (Left) */}
