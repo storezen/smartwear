@@ -1,15 +1,21 @@
 import type { ProductCategory } from "@/lib/categories-context"
 
 const CATEGORY_NORMALIZATION: [RegExp, string][] = [
+  [/premium\s*watch(es)?/i, "Premium Watches"],
+  [/luxury\s*watch(es)?/i, "Premium Watches"],
   [/smart\s*watch(es)?/i, "Smart Watches"],
   [/smartwatch(es)?/i, "Smart Watches"],
+  [/series\s*(9|10|11)/i, "Smart Watches"],
+  [/apple\s*logo/i, "Smart Watches"],
   [/watch(es)?/i, "Watches"],
   [/airpods?/i, "AirPods / Earbuds"],
   [/earbuds?/i, "AirPods / Earbuds"],
   [/wireless\s*earbuds?/i, "AirPods / Earbuds"],
   [/phone\s*case(s)?/i, "Phone Cases"],
   [/iphone\s*case(s)?/i, "iPhone Cases"],
-  [/case(s)?/i, "Phone Cases"],
+  [/acrylic\s*case(s)?/i, "Cases"],
+  [/silicon\s*case(s)?/i, "Cases"],
+  [/case(s)?/i, "Cases"],
   [/accessor(y|ies)/i, "Accessories"],
   [/watch\s*accessor(y|ies)/i, "Watch Accessories"],
   [/charging/i, "Charging"],
@@ -30,13 +36,15 @@ const CATEGORY_NORMALIZATION: [RegExp, string][] = [
   [/wireless\s*charger/i, "Charging"],
   [/usb[-\s]*c/i, "Charging"],
   [/power\s*adapter/i, "Charging"],
+  [/adapter/i, "Charging"],
 ]
 
 const KEYWORD_CATEGORIES: [RegExp, string][] = [
-  [/amoled|heart.?rate|gps|fitness|sport.*watch|smart.*band/i, "Smart Watches"],
-  [/anc|noise.?cancel|driver|bass|tws/i, "Wireless Audio"],
-  [/mAh|power.*bank|fast.*charg|pd\s*3\.0|qc\s*3\.0/i, "Charging"],
-  [/drop.*protect|military.*grade|tpu|polycarbonate|screen.*protect/i, "Accessories"],
+  [/cartier|audemars|patek|rolex|master\s*watch|ap\s*master/i, "Premium Watches"],
+  [/amoled|heart.?rate|gps|fitness|sport.*watch|smart.*band|series\s*(9|10|11)|apple\s*logo/i, "Smart Watches"],
+  [/anc|noise.?cancel|driver|bass|tws|airpods?/i, "AirPods / Earbuds"],
+  [/mAh|power.*bank|fast.*charg|pd\s*3\.0|qc\s*3\.0|2pin/i, "Charging"],
+  [/drop.*protect|military.*grade|tpu|polycarbonate|screen.*protect|acrylic/i, "Cases"],
   [/bluetooth.*tracker|find.*(key|device)/i, "Accessories"],
 ]
 

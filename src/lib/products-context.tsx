@@ -113,6 +113,7 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
 
   const deleteAllProducts = useCallback(() => {
     setProducts([])
+    api("/", { method: "DELETE" })
   }, [])
 
   const cloneProduct = useCallback((id: string) => {

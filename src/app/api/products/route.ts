@@ -56,3 +56,12 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Failed to update product" }, { status: 500 })
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    await prisma.product.deleteMany({})
+    return NextResponse.json({ success: true })
+  } catch {
+    return NextResponse.json({ error: "Failed to delete all products" }, { status: 500 })
+  }
+}

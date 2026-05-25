@@ -40,13 +40,25 @@ function mapSingleProduct(
 ): { product: ParsedProduct; categoryDetection: CategorySuggestion; warnings: ImportWarning[] } {
   const warnings: ImportWarning[] = []
 
-  const title = main.title || ""
-  const handle = group.handle || slugify(title)
+  let title = main.title || ""
   const description = main.bodyHtml || ""
   const vendor = main.vendor || ""
   const type = main.type || ""
 
   const csvTags = parseTags(main.tags)
+
+  // Title Cleaning & Smart Tagging
+  const bracketRegex = /\s*[\[(]([^\])]+)[\])]/g;
+  title = title.replace(bracketRegex, (match, content) => {
+    if (content.includes('|')) {
+      csvTags.push(...content.split('|').map((s: string) => s.trim()).filter(Boolean));
+    } else {
+      csvTags.push(content.trim());
+    }
+    return '';
+  }).trim();
+
+  const handle = group.handle || slugify(title)
   const categorySuggestion = detectCategory(main.productCategory, type, title, description, csvTags, vendor)
   const category = categorySuggestion.name
 
@@ -263,5 +275,15 @@ function parseSpecs(main: CsvRow, title: string, bodyHtml: string, tags: string[
     }
   }
 
-  return specs.slice(0, 20)
+  // 5. Detect from table rows (<tr><td>...</td><td>...</td></tr>)
+  const trMatches = bodyHtml.matchAll(/<tr[^>]*>\s*<td[^>]*>(.*?)<\/td>\s*<td[^>]*>(.*?)<\/td>\s*<\/tr>/gi)
+  for (const match of trMatches) {
+    const label = match[1].replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").trim()
+    const value = match[2].replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").trim()
+    if (label && value && label.length < 40) {
+      add(label, value)
+    }
+  }
+
+  return specs.slice(0, 40)
 }
