@@ -23,7 +23,7 @@ export function TestimonialsSection({ data, style }: { data: TestimonialsData; s
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-80 w-[700px] rounded-full bg-blue-500/4 blur-[120px]" />
 
-      <div className="mx-auto max-w-[1600px] px-4 lg:px-8 mb-12">
+      <div className="mx-auto max-w-[1200px] px-4 lg:px-8 mb-12">
         {/* Section Header */}
         <div className="text-center">
           <motion.span

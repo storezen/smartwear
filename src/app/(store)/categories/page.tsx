@@ -103,7 +103,7 @@ export default function AllCategoriesPage() {
         />
       <PageTransition>
         <div className="min-h-screen bg-[#FAFAFA]">
-          <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-8 lg:py-12">
+          <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-8 lg:py-12">
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Categories" }]} className="mb-6" />
             <div className="mb-6">
 

@@ -39,7 +39,7 @@ export default function PrivacyPage() {
       <PageMeta title="Privacy Policy" description="SMARTWEAR privacy policy — how we collect, use, and protect your data." ogImage="/og-default.jpg" />
 
       <div className="min-h-screen bg-[#FAFAFA]">
-        <section className="mx-auto max-w-[1600px] px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+        <section className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
           <div className="flex items-start gap-5">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border border-[#E5E5E5] shadow-sm">
               <Shield className="h-6 w-6 text-[#0A0A0A]/60" strokeWidth={1.5} />
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1600px] px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
+        <section className="mx-auto max-w-[1200px] px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
             {sections.map((s, i) => (
               <div key={s.title} className={`bg-white border border-[#E5E5E5] rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.03)] px-7 py-8 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)] ${i < 3 ? 'lg:col-span-2' : 'lg:col-span-3'}`}>

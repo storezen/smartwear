@@ -45,7 +45,7 @@ export default function CartPage() {
       <PageMeta title="Shopping Cart" description="Review your items before checkout." noindex ogImage="/og-default.jpg" />
       <PageTransition>
         <div className="min-h-screen bg-[#FAFAFA]">
-          <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+          <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
               <div>
                 <h1 className="text-4xl font-bold tracking-tight text-[#0A0A0A] sm:text-5xl">

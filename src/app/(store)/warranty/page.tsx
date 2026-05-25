@@ -33,7 +33,7 @@ export default function WarrantyPage() {
       <PageMeta title="Warranty" description="SMARTWEAR warranty information — every product is built to last with 1-year coverage." ogImage="/og-default.jpg" />
 
       <div className="min-h-screen bg-[#FAFAFA]">
-        <section className="mx-auto max-w-[1600px] px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+        <section className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
           <div className="flex items-start gap-5">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border border-[#E5E5E5] shadow-sm">
               <ShieldCheck className="h-6 w-6 text-[#0A0A0A]/60" strokeWidth={1.5} />
@@ -49,7 +49,7 @@ export default function WarrantyPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1600px] px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
+        <section className="mx-auto max-w-[1200px] px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
           <div className="grid gap-5 sm:grid-cols-2">
             {items.map((item) => {
               const Icon = item.icon

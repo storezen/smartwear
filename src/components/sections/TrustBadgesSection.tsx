@@ -21,7 +21,7 @@ export function TrustBadgesSection({ data, style }: { data: FeaturesData; style:
 
   return (
     <AnimatedSection style={{ paddingTop: py, paddingBottom: py }} className="w-full bg-[#FAFAFA] border-y border-[#E5E5E5]">
-      <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-12 text-center">
           <motion.h2

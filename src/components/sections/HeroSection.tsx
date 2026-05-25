@@ -102,7 +102,7 @@ export function HeroSection({ data, style: _style }: { data: HeroData; style: Se
       <div className="pointer-events-none absolute top-0 right-0 h-[500px] w-[500px] rounded-full bg-blue-500/4 blur-[120px]" />
       <div className="pointer-events-none absolute bottom-0 left-0 h-[400px] w-[400px] rounded-full bg-emerald-500/3 blur-[100px]" />
 
-      <div className="relative z-10 mx-auto max-w-[1600px] px-4 lg:px-8 w-full">
+      <div className="relative z-10 mx-auto max-w-[1200px] px-4 lg:px-8 w-full">
         <div className="grid gap-8 lg:grid-cols-12 items-center">
 
           {/* ── Left: Typography + CTAs ── */}

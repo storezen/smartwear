@@ -50,89 +50,83 @@ export function HeroSectionRenderer({ data, style }: { data: HeroData; style: Se
   }
 }
 
-// 1. Image Banner Layout (Shopify Impulse Style)
+// 1. Premium Split Layout (Default)
 function ImageBannerHero({ data, style }: { data: HeroData; style: SectionStyle }) {
-  const heroRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] })
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0])
   const words = data.title?.split(" ") || []
 
   return (
-    <section ref={heroRef} className="relative h-[85vh] lg:h-[90vh] min-h-[600px] w-full flex items-center justify-center overflow-hidden bg-black">
-      {/* Background Image with Parallax */}
-      <motion.div style={{ y }} className="absolute inset-0 w-full h-full">
-        <img
-          src={resolveMediaUrl(data.featuredImage)}
-          alt={data.title || "Hero Banner"}
-          className="w-full h-full object-cover object-center"
-        />
-        {/* Gradient Overlay for Text Legibility */}
-        <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
-      </motion.div>
+    <section className="relative min-h-[90vh] w-full flex items-center justify-center overflow-hidden bg-[#0A0A0A]">
+      {/* Ambient Glow Effects */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-[120px] mix-blend-screen opacity-50" />
+      <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[150px] mix-blend-screen opacity-50" />
 
-      {/* Content */}
-      <motion.div
-        style={{ opacity }}
-        className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center mt-16"
-      >
-        {data.badge && (
-          <motion.span
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 text-xs font-bold tracking-widest uppercase rounded-full mb-6 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
-          >
-            <Zap className="size-3.5 text-neutral-300" /> {data.badge}
-          </motion.span>
-        )}
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-          className="text-6xl sm:text-7xl lg:text-9xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-neutral-100 to-neutral-400 leading-[1.0] drop-shadow-lg"
-        >
-          {words.map((word, i) => (
-            <span key={i} className="inline-block mr-[0.25em]">{word}</span>
-          ))}
-          {data.highlightedWord && <span className="inline-block text-blue-400">{data.highlightedWord}</span>}
-        </motion.h1>
-
-        {data.description && (
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="mt-8 text-lg sm:text-2xl text-neutral-300/90 font-medium max-w-3xl leading-relaxed tracking-wide drop-shadow-sm"
-          >
-            {data.description}
-          </motion.p>
-        )}
-
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-16 py-24">
+        
+        {/* Left Side: Caption */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-          className="mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center"
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="flex-1 flex flex-col items-start text-left"
         >
-          {data.primaryButtonText && (
-            <Link href={data.primaryButtonUrl || "/products"}>
-              <button className="flex items-center justify-center gap-2 h-[56px] min-w-[200px] px-8 bg-white text-black font-bold tracking-wide uppercase text-sm rounded-full transition-all hover:bg-neutral-100 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-                <ShoppingBag className="size-4" /> {data.primaryButtonText}
-              </button>
-            </Link>
+          {data.badge && (
+            <span className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-md text-neutral-300 border border-white/10 px-4 py-1.5 text-xs font-semibold tracking-widest uppercase rounded-full mb-8 shadow-sm">
+              <Zap className="size-3.5 text-neutral-400" /> {data.badge}
+            </span>
           )}
-          
-          {data.secondaryButtonText && (
-            <Link href={data.secondaryButtonUrl || "/categories"}>
-              <button className="flex items-center justify-center gap-2 h-[56px] min-w-[200px] px-8 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold tracking-wide uppercase text-sm rounded-full transition-all hover:bg-white/20 hover:scale-105 active:scale-95">
-                {data.secondaryButtonText} <ArrowUpRight className="size-4" />
-              </button>
-            </Link>
+
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light tracking-tight text-white leading-[1.1]">
+            {words.map((word, i) => (
+              <span key={i} className="inline-block mr-[0.25em]">{word}</span>
+            ))}
+            {data.highlightedWord && <span className="inline-block font-semibold text-transparent bg-clip-text bg-gradient-to-r from-neutral-200 to-neutral-500">{data.highlightedWord}</span>}
+          </h1>
+
+          {data.description && (
+            <p className="mt-8 text-lg sm:text-xl text-neutral-400 font-light max-w-xl leading-relaxed tracking-wide">
+              {data.description}
+            </p>
           )}
+
+          <div className="mt-12 flex flex-col sm:flex-row items-center gap-4">
+            {data.primaryButtonText && (
+              <Link href={data.primaryButtonUrl || "/products"}>
+                <button className="flex items-center justify-center gap-2 h-[56px] min-w-[200px] px-8 bg-white text-black font-semibold tracking-wide uppercase text-sm rounded-full transition-all hover:bg-neutral-200 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.15)]">
+                  <ShoppingBag className="size-4" /> {data.primaryButtonText}
+                </button>
+              </Link>
+            )}
+            
+            {data.secondaryButtonText && (
+              <Link href={data.secondaryButtonUrl || "/categories"}>
+                <button className="flex items-center justify-center gap-2 h-[56px] min-w-[200px] px-8 bg-white/5 backdrop-blur-md border border-white/10 text-white font-semibold tracking-wide uppercase text-sm rounded-full transition-all hover:bg-white/10 hover:scale-105 active:scale-95">
+                  {data.secondaryButtonText} <ArrowUpRight className="size-4" />
+                </button>
+              </Link>
+            )}
+          </div>
         </motion.div>
-      </motion.div>
+
+        {/* Right Side: Image Card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+          className="flex-1 w-full max-w-lg lg:max-w-none perspective-1000"
+        >
+          <div className="relative w-full aspect-[4/5] sm:aspect-square lg:aspect-[4/5] rounded-[32px] overflow-hidden bg-gradient-to-tr from-white/5 to-white/10 border border-white/10 backdrop-blur-2xl shadow-2xl shadow-black/50 group transform-gpu transition-transform duration-700 hover:rotate-y-2 hover:rotate-x-2">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 opacity-50" />
+            <img
+              src={resolveMediaUrl(data.featuredImage)}
+              alt={data.title || "Hero Featured"}
+              className="w-full h-full object-cover object-center transform-gpu transition-transform duration-1000 group-hover:scale-105"
+            />
+            {/* Inner glow/border detail */}
+            <div className="absolute inset-0 border border-white/5 rounded-[32px] z-20 pointer-events-none" />
+          </div>
+        </motion.div>
+
+      </div>
     </section>
   )
 }
@@ -184,7 +178,7 @@ function SplitHero({ data, style }: { data: HeroData; style: SectionStyle }) {
   const words = data.title?.split(" ") || []
   return (
     <section className="relative min-h-[90vh] flex items-center bg-white">
-      <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2">
+      <div className="w-full max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2">
         <div className="flex flex-col justify-center px-6 sm:px-12 lg:px-24 py-20 z-10">
           {data.badge && (
             <span className="inline-flex items-center gap-1.5 bg-white shadow-sm text-neutral-600 px-3 py-1.5 text-xs font-semibold rounded-full w-fit mb-8 border border-neutral-200/60">
@@ -236,7 +230,7 @@ function FullscreenHero({ data, style }: { data: HeroData; style: SectionStyle }
         <img src={resolveMediaUrl(data.featuredImage)} alt="Background" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
       </div>
-      <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         {data.badge && (
           <span className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-2 text-xs font-semibold rounded-full mb-8">
             {data.badge}

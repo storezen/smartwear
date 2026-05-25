@@ -122,7 +122,7 @@ export default function ProductDetailClient({ product, related }: ProductDetailC
   return (
     <PageTransition>
       <div className="min-h-screen bg-[#FAFAFA]">
-        <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-8 lg:py-12">
+        <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-8 lg:py-12">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0A0A0A]/50 mb-8 overflow-x-auto">
             <Link href="/" className="transition-colors hover:text-[#0A0A0A] whitespace-nowrap">Home</Link>

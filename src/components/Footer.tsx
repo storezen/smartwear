@@ -39,7 +39,7 @@ export function Footer() {
 
   return (
     <footer className="w-full bg-[#FAFAFA] border-t border-[#E5E5E5] pt-16 pb-8 text-[#0A0A0A]">
-      <div className="mx-auto max-w-[1600px] px-4 sm:px-8">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-8">
         
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">

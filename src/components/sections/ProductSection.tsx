@@ -19,7 +19,7 @@ export function NewArrivalsSection({ data, style }: { data: ProductSectionData; 
 
   return (
     <AnimatedSection style={{ paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }} className="bg-[#FAFAFA] relative border-t border-[#E5E5E5]">
-      <div className="max-w-[1600px] mx-auto relative z-10">
+      <div className="max-w-[1200px] mx-auto relative z-10">
         <div className="px-4 sm:px-6 lg:px-8 mb-12 flex items-end justify-between">
           <div>
             <motion.h2
@@ -71,7 +71,7 @@ export function BestSellersSection({ data, style }: { data: ProductSectionData; 
 
   return (
     <AnimatedSection style={{ paddingTop: paddingVals[style.padding], paddingBottom: paddingVals[style.padding] }} className="bg-[#FAFAFA] relative border-t border-[#E5E5E5]">
-      <div className="max-w-[1600px] mx-auto relative z-10">
+      <div className="max-w-[1200px] mx-auto relative z-10">
         <div className="px-4 sm:px-6 lg:px-8 mb-12 flex items-end justify-between">
           <div>
             <motion.h2

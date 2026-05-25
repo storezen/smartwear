@@ -129,7 +129,7 @@ export default function CategoryPage({
       {breadcrumbJsonLd && <JsonLd data={breadcrumbJsonLd} />}
       <PageTransition>
         <div className="min-h-screen bg-[#FAFAFA]">
-          <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+          <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
             <Breadcrumbs items={breadcrumbItems} className="mb-6" />
 
             {category?.image && (

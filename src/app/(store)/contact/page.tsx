@@ -95,7 +95,7 @@ export default function ContactPage() {
       <PageMeta title="Contact" description="Get in touch with SMARTWEAR. We're here to help with orders, returns, and questions." ogImage="/og-default.jpg" />
 
       <div className="min-h-screen bg-[#FAFAFA]">
-        <section className="mx-auto max-w-[1600px] px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+        <section className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
           <div className="flex items-start gap-5">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border border-[#E5E5E5] shadow-sm">
               <MessageCircle className="h-6 w-6 text-[#0A0A0A]/60" strokeWidth={1.5} />
@@ -111,7 +111,7 @@ export default function ContactPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1600px] px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
+        <section className="mx-auto max-w-[1200px] px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-5 lg:auto-rows-fr">
             <div className="lg:col-span-3">
               <div className="bg-white border border-[#E5E5E5] rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex h-full flex-col p-6 sm:p-8">
