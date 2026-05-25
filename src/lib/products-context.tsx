@@ -72,7 +72,7 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
       setIsReady(true)
     }
 
-    api<{ products: Product[] }>("/?page=1&limit=200").then((data) => {
+    api<{ products: Product[] }>("/?page=1&limit=5000").then((data) => {
       if (!mounted) return
       if (data && data.products.length > 0) {
         setProducts(data.products)

@@ -266,8 +266,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
 
               {/* Variants */}
               {hasVariants && (
-                <div className="flex items-center gap-1.5">
-                  {parsedVariants.map((variant, idx) => {
+                <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                  {parsedVariants.slice(0, 10).map((variant, idx) => {
                     const isActive = activeVariant?.sku === variant.sku || (!activeVariant && idx === 0)
                     return (
                       <motion.button
@@ -290,6 +290,9 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                       </motion.button>
                     )
                   })}
+                  {parsedVariants.length > 10 && (
+                    <span className="text-[10px] text-neutral-500 ml-1">+{parsedVariants.length - 10} more</span>
+                  )}
                   <span className="text-[8px] text-neutral-400 ml-0.5">{activeVariant?.name || parsedVariants[0]?.name}</span>
                 </div>
               )}
