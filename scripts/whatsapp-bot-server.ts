@@ -33,7 +33,9 @@ function initializeClient() {
     }),
     puppeteer: {
       headless: true,
-      executablePath: process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : undefined,
+      executablePath: process.platform === 'darwin' 
+        ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' 
+        : '/opt/render/project/src/.render/chrome/opt/google/chrome/chrome',
       args: ["--no-sandbox", "--disable-setuid-sandbox"]
     }
   })
