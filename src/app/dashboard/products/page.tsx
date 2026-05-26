@@ -15,7 +15,7 @@ import { useProducts } from "@/lib/products-context"
 import { useCategories } from "@/lib/categories-context"
 import { ProductFormModal } from "@/components/ProductFormModal"
 import { exportProductsCsv } from "@/lib/csv-utils"
-import { Search, Package, Plus, Grid3X3, List, Edit, X, Upload, Download, Copy, CheckSquare, Square, ChevronDown, Check, Trash2, Filter } from "lucide-react"
+import { Search, Package, Plus, Grid3X3, List, Edit, X, Upload, Download, Copy, CheckSquare, Square, ChevronDown, Check, Trash2, Filter, Sparkles, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { ConfirmDialog } from "@/app/dashboard/sections/ConfirmDialog"
@@ -47,6 +47,26 @@ export default function ProductsPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [bulkModal, setBulkModal] = useState(false)
   const [bulkForm, setBulkForm] = useState<{ inStock?: boolean; featured?: boolean; category?: string }>({})
+  const [enrichingId, setEnrichingId] = useState<string | null>(null)
+
+  async function handleEnrich(id: string) {
+    try {
+      setEnrichingId(id)
+      toast.loading("Enriching product with AI...", { id: "enrich" })
+      const res = await fetch(`/api/products/${id}/enrich`, { method: "POST" })
+      const data = await res.json()
+      if (res.ok) {
+        updateProduct(id, data.product)
+        toast.success(data.message || "Product enriched!", { id: "enrich" })
+      } else {
+        toast.error(data.error || "Failed to enrich product", { id: "enrich" })
+      }
+    } catch (err) {
+      toast.error("Failed to connect to AI service", { id: "enrich" })
+    } finally {
+      setEnrichingId(null)
+    }
+  }
 
   const filtered = useMemo(() => {
     let result = products
@@ -274,6 +294,9 @@ export default function ProductsPage() {
                             <span className={p.inStock ? "text-emerald-600" : "text-red-500"}>{p.inStock ? "In Stock" : "Out of Stock"}</span>
                           </div>
                           <div className="flex gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+                            <Button variant="ghost" size="icon" className="size-7 text-amber-500 hover:text-amber-600 hover:bg-amber-50" onClick={() => handleEnrich(p.id)} disabled={enrichingId === p.id} title="Auto-Enrich with AI">
+                              {enrichingId === p.id ? <Loader2 className="size-3.5 animate-spin" /> : <Sparkles className="size-3.5" />}
+                            </Button>
                             <Button variant="ghost" size="icon" className="size-7" onClick={() => handleClone(p.id)} title="Clone">
                               <Copy className="size-3.5" />
                             </Button>
@@ -348,6 +371,9 @@ export default function ProductsPage() {
                           </td>
                           <td className="px-6 py-4 text-right">
                             <div className="flex items-center justify-end gap-1.5">
+                              <Button variant="ghost" size="icon" className="size-8 rounded-full text-amber-500 hover:text-amber-600 hover:bg-amber-50" onClick={() => handleEnrich(p.id)} disabled={enrichingId === p.id} title="Auto-Enrich with AI">
+                                {enrichingId === p.id ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" strokeWidth={2} />}
+                              </Button>
                               <Button variant="ghost" size="icon" className="size-8 rounded-full text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100" onClick={() => handleClone(p.id)} title="Clone">
                                 <Copy className="size-4" strokeWidth={2} />
                               </Button>
