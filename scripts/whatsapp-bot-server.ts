@@ -198,6 +198,6 @@ const server = http.createServer((req, res) => {
 
 // Initialize bot and start server
 initializeClient()
-server.listen(PORT, () => {
-  log(`WhatsApp Web Bot bridge listening on http://localhost:${PORT}`)
+server.listen(PORT, "127.0.0.1", () => {
+  log(`WhatsApp Web Bot bridge listening on http://127.0.0.1:${PORT}`)
 })

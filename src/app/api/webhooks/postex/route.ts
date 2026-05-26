@@ -8,16 +8,13 @@ import { financialService } from "@/services/financialService"
 export async function POST(req: Request) {
   try {
     const payloadText = await req.text()
-    const signature = req.headers.get("x-postex-signature")
+    // PostEx lets you define a custom Header Key and Value. 
+    // We will use 'x-postex-secret' as the key.
+    const secretHeader = req.headers.get("x-postex-secret")
     const secret = process.env.POSTEX_WEBHOOK_SECRET
 
-    if (!signature || !secret) {
-      return NextResponse.json({ error: "Missing signature or secret" }, { status: 401 })
-    }
-
-    const isValid = await verifyPostExSignature(payloadText, signature, secret)
-    if (!isValid) {
-      return NextResponse.json({ error: "Invalid signature" }, { status: 403 })
+    if (!secretHeader || secretHeader !== secret) {
+      return NextResponse.json({ error: "Invalid or missing secret header" }, { status: 403 })
     }
 
     const payload = JSON.parse(payloadText)

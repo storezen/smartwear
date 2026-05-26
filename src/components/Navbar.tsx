@@ -3,11 +3,11 @@
 import { useState, useEffect, useRef, startTransition } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Search, ShoppingBag, Menu, X, MessageCircle } from "lucide-react"
+import { Search, ShoppingBag, Menu, MessageCircle, Grid, Home } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useCart } from "@/lib/cart-context"
 import { CartSheet } from "@/components/CartSheet"
-import { MarqueeTrustStrip } from "@/components/MarqueeTrustStrip"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 
 export function Navbar() {
@@ -107,47 +107,53 @@ export function Navbar() {
               </AnimatePresence>
             </button>
 
-            <button
-              className="md:hidden flex h-10 w-10 items-center justify-center rounded-full text-[#0A0A0A] hover:bg-[#0A0A0A]/5 transition-colors"
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
-              {mobileOpen ? <X className="h-5 w-5" strokeWidth={1.5} /> : <Menu className="h-5 w-5" strokeWidth={1.5} />}
-            </button>
+            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+              <SheetTrigger asChild>
+                <button className="md:hidden flex h-10 w-10 items-center justify-center rounded-full text-[#0A0A0A] hover:bg-[#0A0A0A]/5 transition-colors">
+                  <Menu className="h-5 w-5" strokeWidth={1.5} />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0 bg-[#FAFAFA] border-r border-[#E5E5E5]">
+                <SheetHeader className="p-6 border-b border-[#E5E5E5] text-left">
+                  <SheetTitle className="font-heading text-lg font-bold tracking-[0.15em] text-[#0A0A0A] uppercase">
+                    SMARTWEAR
+                  </SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col py-4">
+                  <Link
+                    href="/"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-4 px-6 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-[#0A0A0A] hover:bg-[#0A0A0A]/5 transition-colors"
+                  >
+                    <Home className="h-5 w-5" strokeWidth={1.5} />
+                    Home
+                  </Link>
+                  {links.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-4 px-6 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-[#0A0A0A] hover:bg-[#0A0A0A]/5 transition-colors"
+                    >
+                      <Grid className="h-5 w-5" strokeWidth={1.5} />
+                      {link.label}
+                    </Link>
+                  ))}
+                  <div className="h-px bg-[#E5E5E5] my-4 mx-6" />
+                  <a
+                    href="https://wa.me/923001234567"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 px-6 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-[#10B981] hover:bg-[#10B981]/10 transition-colors"
+                  >
+                    <MessageCircle className="h-5 w-5" strokeWidth={2} />
+                    WhatsApp Support
+                  </a>
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {mobileOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="md:hidden border-t border-[#E5E5E5] bg-[#FAFAFA] overflow-hidden"
-            >
-              <nav className="flex flex-col px-4 py-4 gap-2">
-                {links.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="px-4 py-3 text-sm font-semibold uppercase tracking-[0.1em] text-[#0A0A0A]"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                <div className="h-px bg-[#E5E5E5] my-2 mx-4" />
-                <a
-                  href="https://wa.me/923001234567"
-                  className="flex items-center gap-3 px-4 py-3 text-sm font-semibold uppercase tracking-wider text-[#10B981]"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  Order via WhatsApp
-                </a>
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
 
       <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
