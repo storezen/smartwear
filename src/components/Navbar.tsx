@@ -108,10 +108,8 @@ export function Navbar() {
             </button>
 
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild>
-                <button className="md:hidden flex h-10 w-10 items-center justify-center rounded-full text-[#0A0A0A] hover:bg-[#0A0A0A]/5 transition-colors">
-                  <Menu className="h-5 w-5" strokeWidth={1.5} />
-                </button>
+              <SheetTrigger className="md:hidden flex h-10 w-10 items-center justify-center rounded-full text-[#0A0A0A] hover:bg-[#0A0A0A]/5 transition-colors">
+                <Menu className="h-5 w-5" strokeWidth={1.5} />
               </SheetTrigger>
               <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0 bg-[#FAFAFA] border-r border-[#E5E5E5]">
                 <SheetHeader className="p-6 border-b border-[#E5E5E5] text-left">
