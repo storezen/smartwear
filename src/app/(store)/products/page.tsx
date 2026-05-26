@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Search, X, SlidersHorizontal, FilterX } from "lucide-react"
+import { Search, X, SlidersHorizontal, FilterX, Sparkles, Loader2 } from "lucide-react"
 import { SITE_URL } from "@/lib/constants"
 import { ProductCard } from "@/components/ProductCard"
 import { Pagination } from "@/components/Pagination"
@@ -23,6 +23,8 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState<string>("newest")
   const [inStockOnly, setInStockOnly] = useState(false)
   const [page, setPage] = useState(1)
+  const [aiMatchedIds, setAiMatchedIds] = useState<string[] | null>(null)
+  const [isAiSearching, setIsAiSearching] = useState(false)
 
   const published = useMemo(
     () => products.filter((p) => p.status !== "draft" && p.status !== "archived"),
@@ -31,7 +33,11 @@ export default function ProductsPage() {
 
   const filtered = useMemo(() => {
     let result = [...published]
-    if (search.trim()) {
+    
+    if (aiMatchedIds !== null) {
+      // AI Search overrides normal search
+      result = result.filter(p => aiMatchedIds.includes(p.id))
+    } else if (search.trim()) {
       const q = search.toLowerCase()
       result = result.filter(
         (p) =>
@@ -76,7 +82,32 @@ export default function ProductsPage() {
 
   function handleFilterChange(setter: (v: string) => void, value: string) {
     setter(value)
+    if (setter === setSearch) setAiMatchedIds(null) // Reset AI search on typing
     setPage(1)
+  }
+
+  const handleSmartSearch = async () => {
+    if (!search.trim()) return
+    setIsAiSearching(true)
+    setPage(1)
+    try {
+      const res = await fetch("/api/search/smart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: search })
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setAiMatchedIds(data.productIds || [])
+      } else {
+        setAiMatchedIds(null)
+      }
+    } catch (e) {
+      console.error(e)
+      setAiMatchedIds(null)
+    } finally {
+      setIsAiSearching(false)
+    }
   }
 
   const productsJsonLd = {
@@ -117,22 +148,34 @@ export default function ProductsPage() {
             <div className="mb-10 space-y-4">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:flex-wrap">
                 {/* Search */}
-                <div className="relative flex-1 max-w-sm">
-                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0A0A0A]/40 pointer-events-none" />
-                  <input
-                    placeholder="Search products..."
-                    value={search}
-                    onChange={(e) => handleFilterChange(setSearch, e.target.value)}
-                    className="h-[48px] w-full bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl pl-11 pr-11 text-sm text-[#0A0A0A] placeholder:text-[#0A0A0A]/40 outline-none transition-all duration-200"
-                  />
-                  {search && (
-                    <button
-                      onClick={() => setSearch("")}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#0A0A0A]/40 hover:text-[#0A0A0A] transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
+                <div className="relative flex-1 max-w-sm flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0A0A0A]/40 pointer-events-none" />
+                    <input
+                      placeholder="Search products..."
+                      value={search}
+                      onChange={(e) => handleFilterChange(setSearch, e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSmartSearch()}
+                      className="h-[48px] w-full bg-white border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-1 focus:ring-[#0A0A0A] rounded-2xl pl-11 pr-11 text-sm text-[#0A0A0A] placeholder:text-[#0A0A0A]/40 outline-none transition-all duration-200"
+                    />
+                    {search && (
+                      <button
+                        onClick={() => { setSearch(""); setAiMatchedIds(null); }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#0A0A0A]/40 hover:text-[#0A0A0A] transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+                  <button 
+                    onClick={handleSmartSearch}
+                    disabled={isAiSearching || !search.trim()}
+                    className="h-[48px] px-4 bg-[#0A0A0A] text-white text-sm font-medium rounded-2xl hover:bg-neutral-800 disabled:opacity-50 transition-colors flex items-center gap-2 flex-shrink-0 shadow-sm"
+                    title="Smart Search with AI"
+                  >
+                    {isAiSearching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 text-amber-300" />}
+                    <span className="hidden sm:inline">Smart</span>
+                  </button>
                 </div>
 
                 {/* Price Range */}

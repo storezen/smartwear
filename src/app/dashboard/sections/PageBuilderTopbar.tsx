@@ -10,13 +10,36 @@ interface PageBuilderTopbarProps {
   saving: boolean
   justSaved: boolean
   undoCount: number
+  data: any // SectionData passed for SEO check
   onReset: () => void
   onSave: () => void
   onUndo: () => void
 }
 
-export function PageBuilderTopbar({ hasChanges, saving, justSaved, undoCount, onReset, onSave, onUndo }: PageBuilderTopbarProps) {
+export function PageBuilderTopbar({ hasChanges, saving, justSaved, undoCount, data, onReset, onSave, onUndo }: PageBuilderTopbarProps) {
   const [showResetConfirm, setShowResetConfirm] = useState(false)
+  const [seoOpen, setSeoOpen] = useState(false)
+  const [seoLoading, setSeoLoading] = useState(false)
+  const [seoAdvice, setSeoAdvice] = useState<string | null>(null)
+
+  async function handleSeoCheck() {
+    setSeoOpen(true)
+    setSeoLoading(true)
+    setSeoAdvice(null)
+    try {
+      const res = await fetch("/api/ai/page-builder/seo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pageData: data })
+      })
+      const apiData = await res.json()
+      setSeoAdvice(apiData.advice || "No advice generated.")
+    } catch (e) {
+      setSeoAdvice("Failed to run SEO check due to network error.")
+    } finally {
+      setSeoLoading(false)
+    }
+  }
 
   return (
     <>
@@ -45,6 +68,9 @@ export function PageBuilderTopbar({ hasChanges, saving, justSaved, undoCount, on
               Saved
             </span>
           )}
+          <Button variant="outline" size="sm" onClick={handleSeoCheck} className="gap-1.5 text-xs h-8 text-fuchsia-600 border-fuchsia-200 hover:bg-fuchsia-50">
+            <Layout className="size-3.5" /> SEO Check
+          </Button>
           <Button variant="outline" size="sm" onClick={onUndo} disabled={undoCount === 0} className="gap-1.5 text-xs h-8" title="Undo (Ctrl+Z)">
             <Undo className="size-3.5" /> Undo
           </Button>
@@ -67,6 +93,36 @@ export function PageBuilderTopbar({ hasChanges, saving, justSaved, undoCount, on
         onConfirm={() => { onReset(); setShowResetConfirm(false) }}
         onCancel={() => setShowResetConfirm(false)}
       />
+
+      {/* SEO Modal */}
+      {seoOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg rounded-2xl bg-white shadow-2xl overflow-hidden border border-fuchsia-200">
+            <div className="p-6 border-b border-fuchsia-100 bg-fuchsia-50/30">
+              <h2 className="text-lg font-bold text-neutral-900 flex items-center gap-2">
+                <Layout className="size-5 text-fuchsia-600" />
+                AI SEO Optimizer
+              </h2>
+              <p className="text-sm text-neutral-500 mt-1">Analyzing your homepage content for Google ranking improvements.</p>
+            </div>
+            <div className="p-6 min-h-[200px] max-h-[60vh] overflow-y-auto">
+              {seoLoading ? (
+                <div className="flex flex-col items-center justify-center py-10 gap-4">
+                  <Loader2 className="size-8 animate-spin text-fuchsia-600" />
+                  <p className="text-sm text-neutral-500 font-medium animate-pulse">AI is reading your page...</p>
+                </div>
+              ) : (
+                <div className="text-sm text-neutral-700 whitespace-pre-wrap leading-relaxed">
+                  {seoAdvice}
+                </div>
+              )}
+            </div>
+            <div className="p-4 border-t bg-neutral-50 flex justify-end">
+              <Button onClick={() => setSeoOpen(false)}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

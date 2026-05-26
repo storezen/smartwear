@@ -29,6 +29,8 @@ import {
   ChevronDown,
   Gift,
   Sparkles,
+  Megaphone,
+  Bot,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -67,6 +69,12 @@ const navGroups = [
       { href: "/dashboard/theme", label: "Themes", icon: Palette },
       { href: "/dashboard/sections", label: "Page Builder", icon: Layout },
       { href: "/dashboard/media", label: "Media", icon: Image },
+    ],
+  },
+  {
+    label: "AI Features ✨",
+    items: [
+      { href: "/dashboard/marketing", label: "Marketing Generator", icon: Megaphone },
     ],
   },
   {

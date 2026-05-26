@@ -7,11 +7,22 @@ import { Footer } from "@/components/Footer"
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp"
 import { Toaster } from "sonner"
 import { cn } from "@/lib/utils"
+import { useLiveAnalytics } from "@/hooks/useLiveAnalytics"
+
+function AnalyticsWrapper() {
+  useLiveAnalytics()
+  return null
+}
+
+import { Suspense } from "react"
 
 export default function StoreLayout({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
       <OrdersProvider>
+        <Suspense fallback={null}>
+          <AnalyticsWrapper />
+        </Suspense>
       <a
         href="#main-content"
         className={cn(

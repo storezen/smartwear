@@ -183,6 +183,37 @@ export default function OrderDetailPage() {
             </CardContent>
           </Card>
 
+          {order.aiTrustScore !== undefined && order.aiTrustScore !== null && (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+                  <span className="text-xl">{order.aiTrustScore >= 80 ? "🟢" : order.aiTrustScore >= 50 ? "🟡" : "🔴"}</span> AI Risk Analysis
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-foreground">Trust Score</span>
+                  <span className={`px-2 py-1 rounded text-xs font-bold ${order.aiTrustScore >= 80 ? "bg-emerald-100 text-emerald-700" : order.aiTrustScore >= 50 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"}`}>
+                    {order.aiTrustScore}%
+                  </span>
+                </div>
+                {order.aiFraudReason && (
+                  <div className="mt-2 rounded-lg bg-muted/50 p-3">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      <span className="font-semibold block mb-1 text-foreground">AI Observation:</span>
+                      {order.aiFraudReason}
+                    </p>
+                  </div>
+                )}
+                {order.aiAddressCorrected && (
+                  <p className="text-[10px] text-fuchsia-600 font-bold bg-fuchsia-50 px-2 py-1 rounded w-fit">
+                    ✨ Address was auto-corrected by AI
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-semibold">Update Status</CardTitle>

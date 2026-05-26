@@ -65,6 +65,9 @@ model Order {
   status       String   @default("pending")
   statusHistory Json    @default("[]")
   financials   Json?
+  aiTrustScore       Int?
+  aiFraudReason      String?
+  aiAddressCorrected Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -140,4 +143,15 @@ model ProfitSummary {
   lossRecovery  Float    @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  productId    String
+  customerName String
+  phone        String?
+  rating       Int
+  comment      String
+  verified     Boolean  @default(false)
+  createdAt    DateTime @default(now())
 }

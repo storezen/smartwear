@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { Palette, Check, Save, Sun, Moon, Undo, RotateCcw, Eye, Sparkles } from "lucide-react"
+import { Palette, Check, Save, Sun, Moon, Undo, RotateCcw, Eye, Sparkles, Wand2, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   getThemeData, saveThemeData, applyThemeMode, applyPreset, getPresets,
@@ -61,6 +61,8 @@ export default function ThemePage() {
   const [previewMode, setPreviewMode] = useState<"light" | "dark">(themeData.mode)
   const [savedData, setSavedData] = useState<string>("")
   const [customizing, setCustomizing] = useState(false)
+  const [aiPrompt, setAiPrompt] = useState("")
+  const [aiLoading, setAiLoading] = useState(false)
 
   useEffect(() => {
     setSavedData(JSON.stringify(themeData))
@@ -107,6 +109,36 @@ export default function ThemePage() {
     })
     setSelectedPreset(null)
   }, [mode])
+
+  async function handleAiGenerate() {
+    if (!aiPrompt) return
+    setAiLoading(true)
+    try {
+      const res = await fetch("/api/ai/page-builder/generate-theme", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: aiPrompt })
+      })
+      const data = await res.json()
+      if (data.theme) {
+        setThemeData(prev => {
+          const next = mode === "light" ? { ...prev, light: data.theme } : { ...prev, dark: data.theme }
+          applyThemeMode({ ...next, mode })
+          return next
+        })
+        setSelectedPreset(null)
+        setCustomizing(true)
+        toast.success("AI generated a unique theme!")
+      } else {
+        toast.error("Failed to generate theme")
+      }
+    } catch (e) {
+      toast.error("Network error during AI generation")
+    } finally {
+      setAiLoading(false)
+      setAiPrompt("")
+    }
+  }
 
   const current = mode === "light" ? themeData.light : themeData.dark
 
@@ -194,6 +226,37 @@ export default function ThemePage() {
               </motion.button>
             )
           })}
+        </div>
+      </div>
+
+      {/* AI Generator Panel */}
+      <div className="bg-white border border-fuchsia-200/60 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.03)] p-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-50/50 to-purple-50/50 pointer-events-none" />
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-4">
+            <Wand2 className="size-5 text-fuchsia-600" strokeWidth={2} />
+            <h2 className="text-lg font-bold text-neutral-900">AI Theme Generator</h2>
+          </div>
+          <p className="text-sm text-neutral-600 mb-4 max-w-2xl">
+            Describe the mood or brand identity you want, and AI will create a perfectly matching 10-color palette instantly.
+          </p>
+          <div className="flex gap-3 max-w-3xl">
+            <Input 
+              placeholder="e.g. A vibrant summer theme with orange and yellow accents..." 
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAiGenerate()}
+              className="flex-1 rounded-2xl h-12 border-fuchsia-200/60 shadow-sm focus-visible:ring-fuchsia-500"
+            />
+            <Button 
+              onClick={handleAiGenerate}
+              disabled={aiLoading || !aiPrompt}
+              className="h-12 px-6 rounded-2xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold gap-2 shadow-sm"
+            >
+              {aiLoading ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+              Generate Colors
+            </Button>
+          </div>
         </div>
       </div>
 

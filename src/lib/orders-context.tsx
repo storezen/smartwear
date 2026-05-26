@@ -33,6 +33,9 @@ export interface CODOrder {
   status: OrderStatus
   statusHistory: StatusEntry[]
   createdAt: string
+  aiTrustScore?: number
+  aiFraudReason?: string
+  aiAddressCorrected?: boolean
 }
 
 const API = "/api/orders"

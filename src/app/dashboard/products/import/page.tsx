@@ -20,7 +20,7 @@ import { useCategories } from "@/lib/categories-context"
 import {
   Upload, ArrowRight, Check, Download, AlertTriangle,
   FileText, HelpCircle, ChevronDown, ChevronRight,
-  Eye, Database, ListOrdered, Tags, FolderTree, Info,
+  Eye, Database, ListOrdered, Tags, FolderTree, Info, Sparkles, Loader2,
 } from "lucide-react"
 import { toast } from "sonner"
 import type { CsvRow, ParsedProduct, ImportSummary, DuplicateStrategy } from "@/lib/import/types"
@@ -75,6 +75,7 @@ export default function ProductImportPage() {
   const [importComplete, setImportComplete] = useState(false)
   const [importError, setImportError] = useState(false)
   const [newCategoryItems, setNewCategoryItems] = useState<{ name: string; slug: string }[]>([])
+  const [aiEnhancing, setAiEnhancing] = useState(false)
 
   const existingHandleSet = useMemo(() => new Set(existingProducts.map((p) => p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""))), [existingProducts])
   const existingSkuSet = useMemo(() => new Set(existingProducts.map((p) => p.sku).filter(Boolean)), [existingProducts])
@@ -165,6 +166,52 @@ export default function ProductImportPage() {
 
   function handleUpdateTags(handle: string, tags: string[]) {
     setParsedProducts((prev) => prev.map((p) => (p.handle === handle ? { ...p, tags } : p)))
+  }
+
+  async function handleAiEnhanceCategories() {
+    const uncategorized = parsedProducts
+      .map((p, i) => ({ index: i, name: p.title, description: p.description }))
+      .filter((_, i) => parsedProducts[i].category === "Uncategorized" || !parsedProducts[i].category)
+
+    if (uncategorized.length === 0) {
+      toast.info("Saray products already categorized hain!")
+      return
+    }
+
+    setAiEnhancing(true)
+    try {
+      const availableCategories = [...new Set([
+        ...existingCategories.map((c) => c.name),
+        ...parsedProducts.map((p) => p.category).filter(Boolean),
+      ])].filter((c) => c !== "Uncategorized")
+
+      const res = await fetch("/api/ai/categorize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ products: uncategorized, availableCategories }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+
+      const results: { index: number; category: string }[] = data.results || []
+      if (results.length === 0) {
+        toast.warning("AI koi category suggest nahi kar saka")
+        return
+      }
+
+      setParsedProducts((prev) => {
+        const updated = [...prev]
+        for (const r of results) {
+          if (updated[r.index]) updated[r.index] = { ...updated[r.index], category: r.category }
+        }
+        return updated
+      })
+      toast.success(`✨ AI ne ${results.length} products ko categorize kar diya!`)
+    } catch (e: any) {
+      toast.error(e.message || "AI categorization fail ho gayi")
+    } finally {
+      setAiEnhancing(false)
+    }
   }
 
   function downloadSampleCsv() {
@@ -478,14 +525,29 @@ export default function ProductImportPage() {
             </div>
 
             {/* Preview Actions */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-3">
               <p className="text-sm font-medium text-[#0F172A]">
                 {validProductsCount} valid product{validProductsCount !== 1 ? "s" : ""} ready to import
                 {invalidProducts.length > 0 && (
                   <span className="text-amber-600 font-normal"> · {invalidProducts.length} with errors</span>
                 )}
               </p>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* AI Enhance Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 border-amber-200 text-amber-700 hover:bg-amber-50"
+                  onClick={handleAiEnhanceCategories}
+                  disabled={aiEnhancing}
+                >
+                  {aiEnhancing ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="size-3.5 text-amber-500" />
+                  )}
+                  {aiEnhancing ? "AI categorize kar raha hai..." : "AI Enhance Categories"}
+                </Button>
                 <Button variant="outline" size="sm" onClick={clearFile}>Cancel</Button>
                 <Button size="sm" className="gap-1.5 shadow-sm" onClick={handleImport} disabled={validProductsCount === 0}>
                   <Upload className="size-3.5" /> Import {validProductsCount} Product{validProductsCount !== 1 ? "s" : ""}

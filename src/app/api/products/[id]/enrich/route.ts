@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/db/prisma"
-import { GoogleGenerativeAI } from "@google/generative-ai"
-
-// Placeholder used in the app when an image is missing
+import { prisma } from "@/lib/db/prisma"// Placeholder used in the app when an image is missing
 const PLACEHOLDER_IMAGE = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80"
 
 export async function POST(
@@ -65,53 +62,76 @@ export async function POST(
       }
     }
 
-    // 3. Generate Text with Gemini
+    // 3. Generate Text with Opencode (DeepSeek)
     if (needsDescription || needsSpecs || needsSeo) {
-      const geminiKey = process.env.GEMINI_API_KEY
+      const apiKey = process.env.OPENCODE_API_KEY
+      const baseUrl = process.env.OPENCODE_BASE_URL || "https://opencode.ai/zen/v1"
+      const model = process.env.AI_MODEL || "deepseek-v4-flash-free"
       
-      if (!geminiKey) {
-        console.warn("GEMINI_API_KEY is not set. Skipping text enrichment.")
+      if (!apiKey) {
+        console.warn("OPENCODE_API_KEY is not set. Skipping text enrichment.")
       } else {
         try {
-          const genAI = new GoogleGenerativeAI(geminiKey)
-          const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
-
           const prompt = `
-          You are an expert E-commerce Copywriter and SEO Specialist.
-          I have a product with the following details:
-          Name: "${product.name}"
-          Category: "${product.category}"
-          Price: ${product.price}
-          
-          I need you to generate missing data for this product. Return ONLY a valid JSON object matching this exact structure:
-          {
-            "description": "Write a compelling, premium, and detailed product description in HTML format (e.g. <p>...</p> <ul><li>...</li></ul>). Make it sound premium, focusing on features and benefits.",
-            "specs": [{"key": "Spec Name (e.g. Material)", "value": "Spec Value (e.g. Premium Leather)"}, {"key": "...", "value": "..."}],
-            "metaTitle": "SEO optimized title (max 60 chars)",
-            "metaDescription": "SEO optimized description (max 160 chars)"
-          }
-          
-          Make sure the specs are realistic for a product of this type. Return ONLY valid JSON, without markdown formatting like \`\`\`json.
-          `
+You are an expert E-commerce Copywriter and SEO Specialist.
+I have a product with the following details:
+Name: "${product.name}"
+Category: "${product.category}"
+Price: Rs. ${product.price}
 
-          const result = await model.generateContent({
-            contents: [{ role: 'user', parts: [{ text: prompt }] }],
-            generationConfig: {
-              responseMimeType: "application/json",
-            }
+I need you to generate missing data for this product. Return ONLY a valid JSON object matching this exact structure:
+{
+  "description": "Write a compelling, premium, and detailed product description in HTML format (e.g. <p>...</p> <ul><li>...</li></ul>). Make it sound premium, focusing on features and benefits.",
+  "specs": [{"key": "Spec Name (e.g. Material)", "value": "Spec Value (e.g. Premium Leather)"}, {"key": "...", "value": "..."}],
+  "metaTitle": "SEO optimized title (max 60 chars)",
+  "metaDescription": "SEO optimized description (max 160 chars)"
+}
+
+Make sure the specs are realistic for a product of this type. Return ONLY valid JSON, without markdown formatting like \`\`\`json.
+`
+
+          const aiRes = await fetch(`${baseUrl}/chat/completions`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+              model: model,
+              messages: [
+                { role: "system", content: "You are a product data enricher. Return only raw valid JSON object. No explanations." },
+                { role: "user", content: prompt }
+              ],
+              temperature: 0.3
+            })
           })
 
-          const aiText = result.response.text()
-          const aiData = JSON.parse(aiText)
+          if (!aiRes.ok) {
+            console.error("AI API Error:", await aiRes.text())
+          } else {
+            const aiJson = await aiRes.json()
+            let aiText = aiJson.choices?.[0]?.message?.content?.trim() || ""
+            
+            // Strip markdown if AI included it
+            aiText = aiText.replace(/```json\n?/gi, "").replace(/```\n?/gi, "").trim()
+            
+            if (aiText) {
+              try {
+                const aiData = JSON.parse(aiText)
 
-          if (needsDescription && aiData.description) updates.description = aiData.description
-          if (needsSpecs && aiData.specs) updates.specs = aiData.specs // Prisma maps array to JSON
-          if (needsSeo) {
-            if (aiData.metaTitle) updates.metaTitle = aiData.metaTitle
-            if (aiData.metaDescription) updates.metaDescription = aiData.metaDescription
+                if (needsDescription && aiData.description) updates.description = aiData.description
+                if (needsSpecs && aiData.specs) updates.specs = aiData.specs
+                if (needsSeo) {
+                  if (aiData.metaTitle) updates.metaTitle = aiData.metaTitle
+                  if (aiData.metaDescription) updates.metaDescription = aiData.metaDescription
+                }
+              } catch (parseError) {
+                console.error("Failed to parse AI JSON:", aiText)
+              }
+            }
           }
         } catch (err) {
-          console.error("Gemini API Error:", err)
+          console.error("AI Generation Error:", err)
         }
       }
     }

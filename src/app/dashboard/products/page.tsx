@@ -61,8 +61,9 @@ export default function ProductsPage() {
       } else {
         toast.error(data.error || "Failed to enrich product", { id: "enrich" })
       }
-    } catch (err) {
-      toast.error("Failed to connect to AI service", { id: "enrich" })
+    } catch (err: any) {
+      console.error("Enrichment fetch error:", err)
+      toast.error(`Failed to connect to AI service: ${err.message}`, { id: "enrich" })
     } finally {
       setEnrichingId(null)
     }

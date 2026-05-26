@@ -7,6 +7,7 @@ import type { WhatsAppNotificationConfig } from "@/lib/integrations/whatsapp"
 const ALLOWED_ORDER_FIELDS = [
   "productId", "productName", "productPrice", "productImage",
   "quantity", "total", "customerName", "phone", "address", "city", "notes",
+  "aiTrustScore", "aiFraudReason", "aiAddressCorrected"
 ] as const
 
 function pickOrderFields(data: Record<string, unknown>) {
@@ -146,6 +147,70 @@ export async function POST(req: Request) {
         data: { quantity: { decrement: quantity } },
       })
     }
+
+    // --- AI FRAUD CHECK & ADDRESS NORMALIZATION ---
+    try {
+      const apiKey = process.env.OPENCODE_API_KEY
+      if (apiKey && data.address && data.phone) {
+        const aiPrompt = `Analyze this COD order for a Pakistani E-commerce store.
+Customer: ${data.customerName}
+Phone: ${data.phone}
+Address: ${data.address}
+City: ${data.city}
+
+Tasks:
+1. Normalize and format the address correctly.
+2. Evaluate a Trust Score (0-100) for COD Fraud risk based on the address quality (too short or missing house/street is risky) and phone format (Pakistani phones are usually 11 digits, like 0300... or +923...). 
+3. Provide a short reason for the score in English.
+
+Return strictly ONLY a JSON object:
+{
+  "normalizedAddress": "Corrected Address, City",
+  "trustScore": 90,
+  "reason": "Address looks complete and phone is valid"
+}`
+        const aiRes = await fetch("https://opencode.ai/zen/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: process.env.AI_MODEL || "deepseek-v4-flash-free",
+            messages: [
+              { role: "system", content: "You are a fraud detection API. Return only raw valid JSON object. No explanations." },
+              { role: "user", content: aiPrompt }
+            ],
+            temperature: 0.1
+          })
+        })
+
+        if (aiRes.ok) {
+          const aiJson = await aiRes.json()
+          let aiText = aiJson.choices?.[0]?.message?.content?.trim() || ""
+          aiText = aiText.replace(/```json\n?/gi, "").replace(/```\n?/gi, "").trim()
+          
+          try {
+            const parsed = JSON.parse(aiText)
+            if (parsed.normalizedAddress && parsed.normalizedAddress.length > 10) {
+              data.address = parsed.normalizedAddress
+              data.aiAddressCorrected = true
+            }
+            if (typeof parsed.trustScore === "number") {
+              data.aiTrustScore = parsed.trustScore
+            }
+            if (parsed.reason) {
+              data.aiFraudReason = parsed.reason
+            }
+          } catch (parseError) {
+            console.error("Failed to parse AI Fraud Check:", aiText)
+          }
+        }
+      }
+    } catch (err) {
+      console.error("AI Fraud Check failed, continuing without it:", err)
+    }
+    // --- END AI FRAUD CHECK ---
 
     const order = await prisma.order.create({ data: pickOrderFields(data) as any })
 

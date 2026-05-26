@@ -152,6 +152,7 @@ export function PageBuilderShell() {
         hasChanges={hasChanges}
         saving={saving}
         justSaved={justSaved}
+        data={data}
         onReset={handleReset}
         onSave={handleSave}
         undoCount={undoStack.length}

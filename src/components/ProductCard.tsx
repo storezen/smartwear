@@ -12,6 +12,7 @@ export interface Product {
   originalPrice?: number
   image: string
   inStock?: boolean
+  quantity?: number
 }
 
 interface ProductCardProps {
@@ -37,7 +38,9 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     : null
 
   const handle = product.handle || product.id
-  const available = product.inStock !== false
+  const available = product.quantity !== undefined
+    ? product.quantity > 0
+    : product.inStock !== false
 
   return (
     <div className="group relative flex flex-col bg-[#FAFAFA]">

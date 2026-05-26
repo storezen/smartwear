@@ -6,7 +6,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { ImageField } from "@/components/page-builder/ImageField"
 import { cn } from "@/lib/utils"
-import { Plus, X, Palette } from "lucide-react"
+import { Plus, X, Palette, Wand2, Loader2, Image as ImageIcon } from "lucide-react"
+import { useState } from "react"
+import { toast } from "sonner"
 
 export const sectionLabels: Record<string, string> = {
   hero: "Hero Section", categories: "Categories", newArrivals: "New Arrivals",
@@ -58,6 +60,115 @@ export function getValue(data: any, path: string): any {
   return obj ?? ""
 }
 
+function AiTextWrapper({
+  label, path, value, onUpdate, children, isTextarea
+}: { label: string; path: string; value: string; onUpdate: (p: string, v: string) => void; children: React.ReactNode; isTextarea?: boolean }) {
+  const [loading, setLoading] = useState(false)
+
+  async function handleMagicFill() {
+    const prompt = window.prompt(`What should the AI generate for '${label}'?`)
+    if (!prompt) return
+    setLoading(true)
+    try {
+      const res = await fetch("/api/ai/page-builder/generate-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: `Generate a short text for ${label}. Context: ${prompt}` })
+      })
+      const data = await res.json()
+      if (data.text) {
+        onUpdate(path, data.text)
+        toast.success("AI generated content!")
+      }
+    } catch (e) {
+      toast.error("AI failed")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleRewrite() {
+    if (!value) return toast.error("Write some text first to rewrite")
+    const tone = window.prompt("Rewrite in what tone? (e.g. Exciting, Roman Urdu, Professional)")
+    if (!tone) return
+    setLoading(true)
+    try {
+      const res = await fetch("/api/ai/page-builder/generate-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ originalText: value, tone })
+      })
+      const data = await res.json()
+      if (data.text) {
+        onUpdate(path, data.text)
+        toast.success(`Rewritten in ${tone} tone!`)
+      }
+    } catch (e) {
+      toast.error("AI failed")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <Label className="text-xs">{label}</Label>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon" className="h-5 w-5 text-fuchsia-600 hover:text-fuchsia-700 hover:bg-fuchsia-50" onClick={handleMagicFill} disabled={loading} title="Magic Fill">
+            {loading ? <Loader2 className="size-3 animate-spin" /> : <Wand2 className="size-3" />}
+          </Button>
+          {value && (
+            <Button variant="ghost" size="icon" className="h-5 w-5 text-blue-600 hover:text-blue-700 hover:bg-blue-50" onClick={handleRewrite} disabled={loading} title="Rewrite Tone">
+              <span className="text-[9px] font-bold">Aa</span>
+            </Button>
+          )}
+        </div>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+function AiImageWrapper({
+  label, path, onUpdate, children
+}: { label: string; path: string; onUpdate: (p: string, v: string) => void; children: React.ReactNode }) {
+  const [loading, setLoading] = useState(false)
+
+  async function handleSearch() {
+    const query = window.prompt(`Search image for '${label}':`)
+    if (!query) return
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/unsplash/search?q=${encodeURIComponent(query)}&per_page=1`)
+      const data = await res.json()
+      if (data.results && data.results.length > 0) {
+        onUpdate(path, data.results[0].urls.regular)
+        toast.success("Image found via Unsplash!")
+      } else {
+        toast.error("No image found")
+      }
+    } catch (e) {
+      toast.error("Image search failed")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <Label className="text-xs">{label}</Label>
+        <Button variant="ghost" size="sm" className="h-5 px-1.5 text-[9px] text-fuchsia-600 hover:text-fuchsia-700 hover:bg-fuchsia-50 gap-1" onClick={handleSearch} disabled={loading}>
+          {loading ? <Loader2 className="size-2.5 animate-spin" /> : <ImageIcon className="size-2.5" />}
+          AI Find
+        </Button>
+      </div>
+      {children}
+    </div>
+  )
+}
+
 export function renderTextField(
   label: string,
   path: string,
@@ -68,17 +179,7 @@ export function renderTextField(
 ) {
   const value = getValue(data, path) as string
   return (
-    <div className="space-y-1.5">
-      {opts?.charLimit ? (
-        <div className="flex items-center justify-between">
-          <Label className="text-xs">{label}</Label>
-          <span className={cn("text-[10px] tabular-nums", value.length > opts.charLimit - 20 ? "text-amber-600" : "text-muted-foreground")}>
-            {value.length}/{opts.charLimit}
-          </span>
-        </div>
-      ) : (
-        <Label className="text-xs">{label}</Label>
-      )}
+    <AiTextWrapper label={label} path={path} value={value} onUpdate={onUpdate}>
       <Input
         value={value}
         onChange={(e) => {
@@ -88,7 +189,12 @@ export function renderTextField(
         placeholder={placeholder}
         className={cn("h-8 text-sm", opts?.className)}
       />
-    </div>
+      {opts?.charLimit && (
+        <p className={cn("text-[9px] text-right mt-0.5", value.length > opts.charLimit - 20 ? "text-amber-600" : "text-muted-foreground")}>
+          {value.length}/{opts.charLimit}
+        </p>
+      )}
+    </AiTextWrapper>
   )
 }
 
@@ -102,17 +208,7 @@ export function renderTextarea(
 ) {
   const value = getValue(data, path) as string
   return (
-    <div className="space-y-1.5">
-      {opts?.charLimit ? (
-        <div className="flex items-center justify-between">
-          <Label className="text-xs">{label}</Label>
-          <span className={cn("text-[10px] tabular-nums", value.length > opts.charLimit - 20 ? "text-amber-600" : "text-muted-foreground")}>
-            {value.length}/{opts.charLimit}
-          </span>
-        </div>
-      ) : (
-        <Label className="text-xs">{label}</Label>
-      )}
+    <AiTextWrapper label={label} path={path} value={value} onUpdate={onUpdate} isTextarea>
       <Textarea
         value={value}
         onChange={(e) => {
@@ -123,7 +219,12 @@ export function renderTextarea(
         placeholder={placeholder}
         className="text-sm"
       />
-    </div>
+      {opts?.charLimit && (
+        <p className={cn("text-[9px] text-right mt-0.5", value.length > opts.charLimit - 20 ? "text-amber-600" : "text-muted-foreground")}>
+          {value.length}/{opts.charLimit}
+        </p>
+      )}
+    </AiTextWrapper>
   )
 }
 
@@ -135,7 +236,9 @@ export function renderImageField(
 ) {
   const value = getValue(data, path) as string
   return (
-    <ImageField value={value} onChange={(v) => onUpdate(path, v)} label={label} />
+    <AiImageWrapper label={label} path={path} onUpdate={onUpdate}>
+      <ImageField value={value} onChange={(v) => onUpdate(path, v)} label="" />
+    </AiImageWrapper>
   )
 }
 

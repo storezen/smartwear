@@ -436,6 +436,11 @@ export default function OrdersPage() {
                         <td className="px-3 py-4">
                           <p className="font-bold text-neutral-900 font-mono text-xs">{o.id}</p>
                           <p className="text-[10px] text-neutral-400 mt-0.5">{new Date(o.createdAt).toLocaleDateString("en-PK", { day: "numeric", month: "short", year: "numeric" })}</p>
+                          {o.aiTrustScore !== undefined && o.aiTrustScore !== null && (
+                            <div title={o.aiFraudReason || "AI Trust Score"} className={`mt-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${o.aiTrustScore >= 80 ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : o.aiTrustScore >= 50 ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-red-50 text-red-700 border border-red-200"}`}>
+                              {o.aiTrustScore >= 80 ? "🟢" : o.aiTrustScore >= 50 ? "🟡" : "🔴"} {o.aiTrustScore}% Trust
+                            </div>
+                          )}
                         </td>
                         <td className="px-3 py-4">
                           <p className="font-bold text-neutral-900 text-sm">{o.customerName}</p>
@@ -526,7 +531,14 @@ export default function OrdersPage() {
                         <input type="checkbox" checked={selected.has(o.id)} onChange={() => toggleSelect(o.id)} className="rounded border-neutral-300 accent-neutral-950" />
                         <div>
                           <p className="font-bold text-neutral-900 font-mono text-xs">{o.id}</p>
-                          <p className="text-xs text-neutral-400">{new Date(o.createdAt).toLocaleDateString("en-PK")}</p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <p className="text-xs text-neutral-400">{new Date(o.createdAt).toLocaleDateString("en-PK")}</p>
+                            {o.aiTrustScore !== undefined && o.aiTrustScore !== null && (
+                              <span className={`px-1 rounded text-[9px] font-bold ${o.aiTrustScore >= 80 ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : o.aiTrustScore >= 50 ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-red-50 text-red-700 border border-red-200"}`}>
+                                {o.aiTrustScore >= 80 ? "🟢" : o.aiTrustScore >= 50 ? "🟡" : "🔴"} {o.aiTrustScore}%
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <span className={`px-2.5 py-1 rounded-lg border text-xs font-bold ${STATUS_COLORS[o.status]}`}>

@@ -3,8 +3,11 @@
 import { useState } from "react"
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
-import { ChevronDown, ChevronRight, Layers, Layout, GripVertical } from "lucide-react"
+import { ChevronDown, ChevronRight, Layers, Layout, GripVertical, Wand2, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 import type { SectionData, SectionKey } from "@/lib/sections"
 import { SectionListItem, iconMap, labelMap } from "./SectionListItem"
 
@@ -25,6 +28,9 @@ interface SectionSidebarProps {
 export function SectionSidebar({ data, selectedKey, onSelect, onToggle, onMove, onToggleAll, onUpdate, onPushUndo }: SectionSidebarProps) {
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [activeId, setActiveId] = useState<string | null>(null)
+  
+  const [aiLayoutPrompt, setAiLayoutPrompt] = useState("")
+  const [aiLayoutLoading, setAiLayoutLoading] = useState(false)
 
   const primaryKeys = PRIMARY_KEYS.filter(k => data.sectionOrder.includes(k))
   const advancedKeys = ADVANCED_KEYS.filter(k => data.sectionOrder.includes(k))
@@ -48,8 +54,58 @@ export function SectionSidebar({ data, selectedKey, onSelect, onToggle, onMove, 
   const OverlayIcon = activeId ? (iconMap[activeId] || Layout) : Layout
   const OverlayLabel = activeId ? (labelMap[activeId] || activeId) : ""
 
+  async function handleAiLayout() {
+    if (!aiLayoutPrompt) return
+    setAiLayoutLoading(true)
+    try {
+      const res = await fetch("/api/ai/page-builder/layout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: aiLayoutPrompt, currentOrder: data.sectionOrder })
+      })
+      const apiData = await res.json()
+      if (apiData.order && Array.isArray(apiData.order)) {
+        if (onPushUndo) onPushUndo()
+        // We need to reorder.
+        // It's tricky to call onMove multiple times, so we just update the raw sectionOrder if we can.
+        // Wait, onUpdate can update 'sectionOrder' entirely!
+        if (onUpdate) onUpdate("sectionOrder", apiData.order as any)
+        toast.success("Layout optimized via AI!")
+      }
+    } catch (e) {
+      toast.error("AI Layout failed")
+    } finally {
+      setAiLayoutLoading(false)
+      setAiLayoutPrompt("")
+    }
+  }
+
   return (
     <div className="space-y-4">
+      {/* AI Layout Generator */}
+      <div className="rounded-xl border border-fuchsia-200/60 bg-gradient-to-br from-fuchsia-50/50 to-purple-50/50 p-3 shadow-sm mb-4">
+        <div className="flex items-center gap-1.5 mb-2">
+          <Wand2 className="size-3.5 text-fuchsia-600" />
+          <span className="text-[11px] font-bold text-neutral-900 uppercase tracking-wider">AI Layout Maker</span>
+        </div>
+        <div className="flex gap-2">
+          <Input 
+            placeholder="e.g. Maximize conversions for Flash Sale" 
+            value={aiLayoutPrompt}
+            onChange={e => setAiLayoutPrompt(e.target.value)}
+            className="h-8 text-xs bg-white"
+          />
+          <Button 
+            size="icon" 
+            className="h-8 w-8 shrink-0 bg-fuchsia-600 hover:bg-fuchsia-700 text-white" 
+            onClick={handleAiLayout} 
+            disabled={aiLayoutLoading || !aiLayoutPrompt}
+          >
+            {aiLayoutLoading ? <Loader2 className="size-3 animate-spin" /> : <Wand2 className="size-3" />}
+          </Button>
+        </div>
+      </div>
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Layers className="size-4 text-muted-foreground" />
