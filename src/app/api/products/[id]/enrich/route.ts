@@ -7,10 +7,10 @@ const PLACEHOLDER_IMAGE = "https://images.unsplash.com/photo-1505740420928-5e560
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await context.params
     
     // 1. Fetch Product
     const product = await prisma.product.findUnique({
