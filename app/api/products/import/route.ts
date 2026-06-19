@@ -10,18 +10,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No products provided' }, { status: 400 })
     }
 
-    // Ensure all products have the required structure
+    // Ensure all products have the required structure and ONLY valid fields
     const formattedProducts = products.map((p: any) => ({
-      ...p,
       id: p.id || crypto.randomUUID(),
+      name: p.name || p.slug,
+      slug: p.slug,
+      description: p.description || '',
       price: Number(p.price) || 0,
-      stock: Number(p.stock) || 0,
       compare_price: p.compare_price ? Number(p.compare_price) : null,
-      is_active: p.is_active !== undefined ? p.is_active : true,
-      is_featured: p.is_featured !== undefined ? p.is_featured : false,
       images: Array.isArray(p.images) ? p.images : (typeof p.images === 'string' ? [p.images] : []),
-      tags: Array.isArray(p.tags) ? p.tags : [],
+      category_slug: p.category_slug || 'uncategorized',
+      brand: p.brand || 'Smartwear',
+      stock: Number(p.stock) || 0,
+      rating: Number(p.rating) || 4.8,
+      reviews_count: Number(p.reviews_count) || 0,
       specifications: typeof p.specifications === 'object' && p.specifications !== null ? p.specifications : {},
+      is_featured: p.is_featured !== undefined ? p.is_featured : false,
+      is_active: p.is_active !== undefined ? p.is_active : true,
+      upsell_accessories: Array.isArray(p.upsell_accessories) ? p.upsell_accessories : [],
       created_at: new Date().toISOString()
     }))
 
