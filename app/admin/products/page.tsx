@@ -193,7 +193,22 @@ export default function AdminProductsPage() {
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.id?.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesStatus = filterStatus === 'All' || p.status === filterStatus
-    const matchesCategory = filterCategory === 'All' || p.category_slug === filterCategory
+    const matchesCategory = filterCategory === 'All' || (() => {
+      const c = (p.category_slug || '').toLowerCase();
+      const cat = filterCategory.toLowerCase();
+      
+      if (cat === 'accessories') {
+        return ['accessories', 'strap', 'charger', 'case', 'band', 'protector', 'cable'].some(k => c.includes(k));
+      }
+      if (cat === 'analog-watches' || cat === 'analog') {
+        return ['analog', 'classic', 'luxury', 'mechanic', 'quartz', 'automatic'].some(k => c.includes(k));
+      }
+      if (cat === 'smart-watches' || cat === 'smartwatches') {
+        return ['smart', 'digital', 'fitness', 'tracker', 'apple', 'samsung', 'huawei'].some(k => c.includes(k)) || c === 'watch' || c === 'watches' || c === 'smartwatches' || c === 'smart-watches';
+      }
+      
+      return c === cat || c.includes(cat);
+    })();
     return matchesSearch && matchesStatus && matchesCategory
   })
 

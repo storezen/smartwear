@@ -113,14 +113,20 @@ function ProductsContent() {
     if (q) { const lq = q.toLowerCase(); r = r.filter(p => p.name.toLowerCase().includes(lq) || p.brand.toLowerCase().includes(lq)) }
     if (catSlug) {
       r = r.filter(p => {
-        const c = p.category_slug || '';
+        const c = (p.category_slug || '').toLowerCase();
         const cat = catSlug.toLowerCase();
         
-        if (['accessories', 'straps', 'chargers', 'cases'].includes(cat)) return c === 'accessories';
-        if (['analog-watches', 'analog'].includes(cat)) return c === 'analog-watches';
-        if (['smart-watches', 'smartwatches'].includes(cat)) return c === 'smart-watches';
+        if (cat === 'accessories') {
+          return ['accessories', 'strap', 'charger', 'case', 'band', 'protector', 'cable'].some(k => c.includes(k));
+        }
+        if (cat === 'analog-watches' || cat === 'analog') {
+          return ['analog', 'classic', 'luxury', 'mechanic', 'quartz', 'automatic'].some(k => c.includes(k));
+        }
+        if (cat === 'smart-watches' || cat === 'smartwatches') {
+          return ['smart', 'digital', 'fitness', 'tracker', 'apple', 'samsung', 'huawei'].some(k => c.includes(k)) || c === 'watch' || c === 'watches' || c === 'smartwatches' || c === 'smart-watches';
+        }
         
-        return c === catSlug;
+        return c === cat || c.includes(cat);
       });
     }
     if (saleOnly === "true") r = r.filter(p => p.compare_price)
