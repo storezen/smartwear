@@ -76,20 +76,33 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
           // Deep Smart Category Extraction
           const title = (row['Title'] || handle).toLowerCase()
           const type = (row['Product Category'] || row['Type'] || '').toLowerCase()
-          const searchStr = `${title} ${type} ${rawTags.toLowerCase()}`
+          const tags = rawTags ? rawTags.toLowerCase() : ''
+          const searchStr = `${title} ${type} ${tags}`
           
           let category = 'smart-watches' // Default
           
-          if (/(strap|band|cable|charger|case|cover|protector|airpods|earbud|pod|wisme|adapter)/i.test(searchStr)) {
+          const isAudio = /\b(airpod|airpods|earbud|earbuds|pod|pods|wisme|headphone|earphone|handsfree|buds)\b/i.test(searchStr)
+          
+          const isCaseOrStrap = 
+            /\b(case|cover|protector|cable|charger|adapter|strap|band|loop|box)\b/i.test(title) && 
+            !/\b(with|and|\+)\b.*\b(case|cover|protector|cable|charger|adapter|strap|band|loop|box)\b/i.test(title)
+
+          const isExplicitAccessory = type.includes('accessory') || tags.includes('accessory') || isAudio || isCaseOrStrap
+          
+          const isAnalog = /\b(analog|automatic|quartz|chronograph|mechanic|mechanical|rolex|rlx|rolx|patek|richard|citizen|ctzn|seiko|casio|edifice|hublot|hblt|versace|versacee|universe|sgw5\d+|vr\s*\d+|vr\d+|luxury)\b/i.test(searchStr)
+          
+          const isSmart = /\b(smartwatch|smart|series|ultra|apple|ws-\w+|hw\d+|t800|t900|hk\d+|dt\d+|amoled|kieslect|mibro|huawei|samsung)\b/i.test(searchStr) || /watch\s*\d+/i.test(title)
+
+          if (isExplicitAccessory) {
             category = 'accessories'
-          } else if (/(analog|rolex|rolx|patek|richard|citizen|seiko|mechanic|quartz|luxury|automatic|casio|edifice|hublot|versace|vr\s*\d+|vr\d+|chain)/i.test(searchStr)) {
-            category = 'analog-watches'
-          } else if (/(smart|series|ultra|apple|watch\s*\d+|ws-|hw\d+|t800|t900|samsung|huawei|kieslect|mibro|hk\d+|dt\d+)/i.test(searchStr)) {
+          } else if (isSmart) {
             category = 'smart-watches'
-          } else if (type.includes('analog') || rawTags.toLowerCase().includes('analog')) {
+          } else if (isAnalog) {
             category = 'analog-watches'
-          } else if (type.includes('accessory') || rawTags.toLowerCase().includes('accessory')) {
-            category = 'accessories'
+          } else {
+            if (tags.includes('analog') || type.includes('analog')) category = 'analog-watches'
+            else if (tags.includes('smart') || type.includes('smart')) category = 'smart-watches'
+            else category = 'smart-watches'
           }
 
           if (!productMap.has(handle)) {
