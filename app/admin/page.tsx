@@ -34,12 +34,12 @@ import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { AnimatedCounter } from "@/components/ui/animated-counter"
 
 const revenueData = [
-  { month: "Jan", revenue: 45000 },
-  { month: "Feb", revenue: 52000 },
-  { month: "Mar", revenue: 48000 },
-  { month: "Apr", revenue: 61000 },
-  { month: "May", revenue: 55000 },
-  { month: "Jun", revenue: 67000 },
+  { month: "Jan", revenue: 0 },
+  { month: "Feb", revenue: 0 },
+  { month: "Mar", revenue: 0 },
+  { month: "Apr", revenue: 0 },
+  { month: "May", revenue: 0 },
+  { month: "Jun", revenue: 0 },
 ]
 
 /* ── Stat Card ────────────────────────────────────── */
@@ -113,6 +113,7 @@ function CustomTooltip({ active, payload, label }: any) {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<StatCardProps[]>([])
   const [recentOrders, setRecentOrders] = useState<any[]>([])
+  const [topProducts, setTopProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -169,6 +170,7 @@ export default function AdminDashboard() {
         ])
 
         setRecentOrders(orders.slice(0, 5))
+        setTopProducts(products.slice(0, 5))
       } catch (err) {
         console.error("Failed to load dashboard stats", err)
       } finally {
@@ -346,7 +348,11 @@ export default function AdminDashboard() {
           </div>
 
           <div className="space-y-3">
-            {mockProducts.slice(0, 5).map((product: any, index: number) => (
+            {loading ? (
+              <div className="text-center py-4 text-white/50 text-sm">Loading...</div>
+            ) : topProducts.length === 0 ? (
+              <div className="text-center py-4 text-white/50 text-sm">No products added yet.</div>
+            ) : topProducts.map((product: any, index: number) => (
               <div
                 key={product.id}
                 className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors"
@@ -355,7 +361,13 @@ export default function AdminDashboard() {
                   {index + 1}
                 </span>
                 <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-[#0C0F14] border border-white/10 shrink-0">
-                  <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+                  {product.images && product.images.length > 0 ? (
+                    <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Package className="w-5 h-5 text-white/30" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold truncate text-white">{product.name}</p>
