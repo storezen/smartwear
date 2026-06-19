@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(rm -rf /Users/mrmacbook/Desktop/ecomrenceapp/app/\\\\\\(store\\\\\\)/compare /Users/mrmacbook/Desktop/ecomrenceapp/app/\\\\\\(store\\\\\\)/track-order /Users/mrmacbook/Desktop/ecomrenceapp/app/\\\\\\(store\\\\\\)/account/orders/\\\\[id\\\\]/invoice)",
+      "Bash(pnpm add *)",
+      "Bash(curl -s --max-time 5 http://localhost:3001)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(curl -s http://localhost:3001/products)",
+      "Bash(npm run *)",
+      "Bash(lsof -ti:3001)",
+      "Bash(xargs kill -9)"
+    ],
+    "additionalDirectories": [
+      "/Users/mrmacbook/Desktop/ecomrenceapp/app/(store)/account/orders/[id]/invoice"
+    ]
+  }
+}
