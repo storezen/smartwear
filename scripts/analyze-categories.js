@@ -22,26 +22,24 @@ function getProductCategory(title, tags = '') {
     return 'Watch Bands & Straps';
   }
 
+  if (/\b(case)\b/i.test(lowerTitle) && /\b(iphone|phone)\b/i.test(searchStr)) {
+    return 'Phone Cases';
+  }
+
+  if (/\b(camera lens|lens protector)\b/i.test(searchStr)) {
+    return 'Camera Protectors';
+  }
+
   if (watchKeywords.test(searchStr)) {
     return 'Smart Watches';
   }
 
-  if (/\b(analog)\b/i.test(searchStr) && !watchKeywords.test(searchStr)) {
+  if (/\b(analog)\b/i.test(searchStr)) {
     return 'Analog Watches';
   }
 
   if (/\b(ladies|women|woman)\b/i.test(searchStr) && /\b(watch|watches)\b/i.test(searchStr)) {
     return 'Ladies Watches';
-  }
-
-  if (/\b(case)\b/i.test(lowerTitle)) {
-    if (/\b(iphone|phone|samsung)\b/i.test(searchStr) || !/\b(watch|earbuds|airpods)\b/i.test(searchStr)) {
-      return 'Phone Cases';
-    }
-  }
-
-  if (/\b(camera lens|lens protector)\b/i.test(searchStr)) {
-    return 'Camera Protectors';
   }
 
   return 'Accessories';
