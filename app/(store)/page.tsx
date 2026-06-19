@@ -17,7 +17,7 @@ import { formatPrice } from "@/lib/mock-data"
    SHARED ANIMATION VARIANTS
    ════════════════════════════════════════════════════════ */
 
-const fadeUp = {
+const fadeUp: any = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number = 0) => ({
     opacity: 1, y: 0,
@@ -33,7 +33,7 @@ const staggerContainer = {
   },
 }
 
-const staggerItem = {
+const staggerItem: any = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
 }

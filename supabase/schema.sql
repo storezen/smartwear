@@ -1,66 +1,79 @@
--- Smartwear Supabase Schema
--- Run this in Supabase SQL Editor
+-- ==========================================
+-- Supabase Schema for Smartwear Pakistan
+-- ==========================================
 
--- 1. Products table
-create table if not exists products (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  slug text unique not null,
-  description text,
-  price integer not null,
-  compare_price integer,
-  images text[] default '{}',
-  category_slug text,
-  brand text,
-  stock integer default 0,
-  rating numeric(3,1) default 4.5,
-  reviews_count integer default 0,
-  specifications jsonb default '{}',
-  is_featured boolean default false,
-  is_active boolean default true,
-  created_at timestamptz default now()
+-- 1. Products Table
+CREATE TABLE public.products (
+  id TEXT PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  description TEXT,
+  price NUMERIC NOT NULL,
+  compare_price NUMERIC,
+  images JSONB,
+  category_slug TEXT,
+  brand TEXT,
+  stock INTEGER DEFAULT 0,
+  rating NUMERIC DEFAULT 0,
+  reviews_count INTEGER DEFAULT 0,
+  specifications JSONB,
+  is_featured BOOLEAN DEFAULT FALSE,
+  is_active BOOLEAN DEFAULT TRUE,
+  upsell_accessories JSONB
 );
 
--- 2. Orders table (simple for now)
-create table if not exists orders (
-  id text primary key,                    -- e.g. ORD-12345678
-  user_email text,
-  customer_name text,
-  phone text,
-  items jsonb not null,
-  subtotal integer,
-  shipping_cost integer default 0,
-  discount integer default 0,
-  total integer not null,
-  status text default 'pending',          -- pending, confirmed, shipped, delivered, cancelled
-  shipping_address jsonb,
-  payment_method text default 'COD',
-  tracking_number text,
-  created_at timestamptz default now()
+-- 2. Orders Table
+CREATE TABLE public.orders (
+  id TEXT PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  customer JSONB NOT NULL,
+  items JSONB NOT NULL,
+  subtotal NUMERIC NOT NULL,
+  shipping_fee NUMERIC NOT NULL,
+  total NUMERIC NOT NULL,
+  status TEXT DEFAULT 'Pending',
+  payment_method TEXT,
+  promo_code TEXT,
+  promo_discount NUMERIC DEFAULT 0,
+  notes TEXT,
+  history JSONB,
+  postex TEXT
 );
 
--- Enable Row Level Security (RLS) - important for security
-alter table products enable row level security;
-alter table orders enable row level security;
+-- 3. Marketing (Promo Codes) Table
+CREATE TABLE public.marketing (
+  id TEXT PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  code TEXT NOT NULL UNIQUE,
+  type TEXT NOT NULL,
+  value NUMERIC NOT NULL,
+  max_uses INTEGER,
+  usage_count INTEGER DEFAULT 0,
+  min_order_value NUMERIC DEFAULT 0,
+  is_active BOOLEAN DEFAULT TRUE,
+  expires_at TIMESTAMP WITH TIME ZONE
+);
 
--- Allow public read for products (anyone can browse)
-create policy "Public can view active products"
-  on products for select
-  using (is_active = true);
+-- 4. Settings Table (Single Row)
+CREATE TABLE public.settings (
+  id INTEGER PRIMARY KEY DEFAULT 1,
+  store_name TEXT DEFAULT 'Smartwear Pakistan',
+  store_phone TEXT,
+  store_email TEXT,
+  shipping_flat_rate TEXT DEFAULT '250',
+  postex_api_token TEXT,
+  tiktok_pixel_id TEXT,
+  tiktok_access_token TEXT
+);
 
--- For orders, we will use service role or simple insert from client for now (later we can secure with auth)
--- For simplicity in this phase, allow inserts from anon (we can tighten later)
-create policy "Anyone can create orders"
-  on orders for insert
-  with check (true);
+-- Insert Default Settings Row
+INSERT INTO public.settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
 
-create policy "Anyone can read own orders (by email for now)"
-  on orders for select
-  using (true);  -- For demo; later add proper auth
-
--- Optional: Create index for faster slug lookup
-create index if not exists idx_products_slug on products(slug);
-create index if not exists idx_products_category on products(category_slug);
-create index if not exists idx_orders_status on orders(status);
-
--- Done. Now insert initial data (see seed below)
+-- 5. Analytics Table
+CREATE TABLE public.analytics (
+  id TEXT PRIMARY KEY,
+  timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  event_name TEXT NOT NULL,
+  value NUMERIC DEFAULT 0
+);

@@ -1,5 +1,7 @@
 import fs from 'fs/promises'
 import path from 'path'
+import { env } from './env'
+import { supabase } from './supabase'
 
 const DB_PATH = path.join(process.cwd(), 'database.json')
 
@@ -69,19 +71,14 @@ export async function getDb(retries = 3): Promise<any> {
     return parsed
   } catch (error: any) {
     if (error.code === 'ENOENT') {
-      // If file doesn't exist, create it with initial data
       await fs.writeFile(DB_PATH, JSON.stringify(INITIAL_DATA, null, 2))
       return INITIAL_DATA
     }
-    
     if (retries > 0) {
-      // Wait a bit and retry if it's a parse error (might be reading during a write)
       await new Promise(resolve => setTimeout(resolve, 200))
       return getDb(retries - 1)
     }
-
     console.error('CRITICAL: Failed to parse database.json', error)
-    // Return empty state rather than corrupting the file
     return { products: [], orders: [], marketing: [], analytics: [], settings: INITIAL_DATA.settings }
   }
 }
@@ -96,24 +93,46 @@ export async function saveDb(data: any) {
 
 // Products
 export async function getProducts() {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
+    if (error) console.error('Supabase getProducts error:', error)
+    return data || []
+  }
   const db = await getDb()
   return db.products || []
 }
 
 export async function getProduct(slug: string) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('products').select('*').eq('slug', slug).single()
+    if (error && error.code !== 'PGRST116') console.error('Supabase getProduct error:', error)
+    return data || null
+  }
   const db = await getDb()
-  return db.products.find((p: any) => p.slug === slug)
+  return db.products.find((p: any) => p.slug === slug) || null
 }
 
 export async function addProduct(product: any) {
+  product.id = `PROD-${crypto.randomUUID()}`
+  if (!product.created_at) product.created_at = new Date().toISOString()
+  
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('products').insert([product]).select().single()
+    if (error) throw new Error(error.message)
+    return data
+  }
   const db = await getDb()
-  product.id = `PROD-${Math.floor(100000 + Math.random() * 900000)}`
   db.products.unshift(product)
   await saveDb(db)
   return product
 }
 
 export async function updateProduct(id: string, updates: any) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('products').update(updates).eq('id', id).select().single()
+    if (error) throw new Error(error.message)
+    return data
+  }
   const db = await getDb()
   const index = db.products.findIndex((p: any) => p.id === id)
   if (index !== -1) {
@@ -125,6 +144,11 @@ export async function updateProduct(id: string, updates: any) {
 }
 
 export async function deleteProduct(id: string) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { error } = await supabase.from('products').delete().eq('id', id)
+    if (error) throw new Error(error.message)
+    return
+  }
   const db = await getDb()
   const initialLength = db.products.length
   db.products = db.products.filter((p: any) => p.id !== id)
@@ -134,76 +158,100 @@ export async function deleteProduct(id: string) {
 }
 
 export async function bulkImportProducts(productsToImport: any[], overwrite: boolean = false) {
-  const db = await getDb()
-  
-  let added = 0
-  let updated = 0
-  let skipped = 0
+  if (env.NODE_ENV === 'production' && supabase) {
+    // Basic implementation for Supabase bulk upsert
+    let added = 0; let updated = 0; let skipped = 0;
+    for (const newProduct of productsToImport) {
+      const { data: existing } = await supabase.from('products').select('id').eq('slug', newProduct.slug).single()
+      if (existing) {
+        if (overwrite) {
+          await supabase.from('products').update(newProduct).eq('id', existing.id)
+          updated++
+        } else {
+          skipped++
+        }
+      } else {
+        newProduct.id = `PROD-${crypto.randomUUID()}`
+        if (!newProduct.created_at) newProduct.created_at = new Date().toISOString()
+        await supabase.from('products').insert([newProduct])
+        added++
+      }
+    }
+    return { added, updated, skipped }
+  }
 
+  const db = await getDb()
+  let added = 0; let updated = 0; let skipped = 0;
   for (const newProduct of productsToImport) {
     const existingIndex = db.products.findIndex((p: any) => p.slug === newProduct.slug)
-    
     if (existingIndex !== -1) {
       if (overwrite) {
-        // Overwrite existing product but keep its original ID and created_at if not provided
-        db.products[existingIndex] = { 
-          ...db.products[existingIndex], 
-          ...newProduct,
-          id: db.products[existingIndex].id // Always preserve internal ID
-        }
+        db.products[existingIndex] = { ...db.products[existingIndex], ...newProduct, id: db.products[existingIndex].id }
         updated++
       } else {
-        // Skip existing product
         skipped++
       }
     } else {
-      // Add new product with a collision-free UUID
       newProduct.id = `PROD-${crypto.randomUUID()}`
-      if (!newProduct.created_at) {
-        newProduct.created_at = new Date().toISOString()
-      }
+      if (!newProduct.created_at) newProduct.created_at = new Date().toISOString()
       db.products.unshift(newProduct)
       added++
     }
   }
-
-  if (added > 0 || updated > 0) {
-    await saveDb(db)
-  }
+  if (added > 0 || updated > 0) await saveDb(db)
   return { added, updated, skipped }
 }
 
 // Orders
 export async function getOrders() {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false })
+    if (error) console.error('Supabase getOrders error:', error)
+    return data || []
+  }
   const db = await getDb()
   return db.orders || []
 }
 
 export async function getOrderById(id: string) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('orders').select('*').eq('id', id).single()
+    if (error && error.code !== 'PGRST116') console.error('Supabase getOrderById error:', error)
+    return data || null
+  }
   const db = await getDb()
   return db.orders.find((o: any) => o.id === id) || null
 }
 
 export async function createOrder(order: any) {
+  // Deduct stock is complex in API, but for simplicity we fetch and update
+  if (env.NODE_ENV === 'production' && supabase) {
+    for (const item of order.items) {
+      const { data: product } = await supabase.from('products').select('id, stock, name').eq('id', item.id).single()
+      if (!product) throw new Error(`Product not found: ${item.name}`)
+      if ((product.stock || 0) < item.quantity) throw new Error(`Insufficient stock for ${product.name}`)
+      await supabase.from('products').update({ stock: product.stock - item.quantity }).eq('id', item.id)
+    }
+    order.id = `ORD-${crypto.randomUUID()}`
+    order.created_at = new Date().toISOString()
+    order.history = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
+    order.notes = ""
+    order.status = "Pending"
+    const { data, error } = await supabase.from('orders').insert([order]).select().single()
+    if (error) throw new Error(error.message)
+    return data
+  }
+
   const db = await getDb()
-  
-  // 1. Verify and deduct stock (Simulate transaction)
   for (const item of order.items) {
     const product = db.products.find((p: any) => p.id === item.id)
     if (!product) throw new Error(`Product not found: ${item.name}`)
-    if ((product.stock || 0) < item.quantity) {
-      throw new Error(`Insufficient stock for ${product.name}`)
-    }
+    if ((product.stock || 0) < item.quantity) throw new Error(`Insufficient stock for ${product.name}`)
   }
-
-  // Deduct stock
   for (const item of order.items) {
     const product = db.products.find((p: any) => p.id === item.id)
-    if (product) {
-      product.stock -= item.quantity
-    }
+    if (product) product.stock -= item.quantity
   }
-
   order.id = `ORD-${crypto.randomUUID()}`
   order.created_at = new Date().toISOString()
   order.history = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
@@ -214,89 +262,121 @@ export async function createOrder(order: any) {
   return order
 }
 
-// Settings
-export async function getSettings() {
-  const db = await getDb()
-  // Ensure settings object exists
-  if (!db.settings) {
-    db.settings = {
-      store_name: "Smartwear Pakistan",
-      store_phone: "",
-      store_email: "",
-      shipping_flat_rate: "250",
-      postex_api_token: "",
-      tiktok_pixel_id: "",
-      tiktok_access_token: ""
-    }
-    await saveDb(db)
-  }
-  return db.settings
-}
-
-export async function updateSettings(updates: any) {
-  const db = await getDb()
-  db.settings = { ...db.settings, ...updates }
-  await saveDb(db)
-  return db.settings
-}
-
 export async function updateOrderStatus(orderId: string, status: string, postexId?: string, note?: string) {
-  const db = await getDb()
-  const order = db.orders.find((o: any) => o.id === orderId)
-  if (order) {
-    // Only add to history if status changed or note provided
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data: order } = await supabase.from('orders').select('*').eq('id', orderId).single()
+    if (!order) return null
     if (order.status !== status || note) {
       if (!order.history) order.history = []
-      order.history.push({
-        status,
-        timestamp: new Date().toISOString(),
-        note: note || `Status updated to ${status}`
-      })
+      order.history.push({ status, timestamp: new Date().toISOString(), note: note || `Status updated to ${status}` })
     }
-    
-    // Inventory restoration logic
     if (order.status !== 'Cancelled' && order.status !== 'Returned') {
       if (status === 'Cancelled' || status === 'Returned') {
-        // Restore stock
         for (const item of order.items) {
-          const product = db.products.find((p: any) => p.id === item.id)
-          if (product) {
-            product.stock = (product.stock || 0) + item.quantity
-          }
+          const { data: product } = await supabase.from('products').select('stock').eq('id', item.id).single()
+          if (product) await supabase.from('products').update({ stock: (product.stock || 0) + item.quantity }).eq('id', item.id)
         }
       }
     }
-
     order.status = status
     if (postexId) order.postex = postexId
-    if (note && !order.notes) {
-      order.notes = note
-    } else if (note) {
-      order.notes = order.notes + "\n" + note
+    if (note && !order.notes) order.notes = note
+    else if (note) order.notes = order.notes + "\n" + note
+    
+    const { data, error } = await supabase.from('orders').update(order).eq('id', orderId).select().single()
+    if (error) throw new Error(error.message)
+    return data
+  }
+
+  const db = await getDb()
+  const order = db.orders.find((o: any) => o.id === orderId)
+  if (order) {
+    if (order.status !== status || note) {
+      if (!order.history) order.history = []
+      order.history.push({ status, timestamp: new Date().toISOString(), note: note || `Status updated to ${status}` })
     }
+    if (order.status !== 'Cancelled' && order.status !== 'Returned') {
+      if (status === 'Cancelled' || status === 'Returned') {
+        for (const item of order.items) {
+          const product = db.products.find((p: any) => p.id === item.id)
+          if (product) product.stock = (product.stock || 0) + item.quantity
+        }
+      }
+    }
+    order.status = status
+    if (postexId) order.postex = postexId
+    if (note && !order.notes) order.notes = note
+    else if (note) order.notes = order.notes + "\n" + note
     await saveDb(db)
     return order
   }
   return null
 }
 
-// --- Marketing / Promos ---
+// Settings
+export async function getSettings() {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('settings').select('*').single()
+    if (error && error.code !== 'PGRST116') console.error('Supabase getSettings error:', error)
+    if (data) return data
+    // Fallback default
+    return { store_name: "Smartwear Pakistan", store_phone: "", store_email: "", shipping_flat_rate: "250", postex_api_token: "", tiktok_pixel_id: "", tiktok_access_token: "" }
+  }
+
+  const db = await getDb()
+  if (!db.settings) {
+    db.settings = { store_name: "Smartwear Pakistan", store_phone: "", store_email: "", shipping_flat_rate: "250", postex_api_token: "", tiktok_pixel_id: "", tiktok_access_token: "" }
+    await saveDb(db)
+  }
+  return db.settings
+}
+
+export async function updateSettings(updates: any) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const current = await getSettings()
+    const { data, error } = await supabase.from('settings').upsert({ id: 1, ...current, ...updates }).select().single()
+    if (error) throw new Error(error.message)
+    return data
+  }
+  const db = await getDb()
+  db.settings = { ...db.settings, ...updates }
+  await saveDb(db)
+  return db.settings
+}
+
+// Marketing
 export async function getPromos() {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('marketing').select('*').order('created_at', { ascending: false })
+    if (error) console.error('Supabase getPromos error:', error)
+    return data || []
+  }
   const db = await getDb()
   return db.marketing || []
 }
 
 export async function getPromoByCode(code: string) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('marketing').select('*').ilike('code', code).single()
+    if (error && error.code !== 'PGRST116') console.error('Supabase getPromoByCode error:', error)
+    return data || null
+  }
   const db = await getDb()
   const marketing = db.marketing || []
   return marketing.find((p: any) => p.code.toUpperCase() === code.toUpperCase()) || null
 }
 
 export async function createPromo(promo: any) {
-  const db = await getDb()
   promo.id = `PROMO-${crypto.randomUUID()}`
   promo.created_at = new Date().toISOString()
   promo.usage_count = 0
+  
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('marketing').insert([promo]).select().single()
+    if (error) throw new Error(error.message)
+    return data
+  }
+  const db = await getDb()
   if (!db.marketing) db.marketing = []
   db.marketing.unshift(promo)
   await saveDb(db)
@@ -304,6 +384,11 @@ export async function createPromo(promo: any) {
 }
 
 export async function updatePromo(id: string, updates: any) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data, error } = await supabase.from('marketing').update(updates).eq('id', id).select().single()
+    if (error) throw new Error(error.message)
+    return data
+  }
   const db = await getDb()
   if (!db.marketing) db.marketing = []
   const index = db.marketing.findIndex((p: any) => p.id === id)
@@ -316,11 +401,14 @@ export async function updatePromo(id: string, updates: any) {
 }
 
 export async function deletePromo(id: string) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { error } = await supabase.from('marketing').delete().eq('id', id)
+    if (error) throw new Error(error.message)
+    return
+  }
   const db = await getDb()
   if (!db.marketing) db.marketing = []
   const initialLength = db.marketing.length
   db.marketing = db.marketing.filter((p: any) => p.id !== id)
-  if (db.marketing.length !== initialLength) {
-    await saveDb(db)
-  }
+  if (db.marketing.length !== initialLength) await saveDb(db)
 }

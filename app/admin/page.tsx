@@ -127,15 +127,13 @@ export default function AdminDashboard() {
         const orders = ordRes.ok ? await ordRes.json() : []
         
         const totalRevenue = orders.reduce((sum: number, o: any) => sum + (o.total || 0), 0)
-        // Add base revenue to make it look active initially
-        const displayRevenue = totalRevenue + 616196
 
         setStats([
           {
             title: "Total Revenue",
-            rawValue: displayRevenue,
+            rawValue: totalRevenue,
             prefix: "Rs. ",
-            change: "+12.5%",
+            change: "+0%",
             trend: "up",
             icon: DollarSign,
             accentColor: "#C8972A",
@@ -143,8 +141,8 @@ export default function AdminDashboard() {
           },
           {
             title: "Total Orders",
-            rawValue: orders.length + 42,
-            change: "+8.2%",
+            rawValue: orders.length,
+            change: "0",
             trend: "up",
             icon: ShoppingCart,
             accentColor: "#3B82F6",
@@ -161,8 +159,8 @@ export default function AdminDashboard() {
           },
           {
             title: "Customers",
-            rawValue: 128 + orders.length,
-            change: "+15.3%",
+            rawValue: orders.length,
+            change: "0",
             trend: "up",
             icon: Users,
             accentColor: "#8B5CF6",

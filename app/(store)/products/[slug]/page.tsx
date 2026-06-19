@@ -14,6 +14,7 @@ import { TikTokEvents } from '@/lib/tiktok-pixel'
 import { cn } from '@/lib/utils'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { QuickBuyModal } from '@/components/store/quick-buy-modal'
+import { toast } from 'sonner'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>

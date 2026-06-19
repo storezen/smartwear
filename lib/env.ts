@@ -42,4 +42,15 @@ if (!parsedEnv.success) {
   }
 }
 
-export const env = parsedEnv.success ? parsedEnv.data : ({} as any);
+const env = parsedEnv.success ? parsedEnv.data : ({} as any);
+
+if (env.NODE_ENV === 'production') {
+  if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.error("❌ Missing Supabase Configuration. NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required in production.");
+    if (typeof window === "undefined") {
+      throw new Error("Missing Supabase configuration in production");
+    }
+  }
+}
+
+export { env };

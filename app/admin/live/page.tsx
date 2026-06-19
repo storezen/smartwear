@@ -24,12 +24,12 @@ export default function LiveAnalyticsPage() {
     return () => clearInterval(interval)
   }, [])
 
-  const viewCount = events.filter(e => e.event_name === 'ViewContent').length + 142
-  const cartCount = events.filter(e => e.event_name === 'AddToCart').length + 38
-  const checkoutCount = events.filter(e => e.event_name === 'InitiateCheckout').length + 12
-  const purchaseCount = events.filter(e => e.event_name === 'Purchase').length + 5
+  const viewCount = events.filter(e => e.event_name === 'ViewContent').length
+  const cartCount = events.filter(e => e.event_name === 'AddToCart').length
+  const checkoutCount = events.filter(e => e.event_name === 'InitiateCheckout').length
+  const purchaseCount = events.filter(e => e.event_name === 'Purchase').length
 
-  const revenue = events.filter(e => e.event_name === 'Purchase').reduce((sum, e) => sum + (e.value || 0), 0) + 125000
+  const revenue = events.filter(e => e.event_name === 'Purchase').reduce((sum, e) => sum + (e.value || 0), 0)
 
   return (
     <div className="space-y-6">

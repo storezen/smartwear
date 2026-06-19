@@ -68,11 +68,18 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
         tracking_number: null,
       }
 
-      const { createOrder } = await import('@/lib/supabase')
-      await createOrder(orderPayload)
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload)
+      })
+      if (!res.ok) throw new Error('Order creation failed')
 
-      TikTokEvents.purchase(orderId, total)
-      
+      TikTokEvents.purchase({ 
+        id: orderId, 
+        total, 
+        items: [{ id: product.id, name: product.name, price: product.price, quantity }] 
+      })
       router.push(`/checkout/success?order=${orderId}`)
     } catch (error) {
       console.error("Quick buy failed:", error)

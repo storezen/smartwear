@@ -1,6 +1,6 @@
 import { getPromoByCode } from '@/lib/db'
 
-export async function calculateDiscount(subtotal: number, promoCodeString?: string): Promise<{ discountAmount: number, error?: string }> {
+export async function calculateDiscount(subtotal: number, promoCodeString?: string): Promise<{ discountAmount: number, error?: string, type?: string }> {
   if (!promoCodeString) return { discountAmount: 0 }
 
   const code = promoCodeString.toUpperCase().trim()
