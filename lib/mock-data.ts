@@ -1,27 +1,55 @@
 import { Product, Category, Review, Order, User, Address } from '@/types'
 
-// Focused on Smart Watches + Analog Watches + Accessories only
+// Expanded to 7 global categories
 export const categories: Category[] = [
   {
     id: 'sw',
     name: 'Smart Watches',
     slug: 'smart-watches',
     image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop',
-    description: 'Modern complications for the ambitious Pakistani professional.'
+    description: 'Modern complications for the ambitious professional.'
   },
   {
     id: 'aw',
-    name: 'Analog & Mechanical',
+    name: 'Analog Watches',
     slug: 'analog-watches',
     image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&h=600&fit=crop',
     description: 'Heritage timepieces — the quiet luxury of generations.'
   },
   {
+    id: 'lw',
+    name: 'Ladies Watches',
+    slug: 'ladies-watches',
+    image: 'https://images.unsplash.com/photo-1549972574-8742bba40a7a?w=800&h=600&fit=crop',
+    description: 'Elegant and graceful designs for every occasion.'
+  },
+  {
+    id: 'wb',
+    name: 'Watch Bands & Straps',
+    slug: 'watch-bands',
+    image: 'https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=800&h=600&fit=crop',
+    description: 'Style your watch your way with premium bands.'
+  },
+  {
+    id: 'pc',
+    name: 'Phone Cases',
+    slug: 'phone-cases',
+    image: 'https://images.unsplash.com/photo-1603313011101-320f26a4f6f6?w=800&h=600&fit=crop',
+    description: 'Ultimate protection and style for your device.'
+  },
+  {
+    id: 'cp',
+    name: 'Camera Protectors',
+    slug: 'camera-protectors',
+    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&h=600&fit=crop',
+    description: 'Crystal clear protection for your lenses.'
+  },
+  {
     id: 'acc',
-    name: 'Straps & Care',
+    name: 'Accessories',
     slug: 'accessories',
     image: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop',
-    description: 'Premium straps, cases and care — built to last a lifetime.'
+    description: 'Premium cables, chargers, and audio gear.'
   }
 ]
 

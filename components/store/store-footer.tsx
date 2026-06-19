@@ -6,11 +6,15 @@ import { MapPin, Phone, Mail, Instagram, Facebook, Youtube, Twitter, ArrowRight 
 
 const links = {
   shop: [
-    { l: "All Watches",    h: "/products" },
-    { l: "Smart Watches",  h: "/products?category=smart-watches" },
-    { l: "Analog Watches", h: "/products?category=analog-watches" },
-    { l: "Accessories",    h: "/products?category=accessories" },
-    { l: "Sale",           h: "/products?sale=true" },
+    { l: "All Watches",           h: "/products" },
+    { l: "Smart Watches",         h: "/products?category=smart-watches" },
+    { l: "Analog Watches",        h: "/products?category=analog-watches" },
+    { l: "Ladies Watches",        h: "/products?category=ladies-watches" },
+    { l: "Watch Bands & Straps",  h: "/products?category=watch-bands" },
+    { l: "Phone Cases",           h: "/products?category=phone-cases" },
+    { l: "Camera Protectors",     h: "/products?category=camera-protectors" },
+    { l: "Accessories",           h: "/products?category=accessories" },
+    { l: "Sale",                  h: "/products?sale=true" },
   ],
   account: [
     { l: "My Account",  h: "/account" },

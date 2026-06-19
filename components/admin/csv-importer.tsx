@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { createPortal } from 'react-dom'
 import { useEffect, useState as useReactState } from 'react'
+import { getProductCategory, getCategorySlug } from '@/lib/utils'
 
 interface CsvImporterProps {
   isOpen: boolean
@@ -73,37 +74,12 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
           const rawTags = row['Tags'] || ''
           const parsedTags = rawTags ? rawTags.split(',').map((t: string) => t.trim()).filter(Boolean) : []
           
-          // Deep Smart Category Extraction
-          const title = (row['Title'] || handle).toLowerCase()
-          const type = (row['Product Category'] || row['Type'] || '').toLowerCase()
-          const tags = rawTags ? rawTags.toLowerCase() : ''
-          const searchStr = `${title} ${type} ${tags}`
+          // Deep Smart Category Extraction (Global Logic)
+          const title = row['Title'] || handle;
+          const type = row['Product Category'] || row['Type'] || '';
           
-          let category = 'smart-watches' // Default
-          
-          const isAudio = /\b(airpod|airpods|earbud|earbuds|pod|pods|wisme|headphone|earphone|handsfree|buds)\b/i.test(searchStr)
-          
-          const isCaseOrStrap = 
-            /\b(case|cover|protector|cable|charger|adapter|strap|band|loop|box)\b/i.test(title) && 
-            !/\b(with|and|\+)\b.*\b(case|cover|protector|cable|charger|adapter|strap|band|loop|box)\b/i.test(title)
-
-          const isExplicitAccessory = type.includes('accessory') || tags.includes('accessory') || isAudio || isCaseOrStrap
-          
-          const isAnalog = /\b(analog|automatic|quartz|chronograph|mechanic|mechanical|rolex|rlx|rolx|patek|richard|citizen|ctzn|seiko|casio|edifice|hublot|hblt|versace|versacee|universe|sgw5\d+|vr\s*\d+|vr\d+|luxury)\b/i.test(searchStr)
-          
-          const isSmart = /\b(smartwatch|smart|series|ultra|apple|ws-\w+|hw\d+|t800|t900|hk\d+|dt\d+|amoled|kieslect|mibro|huawei|samsung)\b/i.test(searchStr) || /watch\s*\d+/i.test(title)
-
-          if (isExplicitAccessory) {
-            category = 'accessories'
-          } else if (isSmart) {
-            category = 'smart-watches'
-          } else if (isAnalog) {
-            category = 'analog-watches'
-          } else {
-            if (tags.includes('analog') || type.includes('analog')) category = 'analog-watches'
-            else if (tags.includes('smart') || type.includes('smart')) category = 'smart-watches'
-            else category = 'smart-watches'
-          }
+          const categoryName = getProductCategory(title, `${type} ${rawTags}`);
+          const category = getCategorySlug(categoryName);
 
           if (!productMap.has(handle)) {
             // Create base product

@@ -228,30 +228,51 @@ const shopCategories = [
   {
     name: "Smart Watches",
     slug: "smart-watches",
-    image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop",
     icon: Watch,
     description: "Latest tech on your wrist",
   },
   {
-    name: "Watch Bands & Straps",
-    slug: "accessories",
-    image: "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=800&h=600&fit=crop",
+    name: "Analog Watches",
+    slug: "analog-watches",
+    image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&h=600&fit=crop",
+    icon: Clock,
+    description: "Heritage timepieces",
+  },
+  {
+    name: "Ladies Watches",
+    slug: "ladies-watches",
+    image: "https://images.unsplash.com/photo-1549972574-8742bba40a7a?w=800&h=600&fit=crop",
+    icon: Sparkles,
+    description: "Elegant & graceful designs",
+  },
+  {
+    name: "Bands & Straps",
+    slug: "watch-bands",
+    image: "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=800&h=600&fit=crop",
     icon: Heart,
     description: "Style your watch your way",
   },
   {
-    name: "Chargers & Cables",
+    name: "Phone Cases",
+    slug: "phone-cases",
+    image: "https://images.unsplash.com/photo-1603313011101-320f26a4f6f6?w=800&h=600&fit=crop",
+    icon: Smartphone,
+    description: "Ultimate protection",
+  },
+  {
+    name: "Camera Protectors",
+    slug: "camera-protectors",
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&h=600&fit=crop",
+    icon: Shield,
+    description: "Crystal clear safety",
+  },
+  {
+    name: "Accessories",
     slug: "accessories",
     image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop",
     icon: Battery,
     description: "Keep your gear powered",
-  },
-  {
-    name: "Cases & Protectors",
-    slug: "accessories",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop",
-    icon: Shield,
-    description: "Ultimate protection",
   },
 ]
 
@@ -268,7 +289,7 @@ function ShopByCategory() {
           <motion.div variants={staggerItem}><SectionTitle>Shop by Category</SectionTitle></motion.div>
         </motion.div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
+        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
           {shopCategories.map((cat, i) => (
             <motion.div
               key={cat.name}
@@ -277,18 +298,25 @@ function ShopByCategory() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
             >
-              <Link href={`/products?category=${cat.slug}`} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-square sm:aspect-[3/4] snap-start shrink-0 w-[240px] sm:w-auto">
-                <Image src={cat.image} alt={cat.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <div className="w-12 h-12 rounded-full bg-[#B8860B]/20 border border-[#B8860B]/30 flex items-center justify-center text-[#B8860B] mb-3 group-hover:bg-[#B8860B] group-hover:text-black transition-all duration-300">
+              <Link href={`/products?category=${cat.slug}`} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/5] sm:aspect-square lg:aspect-[3/4] snap-start shrink-0 w-[75vw] sm:w-auto">
+                <Image src={cat.image} alt={cat.name} fill sizes="(max-width: 640px) 75vw, (max-width: 1024px) 50vw, 25vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0C0F14] via-[#0C0F14]/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end">
+                  <div className="w-12 h-12 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center text-white mb-4 group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] group-hover:-translate-y-1 transition-all duration-500 shadow-lg">
                     <cat.icon className="w-5 h-5" />
                   </div>
-                  <h3 className="text-white text-lg font-bold mb-1" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>{cat.name}</h3>
-                  <p className="text-white/50 text-xs mb-4">{cat.description}</p>
-                  <span className="inline-flex items-center gap-2 text-[#B8860B] text-xs font-bold uppercase tracking-widest group-hover:gap-3 transition-all">
-                    Shop Now <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
+                  
+                  <h3 className="text-white text-xl font-bold mb-1 tracking-wide" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+                    {cat.name}
+                  </h3>
+                  <p className="text-white/60 text-sm mb-6 line-clamp-1">{cat.description}</p>
+                  
+                  <div className="mt-auto">
+                    <span className="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 text-white text-xs font-bold uppercase tracking-widest px-5 py-3 rounded-xl group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] transition-all duration-500 shadow-xl">
+                      Shop Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
                 </div>
               </Link>
             </motion.div>

@@ -11,7 +11,7 @@ import { CsvImporter } from "@/components/admin/csv-importer"
 import { FileSpreadsheet } from "lucide-react"
 
 const STATUSES = ProductStatusEnum.options;
-const CATEGORIES = ['All', 'smart-watches', 'analog-watches', 'accessories']
+const CATEGORIES = ['All', 'smart-watches', 'analog-watches', 'ladies-watches', 'watch-bands', 'phone-cases', 'camera-protectors', 'accessories']
 
 export default function AdminProductsPage() {
   const [showAddModal, setShowAddModal] = useState(false) // Will be used as Sheet open state
@@ -215,18 +215,7 @@ export default function AdminProductsPage() {
     const matchesCategory = filterCategory === 'All' || (() => {
       const c = (p.category_slug || '').toLowerCase();
       const cat = filterCategory.toLowerCase();
-      
-      if (cat === 'accessories') {
-        return ['accessories', 'strap', 'charger', 'case', 'band', 'protector', 'cable'].some(k => c.includes(k));
-      }
-      if (cat === 'analog-watches' || cat === 'analog') {
-        return ['analog', 'classic', 'luxury', 'mechanic', 'quartz', 'automatic'].some(k => c.includes(k));
-      }
-      if (cat === 'smart-watches' || cat === 'smartwatches') {
-        return ['smart', 'digital', 'fitness', 'tracker', 'apple', 'samsung', 'huawei'].some(k => c.includes(k)) || c === 'watch' || c === 'watches' || c === 'smartwatches' || c === 'smart-watches';
-      }
-      
-      return c === cat || c.includes(cat);
+      return c === cat;
     })();
     return matchesSearch && matchesStatus && matchesCategory
   })
