@@ -16,59 +16,51 @@ export function getProductCategory(title: string, tags: string = ''): string {
   const searchStr = `${title} ${tags}`.toLowerCase();
   const lowerTitle = title.toLowerCase();
 
-  // 1. Watch Bands & Straps
-  // Rule: Must have strap/band keywords AND NOT be a watch bundled "with" a strap.
-  // We check if "watch" is immediately followed by "with" and then a strap keyword (allowing an optional material adjective)
-  const isBand = /\b(strap|straps|band|bands|loop|chain)\b/i.test(lowerTitle);
-  const isWatchWithBand = /\b(smartwatch|smart watch|watch|series)\b\s*(with|w\/|\+|and)\s*(silicone|metal|leather|nylon|magnetic|mesh|sport|woven|alpine|ocean|trail|braided|steel)?\s*(strap|band|loop|chain)\b/i.test(lowerTitle);
-  
-  if (isBand && !isWatchWithBand) {
+  // Smart Watch Keywords (Used in multiple rules)
+  const watchKeywords = /\b(smartwatch|smart watch|series|ultra|amoled)\b/i;
+
+  // 1. First Priority - Watch Bands & Straps
+  // Rule: Title has "strap", "band", "chain", "loop", "bracelet" BUT NOT smart watch keywords
+  const isBand = /\b(strap|band|chain|loop|bracelet)\b/i.test(lowerTitle);
+  if (isBand && !watchKeywords.test(lowerTitle)) {
     return 'Watch Bands & Straps';
   }
 
-  // 2. Phone Cases
-  if (/\b(case|cover)\b/i.test(lowerTitle) && /\b(phone|iphone|samsung|galaxy)\b/i.test(lowerTitle)) {
-    return 'Phone Cases';
-  }
-
-  // 3. Camera Protectors
-  if (/\b(camera lens|lens protector|camera protector)\b/i.test(searchStr)) {
-    return 'Camera Protectors';
-  }
-
-  // 4. Accessories (Wireless Chargers / Earpods / General Covers)
-  if (/\b(airpod|airpods|earbud|earbuds|pod|pods|charger|cable|adapter|wisme|powerbank)\b/i.test(searchStr)) {
-    return 'Accessories';
-  }
-  // If it's a generic case/cover but not a phone case (and not a watch)
-  if (/\b(case|cover|protector|glass|screen)\b/i.test(lowerTitle) && !/\b(watch|smartwatch)\b/i.test(lowerTitle)) {
-    return 'Accessories';
-  }
-
-  // 5. Ladies Watches
-  // Rule: Sirf tab jab clearly ladies/women specific ho aur watch ho. Must NOT be a band or accessory.
-  if (/\b(ladies|women|womens|girl|girls)\b/i.test(searchStr) && /\b(watch|watches|smartwatch|analog)\b/i.test(searchStr) && !isBand && !/\b(case|cover)\b/i.test(lowerTitle)) {
-    return 'Ladies Watches';
-  }
-
-  // 6. Smart Watches (MUST CHECK BEFORE ANALOG)
-  // Rule: Agar title mein "smartwatch", "series", "ultra", "amoled", "smart watch" ho.
-  if (/\b(smartwatch|smart watch|smart|series|ultra|amoled|apple watch|hw\d+|t\d+|hk\d+|dt\d+|ws-\w+)\b/i.test(searchStr)) {
+  // 2. Second Priority - Smart Watches
+  // Rule: Title has "smartwatch", "series", "ultra", "amoled", "smart watch"
+  if (watchKeywords.test(searchStr)) {
     return 'Smart Watches';
   }
 
-  // 7. Analog Watches
-  if (/\b(analog|automatic|quartz|chronograph|mechanic|mechanical|rolex|rlx|rolx|patek|citizen|ctzn|seiko|casio|edifice|hublot|hblt|versace|vr\d+)\b/i.test(searchStr)) {
+  // 3. Third Priority - Analog Watches
+  // Rule: Title has "analog" and NO smart watch keywords
+  if (/\b(analog)\b/i.test(searchStr) && !watchKeywords.test(searchStr)) {
     return 'Analog Watches';
   }
 
-  // Default Fallback
-  // Rule: Jo products clearly nahi samajh aa rahe (jaise "XT-Lock"), unhe Accessories mein daal do.
-  // Exception: If it explicitly has the standalone word "watch" but didn't trigger smartwatch/analog rules, default to Smart Watches.
-  if (/\b(watch|watches)\b/i.test(lowerTitle)) {
-    return 'Smart Watches';
+  // 4. Fourth Priority - Ladies Watches
+  // Rule: Title has "ladies", "women", "woman" AND "watch"
+  if (/\b(ladies|women|woman)\b/i.test(searchStr) && /\b(watch|watches)\b/i.test(searchStr)) {
+    return 'Ladies Watches';
   }
 
+  // 5. Fifth Priority - Phone Cases
+  // Rule: Title has "case" + "iphone" or "phone"
+  // (Also catching generic phone cases like "Woven Weave Breathable Grid Case" by ensuring it's not a watch/earpod case)
+  if (/\b(case)\b/i.test(lowerTitle)) {
+    if (/\b(iphone|phone|samsung)\b/i.test(searchStr) || !/\b(watch|earbuds|airpods)\b/i.test(searchStr)) {
+      return 'Phone Cases';
+    }
+  }
+
+  // 6. Sixth Priority - Camera Protectors
+  // Rule: Title has "camera lens" or "lens protector"
+  if (/\b(camera lens|lens protector)\b/i.test(searchStr)) {
+    return 'Camera Protectors';
+  }
+
+  // 7. Accessories (Default)
+  // Rule: Everything else (chargers, earpods, protectors, etc.)
   return 'Accessories';
 }
 

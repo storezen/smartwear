@@ -15,42 +15,33 @@ function getProductCategory(title, tags = '') {
   const searchStr = `${title} ${tags}`.toLowerCase();
   const lowerTitle = title.toLowerCase();
 
-  const isBand = /\b(strap|straps|band|bands|loop|chain)\b/i.test(lowerTitle);
-  const isWatchWithBand = /\b(smartwatch|smart watch|watch|series)\b.*\b(with|w\/|\+|and)\b.{0,30}\b(strap|band|loop|chain)\b/i.test(lowerTitle);
-  
-  if (isBand && !isWatchWithBand) {
+  const watchKeywords = /\b(smartwatch|smart watch|series|ultra|amoled)\b/i;
+
+  const isBand = /\b(strap|band|chain|loop|bracelet)\b/i.test(lowerTitle);
+  if (isBand && !watchKeywords.test(lowerTitle)) {
     return 'Watch Bands & Straps';
   }
 
-  if (/\b(case|cover)\b/i.test(lowerTitle) && /\b(phone|iphone|samsung|galaxy)\b/i.test(lowerTitle)) {
-    return 'Phone Cases';
-  }
-
-  if (/\b(camera lens|lens protector|camera protector)\b/i.test(searchStr)) {
-    return 'Camera Protectors';
-  }
-
-  if (/\b(airpod|airpods|earbud|earbuds|pod|pods|charger|cable|adapter|wisme|powerbank)\b/i.test(searchStr)) {
-    return 'Accessories';
-  }
-  if (/\b(case|cover|protector|glass|screen)\b/i.test(lowerTitle) && !/\b(watch|smartwatch)\b/i.test(lowerTitle)) {
-    return 'Accessories';
-  }
-
-  if (/\b(ladies|women|womens|girl|girls)\b/i.test(searchStr) && /\b(watch|watches|smartwatch|analog)\b/i.test(searchStr)) {
-    return 'Ladies Watches';
-  }
-
-  if (/\b(smartwatch|smart watch|smart|series|ultra|amoled|apple watch|hw\d+|t\d+|hk\d+|dt\d+|ws-\w+)\b/i.test(searchStr)) {
+  if (watchKeywords.test(searchStr)) {
     return 'Smart Watches';
   }
 
-  if (/\b(analog|automatic|quartz|chronograph|mechanic|mechanical|rolex|rlx|rolx|patek|citizen|ctzn|seiko|casio|edifice|hublot|hblt|versace|vr\d+)\b/i.test(searchStr)) {
+  if (/\b(analog)\b/i.test(searchStr) && !watchKeywords.test(searchStr)) {
     return 'Analog Watches';
   }
 
-  if (/\b(watch|watches)\b/i.test(lowerTitle)) {
-    return 'Smart Watches';
+  if (/\b(ladies|women|woman)\b/i.test(searchStr) && /\b(watch|watches)\b/i.test(searchStr)) {
+    return 'Ladies Watches';
+  }
+
+  if (/\b(case)\b/i.test(lowerTitle)) {
+    if (/\b(iphone|phone|samsung)\b/i.test(searchStr) || !/\b(watch|earbuds|airpods)\b/i.test(searchStr)) {
+      return 'Phone Cases';
+    }
+  }
+
+  if (/\b(camera lens|lens protector)\b/i.test(searchStr)) {
+    return 'Camera Protectors';
   }
 
   return 'Accessories';
