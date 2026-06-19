@@ -66,12 +66,24 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
           const rawTags = row['Tags'] || ''
           const parsedTags = rawTags ? rawTags.split(',').map((t: string) => t.trim()).filter(Boolean) : []
           
-          // Category extraction (fallback to tags if Type is empty)
-          let category = (row['Product Category'] || row['Type'] || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')
-          if (!category && parsedTags.length > 0) {
-            category = parsedTags[0].toLowerCase().replace(/[^a-z0-9]+/g, '-')
+          // Deep Smart Category Extraction
+          const title = (row['Title'] || handle).toLowerCase()
+          const type = (row['Product Category'] || row['Type'] || '').toLowerCase()
+          const searchStr = `${title} ${type} ${rawTags.toLowerCase()}`
+          
+          let category = 'smart-watches' // Default
+          
+          if (/(strap|band|cable|charger|case|cover|protector|airpods|earbud|pod|wisme|adapter)/i.test(searchStr)) {
+            category = 'accessories'
+          } else if (/(analog|rolex|rolx|patek|richard|citizen|seiko|mechanic|quartz|luxury|automatic|casio|edifice|hublot|versace|vr\s*\d+|vr\d+|chain)/i.test(searchStr)) {
+            category = 'analog-watches'
+          } else if (/(smart|series|ultra|apple|watch\s*\d+|ws-|hw\d+|t800|t900|samsung|huawei|kieslect|mibro|hk\d+|dt\d+)/i.test(searchStr)) {
+            category = 'smart-watches'
+          } else if (type.includes('analog') || rawTags.toLowerCase().includes('analog')) {
+            category = 'analog-watches'
+          } else if (type.includes('accessory') || rawTags.toLowerCase().includes('accessory')) {
+            category = 'accessories'
           }
-          if (!category) category = defaultCategory.toLowerCase().replace(/[^a-z0-9]+/g, '-')
 
           if (!productMap.has(handle)) {
             // Create base product
