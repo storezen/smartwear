@@ -6,6 +6,8 @@ import { Upload, X, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2 } from '
 import Papa from 'papaparse'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { createPortal } from 'react-dom'
+import { useEffect, useState as useReactState } from 'react'
 
 interface CsvImporterProps {
   isOpen: boolean
@@ -22,7 +24,12 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
   const [stats, setStats] = useState({ totalRows: 0, productsFound: 0 })
   const [defaultCategory, setDefaultCategory] = useState('Smartwatches')
   const [overwriteExisting, setOverwriteExisting] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -214,19 +221,19 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
-  if (!isOpen) return null
+  if (!isOpen || !mounted) return null
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
     >
       <motion.div
           initial={{ scale: 0.95, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.95, opacity: 0, y: 20 }}
-          className="relative w-full max-w-2xl bg-[#0C0F14] border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#0C0F14] border border-white/10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)]"
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/[0.02]">
@@ -403,6 +410,7 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
             )}
           </div>
         </motion.div>
-      </motion.div>
+      </motion.div>,
+      document.body
   )
 }
