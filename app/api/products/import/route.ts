@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     // Ensure all products have the required structure
     const formattedProducts = products.map((p: any) => ({
       ...p,
+      id: p.id || crypto.randomUUID(),
       price: Number(p.price) || 0,
       stock: Number(p.stock) || 0,
       compare_price: p.compare_price ? Number(p.compare_price) : null,
@@ -25,20 +26,26 @@ export async function POST(req: Request) {
     }))
 
     if (isSupabaseConfigured()) {
-      const { data: existingData } = await supabase!.from('products').select('slug')
-      const existingSlugs = new Set(existingData?.map(row => row.slug) || [])
+      const { data: existingData } = await supabase!.from('products').select('id, slug')
+      const existingSlugsMap = new Map(existingData?.map(row => [row.slug, row.id]) || [])
 
       const productsToInsert = overwrite 
         ? formattedProducts 
-        : formattedProducts.filter(p => !existingSlugs.has(p.slug))
+        : formattedProducts.filter(p => !existingSlugsMap.has(p.slug))
 
       if (productsToInsert.length === 0) {
         return NextResponse.json({ success: true, message: `0 products imported. Skipped ${formattedProducts.length} existing products.` })
       }
 
+      // Ensure existing products keep their original ID during upsert
+      const finalProductsToInsert = productsToInsert.map(p => ({
+        ...p,
+        id: existingSlugsMap.get(p.slug) || p.id
+      }))
+
       const { error } = await supabase!
         .from('products')
-        .upsert(productsToInsert, { onConflict: 'slug' })
+        .upsert(finalProductsToInsert, { onConflict: 'slug' })
       
       if (error) throw error
       
