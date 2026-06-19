@@ -159,20 +159,34 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
 
     setIsUploading(true)
     try {
-      const response = await fetch('/api/products/import', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          products: previewData,
-          overwrite: overwriteExisting
-        }),
-      })
+      const BATCH_SIZE = 200;
+      const totalBatches = Math.ceil(previewData.length / BATCH_SIZE);
+      let successCount = 0;
 
-      const data = await response.json()
+      for (let i = 0; i < totalBatches; i++) {
+        const batch = previewData.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE);
+        
+        const response = await fetch('/api/products/import', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            products: batch,
+            overwrite: overwriteExisting
+          }),
+        })
 
-      if (!response.ok) throw new Error(data.error || 'Failed to import products')
+        const data = await response.json()
 
-      toast.success(data.message || 'Products imported successfully!')
+        if (!response.ok) throw new Error(data.error || `Failed on batch ${i + 1}`)
+        successCount += batch.length;
+        
+        // Optional: Show toast for progress if many batches
+        if (totalBatches > 1) {
+          toast.success(`Imported ${successCount} of ${previewData.length} products...`)
+        }
+      }
+
+      toast.success('All products imported successfully!')
       if (onSuccess) onSuccess()
       onClose()
     } catch (error: any) {
