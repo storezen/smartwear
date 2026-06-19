@@ -190,6 +190,25 @@ export default function AdminProductsPage() {
     }
   }
 
+  const handleDeleteAllProducts = async () => {
+    if (!confirm("⚠️ WARNING: Are you absolutely sure you want to delete ALL products in your database? This action CANNOT be undone!")) return;
+    try {
+      setLoading(true)
+      const res = await fetch('/api/products?deleteAll=true', { method: 'DELETE' })
+      if (res.ok) {
+        toast.success("All products have been deleted successfully.")
+        setSelectedProducts([])
+        load()
+      } else {
+        toast.error("Failed to delete all products")
+        setLoading(false)
+      }
+    } catch(e) {
+      toast.error("Error deleting all products")
+      setLoading(false)
+    }
+  }
+
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.id?.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesStatus = filterStatus === 'All' || p.status === filterStatus
@@ -220,6 +239,12 @@ export default function AdminProductsPage() {
           <p className="text-white/60 text-sm">Manage inventory, pricing, and statuses.</p>
         </div>
         <div className="flex items-center gap-3">
+          <button 
+            onClick={handleDeleteAllProducts}
+            className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors font-medium"
+          >
+            <Trash2 className="w-4 h-4" /> Delete All
+          </button>
           <button 
             onClick={() => setShowImporter(true)}
             className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors"

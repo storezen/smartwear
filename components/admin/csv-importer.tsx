@@ -214,10 +214,9 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
-  if (!isOpen) return null
-
   return (
     <AnimatePresence>
+      {isOpen && (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -406,6 +405,7 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
           </div>
         </motion.div>
       </motion.div>
+      )}
     </AnimatePresence>
   )
 }

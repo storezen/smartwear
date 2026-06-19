@@ -80,6 +80,17 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
+    const deleteAll = searchParams.get('deleteAll') === 'true'
+
+    if (deleteAll) {
+      if (isSupabaseConfigured() && supabase) {
+        const { error } = await supabase.from('products').delete().neq('id', 'dummy-id-to-match-all')
+        if (!error) return NextResponse.json({ success: true })
+        return NextResponse.json({ error: 'Failed to delete all products' }, { status: 500 })
+      }
+      return NextResponse.json({ success: true })
+    }
+
     if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 })
 
     if (isSupabaseConfigured() && supabase) {
