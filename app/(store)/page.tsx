@@ -3,18 +3,19 @@
 import { useEffect, useState, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from "framer-motion"
+import { motion, useTransform, useSpring, useMotionValue, AnimatePresence } from "framer-motion"
 import {
   ArrowRight, Shield, Truck, RefreshCw, CreditCard, ChevronRight,
   Zap, Star, Heart, Watch, Smartphone, Battery, Headphones,
-  Package, Award, Clock, Activity, HeartPulse, Wifi,
-  Send, Quote, CheckCircle2, Sparkles, ChevronDown
+  Package, Clock, Send, CheckCircle2, Sparkles, ChevronDown
 } from "lucide-react"
 import { ProductCard } from "@/components/store/premium-product-card"
 import { categories as storeCategories } from "@/lib/mock-data"
 import {
   buildCategoryImageMap,
+  getCategoriesWithProducts,
   HOMEPAGE_CARDS_PER_SECTION,
+  HOMEPAGE_CATEGORY_GROUPS,
   pickBalancedNewArrivals,
   pickBalancedProducts,
   pickFromCategory,
@@ -56,9 +57,14 @@ function SectionLabel({ text }: { text: string }) {
   )
 }
 
-function SectionTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+const SECTION_PAD = "py-10 md:py-14"
+
+function SectionTitle({ children, className = "", large = false }: { children: React.ReactNode; className?: string; large?: boolean }) {
   return (
-    <h2 className={`text-3xl md:text-4xl lg:text-5xl font-bold text-white ${className}`} style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+    <h2
+      className={`font-bold text-white ${large ? "text-3xl md:text-4xl lg:text-5xl" : "text-2xl md:text-3xl"} ${className}`}
+      style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+    >
       {children}
     </h2>
   )
@@ -85,7 +91,7 @@ function HeroBanner() {
 
   return (
     <section 
-      className="relative min-h-[85svh] md:min-h-screen flex items-center justify-center overflow-x-hidden bg-[#0C0F14]"
+      className="relative min-h-[72svh] md:min-h-[82svh] flex items-center justify-center overflow-x-hidden bg-[#0C0F14]"
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { mouseX.set(0); mouseY.set(0) }}
     >
@@ -253,164 +259,73 @@ type ShopCategoryCard = {
   description: string
 }
 
-function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
-  return (
-    <section className="py-8 md:py-16 lg:py-24 bg-[#0C0F14]">
-      <div className="sw-container">
-        <motion.div
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-          variants={staggerContainer}
-          className="mb-10 md:mb-14"
-        >
-          <motion.div variants={staggerItem}><SectionLabel text="Browse" /></motion.div>
-          <motion.div variants={staggerItem}><SectionTitle>Shop by Category</SectionTitle></motion.div>
-        </motion.div>
-
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
-          {items.map((cat, i) => (
-            <motion.div
-              key={cat.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-            >
-              <Link href={`/products?category=${cat.slug}`} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/5] sm:aspect-square lg:aspect-[3/4] snap-start shrink-0 w-[75vw] sm:w-auto">
-                <Image src={cat.image} alt={cat.name} fill sizes="(max-width: 640px) 75vw, (max-width: 1024px) 50vw, 25vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0C0F14] via-[#0C0F14]/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end">
-                  <div className="w-12 h-12 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center text-white mb-4 group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] group-hover:-translate-y-1 transition-all duration-500 shadow-lg">
-                    <cat.icon className="w-5 h-5" />
-                  </div>
-                  
-                  <h3 className="text-white text-xl font-bold mb-1 tracking-wide" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
-                    {cat.name}
-                  </h3>
-                  <p className="text-white/60 text-sm mb-6 line-clamp-1">{cat.description}</p>
-                  
-                  <div className="mt-auto">
-                    <span className="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 text-white text-xs font-bold uppercase tracking-widest px-5 py-3 rounded-xl group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] transition-all duration-500 shadow-xl">
-                      Shop Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-
-/* ════════════════════════════════════════════════════════
-   4. PRODUCT SECTION (Bestsellers / New Arrivals)
-   ════════════════════════════════════════════════════════ */
-
-function ProductSection({
-  label,
-  title,
-  products,
-  badge,
-  viewAllHref = "/products",
-  limit = HOMEPAGE_CARDS_PER_SECTION,
+function GroupedCategories({
+  items,
+  counts,
 }: {
-  label: string
-  title: string
-  products: any[]
-  badge?: string
-  viewAllHref?: string
-  limit?: number
+  items: ShopCategoryCard[]
+  counts: Record<string, number>
 }) {
-  if (!products?.length) return null
+  const bySlug = Object.fromEntries(items.map((c) => [c.slug, c]))
 
   return (
-    <section className="py-8 md:py-16 lg:py-24 bg-[#0C0F14]">
+    <section className={`${SECTION_PAD} bg-[#0C0F14]`}>
       <div className="sw-container">
-        <motion.div
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-          variants={staggerContainer}
-          className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-14 gap-4"
-        >
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
           <div>
-            <motion.div variants={staggerItem}><SectionLabel text={label} /></motion.div>
-            <motion.div variants={staggerItem}><SectionTitle>{title}</SectionTitle></motion.div>
+            <SectionLabel text="Browse" />
+            <SectionTitle>Shop by Category</SectionTitle>
+            <p className="text-white/50 text-sm mt-2 max-w-md">
+              Watches, bands, cases, audio & chargers — organized the way you shop.
+            </p>
           </div>
-          <motion.div variants={staggerItem}>
-            <Link href={viewAllHref} className="text-white/50 hover:text-[#B8860B] text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 shrink-0">
-              View All <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
-          {products.slice(0, limit).map((product: any, i: number) => (
-            <motion.div
-              key={product.id || i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06, duration: 0.5 }}
-              className="snap-start shrink-0 w-[240px] sm:w-[280px] md:w-auto"
-            >
-              <ProductCard product={product} />
-            </motion.div>
-          ))}
+          <Link
+            href="/products"
+            className="text-[#B8860B] hover:text-[#D4A017] text-xs font-bold uppercase tracking-widest flex items-center gap-2 shrink-0"
+          >
+            Full Catalog <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
-      </div>
-    </section>
-  )
-}
 
+        <div className="space-y-8">
+          {HOMEPAGE_CATEGORY_GROUPS.map((group) => {
+            const groupItems = group.slugs
+              .map((slug) => bySlug[slug])
+              .filter(Boolean) as ShopCategoryCard[]
+            if (!groupItems.length) return null
 
-/* ════════════════════════════════════════════════════════
-   5. WHY CHOOSE SMARTWEAR
-   ════════════════════════════════════════════════════════ */
-
-const features = [
-  { icon: Award, title: "Premium Build Quality", desc: "Handpicked watches with military-grade durability and premium materials that last." },
-  { icon: HeartPulse, title: "Advanced Health Tracking", desc: "Heart rate, SpO2, sleep analysis, and 100+ sport modes to keep you at your best." },
-  { icon: Battery, title: "Long Battery Life", desc: "Up to 14 days battery life so your watch works as hard as you do." },
-  { icon: Shield, title: "1 Year Warranty", desc: "Full local warranty with dedicated Pakistani customer support team." },
-  { icon: Truck, title: "Fast Delivery via PostEx", desc: "Reliable delivery to every city in Pakistan within 2-5 business days." },
-  { icon: RefreshCw, title: "Easy 7-Day Returns", desc: "Not satisfied? Return hassle-free within 7 days, no questions asked." },
-]
-
-function WhyChooseUs() {
-  return (
-    <section className="py-8 md:py-16 lg:py-24 bg-[#080A0D] border-y border-white/5">
-      <div className="sw-container">
-        <motion.div
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-          variants={staggerContainer}
-          className="mb-10 md:mb-14"
-        >
-          <motion.div variants={staggerItem}><SectionLabel text="Our Promise" /></motion.div>
-          <motion.div variants={staggerItem}><SectionTitle>Why Choose Smartwear?</SectionTitle></motion.div>
-          <motion.p variants={staggerItem} className="text-white/50 mt-4 max-w-2xl text-sm md:text-base">
-            We&apos;re not just selling watches — we&apos;re delivering confidence, reliability, and premium experiences to every customer.
-          </motion.p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="group p-8 rounded-[24px] bg-white/[0.02] border border-white/5 hover:border-[#B8860B]/20 hover:bg-white/[0.04] transition-all duration-500"
-            >
-              <div className="w-14 h-14 rounded-2xl bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center text-[#B8860B] mb-5 group-hover:bg-[#B8860B] group-hover:text-black transition-all duration-300">
-                <f.icon className="w-6 h-6" />
+            return (
+              <div key={group.id}>
+                <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] mb-3">
+                  {group.label}
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                  {groupItems.map((cat) => {
+                    const Icon = cat.icon
+                    return (
+                      <Link
+                        key={cat.slug}
+                        href={`/products?category=${cat.slug}`}
+                        className="group flex items-center gap-3 p-3 rounded-2xl border border-white/5 bg-white/[0.02] hover:border-[#B8860B]/30 hover:bg-white/[0.04] transition-all duration-300"
+                      >
+                        <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-white/10">
+                          <Image src={cat.image} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="56px" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5">
+                            <Icon className="w-3.5 h-3.5 text-[#B8860B] shrink-0" />
+                            <h3 className="text-white text-sm font-semibold truncate">{cat.name}</h3>
+                          </div>
+                          <p className="text-white/40 text-[11px] mt-0.5">{counts[cat.slug] ?? 0} products</p>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#B8860B] shrink-0 transition-colors" />
+                      </Link>
+                    )
+                  })}
+                </div>
               </div>
-              <h3 className="text-white text-lg font-bold mb-2" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>{f.title}</h3>
-              <p className="text-white/50 text-sm leading-relaxed">{f.desc}</p>
-            </motion.div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
@@ -419,141 +334,141 @@ function WhyChooseUs() {
 
 
 /* ════════════════════════════════════════════════════════
-   6. COLLECTIONS BANNER
+   4. DISCOVER — tabbed products (Trending / New / Category)
    ════════════════════════════════════════════════════════ */
 
-const collectionMeta = [
-  { name: "Pro Series", desc: "Built for athletes and adventurers", tag: "MOST POPULAR", slug: "smart-watches" as const },
-  { name: "Classic Series", desc: "Timeless design meets modern tech", tag: "PREMIUM", slug: "analog-watches" as const },
-  { name: "Sport Series", desc: "Lightweight & durable for workouts", tag: "BESTSELLER", slug: "ladies-watches" as const },
-]
+type DiscoverTab = "trending" | "new" | "category"
 
-function CollectionsBanner({ categoryImages }: { categoryImages: Record<string, string> }) {
-  const collections = collectionMeta.map((col) => ({
-    ...col,
-    image: categoryImages[col.slug] || storeCategories.find((c) => c.slug === col.slug)?.image || "",
-    href: `/products?category=${col.slug}`,
-  }))
+function ProductGrid({ products }: { products: any[] }) {
+  if (!products.length) {
+    return (
+      <p className="text-white/40 text-sm py-12 text-center rounded-2xl border border-white/5 bg-white/[0.02]">
+        No products in this collection yet.
+      </p>
+    )
+  }
+
   return (
-    <section className="py-8 md:py-16 lg:py-24 bg-[#0C0F14]">
-      <div className="sw-container">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
+      {products.slice(0, HOMEPAGE_CARDS_PER_SECTION).map((product: any, i: number) => (
         <motion.div
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-          variants={staggerContainer}
-          className="mb-10 md:mb-14"
+          key={product.id || i}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.05, duration: 0.35 }}
         >
-          <motion.div variants={staggerItem}><SectionLabel text="Curated" /></motion.div>
-          <motion.div variants={staggerItem}><SectionTitle>Smartwatch Collections</SectionTitle></motion.div>
+          <ProductCard product={product} />
         </motion.div>
-
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-3 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
-          {collections.map((col, i) => (
-            <motion.div
-              key={col.name}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.12 }}
-              className="snap-start shrink-0 w-[280px] sm:w-[320px] md:w-auto"
-            >
-              <Link href={col.href} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/3]">
-                <Image src={col.image} alt={col.name} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-
-                <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 rounded-full bg-[#B8860B]/20 border border-[#B8860B]/30 text-[#B8860B] text-[9px] font-bold uppercase tracking-widest">
-                    {col.tag}
-                  </span>
-                </div>
-
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-white text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>{col.name}</h3>
-                  <p className="text-white/50 text-sm mb-3">{col.desc}</p>
-                  <span className="inline-flex items-center gap-2 text-[#B8860B] text-xs font-bold uppercase tracking-widest group-hover:gap-3 transition-all">
-                    Explore <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
+      ))}
+    </div>
   )
 }
 
-
-/* ════════════════════════════════════════════════════════
-   7. CATEGORY SHOWCASE — balanced across all categories
-   ════════════════════════════════════════════════════════ */
-
-function CategoryShowcase({
+function DiscoverSection({
+  bestsellers,
+  newArrivals,
   productsByCategory,
+  categoryOptions,
 }: {
+  bestsellers: any[]
+  newArrivals: any[]
   productsByCategory: Record<string, any[]>
+  categoryOptions: { slug: string; name: string }[]
 }) {
-  const rows = storeCategories
-    .map((cat) => ({ cat, products: productsByCategory[cat.slug] ?? [] }))
-    .filter((row) => row.products.length > 0)
+  const [tab, setTab] = useState<DiscoverTab>("trending")
+  const [activeCat, setActiveCat] = useState(categoryOptions[0]?.slug ?? "smart-watches")
 
-  if (!rows.length) return null
+  const viewAllHref =
+    tab === "category" && activeCat
+      ? `/products?category=${activeCat}`
+      : "/products"
+
+  const activeProducts =
+    tab === "trending"
+      ? bestsellers
+      : tab === "new"
+        ? newArrivals
+        : productsByCategory[activeCat] ?? []
+
+  const tabs: { id: DiscoverTab; label: string }[] = [
+    { id: "trending", label: "Trending" },
+    { id: "new", label: "New Arrivals" },
+    { id: "category", label: "By Category" },
+  ]
 
   return (
-    <section className="py-8 md:py-16 lg:py-24 bg-[#080A0D] border-y border-white/5">
+    <section className={`${SECTION_PAD} bg-[#080A0D] border-y border-white/5`}>
       <div className="sw-container">
-        <motion.div
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-          variants={staggerContainer}
-          className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-14 gap-4"
-        >
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
           <div>
-            <motion.div variants={staggerItem}><SectionLabel text="Every Collection" /></motion.div>
-            <motion.div variants={staggerItem}><SectionTitle>Shop All Categories</SectionTitle></motion.div>
-            <motion.p variants={staggerItem} className="text-white/50 mt-3 text-sm max-w-lg">
-              A balanced pick from each line — watches, bands, cases, and essentials.
-            </motion.p>
+            <SectionLabel text="Discover" />
+            <SectionTitle>Curated For You</SectionTitle>
           </div>
-          <motion.div variants={staggerItem}>
-            <Link href="/products" className="text-white/50 hover:text-[#B8860B] text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 shrink-0">
-              Browse Full Catalog <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
-        </motion.div>
+          <Link
+            href={viewAllHref}
+            className="text-white/50 hover:text-[#B8860B] text-xs font-bold uppercase tracking-widest flex items-center gap-2 shrink-0"
+          >
+            View All <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
 
-        <div className="space-y-12 md:space-y-16">
-          {rows.map(({ cat, products }, rowIndex) => (
-            <div key={cat.slug}>
-              <div className="flex items-center justify-between gap-4 mb-5">
-                <h3
-                  className="text-white text-xl md:text-2xl font-bold"
-                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setTab(t.id)}
+              className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border transition-all"
+              style={{
+                background: tab === t.id ? "linear-gradient(135deg, #B8860B, #D4A017)" : "rgba(255,255,255,0.03)",
+                color: tab === t.id ? "#000" : "rgba(255,255,255,0.55)",
+                borderColor: tab === t.id ? "transparent" : "rgba(255,255,255,0.06)",
+              }}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        <AnimatePresence mode="wait">
+          {tab === "category" && (
+            <motion.div
+              key="cat-chips"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="flex flex-wrap gap-2 mb-5 overflow-hidden"
+            >
+              {categoryOptions.map((cat) => (
+                <button
+                  key={cat.slug}
+                  type="button"
+                  onClick={() => setActiveCat(cat.slug)}
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-semibold border transition-all"
+                  style={{
+                    background: activeCat === cat.slug ? "rgba(184,134,11,0.15)" : "transparent",
+                    color: activeCat === cat.slug ? "#D4A017" : "rgba(255,255,255,0.5)",
+                    borderColor: activeCat === cat.slug ? "rgba(184,134,11,0.35)" : "rgba(255,255,255,0.08)",
+                  }}
                 >
                   {cat.name}
-                </h3>
-                <Link
-                  href={`/products?category=${cat.slug}`}
-                  className="text-[#B8860B] hover:text-[#D4A017] text-xs font-bold uppercase tracking-widest transition-colors shrink-0"
-                >
-                  View All
-                </Link>
-              </div>
-              <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
-                {products.map((product: any, i: number) => (
-                  <motion.div
-                    key={product.id || i}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: rowIndex * 0.05 + i * 0.08, duration: 0.5 }}
-                    className="snap-start shrink-0 w-[240px] sm:w-[280px] md:w-auto"
-                  >
-                    <ProductCard product={product} />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${tab}-${tab === "category" ? activeCat : tab}`}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+          >
+            <ProductGrid products={activeProducts} />
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   )
@@ -561,7 +476,7 @@ function CategoryShowcase({
 
 
 /* ════════════════════════════════════════════════════════
-   8. CUSTOMER TESTIMONIALS
+   5. VALUE STRIP + TESTIMONIALS (compact)
    ════════════════════════════════════════════════════════ */
 
 const testimonials = [
@@ -569,76 +484,88 @@ const testimonials = [
     name: "Ahmed Khan",
     city: "Karachi",
     rating: 5,
-    text: "Ordered the Ultra Sport watch and it arrived in 3 days! Quality is amazing, exactly as shown. Will definitely order again. Best smartwatch store in Pakistan.",
+    text: "Ordered the Ultra Sport watch and it arrived in 3 days! Quality is amazing, exactly as shown. Will definitely order again.",
     avatar: "AK",
   },
   {
     name: "Sara Malik",
     city: "Lahore",
     rating: 5,
-    text: "I was skeptical about ordering online but the COD option gave me confidence. The watch exceeded my expectations — the battery lasts a full week!",
+    text: "The COD option gave me confidence. The watch exceeded my expectations — the battery lasts a full week!",
     avatar: "SM",
   },
   {
     name: "Usman Ali",
     city: "Islamabad",
     rating: 5,
-    text: "Received my smartwatch with a beautiful strap. The packaging was premium and the watch itself is absolutely gorgeous. 100% recommend Smartwear Pakistan!",
+    text: "Received my smartwatch with a beautiful strap. Premium packaging and gorgeous watch. 100% recommend!",
     avatar: "UA",
   },
   {
     name: "Fatima Noor",
     city: "Rawalpindi",
     rating: 4,
-    text: "Great health tracking features and the customer support was really helpful when I had questions about setup. Love the gold strap I got for my watch!",
+    text: "Great health tracking and helpful customer support when I had setup questions.",
     avatar: "FN",
   },
 ]
 
-function CustomerTestimonials() {
+const valueProps = [
+  { icon: Shield, title: "1 Year Warranty", desc: "Local support across Pakistan" },
+  { icon: Truck, title: "Fast Delivery", desc: "PostEx to every major city" },
+  { icon: RefreshCw, title: "7-Day Returns", desc: "Hassle-free if not satisfied" },
+]
+
+function ValueAndReviews() {
+  const featured = testimonials.slice(0, 2)
+
   return (
-    <section className="py-8 md:py-16 lg:py-24 bg-[#0C0F14]">
-      <div className="sw-container">
-        <motion.div
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-          variants={staggerContainer}
-          className="mb-10 md:mb-14"
-        >
-          <motion.div variants={staggerItem}><SectionLabel text="Reviews" /></motion.div>
-          <motion.div variants={staggerItem}><SectionTitle>What Our Customers Say</SectionTitle></motion.div>
-        </motion.div>
-
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="group p-6 rounded-[24px] bg-white/[0.02] border border-white/5 hover:border-[#B8860B]/20 transition-all duration-500 flex flex-col snap-start shrink-0 w-[280px] sm:w-[320px] md:w-auto"
+    <section className={`${SECTION_PAD} bg-[#0C0F14]`}>
+      <div className="sw-container space-y-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {valueProps.map((f) => (
+            <div
+              key={f.title}
+              className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5"
             >
-              <Quote className="w-8 h-8 text-[#B8860B]/30 mb-4 shrink-0" />
-
-              <div className="flex gap-1 mb-4">
-                {Array.from({ length: 5 }).map((_, s) => (
-                  <Star key={s} className={`w-3.5 h-3.5 ${s < t.rating ? "fill-[#B8860B] text-[#B8860B]" : "text-white/20"}`} />
-                ))}
+              <div className="w-11 h-11 rounded-xl bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center text-[#B8860B] shrink-0">
+                <f.icon className="w-5 h-5" />
               </div>
-
-              <p className="text-white/70 text-sm leading-relaxed flex-1 mb-6">&ldquo;{t.text}&rdquo;</p>
-
-              <div className="flex items-center gap-3 pt-4 border-t border-white/5">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center text-black text-xs font-bold shrink-0">
-                  {t.avatar}
-                </div>
-                <div>
-                  <p className="text-white text-sm font-semibold">{t.name}</p>
-                  <p className="text-white/40 text-xs">{t.city}, Pakistan</p>
-                </div>
+              <div>
+                <p className="text-white text-sm font-semibold">{f.title}</p>
+                <p className="text-white/45 text-xs mt-0.5">{f.desc}</p>
               </div>
-            </motion.div>
+            </div>
           ))}
+        </div>
+
+        <div>
+          <SectionLabel text="Reviews" />
+          <SectionTitle className="mb-6">Loved by Customers</SectionTitle>
+          <div className="grid md:grid-cols-2 gap-4">
+            {featured.map((t) => (
+              <div
+                key={t.name}
+                className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 flex flex-col"
+              >
+                <div className="flex gap-1 mb-3">
+                  {Array.from({ length: 5 }).map((_, s) => (
+                    <Star key={s} className={`w-3.5 h-3.5 ${s < t.rating ? "fill-[#B8860B] text-[#B8860B]" : "text-white/20"}`} />
+                  ))}
+                </div>
+                <p className="text-white/70 text-sm leading-relaxed flex-1">&ldquo;{t.text}&rdquo;</p>
+                <div className="flex items-center gap-3 pt-4 mt-4 border-t border-white/5">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center text-black text-[10px] font-bold">
+                    {t.avatar}
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-medium">{t.name}</p>
+                    <p className="text-white/40 text-xs">{t.city}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -647,7 +574,7 @@ function CustomerTestimonials() {
 
 
 /* ════════════════════════════════════════════════════════
-   9. NEWSLETTER SIGNUP
+   6. NEWSLETTER SIGNUP
    ════════════════════════════════════════════════════════ */
 
 function NewsletterSignup() {
@@ -664,7 +591,7 @@ function NewsletterSignup() {
   }
 
   return (
-    <section className="py-8 md:py-16 lg:py-24 bg-[#080A0D] border-t border-white/5 relative overflow-hidden">
+    <section className={`${SECTION_PAD} bg-[#080A0D] border-t border-white/5 relative overflow-hidden`}>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#B8860B]/[0.04] blur-[100px] pointer-events-none" />
 
       <div className="sw-container relative z-10">
@@ -675,10 +602,10 @@ function NewsletterSignup() {
         >
           <motion.div variants={staggerItem}><SectionLabel text="Newsletter" /></motion.div>
           <motion.div variants={staggerItem}>
-            <SectionTitle>Stay Updated with New Drops & Offers</SectionTitle>
+            <SectionTitle>Get New Drops & Offers</SectionTitle>
           </motion.div>
-          <motion.p variants={staggerItem} className="text-white/50 mt-4 mb-8 text-sm md:text-base">
-            Get early access to new arrivals, exclusive discounts, and smartwatch tips delivered to your inbox.
+          <motion.p variants={staggerItem} className="text-white/50 mt-3 mb-6 text-sm">
+            Early access to arrivals and exclusive discounts.
           </motion.p>
 
           <motion.form
@@ -781,7 +708,7 @@ export default function HomePage() {
     [allProducts]
   )
 
-  const showcaseByCategory = useMemo(
+  const productsByCategory = useMemo(
     () =>
       Object.fromEntries(
         storeCategories.map((cat) => [
@@ -792,31 +719,35 @@ export default function HomePage() {
     [allProducts]
   )
 
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const cat of storeCategories) {
+      counts[cat.slug] = allProducts.filter(
+        (p) => normalizeCategorySlug(p.category_slug) === cat.slug && p.is_active !== false
+      ).length
+    }
+    return counts
+  }, [allProducts])
+
+  const categoryOptions = useMemo(
+    () => getCategoriesWithProducts(allProducts).map((c) => ({ slug: c.slug, name: c.name })),
+    [allProducts]
+  )
+
   return (
     <div className="min-h-screen bg-[#0C0F14]">
       <HeroBanner />
       <TrustBadges />
-      <ShopByCategory items={shopCategoryCards} />
+      <GroupedCategories items={shopCategoryCards} counts={categoryCounts} />
       {!loading && (
-        <ProductSection
-          label="Trending"
-          title="Bestsellers"
-          products={bestsellers}
-          badge="Bestseller"
+        <DiscoverSection
+          bestsellers={bestsellers}
+          newArrivals={newArrivals}
+          productsByCategory={productsByCategory}
+          categoryOptions={categoryOptions}
         />
       )}
-      <CollectionsBanner categoryImages={categoryImageMap} />
-      {!loading && (
-        <ProductSection
-          label="Fresh Drops"
-          title="New Arrivals"
-          products={newArrivals}
-          badge="Just Arrived"
-        />
-      )}
-      <WhyChooseUs />
-      {!loading && <CategoryShowcase productsByCategory={showcaseByCategory} />}
-      <CustomerTestimonials />
+      <ValueAndReviews />
       <NewsletterSignup />
     </div>
   )
