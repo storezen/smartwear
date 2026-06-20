@@ -251,7 +251,7 @@ export async function createOrder(order: any) {
       if ((product.stock || 0) < item.quantity) throw new Error(`Insufficient stock for ${product.name}`)
       await supabase.from('products').update({ stock: product.stock - item.quantity }).eq('id', item.id)
     }
-    order.id = `ORD-${crypto.randomUUID()}`
+    order.id = `ORD-${Math.floor(100000 + Math.random() * 900000)}`
     order.created_at = new Date().toISOString()
     order.history = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
     order.notes = ""
@@ -271,7 +271,7 @@ export async function createOrder(order: any) {
     const product = db.products.find((p: any) => p.id === item.id)
     if (product) product.stock -= item.quantity
   }
-  order.id = `ORD-${crypto.randomUUID()}`
+  order.id = `ORD-${Math.floor(100000 + Math.random() * 900000)}`
   order.created_at = new Date().toISOString()
   order.history = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
   order.notes = ""
