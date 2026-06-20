@@ -224,11 +224,11 @@ export default function LiveAnalyticsPage() {
                 <div className="space-y-3">
                   {parsedEvents.slice(0, 10).map((event, i) => (
                     <div key={event.id || i} className="flex items-center gap-3 group">
-                      <div className={`w-2 h-2 rounded-full shadow-[0_0_8px_currentColor] ${event.base_event === 'Purchase' ? 'bg-[#B8860B] text-[#B8860B]' : 'bg-white/40 text-white/40 group-hover:bg-white group-hover:text-white transition-colors'}`} />
+                      <div className={`w-2 h-2 rounded-full shadow-[0_0_8px_currentColor] ${(event.base_event === 'Purchase' || event.base_event === 'CompletePayment') ? 'bg-[#B8860B] text-[#B8860B]' : 'bg-white/40 text-white/40 group-hover:bg-white group-hover:text-white transition-colors'}`} />
                       <div className="flex-1">
                         <p className="text-[13px] text-white/90 truncate max-w-[250px] font-medium">{event.item_name}</p>
                         <p className="text-[11px] text-white/40">
-                          {event.base_event === 'Purchase' ? 'Purchased' : 'Viewed'} • {event.location}
+                          {(event.base_event === 'Purchase' || event.base_event === 'CompletePayment') ? 'Purchased' : 'Viewed'} • {event.location}
                         </p>
                       </div>
                     </div>

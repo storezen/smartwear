@@ -10,12 +10,16 @@ export async function GET() {
   try {
     if (env.NODE_ENV === 'production' && supabase) {
       const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
-      const { data } = await supabase.from('analytics')
+      const { data, error } = await supabase.from('analytics')
         .select('*')
         .gte('timestamp', twoHoursAgo)
         .order('timestamp', { ascending: false })
         .limit(100)
-      return NextResponse.json(data || [])
+      
+      if (!error && data) {
+        return NextResponse.json(data)
+      }
+      console.warn("Supabase Analytics GET Error (falling back to memory):", error?.message)
     }
     const db = await getDb()
     const twoHoursAgoTime = Date.now() - 2 * 60 * 60 * 1000
@@ -37,8 +41,11 @@ export async function POST(req: Request) {
     }
 
     if (env.NODE_ENV === 'production' && supabase) {
-      await supabase.from('analytics').insert([newEvent])
-      return NextResponse.json({ success: true, event: newEvent }, { status: 201 })
+      const { error } = await supabase.from('analytics').insert([newEvent])
+      if (!error) {
+        return NextResponse.json({ success: true, event: newEvent }, { status: 201 })
+      }
+      console.warn("Supabase Analytics Insert Error (falling back to memory):", error.message)
     }
 
     const db = await getDb()
