@@ -261,13 +261,6 @@ const shopCategories = [
     description: "Ultimate protection",
   },
   {
-    name: "Camera Protectors",
-    slug: "camera-protectors",
-    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&h=600&fit=crop",
-    icon: Shield,
-    description: "Crystal clear safety",
-  },
-  {
     name: "Accessories",
     slug: "accessories",
     image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop",

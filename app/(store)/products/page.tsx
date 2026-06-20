@@ -16,14 +16,13 @@ const sortOpts = [
   { value: "price-hi", label: "Price ↓" },
 ]
 
-/** Short labels so all 7 category tabs fit on mobile scroll. */
+/** Short labels so all category tabs fit on mobile scroll. */
 const categoryTabLabels: Record<string, string> = {
   "smart-watches": "Smart",
   "analog-watches": "Analog",
   "ladies-watches": "Ladies",
   "watch-bands": "Bands",
   "phone-cases": "Cases",
-  "camera-protectors": "Camera",
   "accessories": "Accessories",
 }
 
@@ -223,7 +222,7 @@ function ProductsContent() {
               </SheetContent>
             </Sheet>
 
-            {/* Category Tabs — all 7 categories including Camera Protectors */}
+            {/* Category Tabs */}
             <div
               className="flex items-center gap-1.5 sm:gap-2 flex-1 overflow-x-auto pb-0.5"
               style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}

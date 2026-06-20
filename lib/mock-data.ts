@@ -1,6 +1,6 @@
 import { Product, Category, Review, Order, User, Address } from '@/types'
 
-// Expanded to 7 global categories
+// 6 store categories
 export const categories: Category[] = [
   {
     id: 'sw',
@@ -36,13 +36,6 @@ export const categories: Category[] = [
     slug: 'phone-cases',
     image: 'https://images.unsplash.com/photo-1603313011101-320f26a4f6f6?w=800&h=600&fit=crop',
     description: 'Ultimate protection and style for your device.'
-  },
-  {
-    id: 'cp',
-    name: 'Camera Protectors',
-    slug: 'camera-protectors',
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&h=600&fit=crop',
-    description: 'Crystal clear protection for your lenses.'
   },
   {
     id: 'acc',

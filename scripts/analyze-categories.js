@@ -26,10 +26,6 @@ function getProductCategory(title, tags = '') {
     return 'Phone Cases';
   }
 
-  if (/\b(camera lens|lens protector)\b/i.test(searchStr)) {
-    return 'Camera Protectors';
-  }
-
   if (watchKeywords.test(searchStr)) {
     return 'Smart Watches';
   }
@@ -57,7 +53,7 @@ Papa.parse(csvData, {
       'Ladies Watches': [],
       'Watch Bands & Straps': [],
       'Phone Cases': [],
-      'Camera Protectors': [],
+
       'Accessories': []
     };
 

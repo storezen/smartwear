@@ -12,7 +12,6 @@ const links = {
     { l: "Ladies Watches",        h: "/products?category=ladies-watches" },
     { l: "Watch Bands & Straps",  h: "/products?category=watch-bands" },
     { l: "Phone Cases",           h: "/products?category=phone-cases" },
-    { l: "Camera Protectors",     h: "/products?category=camera-protectors" },
     { l: "Accessories",           h: "/products?category=accessories" },
     { l: "Sale",                  h: "/products?sale=true" },
   ],

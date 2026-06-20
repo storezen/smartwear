@@ -11,7 +11,7 @@ import { CsvImporter } from "@/components/admin/csv-importer"
 import { FileSpreadsheet } from "lucide-react"
 
 const STATUSES = ProductStatusEnum.options;
-const CATEGORIES = ['All', 'smart-watches', 'analog-watches', 'ladies-watches', 'watch-bands', 'phone-cases', 'camera-protectors', 'accessories']
+const CATEGORIES = ['All', 'smart-watches', 'analog-watches', 'ladies-watches', 'watch-bands', 'phone-cases', 'accessories']
 
 export default function AdminProductsPage() {
   const [showAddModal, setShowAddModal] = useState(false) // Will be used as Sheet open state
