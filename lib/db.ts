@@ -64,13 +64,13 @@ const INITIAL_DATA = {
 const globalAny: any = global;
 
 export async function getDb(retries = 3): Promise<any> {
-  if (env.NODE_ENV === 'production') {
-    if (!globalAny.memoryDb) {
-      globalAny.memoryDb = JSON.parse(JSON.stringify(INITIAL_DATA))
-    }
+  // Return memory DB if it's already loaded (super fast)
+  if (globalAny.memoryDb) {
     return globalAny.memoryDb
   }
+
   try {
+    // Attempt to read from the static database.json file first!
     const data = await fs.readFile(DB_PATH, 'utf-8')
     const parsed = JSON.parse(data)
     parsed.products = parsed.products || []
@@ -78,18 +78,28 @@ export async function getDb(retries = 3): Promise<any> {
     parsed.marketing = parsed.marketing || []
     parsed.analytics = parsed.analytics || []
     parsed.settings = parsed.settings || INITIAL_DATA.settings
+    
+    // Cache it in memory so future reads/writes persist across hot-reloads and Vercel serverless requests
+    globalAny.memoryDb = parsed
     return parsed
   } catch (error: any) {
     if (error.code === 'ENOENT') {
-      await fs.writeFile(DB_PATH, JSON.stringify(INITIAL_DATA, null, 2))
-      return INITIAL_DATA
+      // If file doesn't exist, fallback to INITIAL_DATA
+      if (env.NODE_ENV !== 'production') {
+        await fs.writeFile(DB_PATH, JSON.stringify(INITIAL_DATA, null, 2))
+      }
+      globalAny.memoryDb = JSON.parse(JSON.stringify(INITIAL_DATA))
+      return globalAny.memoryDb
     }
     if (retries > 0) {
       await new Promise(resolve => setTimeout(resolve, 200))
       return getDb(retries - 1)
     }
     console.error('CRITICAL: Failed to parse database.json', error)
-    return { products: [], orders: [], marketing: [], analytics: [], settings: INITIAL_DATA.settings }
+    
+    const safeData = { products: [], orders: [], marketing: [], analytics: [], settings: INITIAL_DATA.settings }
+    globalAny.memoryDb = safeData
+    return safeData
   }
 }
 
