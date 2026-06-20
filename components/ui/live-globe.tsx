@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import createGlobe from "cobe";
 
-export function LiveGlobe({ locations }: { locations: { lat: number, lng: number, size: number }[] }) {
+export default function LiveGlobe({ locations }: { locations: { lat: number, lng: number, size: number }[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointerInteracting = useRef<number | null>(null);
   const pointerInteractionMovement = useRef(0);
