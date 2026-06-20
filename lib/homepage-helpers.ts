@@ -6,24 +6,18 @@ export const CATEGORY_SLUGS = categories.map((c) => c.slug)
 /** Consistent product card count across homepage sections. */
 export const HOMEPAGE_CARDS_PER_SECTION = 4
 
-/** E-commerce hierarchy — watches first, then style, then tech. */
-export const HOMEPAGE_CATEGORY_GROUPS = [
-  {
-    id: 'watches',
-    label: 'Watches',
-    slugs: ['smart-watches', 'analog-watches', 'ladies-watches'],
-  },
-  {
-    id: 'style',
-    label: 'Style & Protection',
-    slugs: ['watch-bands', 'phone-cases', 'watch-cases'],
-  },
-  {
-    id: 'tech',
-    label: 'Tech & Essentials',
-    slugs: ['audio', 'chargers', 'power-banks', 'accessories'],
-  },
+/** Category showcase — top lines only (keeps page shorter). */
+export const HOMEPAGE_SHOWCASE_SLUGS = [
+  'smart-watches',
+  'analog-watches',
+  'ladies-watches',
+  'phone-cases',
+  'watch-bands',
+  'audio',
+  'chargers',
 ] as const
+
+export const HOMEPAGE_SHOWCASE_PER_CATEGORY = 2
 
 export function getCategoriesWithProducts(products: ProductLike[]) {
   return categories.filter((cat) => productsInCategory(products, cat.slug).length > 0)
