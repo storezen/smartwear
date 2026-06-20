@@ -8,6 +8,7 @@ import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSp
 import { Minus, Plus, Star, Heart, ShoppingBag, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote } from 'lucide-react'
 import { ProductCard } from '@/components/store/premium-product-card'
 import { getProductBySlug as getProductBySlugMock, getReviewsByProduct, formatPrice, products } from '@/lib/mock-data'
+import { decodeProductSlug, productApiPath, productPagePath, resolveProductSlug } from '@/lib/product-url'
 
 import { useCart } from '@/context/cart-context'
 import { TikTokEvents } from '@/lib/tiktok-pixel'
@@ -56,27 +57,70 @@ const scaleIn: any = {
 
 export default function ProductPage({ params }: ProductPageProps) {
   const resolvedParams = use(params)
+  const slug = resolveProductSlug(decodeProductSlug(resolvedParams.slug))
   const [product, setProduct] = useState<any>(null)
+  const [status, setStatus] = useState<'loading' | 'ready' | 'not-found'>('loading')
 
   useEffect(() => {
+    let cancelled = false
+
+    async function loadFromCatalog(catalog: any[]) {
+      return catalog.find((p) => p.slug === slug && p.is_active !== false)
+    }
+
     async function load() {
+      setStatus('loading')
+      setProduct(null)
+
       try {
-        const res = await fetch(`/api/products/${resolvedParams.slug}`)
+        const res = await fetch(productApiPath(slug))
         if (res.ok) {
           const realProduct = await res.json()
-          setProduct(realProduct)
-        } else {
-          throw new Error('Not found')
+          if (!cancelled) {
+            setProduct(realProduct)
+            setStatus('ready')
+          }
+          return
         }
-      } catch (err) {
-        const mock = getProductBySlugMock(resolvedParams.slug)
-        setProduct(mock)
+      } catch {
+        // fall through to catalog / mock lookup
+      }
+
+      try {
+        const catalogRes = await fetch('/api/products')
+        if (catalogRes.ok) {
+          const catalog = await catalogRes.json()
+          const match = await loadFromCatalog(Array.isArray(catalog) ? catalog : [])
+          if (match) {
+            if (!cancelled) {
+              setProduct(match)
+              setStatus('ready')
+            }
+            return
+          }
+        }
+      } catch {
+        // fall through to mock
+      }
+
+      const mock = getProductBySlugMock(slug)
+      if (!cancelled) {
+        if (mock) {
+          setProduct(mock)
+          setStatus('ready')
+        } else {
+          setStatus('not-found')
+        }
       }
     }
-    load()
-  }, [resolvedParams.slug])
 
-  if (!product) {
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [slug])
+
+  if (status === 'loading') {
     return (
       <div className="min-h-screen bg-[#0C0F14] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
@@ -87,6 +131,28 @@ export default function ProductPage({ params }: ProductPageProps) {
             style={{ borderTopColor: '#D4A017', borderRightColor: '#B8860B' }}
           />
           <p className="text-white/60 text-sm tracking-widest uppercase">Loading Timepiece…</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (status === 'not-found' || !product) {
+    return (
+      <div className="min-h-screen bg-[#0C0F14] flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <p className="text-[#B8860B] text-xs font-bold uppercase tracking-[0.25em] mb-3">Not Found</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-3" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+            This timepiece isn&apos;t in our catalog
+          </h1>
+          <p className="text-white/55 text-sm mb-8">
+            The link may be outdated or the product was removed. Browse the collection to find your next watch.
+          </p>
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 sw-btn-gold px-6 py-3.5 text-sm font-bold uppercase tracking-widest rounded-xl"
+          >
+            Shop Collection <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     )

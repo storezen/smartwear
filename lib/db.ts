@@ -2,6 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import { env } from './env'
 import { normalizeProductList } from './normalize-product'
+import { resolveProductSlug } from './product-url'
 import { supabase } from './supabase'
 
 const DB_PATH = path.join(process.cwd(), 'database.json')
@@ -112,16 +113,17 @@ export async function getProducts() {
 }
 
 export async function getProduct(slug: string) {
+  const canonicalSlug = resolveProductSlug(slug)
   const db = await getDb()
   const local = normalizeProductList(db.products || [])
 
   if (local.length > 0) {
-    const product = local.find((p: any) => p.slug === slug)
+    const product = local.find((p: any) => p.slug === canonicalSlug || p.slug === slug)
     if (product) return product
   }
 
   if (env.NODE_ENV === 'production' && supabase) {
-    const { data, error } = await supabase.from('products').select('*').eq('slug', slug).single()
+    const { data, error } = await supabase.from('products').select('*').eq('slug', canonicalSlug).single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getProduct error:', error)
     return data ? normalizeProductList([data])[0] : null
   }

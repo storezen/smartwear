@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server'
 import { getProduct } from '@/lib/db'
+import { decodeProductSlug } from '@/lib/product-url'
 
 export async function GET(_request: Request, context: { params: Promise<{ slug: string }> }) {
   try {
-    const { slug } = await context.params
+    const { slug: rawSlug } = await context.params
+    const slug = decodeProductSlug(rawSlug)
     const product = await getProduct(slug)
 
     if (!product) {

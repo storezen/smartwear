@@ -1,0 +1,41 @@
+/** Encode product slugs for safe use in URL paths (handles |, spaces, unicode, etc.). */
+export function encodeProductSlug(slug: string): string {
+  return encodeURIComponent(slug)
+}
+
+export function decodeProductSlug(slug: string): string {
+  try {
+    return decodeURIComponent(slug)
+  } catch {
+    return slug
+  }
+}
+
+export function productPagePath(slug: string): string {
+  return `/products/${encodeProductSlug(slug)}`
+}
+
+export function productApiPath(slug: string): string {
+  return `/api/products/${encodeProductSlug(slug)}`
+}
+
+/** Resolve mangled / legacy slugs to the canonical catalog slug. */
+export function resolveProductSlug(slug: string): string {
+  const decoded = decodeProductSlug(slug).trim()
+  const key = decoded.toLowerCase()
+
+  if (PRODUCT_SLUG_ALIASES[key]) return PRODUCT_SLUG_ALIASES[key]
+
+  // Common corruption when "|" or parentheses break routing/CDN paths
+  if (/^series[.\-_]?(11)?[.\-_]?(cash|cod)/i.test(decoded) || /^series\.cash-on-delivery/i.test(decoded)) {
+    return "series-11-(allow-to-open-|-cash-on-delivery)"
+  }
+
+  return decoded
+}
+
+const PRODUCT_SLUG_ALIASES: Record<string, string> = {
+  "series-11-cod": "series-11-(allow-to-open-|-cash-on-delivery)",
+  "series.cash-on-delivery": "series-11-(allow-to-open-|-cash-on-delivery)",
+  "series-cash-on-delivery": "series-11-(allow-to-open-|-cash-on-delivery)",
+}
