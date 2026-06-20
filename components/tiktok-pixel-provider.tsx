@@ -14,10 +14,8 @@ export function TikTokPixelProvider({ pixelId }: { pixelId: string | null }) {
   }, [pixelId])
 
   useEffect(() => {
-    if (pixelId) {
-      TikTokEvents.pageView()
-    }
-  }, [pathname, pixelId])
+    TikTokEvents.pageView()
+  }, [pathname])
 
   return null
 }

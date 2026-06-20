@@ -12,7 +12,7 @@ export default function LiveAnalyticsPage() {
   useEffect(() => {
     // Poll every 5 seconds for live feel
     const fetchEvents = () => {
-      fetch('/api/analytics')
+      fetch(`/api/analytics?t=${Date.now()}`, { cache: 'no-store' })
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data)) setEvents(data)

@@ -117,8 +117,8 @@ export const TikTokEvents = {
   pageView: () => {
     if (typeof window !== 'undefined' && window.ttq) {
       window.ttq.page();
-      if (TIKTOK_DEBUG_MODE) console.log('%c[TikTok Event] PageView', 'color:#00f2fe; font-weight:bold');
     }
+    trackTikTokEvent('PageView', { content_name: 'Store Visit' });
   },
 
   viewContent: (product: { id: string; name: string; price: number }) => {
