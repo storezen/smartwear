@@ -57,143 +57,206 @@ export default function LiveAnalyticsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/5">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight font-playfair mb-2">Live Analytics</h1>
-          <p className="text-white/60 text-sm">Real-time TikTok Ad Traffic & Conversion Funnel</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight mb-1">Live View</h1>
+          <p className="text-white/60 text-sm">Real-time store activity & TikTok conversions</p>
         </div>
-        <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-4 py-2 rounded-xl text-sm font-medium shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+        <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-4 py-2 rounded-lg text-sm font-medium shadow-[0_0_20px_rgba(16,185,129,0.1)]">
           <span className="relative flex h-3 w-3">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
           </span>
-          Receiving Live Data (TikTok Pixel)
+          Receiving Live Data
         </div>
       </div>
 
-      {/* Live Traffic Funnel */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <SpotlightCard className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-              <Eye className="w-5 h-5 text-blue-400" />
+      {/* Hero Stats */}
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex-1 bg-gradient-to-br from-[#141414] to-[#0a0a0a] border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-center min-h-[200px]">
+          {/* Subtle world map background SVG pattern (abstract) */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
+          
+          <div className="relative z-10">
+            <p className="text-white/60 text-sm font-medium mb-2 uppercase tracking-wider">Right now</p>
+            <div className="flex items-baseline gap-4">
+              <span className="text-6xl font-bold text-white tracking-tighter"><AnimatedCounter value={viewCount} /></span>
+              <span className="text-xl text-white/50 font-medium">active visitors</span>
             </div>
-            <div className="flex items-center gap-1 text-emerald-400 text-xs font-medium bg-emerald-500/10 px-2 py-1 rounded-lg">
-              <TrendingUp className="w-3 h-3" />
-              +12%
+            <div className="flex items-center gap-2 mt-4 text-emerald-400 text-sm font-medium">
+              <TrendingUp className="w-4 h-4" />
+              Traffic is active
             </div>
           </div>
-          <p className="text-white/50 text-sm font-medium mb-1">Live Visitors (ViewContent)</p>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-white tracking-tight"><AnimatedCounter value={viewCount} /></span>
-          </div>
-        </SpotlightCard>
+        </div>
 
-        <SpotlightCard className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
-              <ShoppingCart className="w-5 h-5 text-purple-400" />
-            </div>
-            <div className="flex items-center gap-1 text-emerald-400 text-xs font-medium bg-emerald-500/10 px-2 py-1 rounded-lg">
-              <TrendingUp className="w-3 h-3" />
-              +5%
-            </div>
+        <div className="md:w-72 bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 flex flex-col justify-center">
+          <p className="text-white/50 text-sm font-medium mb-2 uppercase tracking-wider">Total Sales Today</p>
+          <div className="flex items-baseline gap-2 mb-4">
+            <span className="text-4xl font-bold text-[#D4A017] tracking-tight">₨ <AnimatedCounter value={revenue} /></span>
           </div>
-          <p className="text-white/50 text-sm font-medium mb-1">Active Carts (AddToCart)</p>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-white tracking-tight"><AnimatedCounter value={cartCount} /></span>
+          <div className="h-px bg-white/5 mb-4 w-full" />
+          <div className="flex items-center justify-between">
+            <span className="text-white/60 text-sm">Orders</span>
+            <span className="text-white font-bold">{purchaseCount}</span>
           </div>
-        </SpotlightCard>
-
-        <SpotlightCard className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20">
-              <Activity className="w-5 h-5 text-rose-400" />
-            </div>
-          </div>
-          <p className="text-white/50 text-sm font-medium mb-1">In Checkout (InitiateCheckout)</p>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-white tracking-tight"><AnimatedCounter value={checkoutCount} /></span>
-          </div>
-        </SpotlightCard>
-
-        <SpotlightCard className="p-6 border-[#B8860B]/30 shadow-[0_0_30px_rgba(184,134,11,0.05)] bg-[#B8860B]/5">
-          <div className="flex items-start justify-between mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center shadow-lg">
-              <CreditCard className="w-5 h-5 text-[#0C0F14]" />
-            </div>
-          </div>
-          <p className="text-white/70 text-sm font-medium mb-1">Live Sales Today</p>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-[#D4A017] tracking-tight">₨ <AnimatedCounter value={revenue} /></span>
-          </div>
-        </SpotlightCard>
+        </div>
       </div>
 
-      {/* Traffic Sources & Recent Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SpotlightCard className="p-6">
-          <h2 className="text-lg font-semibold text-white mb-6">Traffic Source (TikTok Campaigns)</h2>
-          <div className="space-y-4">
-            {campaigns.length === 0 && <div className="text-white/40 text-sm text-center py-4">Waiting for traffic...</div>}
-            {campaigns.map((camp: any, i) => (
-              <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                <div>
-                  <h3 className="text-white text-sm font-medium">{camp.name}</h3>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-white/40 flex items-center gap-1"><Users className="w-3 h-3"/> {camp.visitors} Live</span>
-                    {camp.rev > 0 && <span className="text-xs text-emerald-400 font-medium">Sales: ₨ {camp.rev.toLocaleString()}</span>}
-                  </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Left Column: Live Feed & Traffic Sources */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-0 overflow-hidden">
+            <div className="p-5 border-b border-white/5 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-white uppercase tracking-wider">Live Feed</h2>
+              <span className="text-xs text-white/40">{parsedEvents.length} events today</span>
+            </div>
+            
+            <div className="h-[400px] overflow-y-auto custom-scrollbar p-2">
+              {parsedEvents.length === 0 && (
+                <div className="h-full flex flex-col items-center justify-center text-white/40">
+                  <Activity className="w-8 h-8 mb-3 opacity-20" />
+                  <p className="text-sm">Waiting for live activity...</p>
                 </div>
-                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
-              </div>
-            ))}
-          </div>
-        </SpotlightCard>
-
-        <SpotlightCard className="p-6">
-          <h2 className="text-lg font-semibold text-white mb-6">Recent Live Events</h2>
-          <div className="space-y-4 relative before:absolute before:inset-0 before:ml-[11px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
-            {parsedEvents.length === 0 && <div className="text-white/40 text-sm text-center py-4">No recent events.</div>}
-            {parsedEvents.slice(0, 10).map((event, i) => {
-              const mins = Math.floor((new Date().getTime() - new Date(event.timestamp).getTime()) / 60000)
-              const timeStr = mins < 1 ? 'Just now' : `${mins}m ago`
+              )}
               
-              let color = 'text-white/60'
-              let bg = 'bg-white/5 border-white/10'
-              let actionDisplay = event.base_event
-              
-              if (event.base_event === 'CompletePayment' || event.base_event === 'Purchase') { 
-                color = 'text-emerald-400'; bg = 'bg-emerald-500/10 border-emerald-500/20'; actionDisplay = 'Purchase' 
-              }
-              else if (event.base_event === 'AddToCart') { 
-                color = 'text-blue-400'; bg = 'bg-blue-500/10 border-blue-500/20'; actionDisplay = 'Added to Cart' 
-              }
-              else if (event.base_event === 'InitiateCheckout') { 
-                color = 'text-purple-400'; bg = 'bg-purple-500/10 border-purple-500/20'; actionDisplay = 'Checkout Started' 
-              }
-              else if (event.base_event === 'ViewContent' || event.base_event === 'PageView') {
-                actionDisplay = event.base_event === 'PageView' ? 'Site Visit' : 'Viewed Item'
-              }
+              <div className="space-y-1">
+                {parsedEvents.slice(0, 50).map((event, i) => {
+                  const mins = Math.floor((new Date().getTime() - new Date(event.timestamp).getTime()) / 60000)
+                  const timeStr = mins < 1 ? 'Just now' : `${mins}m`
+                  
+                  let color = 'text-white/60'
+                  let bg = 'bg-transparent hover:bg-white/[0.02]'
+                  let dot = 'bg-white/20'
+                  let actionDisplay = event.base_event
+                  
+                  if (event.base_event === 'CompletePayment' || event.base_event === 'Purchase') { 
+                    color = 'text-emerald-400'; dot = 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]'; actionDisplay = 'Purchased' 
+                  }
+                  else if (event.base_event === 'AddToCart') { 
+                    color = 'text-blue-400'; dot = 'bg-blue-400'; actionDisplay = 'Added to Cart' 
+                  }
+                  else if (event.base_event === 'InitiateCheckout') { 
+                    color = 'text-purple-400'; dot = 'bg-purple-400'; actionDisplay = 'Started Checkout' 
+                  }
+                  else if (event.base_event === 'ViewContent' || event.base_event === 'PageView') {
+                    actionDisplay = event.base_event === 'PageView' ? 'Visited Site' : 'Viewed Product'
+                  }
 
-              return (
-                <div key={event.id || i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full border border-white/10 bg-[#0C0F14] text-white/50 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                    <div className="w-2 h-2 rounded-full bg-white/20" />
-                  </div>
-                  <div className={`w-[calc(100%-3rem)] md:w-[calc(50%-1.5rem)] p-4 rounded-xl border ${bg} backdrop-blur-sm transition-all hover:bg-white/[0.05]`}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className={`text-xs font-semibold uppercase tracking-wider ${color}`}>{actionDisplay}</span>
-                      <span className="text-[10px] text-white/40">{timeStr}</span>
+                  return (
+                    <div key={event.id || i} className={`flex items-center justify-between p-3 rounded-lg transition-colors ${bg}`}>
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 text-xs text-white/30 font-mono text-right shrink-0">{timeStr}</div>
+                        <div className={`w-2 h-2 rounded-full ${dot} shrink-0`} />
+                        <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
+                          <span className={`text-sm font-medium ${color}`}>{actionDisplay}</span>
+                          <span className="text-white/40 hidden md:block">•</span>
+                          <span className="text-sm text-white/80 truncate max-w-[200px] md:max-w-[300px]">{event.item_name}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-white/40 bg-white/5 px-2 py-1 rounded-md shrink-0">
+                        <Users className="w-3 h-3" />
+                        {event.location}
+                      </div>
                     </div>
-                    <p className="text-sm text-white font-medium truncate">{event.item_name}</p>
-                    <p className="text-xs text-white/50 mt-1 flex items-center gap-1"><Users className="w-3 h-3"/> {event.location}</p>
-                  </div>
-                </div>
-              )
-            })}
+                  )
+                })}
+              </div>
+            </div>
           </div>
-        </SpotlightCard>
+
+          <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6">
+            <h2 className="text-sm font-semibold text-white mb-6 uppercase tracking-wider">Active Campaigns</h2>
+            <div className="space-y-3">
+              {campaigns.length === 0 && <div className="text-white/40 text-sm py-4">No active campaigns.</div>}
+              {campaigns.map((camp: any, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#141414] flex items-center justify-center border border-white/5">
+                      <span className="text-xs text-white/50 font-bold">{i+1}</span>
+                    </div>
+                    <div>
+                      <h3 className="text-white text-sm font-medium">{camp.name}</h3>
+                      <div className="flex items-center gap-3 mt-0.5">
+                        <span className="text-[11px] text-white/40 flex items-center gap-1"><Users className="w-3 h-3"/> {camp.visitors} Visitors</span>
+                      </div>
+                    </div>
+                  </div>
+                  {camp.rev > 0 && <div className="text-right">
+                    <span className="text-sm font-semibold text-emerald-400">₨ {camp.rev.toLocaleString()}</span>
+                    <p className="text-[10px] text-white/40 uppercase">Revenue</p>
+                  </div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Behavior Funnel */}
+        <div className="space-y-6">
+          <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6">
+            <h2 className="text-sm font-semibold text-white mb-6 uppercase tracking-wider">Behavior Funnel</h2>
+            
+            <div className="space-y-0 relative">
+              {/* Connecting line */}
+              <div className="absolute left-6 top-10 bottom-10 w-px bg-white/5 z-0" />
+              
+              <div className="relative z-10 flex items-center gap-4 py-4">
+                <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
+                  <Eye className="w-5 h-5 text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/90 text-sm font-medium">Active Visitors</p>
+                  <p className="text-2xl font-bold text-white tracking-tight"><AnimatedCounter value={viewCount} /></p>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs text-blue-400 font-medium bg-blue-500/10 px-2 py-1 rounded-md">100%</span>
+                </div>
+              </div>
+
+              <div className="relative z-10 flex items-center gap-4 py-4">
+                <div className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/20 shrink-0">
+                  <ShoppingCart className="w-5 h-5 text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/90 text-sm font-medium">Added to Cart</p>
+                  <p className="text-2xl font-bold text-white tracking-tight"><AnimatedCounter value={cartCount} /></p>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs text-white/40 font-medium">{viewCount > 0 ? Math.round((cartCount/viewCount)*100) : 0}%</span>
+                </div>
+              </div>
+
+              <div className="relative z-10 flex items-center gap-4 py-4">
+                <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center border border-rose-500/20 shrink-0">
+                  <Activity className="w-5 h-5 text-rose-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/90 text-sm font-medium">Checking Out</p>
+                  <p className="text-2xl font-bold text-white tracking-tight"><AnimatedCounter value={checkoutCount} /></p>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs text-white/40 font-medium">{cartCount > 0 ? Math.round((checkoutCount/cartCount)*100) : 0}%</span>
+                </div>
+              </div>
+
+              <div className="relative z-10 flex items-center gap-4 py-4">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shrink-0">
+                  <CheckCircle className="w-5 h-5 text-emerald-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/90 text-sm font-medium">Purchased</p>
+                  <p className="text-2xl font-bold text-[#D4A017] tracking-tight"><AnimatedCounter value={purchaseCount} /></p>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs text-emerald-400 font-medium bg-emerald-500/10 px-2 py-1 rounded-md">{checkoutCount > 0 ? Math.round((purchaseCount/checkoutCount)*100) : 0}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   )
