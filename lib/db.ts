@@ -112,13 +112,21 @@ export async function getProducts() {
 }
 
 export async function getProduct(slug: string) {
+  const db = await getDb()
+  const local = normalizeProductList(db.products || [])
+
+  if (local.length > 0) {
+    const product = local.find((p: any) => p.slug === slug)
+    if (product) return product
+  }
+
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('products').select('*').eq('slug', slug).single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getProduct error:', error)
-    return data || null
+    return data ? normalizeProductList([data])[0] : null
   }
-  const db = await getDb()
-  return db.products.find((p: any) => p.slug === slug) || null
+
+  return null
 }
 
 export async function addProduct(product: any) {

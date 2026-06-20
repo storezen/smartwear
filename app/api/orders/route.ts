@@ -16,10 +16,6 @@ const MAX_REQUESTS_PER_WINDOW = 5;
 
 // Helper to get real product prices
 async function getRealProductPrice(productId: string): Promise<number | null> {
-  if (isSupabaseConfigured() && supabase) {
-    const { data } = await supabase.from('products').select('price').eq('id', productId).single()
-    return data?.price || null
-  }
   const products = await getProducts()
   const p = products.find((x: any) => x.id === productId)
   return p ? p.price : null

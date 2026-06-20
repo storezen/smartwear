@@ -3,19 +3,43 @@ import type { NextRequest } from "next/server"
 import { jwtVerify } from "jose"
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-for-development"
-
-// Which paths to protect
-const protectedAdminPaths = ["/admin"]
 const publicAdminPaths = ["/admin/login"]
+
+/** Storefront + webhook APIs that stay public */
+function isPublicApi(pathname: string, method: string): boolean {
+  if (pathname.startsWith("/api/webhooks/")) return true
+  if (pathname === "/api/admin/login" && method === "POST") return true
+  if (pathname === "/api/products" && method === "GET") return true
+  if (method === "GET" && /^\/api\/products\/[^/]+$/.test(pathname)) return true
+  if (pathname === "/api/orders" && method === "POST") return true
+  if (pathname === "/api/orders/promo" && method === "POST") return true
+  if (pathname.startsWith("/api/orders/track")) return true
+  return false
+}
+
+async function denyUnlessAdmin(req: NextRequest): Promise<NextResponse | null> {
+  const token = req.cookies.get("smartwear_admin_token")?.value
+
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  try {
+    const secret = new TextEncoder().encode(JWT_SECRET)
+    await jwtVerify(token, secret)
+    return null
+  } catch {
+    return NextResponse.json({ error: "Unauthorized or token expired" }, { status: 401 })
+  }
+}
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
+  const method = req.method
 
-  // 1. Check if the path is inside /admin
-  const isAdminPath = pathname.startsWith("/admin")
-  const isPublicAdminPath = publicAdminPaths.some(p => pathname === p)
+  const isPublicAdminPath = publicAdminPaths.some((p) => pathname === p)
 
-  if (isAdminPath && !isPublicAdminPath) {
+  if (pathname.startsWith("/admin") && !isPublicAdminPath) {
     const token = req.cookies.get("smartwear_admin_token")?.value
 
     if (!token) {
@@ -23,47 +47,21 @@ export async function middleware(req: NextRequest) {
     }
 
     try {
-      // Verify JWT token using `jose`
       const secret = new TextEncoder().encode(JWT_SECRET)
       await jwtVerify(token, secret)
-    } catch (err) {
-      // Token is invalid or expired
+    } catch {
       return NextResponse.redirect(new URL("/admin/login", req.url))
     }
   }
 
-  // 2. Protect sensitive API routes (e.g. creating/deleting products, updating orders)
-  const isApiRoute = pathname.startsWith("/api/")
-  
-  if (isApiRoute) {
-    // Only protect non-GET product routes, and order update routes
-    const isProtectedApi = 
-      (pathname.startsWith("/api/products") && req.method !== "GET") ||
-      (pathname.startsWith("/api/orders") && req.method === "PUT") ||
-      pathname.startsWith("/api/analytics")
-
-    if (isProtectedApi) {
-      const token = req.cookies.get("smartwear_admin_token")?.value
-      
-      if (!token) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-      }
-
-      try {
-        const secret = new TextEncoder().encode(JWT_SECRET)
-        await jwtVerify(token, secret)
-      } catch (err) {
-        return NextResponse.json({ error: "Unauthorized or token expired" }, { status: 401 })
-      }
-    }
+  if (pathname.startsWith("/api/") && !isPublicApi(pathname, method)) {
+    const denied = await denyUnlessAdmin(req)
+    if (denied) return denied
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    "/admin/:path*",
-    "/api/:path*"
-  ]
+  matcher: ["/admin/:path*", "/api/:path*"],
 }

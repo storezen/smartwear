@@ -37,18 +37,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const subtotal = items.reduce((total, item) => total + (item.product.price * item.quantity), 0)
 
   const addToCart = (product: Product, quantity = 1, selectedColor?: string) => {
+    const stock = product.stock ?? 0
+    if (stock <= 0) {
+      toast.error('Out of stock', {
+        description: `${product.name} is currently unavailable.`,
+      })
+      return
+    }
+
     setItems(prevItems => {
       const itemId = selectedColor ? `${product.id}-${selectedColor}` : product.id
       const existingItem = prevItems.find(item => item.id === itemId)
-      
+      const nextQty = (existingItem?.quantity ?? 0) + quantity
+
+      if (nextQty > stock) {
+        toast.error('Not enough stock', {
+          description: `Only ${stock} units available for ${product.name}.`,
+        })
+        return prevItems
+      }
+
       if (existingItem) {
         return prevItems.map(item =>
-          item.id === itemId
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
+          item.id === itemId ? { ...item, quantity: nextQty } : item
         )
       }
-      
+
       toast.success(`${product.name} added to cart`, {
         description: selectedColor ? `Color: ${selectedColor}` : 'You can review your items before checkout.',
         duration: 3000,
@@ -72,12 +86,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeFromCart(itemId)
       return
     }
-    
-    setItems(prevItems =>
-      prevItems.map(item =>
-        item.id === itemId ? { ...item, quantity } : item
-      )
-    )
+
+    setItems(prevItems => {
+      const item = prevItems.find((i) => i.id === itemId)
+      if (!item) return prevItems
+
+      const stock = item.product.stock ?? 0
+      if (quantity > stock) {
+        toast.error('Not enough stock', {
+          description: `Only ${stock} units available.`,
+        })
+        return prevItems
+      }
+
+      return prevItems.map((i) => (i.id === itemId ? { ...i, quantity } : i))
+    })
   }
 
   const clearCart = () => {
