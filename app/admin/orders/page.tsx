@@ -239,31 +239,49 @@ export default function AdminOrdersPage() {
           <div className="text-center py-12 text-white/50">No orders found.</div>
         ) : (orders || []).filter(o => activeTab === 'All' || o.status === activeTab).map((order) => (
           <SpotlightCard key={order.id} className="p-0 overflow-hidden cursor-pointer hover:border-[#B8860B]/30 transition-colors" onClick={() => openOrderDetail(order)}>
-            <div className="flex flex-col lg:flex-row pointer-events-none">
-              <div className="p-5 flex-1 border-b lg:border-b-0 lg:border-r border-white/5 relative">
-                
-                {/* Checkbox overlay area */}
+            <div className="flex flex-col lg:flex-row lg:items-center pointer-events-none p-4 gap-4">
+              
+              {/* Left Section: Checkbox & Order ID */}
+              <div className="flex items-center gap-4 min-w-[180px]">
+                {/* Checkbox */}
                 <div 
-                  className="absolute left-4 top-4 w-6 h-6 z-10 pointer-events-auto flex items-center justify-center cursor-pointer"
+                  className="w-6 h-6 z-10 pointer-events-auto flex items-center justify-center cursor-pointer flex-shrink-0"
                   onClick={(e) => toggleOrderSelection(e, order.id)}
                 >
                   <div className={`w-4 h-4 rounded border transition-colors flex items-center justify-center ${
                     selectedOrders.includes(order.id) 
-                      ? 'bg-[#B8860B] border-[#B8860B]' 
+                      ? 'bg-white text-black border-white' 
                       : 'border-white/30 bg-white/5 hover:border-white/60'
                   }`}>
-                    {selectedOrders.includes(order.id) && <CheckCircle2 className="w-3 h-3 text-white" />}
+                    {selectedOrders.includes(order.id) && <CheckCircle2 className="w-3 h-3 text-black" />}
                   </div>
                 </div>
 
-                <div className="flex justify-between items-start mb-4 pl-8">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-bold text-white">{order.id}</h3>
-                    </div>
-                    <p className="text-[#D4A017] font-semibold">₨ {order.total.toLocaleString()}</p>
+                {/* Order ID & Date */}
+                <div>
+                  <h3 className="text-sm font-bold text-white hover:underline cursor-pointer pointer-events-auto" onClick={() => openOrderDetail(order)}>{order.id}</h3>
+                  <p className="text-xs text-white/50 mt-0.5">{new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                </div>
+              </div>
+
+              {/* Middle Section: Customer & Location */}
+              <div className="flex-1 min-w-[200px]">
+                <p className="text-sm text-white/90 font-medium truncate flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white/70 font-bold uppercase">
+                    {order.customer_name?.charAt(0) || '?'}
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
+                  {order.customer_name}
+                </p>
+                <p className="text-xs text-white/50 mt-1 flex items-center gap-1 pl-7">
+                  {order.shipping_address?.city || 'N/A'}, {order.phone}
+                </p>
+              </div>
+
+              {/* Right Section: Status & Total */}
+              <div className="flex items-center justify-between lg:justify-end gap-6 w-full lg:w-auto mt-2 lg:mt-0">
+                {/* Status */}
+                <div className="w-[100px]">
+                  <span className={`px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider border ${
                     order.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                     order.status === 'Processing' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
                     order.status === 'Shipped' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
@@ -274,18 +292,19 @@ export default function AdminOrdersPage() {
                     {order.status}
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className="text-sm text-white flex items-center gap-2"><Phone className="w-4 h-4 text-white/40"/> {order.customer_name} ({order.phone})</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-sm text-white flex items-center gap-2"><MapPin className="w-4 h-4 text-white/40"/> {order.shipping_address?.city || 'N/A'}</p>
-                  </div>
+
+                {/* Total & Items */}
+                <div className="w-[100px] text-right">
+                  <p className="text-sm font-semibold text-white">₨ {order.total.toLocaleString()}</p>
+                  <p className="text-[11px] text-white/50 mt-0.5">{order.items?.length || 0} items</p>
+                </div>
+
+                {/* Action / Arrow */}
+                <div className="w-6 flex justify-end">
+                  <ChevronRight className="w-4 h-4 text-white/30" />
                 </div>
               </div>
-              <div className="p-5 w-full lg:w-48 bg-white/[0.01] flex flex-col justify-center items-center gap-3">
-                <span className="text-white/40 text-xs text-center flex items-center gap-1">Click to manage <ChevronRight className="w-3 h-3" /></span>
-              </div>
+              
             </div>
           </SpotlightCard>
         ))}
