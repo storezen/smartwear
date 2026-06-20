@@ -11,6 +11,13 @@ import {
   Send, Quote, CheckCircle2, Sparkles, ChevronDown
 } from "lucide-react"
 import { ProductCard } from "@/components/store/premium-product-card"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 import { categories as storeCategories } from "@/lib/mock-data"
 import {
   buildCategoryImageMap,
@@ -259,6 +266,11 @@ type ShopCategoryCard = {
 }
 
 function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
+  if (!items.length) return null
+
+  const carouselNavClass =
+    "hidden md:flex h-10 w-10 border-white/10 bg-[#0C0F14]/95 text-white hover:bg-[#B8860B] hover:text-[#0C0F14] hover:border-[#B8860B] disabled:opacity-30"
+
   return (
     <section className={`${SECTION_PAD} bg-[#0C0F14]`}>
       <div className="sw-container">
@@ -271,39 +283,59 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
           <motion.div variants={staggerItem}><SectionTitle>Shop by Category</SectionTitle></motion.div>
         </motion.div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
-          {items.map((cat, i) => (
-            <motion.div
-              key={cat.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-            >
-              <Link href={`/products?category=${cat.slug}`} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/5] sm:aspect-square lg:aspect-[3/4] snap-start shrink-0 w-[75vw] sm:w-auto">
-                <Image src={cat.image} alt={cat.name} fill sizes="(max-width: 640px) 75vw, (max-width: 1024px) 50vw, 25vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0C0F14] via-[#0C0F14]/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end">
-                  <div className="w-12 h-12 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center text-white mb-4 group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] group-hover:-translate-y-1 transition-all duration-500 shadow-lg">
-                    <cat.icon className="w-5 h-5" />
-                  </div>
-                  
-                  <h3 className="text-white text-xl font-bold mb-1 tracking-wide" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
-                    {cat.name}
-                  </h3>
-                  <p className="text-white/60 text-sm mb-6 line-clamp-1">{cat.description}</p>
-                  
-                  <div className="mt-auto">
-                    <span className="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 text-white text-xs font-bold uppercase tracking-widest px-5 py-3 rounded-xl group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] transition-all duration-500 shadow-xl">
-                      Shop Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+        <Carousel opts={{ align: "start", loop: false }} className="relative w-full px-0 md:px-6">
+          <CarouselContent className="-ml-4">
+            {items.map((cat, i) => (
+              <CarouselItem
+                key={cat.slug}
+                className="pl-4 basis-[78%] sm:basis-1/2 lg:basis-1/4"
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.06, duration: 0.5 }}
+                >
+                  <Link
+                    href={`/products?category=${cat.slug}`}
+                    className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/5] sm:aspect-square lg:aspect-[3/4]"
+                  >
+                    <Image
+                      src={cat.image}
+                      alt={cat.name}
+                      fill
+                      sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0C0F14] via-[#0C0F14]/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end">
+                      <div className="w-12 h-12 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center text-white mb-4 group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] group-hover:-translate-y-1 transition-all duration-500 shadow-lg">
+                        <cat.icon className="w-5 h-5" />
+                      </div>
+
+                      <h3
+                        className="text-white text-xl font-bold mb-1 tracking-wide"
+                        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                      >
+                        {cat.name}
+                      </h3>
+                      <p className="text-white/60 text-sm mb-6 line-clamp-1">{cat.description}</p>
+
+                      <div className="mt-auto">
+                        <span className="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 text-white text-xs font-bold uppercase tracking-widest px-5 py-3 rounded-xl group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] transition-all duration-500 shadow-xl">
+                          Shop Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className={`${carouselNavClass} -left-1 lg:-left-4`} />
+          <CarouselNext className={`${carouselNavClass} -right-1 lg:-right-4`} />
+        </Carousel>
       </div>
     </section>
   )
@@ -545,7 +577,7 @@ function CategoryShowcase({
                   View All
                 </Link>
               </div>
-              <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
+              <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
                 {products.map((product: any, i: number) => (
                   <motion.div
                     key={product.id || i}
@@ -766,7 +798,7 @@ export default function HomePage() {
           slug: cat.slug,
           image: categoryImageMap[cat.slug] || cat.image,
           icon: categoryIcons[cat.slug] ?? Package,
-          description: cat.description,
+          description: cat.description ?? "",
         })),
     [categoryImageMap, allProducts]
   )

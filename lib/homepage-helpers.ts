@@ -17,7 +17,7 @@ export const HOMEPAGE_SHOWCASE_SLUGS = [
   'chargers',
 ] as const
 
-export const HOMEPAGE_SHOWCASE_PER_CATEGORY = 2
+export const HOMEPAGE_SHOWCASE_PER_CATEGORY = HOMEPAGE_CARDS_PER_SECTION
 
 export function getCategoriesWithProducts(products: ProductLike[]) {
   return categories.filter((cat) => productsInCategory(products, cat.slug).length > 0)
