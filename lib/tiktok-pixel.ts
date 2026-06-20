@@ -83,11 +83,24 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
 
   // Admin Dashboard Live View Sync
   try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const campaign = urlParams.get('utm_campaign') || urlParams.get('ttclid') ? 'TikTok Ad' : (sessionStorage.getItem('utm_campaign') || 'Direct / Organic');
+    if (urlParams.get('utm_campaign')) sessionStorage.setItem('utm_campaign', urlParams.get('utm_campaign')!);
+    if (urlParams.get('ttclid')) sessionStorage.setItem('utm_campaign', 'TikTok Ad');
+    
+    let city = 'PK';
+    try {
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      city = timeZone.split('/')[1]?.replace('_', ' ') || 'PK';
+    } catch(err) {}
+
+    const itemName = options.content_name || options.contents?.[0]?.content_name || 'Store Visit';
+
     fetch('/api/analytics', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        event_name: event,
+        event_name: `${event}::${itemName}::${city}::${campaign}`,
         value: options.value || 0
       })
     }).catch(() => {})
