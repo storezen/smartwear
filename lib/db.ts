@@ -332,6 +332,19 @@ export async function updateOrderStatus(orderId: string, status: string, postexI
   return null
 }
 
+export async function deleteOrders(ids: string[]) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { error } = await supabase.from('orders').delete().in('id', ids)
+    if (error) throw new Error(error.message)
+    return { success: true }
+  }
+  
+  const db = await getDb()
+  db.orders = db.orders.filter((o: any) => !ids.includes(o.id))
+  await saveDb(db)
+  return { success: true }
+}
+
 // Settings
 export async function getSettings() {
   if (env.NODE_ENV === 'production' && supabase) {

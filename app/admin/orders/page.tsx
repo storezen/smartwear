@@ -37,6 +37,37 @@ export default function AdminOrdersPage() {
     toast.success(`Successfully updated ${selectedOrders.length} orders`)
   }
 
+  const handleBulkDelete = async () => {
+    if (!confirm(`Are you sure you want to completely DELETE ${selectedOrders.length} orders? This cannot be undone.`)) return
+    
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedOrders })
+      })
+      
+      if (res.ok) {
+        setOrders(orders.filter(o => !selectedOrders.includes(o.id)))
+        setSelectedOrders([])
+        toast.success(`Successfully deleted ${selectedOrders.length} orders`)
+      } else {
+        toast.error('Failed to delete orders')
+      }
+    } catch (e) {
+      toast.error('An error occurred while deleting')
+    }
+  }
+
+  const handleSelectAll = () => {
+    const currentViewOrders = orders.filter(o => activeTab === 'All' || o.status === activeTab)
+    if (selectedOrders.length === currentViewOrders.length && currentViewOrders.length > 0) {
+      setSelectedOrders([])
+    } else {
+      setSelectedOrders(currentViewOrders.map(o => o.id))
+    }
+  }
+
   useEffect(() => {
     fetch('/api/orders')
       .then(res => res.json())
@@ -141,6 +172,12 @@ export default function AdminOrdersPage() {
           >
             Export CSV
           </button>
+          <button 
+            onClick={handleSelectAll}
+            className="flex items-center gap-2 bg-white/5 border border-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
+          >
+            Select All
+          </button>
         </div>
       </div>
 
@@ -183,6 +220,13 @@ export default function AdminOrdersPage() {
                 {status}
               </button>
             ))}
+            <div className="w-px h-4 bg-white/20 mx-1"></div>
+            <button 
+              onClick={handleBulkDelete}
+              className="bg-red-500/20 hover:bg-red-500/30 text-red-400 text-xs px-3 py-1.5 rounded-lg transition-colors border border-red-500/20"
+            >
+              Delete
+            </button>
           </div>
         </div>
       )}

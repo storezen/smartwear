@@ -286,3 +286,22 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const rawData = await req.json()
+    const { ids } = rawData
+    
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return NextResponse.json({ error: 'Invalid or missing order IDs' }, { status: 400 })
+    }
+
+    const { deleteOrders } = await import('@/lib/db')
+    await deleteOrders(ids)
+    
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Order DELETE Error", error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  }
+}
