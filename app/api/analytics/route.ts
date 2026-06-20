@@ -1,10 +1,12 @@
 export const dynamic = 'force-dynamic'
 
 import { NextResponse } from 'next/server'
-import { getDb, saveDb } from '@/lib/db'
-
 import { env } from '@/lib/env'
 import { supabase } from '@/lib/supabase'
+
+// Use a global variable to persist live events across hot reloads and lambda invocations (fallback)
+const globalAny: any = global
+globalAny.liveAnalytics = globalAny.liveAnalytics || []
 
 export async function GET() {
   try {
@@ -21,9 +23,8 @@ export async function GET() {
       }
       console.warn("Supabase Analytics GET Error (falling back to memory):", error?.message)
     }
-    const db = await getDb()
     const twoHoursAgoTime = Date.now() - 2 * 60 * 60 * 1000
-    const filteredAnalytics = db.analytics.filter(e => new Date(e.timestamp).getTime() >= twoHoursAgoTime)
+    const filteredAnalytics = globalAny.liveAnalytics.filter((e: any) => new Date(e.timestamp).getTime() >= twoHoursAgoTime)
     return NextResponse.json(filteredAnalytics)
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
@@ -48,13 +49,10 @@ export async function POST(req: Request) {
       console.warn("Supabase Analytics Insert Error (falling back to memory):", error.message)
     }
 
-    const db = await getDb()
-    db.analytics.unshift(newEvent)
-    // Keep only last 100 events to avoid massive JSON
-    if (db.analytics.length > 100) {
-      db.analytics.pop()
+    globalAny.liveAnalytics.unshift(newEvent)
+    if (globalAny.liveAnalytics.length > 100) {
+      globalAny.liveAnalytics.pop()
     }
-    await saveDb(db)
     return NextResponse.json({ success: true, event: newEvent }, { status: 201 })
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
