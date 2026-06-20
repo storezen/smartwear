@@ -293,116 +293,201 @@ export default function AdminOrdersPage() {
 
       {/* Order Detail Sheet */}
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="bg-[#0C0F14] border-l border-white/10 text-white w-full sm:max-w-md overflow-y-auto z-[150] p-0">
+        <SheetContent className="bg-[#0a0a0a] border-l border-white/10 text-white w-full sm:max-w-3xl overflow-y-auto z-[150] p-0">
           {selectedOrder && (
             <div className="flex flex-col h-full">
-              <SheetHeader className="p-6 border-b border-white/10">
-                <div className="flex justify-between items-center">
-                  <SheetTitle className="text-xl font-bold text-white">{selectedOrder.id}</SheetTitle>
-                  <SheetClose className="text-white/40 hover:text-white"><X className="w-5 h-5"/></SheetClose>
-                </div>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm text-white/60">{new Date(selectedOrder.created_at).toLocaleString()}</span>
+              <SheetHeader className="p-6 border-b border-white/10 bg-[#0a0a0a] sticky top-0 z-10">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <SheetTitle className="text-2xl font-bold text-white flex items-center gap-3">
+                      {selectedOrder.id}
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                        selectedOrder.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                        selectedOrder.status === 'Processing' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                        selectedOrder.status === 'Shipped' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                        selectedOrder.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                        selectedOrder.status === 'Cancelled' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
+                        'bg-white/10 text-white/60 border-white/20'
+                      }`}>
+                        {selectedOrder.status}
+                      </span>
+                    </SheetTitle>
+                    <p className="text-sm text-white/50 mt-1">{new Date(selectedOrder.created_at).toLocaleString()}</p>
+                  </div>
+                  <SheetClose className="text-white/40 hover:text-white bg-white/5 p-2 rounded-full"><X className="w-4 h-4"/></SheetClose>
                 </div>
               </SheetHeader>
 
-              <div className="flex-1 p-6 space-y-8 overflow-y-auto">
-                {/* Status Update Actions */}
-                <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-                  <h3 className="text-sm font-semibold mb-3">Update Status</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {ALL_STATUSES.map(status => (
-                      <button
-                        key={status}
-                        onClick={() => updateOrderStatus(selectedOrder.id, status)}
-                        disabled={selectedOrder.status === status}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                          selectedOrder.status === status 
-                            ? 'bg-[#B8860B] border-[#B8860B] text-white' 
-                            : 'bg-transparent border-white/20 text-white/60 hover:border-[#B8860B] hover:text-[#B8860B]'
-                        }`}
-                      >
-                        {status}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tracking Info */}
-                {selectedOrder.postex && (
-                  <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-xl flex items-center gap-4">
-                    <div className="bg-emerald-500/20 p-2 rounded-lg text-emerald-400"><Truck className="w-5 h-5"/></div>
-                    <div>
-                      <p className="text-xs text-emerald-400/80 uppercase font-semibold">PostEx Tracking</p>
-                      <p className="font-bold text-emerald-400">{selectedOrder.postex}</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Items */}
-                <div>
-                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2 border-b border-white/10 pb-2">Order Items</h3>
-                  <div className="space-y-3">
-                    {selectedOrder.items?.map((item: any, i: number) => (
-                      <div key={i} className="flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-white/10 rounded overflow-hidden flex-shrink-0">
-                            {item.image ? <img src={item.image} alt="" className="w-full h-full object-cover"/> : <div className="w-full h-full bg-white/5" />}
+              <div className="flex-1 p-6 overflow-y-auto bg-black">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Left Column (Main details) */}
+                  <div className="md:col-span-2 space-y-6">
+                    
+                    {/* Items Card */}
+                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                      <div className="p-4 border-b border-white/5 bg-[#141414]">
+                        <h3 className="font-semibold text-white/90">Order Details</h3>
+                      </div>
+                      <div className="p-4 space-y-4">
+                        {selectedOrder.items?.map((item: any, i: number) => (
+                          <div key={i} className="flex justify-between items-start">
+                            <div className="flex gap-4">
+                              <div className="w-12 h-12 bg-[#1a1a1a] rounded-md border border-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center relative">
+                                {item.image ? <img src={item.image} alt="" className="w-full h-full object-cover"/> : <div className="text-white/20 text-xs">No img</div>}
+                                <span className="absolute -top-2 -right-2 bg-white/20 backdrop-blur-md text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border border-white/10">{item.quantity}</span>
+                              </div>
+                              <div className="pt-1">
+                                <p className="text-sm font-medium text-white/90 leading-tight">{item.name}</p>
+                                {item.color && <p className="text-xs text-white/50 mt-1">Color: {item.color}</p>}
+                                <p className="text-xs text-white/50">{item.variant || 'Default Variant'}</p>
+                              </div>
+                            </div>
+                            <p className="text-sm font-medium text-white/80 pt-1">₨ {(item.price * item.quantity).toLocaleString()}</p>
                           </div>
-                          <div>
-                            <p className="text-sm font-medium">{item.name}</p>
-                            <p className="text-xs text-white/50">{item.color ? `Color: ${item.color}` : (item.variant || 'Default')} x {item.quantity}</p>
-                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Payment Summary */}
+                      <div className="p-4 border-t border-white/5 bg-[#141414] space-y-2">
+                        <div className="flex justify-between text-sm text-white/60">
+                          <span>Subtotal</span>
+                          <span>₨ {selectedOrder.subtotal?.toLocaleString() || selectedOrder.total.toLocaleString()}</span>
                         </div>
-                        <p className="text-sm font-semibold text-[#B8860B]">₨ {(item.price * item.quantity).toLocaleString()}</p>
+                        <div className="flex justify-between text-sm text-white/60">
+                          <span>Shipping</span>
+                          <span>₨ {selectedOrder.shipping_fee || 0}</span>
+                        </div>
+                        {(selectedOrder.discount > 0) && (
+                          <div className="flex justify-between text-sm text-emerald-400/80">
+                            <span>Discount</span>
+                            <span>- ₨ {selectedOrder.discount.toLocaleString()}</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between text-base font-medium text-white pt-2 border-t border-white/5 mt-2">
+                          <span>Total</span>
+                          <span>₨ {selectedOrder.total.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between text-xs text-white/50 pt-1">
+                          <span>Payment Method</span>
+                          <span className="uppercase">{selectedOrder.payment_method || 'COD'}</span>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Timeline */}
-                <div>
-                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2 border-b border-white/10 pb-2"><History className="w-4 h-4"/> Timeline</h3>
-                  <div className="space-y-4 pl-2 border-l-2 border-white/10 ml-2">
-                    {selectedOrder.history?.map((event: any, i: number) => (
-                      <div key={i} className="relative pl-6">
-                        <div className="absolute -left-[25px] top-1 w-3 h-3 rounded-full bg-[#B8860B] border-4 border-[#0C0F14]" />
-                        <p className="text-sm font-medium text-white">{event.status}</p>
-                        {event.note && <p className="text-xs text-white/60 mt-1">{event.note}</p>}
-                        <p className="text-[10px] text-white/40 mt-1">{new Date(event.timestamp).toLocaleString()}</p>
-                      </div>
-                    ))}
-                    {(!selectedOrder.history || selectedOrder.history.length === 0) && (
-                      <p className="text-xs text-white/50 pl-4">No history recorded yet.</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Internal Notes */}
-                <div>
-                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2 border-b border-white/10 pb-2"><MessageSquare className="w-4 h-4"/> Internal Notes</h3>
-                  {selectedOrder.notes ? (
-                    <div className="bg-white/5 p-3 rounded-lg text-sm text-white/80 whitespace-pre-wrap mb-3 border border-white/10">
-                      {selectedOrder.notes}
                     </div>
-                  ) : (
-                    <p className="text-xs text-white/40 mb-3">No notes yet.</p>
-                  )}
-                  <div className="flex gap-2">
-                    <input 
-                      type="text" 
-                      value={newNote}
-                      onChange={e => setNewNote(e.target.value)}
-                      placeholder="Add an internal note..."
-                      className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 text-sm focus:outline-none focus:border-[#B8860B]"
-                      onKeyDown={e => e.key === 'Enter' && handleAddNote()}
-                    />
-                    <button onClick={handleAddNote} className="bg-white/10 hover:bg-white/20 p-2 rounded-lg text-white">
-                      <Plus className="w-4 h-4" />
-                    </button>
+
+                    {/* Timeline Card */}
+                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                      <div className="p-4 border-b border-white/5 bg-[#141414]">
+                        <h3 className="font-semibold text-white/90 flex items-center gap-2"><History className="w-4 h-4 text-white/50"/> Timeline</h3>
+                      </div>
+                      <div className="p-5">
+                        <div className="space-y-5 pl-2 border-l-2 border-white/10 ml-2">
+                          {selectedOrder.history?.map((event: any, i: number) => (
+                            <div key={i} className="relative pl-6">
+                              <div className="absolute -left-[25px] top-1 w-3 h-3 rounded-full bg-[#141414] border-2 border-white/40" />
+                              <p className="text-sm font-medium text-white/90">{event.status}</p>
+                              {event.note && <p className="text-sm text-white/60 mt-0.5">{event.note}</p>}
+                              <p className="text-xs text-white/40 mt-1">{new Date(event.timestamp).toLocaleString()}</p>
+                            </div>
+                          ))}
+                          {(!selectedOrder.history || selectedOrder.history.length === 0) && (
+                            <p className="text-sm text-white/50 pl-4">No history recorded.</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Right Column (Customer & Actions) */}
+                  <div className="space-y-6">
+                    
+                    {/* Status Update Actions */}
+                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                      <div className="p-4 border-b border-white/5 bg-[#141414]">
+                        <h3 className="font-semibold text-white/90">Update Status</h3>
+                      </div>
+                      <div className="p-4 flex flex-wrap gap-2">
+                        {ALL_STATUSES.map(status => (
+                          <button
+                            key={status}
+                            onClick={() => updateOrderStatus(selectedOrder.id, status)}
+                            disabled={selectedOrder.status === status}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors w-full text-left ${
+                              selectedOrder.status === status 
+                                ? 'bg-[#1a1a1a] border-white/20 text-white cursor-default' 
+                                : 'bg-transparent border-transparent text-white/60 hover:bg-white/5 hover:text-white'
+                            }`}
+                          >
+                            {selectedOrder.status === status ? <span className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> {status}</span> : status}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Customer & Shipping */}
+                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                      <div className="p-4 border-b border-white/5 bg-[#141414]">
+                        <h3 className="font-semibold text-white/90">Customer</h3>
+                      </div>
+                      <div className="p-4 space-y-4">
+                        <div>
+                          <p className="text-sm text-white/90 font-medium">{selectedOrder.customer_name}</p>
+                          <p className="text-sm text-white/60">{selectedOrder.phone}</p>
+                          {selectedOrder.email && <p className="text-sm text-white/60">{selectedOrder.email}</p>}
+                        </div>
+                        <div className="h-px bg-white/5" />
+                        <div>
+                          <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">Shipping Address</h4>
+                          <p className="text-sm text-white/80">{selectedOrder.shipping_address?.address_line1}</p>
+                          {selectedOrder.shipping_address?.city && (
+                            <p className="text-sm text-white/80">{selectedOrder.shipping_address.city}{selectedOrder.shipping_address.country ? `, ${selectedOrder.shipping_address.country}` : ''}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tracking Info */}
+                    {selectedOrder.postex && (
+                      <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                        <div className="p-4 border-b border-emerald-500/10 bg-emerald-500/5 flex items-center gap-2">
+                          <Truck className="w-4 h-4 text-emerald-400"/>
+                          <h3 className="font-semibold text-emerald-400">PostEx Tracking</h3>
+                        </div>
+                        <div className="p-4">
+                          <p className="font-mono text-sm text-white/90">{selectedOrder.postex}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Internal Notes */}
+                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                      <div className="p-4 border-b border-white/5 bg-[#141414]">
+                        <h3 className="font-semibold text-white/90 flex items-center gap-2"><MessageSquare className="w-4 h-4 text-white/50"/> Internal Notes</h3>
+                      </div>
+                      <div className="p-4">
+                        {selectedOrder.notes ? (
+                          <div className="bg-[#141414] p-3 rounded-lg text-sm text-white/80 whitespace-pre-wrap mb-3 border border-white/5">
+                            {selectedOrder.notes}
+                          </div>
+                        ) : (
+                          <p className="text-xs text-white/40 mb-3">No notes yet.</p>
+                        )}
+                        <div className="flex flex-col gap-2">
+                          <textarea 
+                            value={newNote}
+                            onChange={e => setNewNote(e.target.value)}
+                            placeholder="Add a note..."
+                            className="w-full bg-[#141414] border border-white/10 rounded-lg p-3 text-sm focus:outline-none focus:border-white/30 resize-none min-h-[80px]"
+                          />
+                          <button onClick={handleAddNote} className="bg-white/10 hover:bg-white/20 py-2 px-4 rounded-lg text-white text-sm font-medium transition-colors">
+                            Save Note
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
-
               </div>
             </div>
           )}
