@@ -169,7 +169,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `Total mismatch. Expected ${expectedTotal}, got ${payload.total}` }, { status: 400 })
     }
 
-    const finalPayload = { ...payload, discount: discountAmount }
+    const { idempotency_key, ...payloadWithoutIdempotency } = payload;
+    const finalPayload = { ...payloadWithoutIdempotency, discount: discountAmount }
     const initialHistory = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
 
     if (isSupabaseConfigured() && supabase) {
