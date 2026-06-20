@@ -31,13 +31,21 @@ export default function LiveAnalyticsPage() {
       base_event: parts[0] || e.event_name,
       item_name: parts[1] || 'Store Visit',
       location: parts[2] || 'PK',
-      campaign: parts[3] || 'Direct / Organic'
+      campaign: parts[3] || 'Direct / Organic',
+      session_id: parts[4] || e.id // fallback to event ID so older events count as 1
     }
   })
 
-  const viewCount = parsedEvents.filter(e => e.base_event === 'ViewContent' || e.base_event === 'PageView').length
-  const cartCount = parsedEvents.filter(e => e.base_event === 'AddToCart').length
-  const checkoutCount = parsedEvents.filter(e => e.base_event === 'InitiateCheckout').length
+  // To count "Unique" visitors/carts etc, we group by session_id
+  const getUniqueCount = (baseEvents: string[]) => {
+    const matchingEvents = parsedEvents.filter(e => baseEvents.includes(e.base_event))
+    const uniqueSessions = new Set(matchingEvents.map(e => e.session_id))
+    return uniqueSessions.size
+  }
+
+  const viewCount = getUniqueCount(['ViewContent', 'PageView'])
+  const cartCount = getUniqueCount(['AddToCart'])
+  const checkoutCount = getUniqueCount(['InitiateCheckout'])
   const purchaseCount = parsedEvents.filter(e => e.base_event === 'Purchase' || e.base_event === 'CompletePayment').length
 
   const revenue = parsedEvents.filter(e => e.base_event === 'Purchase' || e.base_event === 'CompletePayment').reduce((sum, e) => sum + (e.value || 0), 0)

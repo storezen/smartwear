@@ -96,11 +96,17 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
 
     const itemName = options.content_name || options.contents?.[0]?.content_name || 'Store Visit';
 
+    let sessionId = sessionStorage.getItem('live_session_id');
+    if (!sessionId) {
+      sessionId = `sess_${Date.now()}_${Math.random().toString(36).substring(2,9)}`;
+      sessionStorage.setItem('live_session_id', sessionId);
+    }
+
     fetch('/api/analytics', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        event_name: `${event}::${itemName}::${city}::${campaign}`,
+        event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
         value: options.value || 0
       })
     }).catch(() => {})
