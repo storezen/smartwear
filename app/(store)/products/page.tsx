@@ -23,7 +23,9 @@ const categoryTabLabels: Record<string, string> = {
   "ladies-watches": "Ladies",
   "watch-bands": "Bands",
   "phone-cases": "Cases",
-  "accessories": "Accessories",
+  "audio": "Audio",
+  "chargers": "Chargers",
+  "accessories": "More",
 }
 
 function Skeleton({ count = 8 }: { count?: number }) {

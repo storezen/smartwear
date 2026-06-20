@@ -1,6 +1,6 @@
 import { Product, Category, Review, Order, User, Address } from '@/types'
 
-// 6 store categories
+// 8 store categories
 export const categories: Category[] = [
   {
     id: 'sw',
@@ -38,11 +38,25 @@ export const categories: Category[] = [
     description: 'Ultimate protection and style for your device.'
   },
   {
+    id: 'audio',
+    name: 'Audio',
+    slug: 'audio',
+    image: 'https://images.unsplash.com/photo-1484704849701-f2a667e90430?w=800&h=600&fit=crop&q=80',
+    description: 'AirPods, earbuds, headphones, and premium sound.'
+  },
+  {
+    id: 'chg',
+    name: 'Chargers & Cables',
+    slug: 'chargers',
+    image: 'https://images.unsplash.com/photo-1591290619762-d2d4e1d8b8c8?w=800&h=600&fit=crop&q=80',
+    description: 'Fast chargers, adapters, cables, and power banks.'
+  },
+  {
     id: 'acc',
     name: 'Accessories',
     slug: 'accessories',
     image: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=800&h=600&fit=crop&q=80',
-    description: 'Premium cables, chargers, and audio gear.'
+    description: 'Watch cases, screen protectors, boxes, and essentials.'
   }
 ]
 

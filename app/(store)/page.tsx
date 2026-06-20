@@ -236,6 +236,8 @@ const categoryIcons: Record<string, typeof Watch> = {
   "ladies-watches": Sparkles,
   "watch-bands": Heart,
   "phone-cases": Smartphone,
+  audio: Headphones,
+  chargers: Zap,
   accessories: Battery,
 }
 
@@ -476,7 +478,7 @@ function CollectionsBanner({ categoryImages }: { categoryImages: Record<string, 
 
 
 /* ════════════════════════════════════════════════════════
-   7. CATEGORY SHOWCASE — balanced across all 6 categories
+   7. CATEGORY SHOWCASE — balanced across all categories
    ════════════════════════════════════════════════════════ */
 
 function CategoryShowcase({

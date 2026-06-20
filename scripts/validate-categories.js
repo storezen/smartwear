@@ -36,6 +36,10 @@ for (const p of products) {
       flag(cat, 'Looks like ladies watch', p);
     } else if (/\bcase\b/i.test(blob) && /\b(iphone|silicon case|premium case|samsung|galaxy phone)\b/i.test(blob)) {
       flag(cat, 'Looks like phone case', p);
+    } else if (/\b(airpods?|earbuds?|tws|headphones?|earphones?|galaxy buds)\b/i.test(blob)) {
+      flag(cat, 'Looks like audio', p);
+    } else if (/\b(charger|charging cable|adapter kit|power bank|wireless charger)\b/i.test(blob)) {
+      flag(cat, 'Looks like charger/cable', p);
     }
   }
 
