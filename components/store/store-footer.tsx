@@ -4,21 +4,15 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { MapPin, Phone, Mail, Instagram, Facebook, Youtube, Twitter, ArrowRight } from "lucide-react"
 
+/** Top 4 collection lines for footer — full catalog via View All */
+const collectionLinks = [
+  { l: "Smart Watches",        h: "/products?category=smart-watches" },
+  { l: "Analog Watches",       h: "/products?category=analog-watches" },
+  { l: "Ladies Watches",       h: "/products?category=ladies-watches" },
+  { l: "Watch Bands & Straps", h: "/products?category=watch-bands" },
+]
+
 const links = {
-  shop: [
-    { l: "All Watches",           h: "/products" },
-    { l: "Smart Watches",         h: "/products?category=smart-watches" },
-    { l: "Analog Watches",        h: "/products?category=analog-watches" },
-    { l: "Ladies Watches",        h: "/products?category=ladies-watches" },
-    { l: "Watch Bands & Straps",  h: "/products?category=watch-bands" },
-    { l: "Phone Cases",           h: "/products?category=phone-cases" },
-    { l: "Watch Cases",           h: "/products?category=watch-cases" },
-    { l: "Power Banks",           h: "/products?category=power-banks" },
-    { l: "Audio",                 h: "/products?category=audio" },
-    { l: "Chargers & Cables",     h: "/products?category=chargers" },
-    { l: "Accessories",           h: "/products?category=accessories" },
-    { l: "Sale",                  h: "/products?sale=true" },
-  ],
   account: [
     { l: "My Account",  h: "/account" },
     { l: "Orders",      h: "/account/orders" },
@@ -145,13 +139,21 @@ export function StoreFooter() {
             <div className="lg:col-span-2">
               <h4 className="text-white font-semibold mb-6 uppercase tracking-widest text-xs">The Collection</h4>
               <ul className="space-y-4">
-                {links.shop.map(link => (
+                {collectionLinks.map((link) => (
                   <li key={link.l}>
                     <Link href={link.h} className="text-white/60 hover:text-[#B8860B] text-sm transition-colors sw-interactive inline-block">
                       {link.l}
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <Link
+                    href="/products"
+                    className="text-[#B8860B] hover:text-[#D4A017] text-sm font-semibold transition-colors sw-interactive inline-flex items-center gap-1.5"
+                  >
+                    View All <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </li>
               </ul>
             </div>
 
