@@ -7,7 +7,7 @@
       "description": "<div class=\"product-block\">\n<div class=\"rte\">\n<div class=\"table-wrapper\">\n<div class=\"table-wrapper\">\n<table border=\"1\">\n<colgroup>\n<col>\n<col>\n</colgroup>\n<tbody>\n<tr>\n<td>Support Devices</td>\n<td>Android &amp; IOS</td>\n</tr>\n<tr>\n<td> Logo On/Off</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Case Size</td>\n<td>45mm</td>\n</tr>\n<tr>\n<td>Scroll &amp; Side Buttons</td>\n<td>Working</td>\n</tr>\n<tr>\n<td>Always on Display</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Raise to Wake</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Main Screen</td>\n<td>2.05 HD IPS, 320*385</td>\n</tr>\n<tr>\n<td>Touch Screen</td>\n<td>2.3D Curved Capacitive Full-Fit Touch Screen</td>\n</tr>\n<tr>\n<td>Making &amp; Answers Calls</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Notifications</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Add Custom Wallpaper</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Battrey</td>\n<td>420mAh</td>\n</tr>\n<tr>\n<td>Charging</td>\n<td>Wireless</td>\n</tr>\n<tr>\n<td>Water Resistant</td>\n<td>Yes IP67</td>\n</tr>\n<tr>\n<td>Running, Hiking, Football, Badminton, Tennis, Basketball and Others</td>\n<td>Sports Mode</td>\n</tr>\n<tr>\n<td>Heart Rate Detection, Pedometer, Blood Pressure, Sedentary Reminder, Sleep Monitoring and Others</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Instagram, SMS, Whatsapp, News and Others communications in time to remind</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Find Mobile Phone Function: Anti Lost Reminder</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Bluetooth Music Playback</td>\n<td>Yes</td>\n</tr>\n<tr>\n<td>Vibration</td>\n<td>Support</td>\n</tr>\n<tr>\n<td>Alarm Clock, Calendar, Stopwatch, Calculator and Many More</td>\n<td>Other Functions</td>\n</tr>\n<tr>\n<td>Warranty</td>\n<td>6 Months (Physical Screen &amp; Water Damage Not Included)</td>\n</tr>\n<tr>\n<td>Package Include</td>\n<td>\n<p>1 Watch, 1silicone band, 1 metal chain, or Alpine Band, 1 Charging Cable, 1 Manual, 1 Brand Box</p>\n</td>\n</tr>\n</tbody>\n</table>\n</div>\n</div>\n<div class=\"product-block\">\n<div class=\"rte\">\n<p> </p>\n<p><img src=\"https://cdn.shopify.com/s/files/1/0811/7770/6739/files/cffea9881cb27f79f840ae88ebe34597.jpg?v=1771941301\" alt=\"\" width=\"470\" height=\"626\"></p>\n<p><img height=\"711\" width=\"474\" alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0811/7770/6739/files/dee74f9feeac670bfa2db80404362205.jpg?v=1771941479\"></p>\n<p><img height=\"491\" width=\"475\" alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0811/7770/6739/files/Untitled_design_-_2_8723e457-8d5e-490e-931f-7417a80a740c.webp?v=1771952099\"></p>\n<p><img height=\"469\" width=\"469\" alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0811/7770/6739/files/Untitled_design_337c28e8-f23d-4cac-a26a-4a9508a1e007.webp?v=1771952187\"></p>\n</div>\n</div>\n<div class=\"product-block\">\n<div class=\"social-sharing\"></div>\n</div>\n</div>\n</div>",
       "price": 5500,
       "compare_price": null,
-      "stock": 196,
+      "stock": 195,
       "brand": "SMARTWEAR",
       "category_slug": "smart-watches",
       "images": [
@@ -30899,6 +30899,43 @@
     "tiktok_access_token": ""
   },
   "orders": [
+    {
+      "customer_name": "Test User",
+      "email": "",
+      "phone": "03001234567",
+      "shipping_address": {
+        "address_line1": "House 1 Street 1",
+        "city": "Karachi",
+        "state": "",
+        "postal_code": "",
+        "country": "Pakistan"
+      },
+      "payment_method": "COD",
+      "items": [
+        {
+          "id": "PROD-qfhxp5uu8-1781831031131",
+          "name": "Series 11 (Allow to open | Cash on delivery)",
+          "price": 5500,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "subtotal": 5500,
+      "shipping_fee": 200,
+      "total": 5700,
+      "discount": 0,
+      "id": "ORD-6731ffb3-dda7-4619-971b-f8965faaa329",
+      "created_at": "2026-06-20T02:04:10.636Z",
+      "history": [
+        {
+          "status": "Pending",
+          "timestamp": "2026-06-20T02:04:10.636Z",
+          "note": "Order placed"
+        }
+      ],
+      "notes": "",
+      "status": "Pending"
+    },
     {
       "customer_name": "Test User",
       "email": "",

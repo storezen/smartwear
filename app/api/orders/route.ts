@@ -174,8 +174,10 @@ export async function POST(req: Request) {
     const initialHistory = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
 
     if (isSupabaseConfigured() && supabase) {
+      const orderId = `ORD-${crypto.randomUUID()}`
       const { data: supabaseOrder, error } = await supabase.from('orders').insert({
         ...finalPayload,
+        id: orderId,
         status: 'Pending',
         history: initialHistory,
         notes: "",
