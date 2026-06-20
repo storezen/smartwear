@@ -394,7 +394,7 @@ export default function AdminDashboard() {
               {
                 label: "Add New Product",
                 desc: "List a new watch",
-                href: "/admin/products/new",
+                href: "/admin/products?new=true",
                 icon: Plus,
                 color: "#C8972A",
                 bg: "rgba(200, 151, 42, 0.15)",
