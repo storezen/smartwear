@@ -9,11 +9,18 @@ import { supabase } from '@/lib/supabase'
 export async function GET() {
   try {
     if (env.NODE_ENV === 'production' && supabase) {
-      const { data } = await supabase.from('analytics').select('*').order('timestamp', { ascending: false }).limit(100)
+      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+      const { data } = await supabase.from('analytics')
+        .select('*')
+        .gte('timestamp', twoHoursAgo)
+        .order('timestamp', { ascending: false })
+        .limit(100)
       return NextResponse.json(data || [])
     }
     const db = await getDb()
-    return NextResponse.json(db.analytics)
+    const twoHoursAgoTime = Date.now() - 2 * 60 * 60 * 1000
+    const filteredAnalytics = db.analytics.filter(e => new Date(e.timestamp).getTime() >= twoHoursAgoTime)
+    return NextResponse.json(filteredAnalytics)
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }

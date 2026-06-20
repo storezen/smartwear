@@ -77,35 +77,31 @@ export default function LiveAnalyticsPage() {
   })
 
   return (
-    <div className="bg-[#f6f6f7] min-h-[calc(100vh-4rem)] -m-4 p-4 md:-m-6 md:p-6 lg:-m-8 lg:p-8 rounded-tl-xl text-[#202223] font-sans">
+    <div className="bg-[#0C0F14] min-h-[calc(100vh-4rem)] -m-4 p-4 md:-m-6 md:p-6 lg:-m-8 lg:p-8 rounded-tl-xl text-white font-sans">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-white shadow-sm border border-[#e1e3e5] rounded-lg flex items-center justify-center">
-            <svg viewBox="0 0 20 20" className="w-5 h-5 text-[#5c5f62]" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13z"/><path d="M10 5.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9zm0 7.5a3 3 0 110-6 3 3 0 010 6z"/></svg>
+          <div className="w-8 h-8 bg-[#0F1923] shadow-sm border border-white/10 rounded-lg flex items-center justify-center">
+            <svg viewBox="0 0 20 20" className="w-5 h-5 text-[#B8860B]" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13z"/><path d="M10 5.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9zm0 7.5a3 3 0 110-6 3 3 0 010 6z"/></svg>
           </div>
-          <h1 className="text-xl font-semibold tracking-tight">Live View</h1>
-          <div className="flex items-center gap-2 text-xs font-medium text-[#5c5f62] ml-2">
+          <h1 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Live Analytics</h1>
+          <div className="flex items-center gap-2 text-xs font-medium text-white/60 ml-2">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]"></span>
             </span>
-            Just now
+            Live now
           </div>
         </div>
         
         <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center bg-white border border-[#e1e3e5] rounded-md px-3 py-1.5 shadow-sm">
-            <svg className="w-4 h-4 text-[#8c9196] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input type="text" placeholder="Search location" className="text-sm border-none focus:outline-none w-48 text-[#202223] placeholder:text-[#8c9196] bg-transparent" />
-          </div>
-          <button className="p-2 bg-white border border-[#e1e3e5] rounded-md shadow-sm text-[#5c5f62] hover:bg-gray-50">
+          <button className="p-2 bg-[#0F1923] border border-white/5 rounded-md shadow-sm text-white/60 hover:text-white transition-colors">
             <Eye className="w-4 h-4" />
           </button>
-          <button className="p-2 bg-white border border-[#e1e3e5] rounded-md shadow-sm text-[#5c5f62] hover:bg-gray-50">
+          <button className="p-2 bg-[#0F1923] border border-white/5 rounded-md shadow-sm text-white/60 hover:text-white transition-colors">
             <MapIcon className="w-4 h-4" />
           </button>
-          <button className="p-2 bg-white border border-[#e1e3e5] rounded-md shadow-sm text-[#5c5f62] hover:bg-gray-50">
+          <button className="p-2 bg-[#0F1923] border border-white/5 rounded-md shadow-sm text-white/60 hover:text-white transition-colors">
             <Maximize2 className="w-4 h-4" />
           </button>
         </div>
@@ -118,72 +114,72 @@ export default function LiveAnalyticsPage() {
           
           {/* Row 1 */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white p-5 rounded-xl border border-[#e1e3e5] shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-              <h3 className="text-[13px] font-semibold text-[#202223] mb-3">Visitors right now</h3>
-              <p className="text-3xl font-bold tracking-tight"><AnimatedCounter value={viewCount} /></p>
+            <div className="bg-[#0F1923] p-5 rounded-xl border border-white/5 shadow-2xl relative overflow-hidden">
+              <h3 className="text-[13px] font-semibold text-white/70 mb-3 relative z-10">Visitors right now</h3>
+              <p className="text-3xl font-bold tracking-tight text-[#B8860B] relative z-10"><AnimatedCounter value={viewCount} /></p>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-[#e1e3e5] shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-              <h3 className="text-[13px] font-semibold text-[#202223] mb-3">Total sales</h3>
-              <p className="text-xl font-bold tracking-tight">PKR <AnimatedCounter value={revenue} /></p>
-              <div className="mt-4 h-0.5 w-full bg-[#f1f2f3] rounded-full overflow-hidden">
-                <div className="h-full bg-[#90cdff] w-1/3 rounded-full" />
+            <div className="bg-[#0F1923] p-5 rounded-xl border border-white/5 shadow-2xl relative overflow-hidden">
+              <h3 className="text-[13px] font-semibold text-white/70 mb-3 relative z-10">Total sales</h3>
+              <p className="text-xl font-bold tracking-tight text-white relative z-10">PKR <AnimatedCounter value={revenue} /></p>
+              <div className="mt-4 h-0.5 w-full bg-white/5 rounded-full overflow-hidden relative z-10">
+                <div className="h-full bg-[#B8860B] w-1/3 rounded-full" />
               </div>
             </div>
           </div>
 
           {/* Row 2 */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white p-5 rounded-xl border border-[#e1e3e5] shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-              <h3 className="text-[13px] font-semibold text-[#202223] mb-3">Sessions</h3>
-              <p className="text-xl font-bold tracking-tight"><AnimatedCounter value={viewCount} /></p>
-              <div className="mt-4 h-0.5 w-full bg-[#f1f2f3] rounded-full overflow-hidden">
-                <div className="h-full bg-[#90cdff] w-1/4 rounded-full" />
+            <div className="bg-[#0F1923] p-5 rounded-xl border border-white/5 shadow-2xl">
+              <h3 className="text-[13px] font-semibold text-white/70 mb-3">Sessions</h3>
+              <p className="text-xl font-bold tracking-tight text-white"><AnimatedCounter value={viewCount} /></p>
+              <div className="mt-4 h-0.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-full bg-[#B8860B] w-1/4 rounded-full opacity-70" />
               </div>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-[#e1e3e5] shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-              <h3 className="text-[13px] font-semibold text-[#202223] mb-3">Orders</h3>
-              <p className="text-xl font-bold tracking-tight"><AnimatedCounter value={purchaseCount} /></p>
-              <div className="mt-4 h-0.5 w-full bg-[#f1f2f3] rounded-full overflow-hidden">
-                <div className="h-full bg-[#90cdff] w-1/2 rounded-full" />
+            <div className="bg-[#0F1923] p-5 rounded-xl border border-white/5 shadow-2xl">
+              <h3 className="text-[13px] font-semibold text-white/70 mb-3">Orders</h3>
+              <p className="text-xl font-bold tracking-tight text-white"><AnimatedCounter value={purchaseCount} /></p>
+              <div className="mt-4 h-0.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-full bg-[#B8860B] w-1/2 rounded-full opacity-70" />
               </div>
             </div>
           </div>
 
           {/* Row 3 Funnel */}
-          <div className="bg-white p-5 rounded-xl border border-[#e1e3e5] shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-            <h3 className="text-[13px] font-semibold text-[#202223] mb-4">Customer behavior</h3>
-            <div className="grid grid-cols-3 gap-4">
+          <div className="bg-[#0F1923] p-5 rounded-xl border border-white/5 shadow-2xl relative overflow-hidden">
+            <h3 className="text-[13px] font-semibold text-white/70 mb-4 relative z-10">Customer behavior</h3>
+            <div className="grid grid-cols-3 gap-4 relative z-10">
               <div>
-                <p className="text-[11px] text-[#6d7175] mb-1">Active carts</p>
-                <p className="text-lg font-medium"><AnimatedCounter value={cartCount} /></p>
+                <p className="text-[11px] text-white/50 mb-1">Active carts</p>
+                <p className="text-lg font-medium text-white"><AnimatedCounter value={cartCount} /></p>
               </div>
-              <div className="border-l border-[#f1f2f3] pl-4">
-                <p className="text-[11px] text-[#6d7175] mb-1">Checking out</p>
-                <p className="text-lg font-medium"><AnimatedCounter value={checkoutCount} /></p>
+              <div className="border-l border-white/5 pl-4">
+                <p className="text-[11px] text-white/50 mb-1">Checking out</p>
+                <p className="text-lg font-medium text-white"><AnimatedCounter value={checkoutCount} /></p>
               </div>
-              <div className="border-l border-[#f1f2f3] pl-4">
-                <p className="text-[11px] text-[#6d7175] mb-1">Purchased</p>
-                <p className="text-lg font-medium"><AnimatedCounter value={purchaseCount} /></p>
+              <div className="border-l border-white/5 pl-4">
+                <p className="text-[11px] text-white/50 mb-1">Purchased</p>
+                <p className="text-lg font-medium text-[#B8860B]"><AnimatedCounter value={purchaseCount} /></p>
               </div>
             </div>
           </div>
 
           {/* Row 4 Traffic Source / Locations */}
-          <div className="bg-white rounded-xl border border-[#e1e3e5] shadow-[0_1px_2px_rgba(0,0,0,0.05)] flex flex-col h-48">
-            <div className="p-4 border-b border-[#f1f2f3] border-dashed">
-              <h3 className="text-[13px] font-semibold text-[#202223]">Sessions by location</h3>
+          <div className="bg-[#0F1923] rounded-xl border border-white/5 shadow-2xl flex flex-col h-48">
+            <div className="p-4 border-b border-white/5 border-dashed">
+              <h3 className="text-[13px] font-semibold text-white/70">Sessions by location</h3>
             </div>
             <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
               {Array.from(activeLocationsMap.entries()).length === 0 ? (
-                <div className="h-full flex items-center justify-center text-[13px] text-[#8c9196]">
+                <div className="h-full flex items-center justify-center text-[13px] text-white/30">
                   No data for this date range
                 </div>
               ) : (
                 <div className="space-y-3">
                   {Array.from(activeLocationsMap.entries()).sort((a,b) => b[1]-a[1]).map(([loc, count], i) => (
-                    <div key={i} className="flex items-center justify-between">
-                      <span className="text-[13px] text-[#202223]">{loc}</span>
-                      <span className="text-[13px] font-medium text-[#202223]">{count}</span>
+                    <div key={i} className="flex items-center justify-between group">
+                      <span className="text-[13px] text-white/80 group-hover:text-[#B8860B] transition-colors">{loc}</span>
+                      <span className="text-[13px] font-medium text-white/90">{count}</span>
                     </div>
                   ))}
                 </div>
@@ -192,23 +188,23 @@ export default function LiveAnalyticsPage() {
           </div>
 
           {/* Row 5 Feed */}
-          <div className="bg-white rounded-xl border border-[#e1e3e5] shadow-[0_1px_2px_rgba(0,0,0,0.05)] flex flex-col h-48">
-            <div className="p-4 border-b border-[#f1f2f3] border-dashed">
-              <h3 className="text-[13px] font-semibold text-[#202223]">Live Events Feed</h3>
+          <div className="bg-[#0F1923] rounded-xl border border-white/5 shadow-2xl flex flex-col h-48">
+            <div className="p-4 border-b border-white/5 border-dashed flex items-center justify-between">
+              <h3 className="text-[13px] font-semibold text-white/70">Live Events Feed</h3>
             </div>
             <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
               {parsedEvents.length === 0 ? (
-                <div className="h-full flex items-center justify-center text-[13px] text-[#8c9196]">
+                <div className="h-full flex items-center justify-center text-[13px] text-white/30">
                   No data for this date range
                 </div>
               ) : (
                 <div className="space-y-3">
                   {parsedEvents.slice(0, 10).map((event, i) => (
-                    <div key={event.id || i} className="flex items-center gap-3">
-                      <div className={`w-2 h-2 rounded-full ${event.base_event === 'Purchase' ? 'bg-[#9a86ff]' : 'bg-[#5cd4f8]'}`} />
+                    <div key={event.id || i} className="flex items-center gap-3 group">
+                      <div className={`w-2 h-2 rounded-full shadow-[0_0_8px_currentColor] ${event.base_event === 'Purchase' ? 'bg-[#B8860B] text-[#B8860B]' : 'bg-white/40 text-white/40 group-hover:bg-white group-hover:text-white transition-colors'}`} />
                       <div className="flex-1">
-                        <p className="text-[13px] text-[#202223] truncate max-w-[250px]">{event.item_name}</p>
-                        <p className="text-[11px] text-[#6d7175]">
+                        <p className="text-[13px] text-white/90 truncate max-w-[250px] font-medium">{event.item_name}</p>
+                        <p className="text-[11px] text-white/40">
                           {event.base_event === 'Purchase' ? 'Purchased' : 'Viewed'} • {event.location}
                         </p>
                       </div>
@@ -221,22 +217,21 @@ export default function LiveAnalyticsPage() {
         </div>
 
         {/* Right Globe Area */}
-        <div className="flex-1 relative bg-transparent overflow-hidden rounded-xl">
+        <div className="flex-1 relative bg-[#0F1923] overflow-hidden rounded-xl border border-white/5 shadow-2xl">
           <LiveGlobe locations={globeLocations} />
           
           {/* Bottom Right Legend */}
-          <div className="absolute bottom-6 right-6 flex items-center gap-4 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-[#e1e3e5] shadow-sm">
+          <div className="absolute bottom-6 right-6 flex items-center gap-4 bg-[#0C0F14]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-2xl">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#9a86ff] shadow-[0_0_8px_rgba(154,134,255,0.8)]"></span>
-              <span className="text-xs font-medium text-[#5c5f62]">Orders</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#B8860B] shadow-[0_0_8px_rgba(184,134,11,0.8)]"></span>
+              <span className="text-xs font-medium text-white/70">Orders</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#5cd4f8] shadow-[0_0_8px_rgba(92,212,248,0.8)]"></span>
-              <span className="text-xs font-medium text-[#5c5f62]">Visitors right now</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
+              <span className="text-xs font-medium text-white/70">Visitors right now</span>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   )
