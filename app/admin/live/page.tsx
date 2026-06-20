@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Eye, Map as MapIcon, Maximize2 } from "lucide-react"
+import { Eye, Map as MapIcon, Maximize2, Trash2, RefreshCw } from "lucide-react"
 import dynamic from "next/dynamic"
 
 const AnimatedCounter = dynamic(() => import('@/components/ui/animated-counter').then(m => m.AnimatedCounter), { ssr: false })
@@ -22,6 +22,7 @@ const CITY_COORDS: Record<string, { lat: number, lng: number }> = {
 
 export default function LiveAnalyticsPage() {
   const [events, setEvents] = useState<any[]>([])
+  const [isClearing, setIsClearing] = useState(false)
 
   useEffect(() => {
     // Poll every 5 seconds for live feel
@@ -37,6 +38,19 @@ export default function LiveAnalyticsPage() {
     const interval = setInterval(fetchEvents, 5000)
     return () => clearInterval(interval)
   }, [])
+
+  const handleClear = async () => {
+    if (!confirm('Are you sure you want to clear all live analytics data?')) return
+    setIsClearing(true)
+    try {
+      await fetch('/api/analytics/clear', { method: 'POST' })
+      setEvents([]) // clear locally immediately
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsClearing(false)
+    }
+  }
 
   const parsedEvents = events.map(e => {
     const parts = (e.event_name || '').split('::')
@@ -95,6 +109,15 @@ export default function LiveAnalyticsPage() {
         </div>
         
         <div className="flex items-center gap-2">
+          <button 
+            onClick={handleClear}
+            disabled={isClearing}
+            title="Clear Live Data"
+            className="p-2 bg-red-500/10 border border-red-500/20 rounded-md shadow-sm text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+          >
+            {isClearing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+          </button>
+          <div className="w-px h-6 bg-white/10 mx-1"></div>
           <button className="p-2 bg-[#0F1923] border border-white/5 rounded-md shadow-sm text-white/60 hover:text-white transition-colors">
             <Eye className="w-4 h-4" />
           </button>
