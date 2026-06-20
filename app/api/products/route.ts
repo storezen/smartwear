@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { getProducts, addProduct, updateProduct, deleteProduct } from '@/lib/db'
 import { isSupabaseConfigured, supabase } from '@/lib/supabase'
