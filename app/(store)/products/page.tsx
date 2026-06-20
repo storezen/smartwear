@@ -16,6 +16,17 @@ const sortOpts = [
   { value: "price-hi", label: "Price ↓" },
 ]
 
+/** Short labels so all 7 category tabs fit on mobile scroll. */
+const categoryTabLabels: Record<string, string> = {
+  "smart-watches": "Smart",
+  "analog-watches": "Analog",
+  "ladies-watches": "Ladies",
+  "watch-bands": "Bands",
+  "phone-cases": "Cases",
+  "camera-protectors": "Camera",
+  "accessories": "Accessories",
+}
+
 function Skeleton({ count = 8 }: { count?: number }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
@@ -212,11 +223,14 @@ function ProductsContent() {
               </SheetContent>
             </Sheet>
 
-            {/* Category Tabs */}
-            <div className="flex items-center gap-2 flex-1 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+            {/* Category Tabs — all 7 categories including Camera Protectors */}
+            <div
+              className="flex items-center gap-1.5 sm:gap-2 flex-1 overflow-x-auto pb-0.5"
+              style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+            >
               <button
                 onClick={() => { const p = new URLSearchParams(params.toString()); p.delete("category"); router.push(`/products?${p.toString()}`) }}
-                className="px-4 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border"
+                className="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border"
                 style={{
                   background: !catSlug ? "linear-gradient(135deg, #B8860B, #D4A017)" : "rgba(255,255,255,0.03)",
                   color: !catSlug ? "#000" : "rgba(255,255,255,0.6)",
@@ -229,14 +243,16 @@ function ProductsContent() {
                 <button
                   key={c.id}
                   onClick={() => { const p = new URLSearchParams(params.toString()); p.set("category", c.slug); router.push(`/products?${p.toString()}`) }}
-                  className="px-4 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border"
+                  title={c.name}
+                  className="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border"
                   style={{
                     background: catSlug === c.slug ? "linear-gradient(135deg, #B8860B, #D4A017)" : "rgba(255,255,255,0.03)",
                     color: catSlug === c.slug ? "#000" : "rgba(255,255,255,0.6)",
                     borderColor: catSlug === c.slug ? "transparent" : "rgba(255,255,255,0.05)",
                   }}
                 >
-                  {c.name}
+                  <span className="sm:hidden">{categoryTabLabels[c.slug] || c.name}</span>
+                  <span className="hidden sm:inline">{c.name}</span>
                 </button>
               ))}
               {saleOnly === "true" && (

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "categorize": "node scripts/categorize-products.js",
-    "categorize:validate": "node scripts/validate-categories.js"
+    "categorize:validate": "node scripts/validate-categories.js",
+    "recategorize:db": "node scripts/recategorize-database.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

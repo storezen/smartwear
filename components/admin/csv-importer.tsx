@@ -78,8 +78,10 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
           const title = row['Title'] || handle;
           const type = row['Product Category'] || row['Type'] || '';
           
-          const categoryName = getProductCategory(title, `${type} ${rawTags}`);
-          const category = getCategorySlug(categoryName);
+          const tagsStr = Array.isArray(parsedTags) ? parsedTags.join(', ') : rawTags
+          const csvCategory = (row['category'] || '').trim()
+          const categoryName = csvCategory || getProductCategory(title, tagsStr, type, handle)
+          const category = getCategorySlug(categoryName)
 
           if (!productMap.has(handle)) {
             // Create base product
