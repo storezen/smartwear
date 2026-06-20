@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react"
 import { Eye, Map, Maximize2 } from "lucide-react"
 import { AnimatedCounter } from "@/components/ui/animated-counter"
-import { LiveGlobe } from "@/components/ui/live-globe"
+import dynamic from "next/dynamic"
+
+const LiveGlobe = dynamic(() => import('@/components/ui/live-globe').then(m => m.LiveGlobe), { ssr: false })
 
 // A mapping of major PK cities to lat/lng for the globe
 const CITY_COORDS: Record<string, { lat: number, lng: number }> = {
