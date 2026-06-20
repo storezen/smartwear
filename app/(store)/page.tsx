@@ -18,7 +18,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { categories as storeCategories } from "@/lib/mock-data"
+import { categories as storeCategories, formatPrice } from "@/lib/mock-data"
 import {
   buildCategoryImageMap,
   HOMEPAGE_CARDS_PER_SECTION,
@@ -77,17 +77,63 @@ function SectionTitle({ children, className = "" }: { children: React.ReactNode;
 }
 
 /* ════════════════════════════════════════════════════════
-   1. HERO BANNER — Cinematic Full-Screen
+   1. HERO BANNER — Series 11 flagship showcase
    ════════════════════════════════════════════════════════ */
 
-function HeroBanner() {
+type HeroFeatured = {
+  name: string
+  slug: string
+  image: string
+  price: number
+}
+
+const HERO_FALLBACK: HeroFeatured = {
+  name: "Series 11",
+  slug: "series-11-(allow-to-open-|-cash-on-delivery)",
+  image: "https://cdn.shopify.com/s/files/1/0669/1189/5650/files/dee74f9feeac670bfa2db80404362205.webp?v=1774961750",
+  price: 5500,
+}
+
+const heroSpecs = [
+  { icon: Activity, label: "2.05″ AMOLED" },
+  { icon: Shield, label: "IP67 Rated" },
+  { icon: Battery, label: "420mAh Cell" },
+  { icon: Wifi, label: "BT Calling" },
+]
+
+const heroFloatChips = [
+  { icon: HeartPulse, label: "Health Suite", className: "top-[8%] -left-2 md:left-0" },
+  { icon: Clock, label: "Always-On", className: "top-[42%] -right-1 md:right-2" },
+  { icon: Truck, label: "COD Pakistan", className: "bottom-[12%] left-[5%]" },
+]
+
+function HeroWatchFace() {
+  return (
+    <div className="absolute -bottom-6 -left-4 md:-left-8 z-20 w-[88px] h-[88px] md:w-[104px] md:h-[104px] rounded-[22px] bg-[#0A0D11]/90 border border-white/10 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#B8860B]/20 via-transparent to-transparent" />
+      <div className="relative p-3 h-full flex flex-col justify-between">
+        <p className="text-[8px] uppercase tracking-[0.2em] text-[#B8860B] font-bold">Series 11</p>
+        <p className="text-white text-xl md:text-2xl font-semibold tabular-nums leading-none" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+          10:09
+        </p>
+        <div className="flex items-center justify-between">
+          <span className="text-[9px] text-white/50">72 BPM</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function HeroBanner({ featured = HERO_FALLBACK }: { featured?: HeroFeatured }) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
-  const springConfig = { damping: 30, stiffness: 100 }
+  const springConfig = { damping: 28, stiffness: 120 }
   const mouseXSpring = useSpring(mouseX, springConfig)
   const mouseYSpring = useSpring(mouseY, springConfig)
-  const translateX = useTransform(mouseXSpring, [-0.5, 0.5], [-15, 15])
-  const translateY = useTransform(mouseYSpring, [-0.5, 0.5], [-15, 15])
+  const translateX = useTransform(mouseXSpring, [-0.5, 0.5], [-18, 18])
+  const translateY = useTransform(mouseYSpring, [-0.5, 0.5], [-18, 18])
+  const productHref = `/products/${encodeURIComponent(featured.slug)}`
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -96,105 +142,173 @@ function HeroBanner() {
   }
 
   return (
-    <section 
-      className="relative min-h-[85svh] md:min-h-screen flex items-center justify-center overflow-x-hidden bg-[#0C0F14]"
+    <section
+      className="relative min-h-[90svh] md:min-h-screen flex items-center justify-center overflow-hidden bg-[#06080A]"
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { mouseX.set(0); mouseY.set(0) }}
     >
-      {/* Background Ambient Glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[20%] right-[20%] w-[500px] h-[500px] rounded-full bg-[#B8860B]/[0.04] blur-[120px]" />
-        <div className="absolute bottom-[10%] left-[10%] w-[400px] h-[400px] rounded-full bg-[#B8860B]/[0.03] blur-[100px]" />
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div
+          className="absolute inset-0 opacity-[0.35]"
+          style={{
+            background:
+              "radial-gradient(ellipse 70% 55% at 72% 42%, rgba(184,134,11,0.14) 0%, transparent 65%), radial-gradient(ellipse 50% 40% at 15% 80%, rgba(184,134,11,0.06) 0%, transparent 60%)",
+          }}
+        />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-full bg-gradient-to-b from-transparent via-[#B8860B]/25 to-transparent opacity-60" />
+        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
       </div>
 
       <div className="sw-container relative z-10 w-full" style={{ maxWidth: "1536px" }}>
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-20 lg:py-32 relative z-10 mt-16 md:mt-0">
-          {/* Left: Text Content */}
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center py-16 md:py-24 lg:py-28 mt-14 md:mt-0">
           <div className="order-2 lg:order-1 text-center lg:text-left">
             <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
-              <motion.div variants={staggerItem} className="mb-6">
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/20 text-[#B8860B] text-xs font-bold uppercase tracking-widest">
-                  <Sparkles className="w-3.5 h-3.5" /> Pakistan&apos;s #1 Smart Watch Store
+              <motion.div variants={staggerItem} className="mb-5">
+                <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/25 text-[#D4A017] text-[10px] md:text-xs font-bold uppercase tracking-[0.22em]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-60" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]" />
+                  </span>
+                  Flagship Drop · {featured.name}
                 </span>
               </motion.div>
 
               <motion.h1
                 variants={staggerItem}
-                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6"
+                className="text-[2rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white leading-[1.05] mb-5"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
-                Elevate Your
+                Thinner Profile.
                 <br />
-                <span className="bg-gradient-to-r from-[#B8860B] via-[#D4A017] to-[#B8860B] bg-clip-text text-transparent">
-                  Wrist Game
+                <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
+                  Bigger Display.
                 </span>
               </motion.h1>
 
-              <motion.p variants={staggerItem} className="text-white/60 text-base md:text-lg max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed">
-                Discover premium smartwatches, bands & accessories with
-                <strong className="text-white"> free delivery</strong> across Pakistan.
-                Pay on delivery — no risk, just style.
+              <motion.p variants={staggerItem} className="text-white/55 text-sm md:text-lg max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed">
+                The <strong className="text-white font-medium">{featured.name}</strong> brings a cinematic 2.05″ always-on AMOLED face, Bluetooth calling, and IP67 durability — delivered across Pakistan with{" "}
+                <strong className="text-[#D4A017]">Cash on Delivery</strong>. Open the parcel. Love it. Then pay.
               </motion.p>
 
+              <motion.div variants={staggerItem} className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/8 mb-7">
+                <span className="text-white/40 text-xs uppercase tracking-widest">From</span>
+                <span className="text-white text-xl md:text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+                  {formatPrice(featured.price)}
+                </span>
+                <span className="text-[10px] text-emerald-400/90 font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                  In Stock
+                </span>
+              </motion.div>
+
               <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                <Link href="/products" className="w-full sm:w-auto sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
-                  Shop Now <ArrowRight className="w-4 h-4" />
+                <Link href={productHref} className="w-full sm:w-auto sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
+                  Shop {featured.name} <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link href="/products?category=smart-watches" className="w-full sm:w-auto sw-btn-ghost-white px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
-                  Explore Collections
+                  All Smart Watches
                 </Link>
               </motion.div>
 
-              {/* Quick Stats */}
-              <motion.div variants={staggerItem} className="mt-8 sm:mt-10 flex flex-wrap gap-4 sm:gap-8 justify-center lg:justify-start">
-                {[
-                  { value: "10K+", label: "Happy Customers" },
-                  { value: "500+", label: "Products" },
-                  { value: "4.9", label: "Avg Rating" },
-                ].map((stat) => (
-                  <div key={stat.label} className="text-center lg:text-left min-w-[100px] sm:min-w-0">
-                    <p className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>{stat.value}</p>
-                    <p className="text-white/40 text-xs uppercase tracking-wider">{stat.label}</p>
-                  </div>
+              <motion.div variants={staggerItem} className="mt-8 flex flex-wrap gap-2.5 justify-center lg:justify-start">
+                {heroSpecs.map((spec) => (
+                  <span
+                    key={spec.label}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/8 text-white/60 text-[11px] font-medium"
+                  >
+                    <spec.icon className="w-3 h-3 text-[#B8860B]" />
+                    {spec.label}
+                  </span>
                 ))}
               </motion.div>
             </motion.div>
           </div>
 
-          {/* Right: Hero Watch Image */}
-          <div className="order-1 lg:order-2 flex justify-center relative">
+          <div className="order-1 lg:order-2 flex justify-center relative px-2 sm:px-0">
             <motion.div
               style={{ x: translateX, y: translateY }}
-              className="relative w-[220px] h-[220px] sm:w-[320px] sm:h-[320px] md:w-[450px] md:h-[450px] lg:w-[520px] lg:h-[520px] mt-8 md:mt-0"
+              className="relative w-[260px] h-[300px] sm:w-[340px] sm:h-[380px] md:w-[420px] md:h-[460px] lg:w-[500px] lg:h-[540px]"
             >
-              <div className="absolute inset-[-20px] rounded-full border border-[#B8860B]/20 animate-[spin_20s_linear_infinite]" />
-              <div className="absolute inset-[-40px] rounded-full border border-[#B8860B]/10 animate-[spin_30s_linear_infinite_reverse]" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] rounded-full bg-[#B8860B]/15 blur-[60px]" />
+              <div className="absolute inset-[10%] rounded-full bg-[#B8860B]/12 blur-[80px]" />
+              <div className="absolute inset-[-12px] rounded-[40%] border border-[#B8860B]/15 animate-[spin_24s_linear_infinite]" />
+              <div className="absolute inset-[-28px] rounded-[42%] border border-dashed border-[#B8860B]/10 animate-[spin_36s_linear_infinite_reverse]" />
+
+              <div className="absolute inset-0 rounded-[32px] bg-gradient-to-b from-white/[0.04] to-transparent border border-white/5 backdrop-blur-[2px]" />
 
               <Image
-                src="/hero-watch-transparent.png"
-                alt="Premium Smartwatch"
+                src={featured.image}
+                alt={`${featured.name} smartwatch`}
                 fill
-                className="object-contain drop-shadow-[0_20px_60px_rgba(184,134,11,0.3)] z-10"
+                sizes="(max-width: 640px) 260px, (max-width: 1024px) 420px, 500px"
+                className="object-contain object-center drop-shadow-[0_30px_80px_rgba(184,134,11,0.35)] z-10 p-4 md:p-6"
                 priority
               />
+
+              <HeroWatchFace />
+
+              {heroFloatChips.map((chip, i) => (
+                <motion.div
+                  key={chip.label}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: [0, -6, 0] }}
+                  transition={{
+                    opacity: { delay: 0.4 + i * 0.15, duration: 0.5 },
+                    y: { delay: 0.8 + i * 0.2, duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+                  }}
+                  className={`absolute z-20 hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0C0F14]/85 border border-white/10 backdrop-blur-md shadow-lg ${chip.className}`}
+                >
+                  <chip.icon className="w-3.5 h-3.5 text-[#B8860B]" />
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-white/80">{chip.label}</span>
+                </motion.div>
+              ))}
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 }}
+                className="absolute top-4 right-2 md:right-6 z-20 px-3 py-1.5 rounded-full bg-[#B8860B] text-[#0C0F14] text-[10px] font-black uppercase tracking-[0.18em] shadow-[0_8px_24px_rgba(184,134,11,0.4)]"
+              >
+                New 2026
+              </motion.div>
             </motion.div>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
       <motion.div
         className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-white/30"
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+        <span className="text-[10px] uppercase tracking-[0.3em]">Discover</span>
         <ChevronDown className="w-4 h-4" />
       </motion.div>
     </section>
   )
+}
+
+function pickHeroFeatured(products: any[]): HeroFeatured {
+  const match =
+    products.find(
+      (p) =>
+        p.is_active !== false &&
+        normalizeCategorySlug(p.category_slug) === "smart-watches" &&
+        /\bseries\s*11\b/i.test(`${p.name || ""} ${p.slug || ""}`)
+    ) ??
+    products.find(
+      (p) =>
+        p.is_active !== false &&
+        normalizeCategorySlug(p.category_slug) === "smart-watches" &&
+        p.images?.[0]
+    )
+
+  if (!match?.images?.[0]) return HERO_FALLBACK
+
+  return {
+    name: "Series 11",
+    slug: match.slug || HERO_FALLBACK.slug,
+    image: match.images[0],
+    price: match.price ?? HERO_FALLBACK.price,
+  }
 }
 
 
@@ -832,9 +946,11 @@ export default function HomePage() {
     [allProducts]
   )
 
+  const heroFeatured = useMemo(() => pickHeroFeatured(allProducts), [allProducts])
+
   return (
     <div className="min-h-screen bg-[#0C0F14]">
-      <HeroBanner />
+      <HeroBanner featured={heroFeatured} />
       <TrustBadges />
       <ShopByCategory items={shopCategoryCards} />
       {!loading && (
