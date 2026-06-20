@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const Papa = require('papaparse');
+const { getProductCategory, FINAL_CATEGORIES } = require('../lib/product-category');
 
 const inputFile = path.join(__dirname, '../filtered_products.csv');
-const outputFile = path.join(__dirname, '../products_with_category.csv');
+const outputFile = path.join(__dirname, '../products_final.csv');
 
 if (!fs.existsSync(inputFile)) {
   console.error(`Error: Could not find ${inputFile}`);
@@ -12,86 +13,74 @@ if (!fs.existsSync(inputFile)) {
 
 const csvData = fs.readFileSync(inputFile, 'utf-8');
 
-function getProductCategory(title, tags = '') {
-  const searchStr = `${title} ${tags}`.toLowerCase();
-  const lowerTitle = title.toLowerCase();
-
-  // 1. Camera Protectors
-  if (searchStr.includes('camera lens') || searchStr.includes('lens protector')) {
-    return 'Camera Protectors';
-  }
-
-  // 2. Phone Cases
-  if (lowerTitle.includes('case') && (lowerTitle.includes('phone') || lowerTitle.includes('iphone') || lowerTitle.includes('samsung'))) {
-    return 'Phone Cases';
-  }
-
-  // 3. Watch Bands & Straps
-  const isStrap = /\b(strap|band|loop|chain)\b/i.test(lowerTitle);
-  const comesWithStrap = /\b(with|and|\+)\b.*\b(strap|band|loop|chain)\b/i.test(lowerTitle);
-  if (isStrap && !comesWithStrap) {
-    return 'Watch Bands & Straps';
-  }
-
-  // 4. Accessories
-  if (/\b(airpod|airpods|earbud|earbuds|pod|pods|charger|cable|adapter|wisme)\b/i.test(searchStr)) {
-    return 'Accessories';
-  }
-  if (/\b(case|cover|protector)\b/i.test(lowerTitle) && !/\b(with|and|\+)\b/i.test(lowerTitle)) {
-    return 'Accessories';
-  }
-
-  // 5. Ladies Watches
-  if (/\b(ladies|women|womens|girl|girls)\b/i.test(searchStr)) {
-    return 'Ladies Watches';
-  }
-
-  // 6. Analog Watches
-  if (/\b(analog|automatic|quartz|chronograph|mechanic|mechanical|rolex|rlx|rolx|patek|citizen|ctzn|seiko|casio|edifice|hublot|hblt|versace|vr\d+)\b/i.test(searchStr)) {
-    return 'Analog Watches';
-  }
-
-  // 7. Smart Watches (Default)
-  return 'Smart Watches';
-}
-
 Papa.parse(csvData, {
   header: true,
   skipEmptyLines: true,
   complete: (results) => {
     const data = results.data;
-    const stats = {
-      'Smart Watches': 0,
-      'Analog Watches': 0,
-      'Ladies Watches': 0,
-      'Watch Bands & Straps': 0,
-      'Phone Cases': 0,
-      'Camera Protectors': 0,
-      'Accessories': 0
-    };
+
+    // Variant/image rows often have empty titles — categorize once per handle.
+    const handleCategoryMap = new Map();
+
+    for (const row of data) {
+      const handle = row.Handle;
+      if (!handle || handleCategoryMap.has(handle)) continue;
+
+      const title = row.Title || '';
+      const tags = row.Tags || '';
+      const type = row.Type || row['Product Category'] || '';
+
+      if (!title.trim() && !handle) continue;
+
+      handleCategoryMap.set(
+        handle,
+        getProductCategory(title, tags, type, handle)
+      );
+    }
+
+    const stats = Object.fromEntries(FINAL_CATEGORIES.map((cat) => [cat, 0]));
 
     const categorizedData = data.map((row) => {
-      const title = row['Title'] || '';
-      const tags = row['Tags'] || '';
-      
-      const category = getProductCategory(title, tags);
-      row['category'] = category;
-      stats[category]++;
-      
+      const handle = row.Handle || '';
+      const title = row.Title || '';
+      const tags = row.Tags || '';
+      const type = row.Type || row['Product Category'] || '';
+
+      const category =
+        handleCategoryMap.get(handle) ||
+        getProductCategory(title || handle, tags, type, handle);
+
+      row.category = category;
+      stats[category] = (stats[category] || 0) + 1;
+
       return row;
     });
 
     const outputCsv = Papa.unparse(categorizedData);
     fs.writeFileSync(outputFile, outputCsv, 'utf-8');
 
-    console.log(`\nSuccessfully categorized ${categorizedData.length} products!\n`);
-    console.log('--- Category Breakdown ---');
-    for (const [cat, count] of Object.entries(stats)) {
-      console.log(`${cat.padEnd(25)} : ${count}`);
+    const uniqueProducts = handleCategoryMap.size;
+
+    console.log(`\nSuccessfully categorized ${categorizedData.length} rows (${uniqueProducts} unique products)!\n`);
+    console.log('--- Category Breakdown (rows) ---');
+    for (const cat of FINAL_CATEGORIES) {
+      console.log(`${cat.padEnd(25)} : ${stats[cat] || 0}`);
     }
+
+    const uniqueStats = Object.fromEntries(FINAL_CATEGORIES.map((cat) => [cat, 0]));
+    for (const cat of handleCategoryMap.values()) {
+      uniqueStats[cat] = (uniqueStats[cat] || 0) + 1;
+    }
+
+    console.log('\n--- Category Breakdown (unique products) ---');
+    for (const cat of FINAL_CATEGORIES) {
+      console.log(`${cat.padEnd(25)} : ${uniqueStats[cat] || 0}`);
+    }
+
     console.log(`\nSaved to: ${outputFile}\n`);
   },
   error: (err) => {
     console.error('Error parsing CSV:', err);
-  }
+    process.exit(1);
+  },
 });
