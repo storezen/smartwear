@@ -40,32 +40,27 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
 
       const orderPayload = {
         id: orderId,
-        user_email: 'guest@smartwear.pk',
         customer_name: formData.name,
         phone: formData.phone,
-        items: [{
-          product_id: product.id,
-          product_name: product.name,
-          product_image: product.images[0],
-          price: product.price,
-          quantity: quantity
-        }],
-        subtotal,
-        shipping_cost: shippingCost,
-        discount: 0,
-        total,
-        status: 'pending',
+        email: "",
         shipping_address: {
-          name: formData.name,
-          phone: formData.phone,
-          street: formData.address,
+          address_line1: formData.address,
           city: formData.city,
           state: '',
-          zip: '',
+          postal_code: '',
           country: 'Pakistan'
         },
-        payment_method: 'Cash on Delivery',
-        tracking_number: null,
+        items: [{
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: quantity,
+          image: product.images?.[0]
+        }],
+        subtotal,
+        shipping_fee: shippingCost,
+        total,
+        payment_method: 'COD',
       }
 
       const res = await fetch('/api/orders', {
@@ -83,8 +78,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
       router.push(`/checkout/success?order=${orderId}`)
     } catch (error) {
       console.error("Quick buy failed:", error)
-      // On failure fallback to success anyway for demo
-      router.push(`/checkout/success?order=DEMO-${Date.now().toString().slice(-6)}`)
+      alert("Error: Order creation failed. Please check your details and try again.")
     } finally {
       setIsProcessing(false)
     }
