@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from "framer-motion"
@@ -11,7 +11,13 @@ import {
   Send, Quote, CheckCircle2, Sparkles, ChevronDown
 } from "lucide-react"
 import { ProductCard } from "@/components/store/premium-product-card"
-import { formatPrice } from "@/lib/mock-data"
+import { categories as storeCategories } from "@/lib/mock-data"
+import {
+  buildCategoryImageMap,
+  pickBalancedNewArrivals,
+  pickBalancedProducts,
+  pickFromCategory,
+} from "@/lib/homepage-helpers"
 
 /* ════════════════════════════════════════════════════════
    SHARED ANIMATION VARIANTS
@@ -224,52 +230,24 @@ function TrustBadges() {
    3. SHOP BY CATEGORY
    ════════════════════════════════════════════════════════ */
 
-const shopCategories = [
-  {
-    name: "Smart Watches",
-    slug: "smart-watches",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop",
-    icon: Watch,
-    description: "Latest tech on your wrist",
-  },
-  {
-    name: "Analog Watches",
-    slug: "analog-watches",
-    image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&h=600&fit=crop",
-    icon: Clock,
-    description: "Heritage timepieces",
-  },
-  {
-    name: "Ladies Watches",
-    slug: "ladies-watches",
-    image: "https://images.unsplash.com/photo-1549972574-8742bba40a7a?w=800&h=600&fit=crop",
-    icon: Sparkles,
-    description: "Elegant & graceful designs",
-  },
-  {
-    name: "Bands & Straps",
-    slug: "watch-bands",
-    image: "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=800&h=600&fit=crop",
-    icon: Heart,
-    description: "Style your watch your way",
-  },
-  {
-    name: "Phone Cases",
-    slug: "phone-cases",
-    image: "https://images.unsplash.com/photo-1603313011101-320f26a4f6f6?w=800&h=600&fit=crop",
-    icon: Smartphone,
-    description: "Ultimate protection",
-  },
-  {
-    name: "Accessories",
-    slug: "accessories",
-    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop",
-    icon: Battery,
-    description: "Keep your gear powered",
-  },
-]
+const categoryIcons: Record<string, typeof Watch> = {
+  "smart-watches": Watch,
+  "analog-watches": Clock,
+  "ladies-watches": Sparkles,
+  "watch-bands": Heart,
+  "phone-cases": Smartphone,
+  accessories: Battery,
+}
 
-function ShopByCategory() {
+type ShopCategoryCard = {
+  name: string
+  slug: string
+  image: string
+  icon: typeof Watch
+  description: string
+}
+
+function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
   return (
     <section className="py-8 md:py-16 lg:py-24 bg-[#0C0F14]">
       <div className="sw-container">
@@ -283,7 +261,7 @@ function ShopByCategory() {
         </motion.div>
 
         <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
-          {shopCategories.map((cat, i) => (
+          {items.map((cat, i) => (
             <motion.div
               key={cat.name}
               initial={{ opacity: 0, y: 30 }}
@@ -436,13 +414,18 @@ function WhyChooseUs() {
    6. COLLECTIONS BANNER
    ════════════════════════════════════════════════════════ */
 
-const collections = [
-  { name: "Pro Series", desc: "Built for athletes and adventurers", tag: "MOST POPULAR", image: "https://images.unsplash.com/photo-1557438159-51eec7dbc7a1?w=600&h=400&fit=crop" },
-  { name: "Classic Series", desc: "Timeless design meets modern tech", tag: "PREMIUM", image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=600&h=400&fit=crop" },
-  { name: "Sport Series", desc: "Lightweight & durable for workouts", tag: "BESTSELLER", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=600&h=400&fit=crop" },
+const collectionMeta = [
+  { name: "Pro Series", desc: "Built for athletes and adventurers", tag: "MOST POPULAR", slug: "smart-watches" as const },
+  { name: "Classic Series", desc: "Timeless design meets modern tech", tag: "PREMIUM", slug: "analog-watches" as const },
+  { name: "Sport Series", desc: "Lightweight & durable for workouts", tag: "BESTSELLER", slug: "ladies-watches" as const },
 ]
 
-function CollectionsBanner() {
+function CollectionsBanner({ categoryImages }: { categoryImages: Record<string, string> }) {
+  const collections = collectionMeta.map((col) => ({
+    ...col,
+    image: categoryImages[col.slug] || storeCategories.find((c) => c.slug === col.slug)?.image || "",
+    href: `/products?category=${col.slug}`,
+  }))
   return (
     <section className="py-8 md:py-16 lg:py-24 bg-[#0C0F14]">
       <div className="sw-container">
@@ -465,7 +448,7 @@ function CollectionsBanner() {
               transition={{ delay: i * 0.12 }}
               className="snap-start shrink-0 w-[280px] sm:w-[320px] md:w-auto"
             >
-              <Link href="/products" className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/3]">
+              <Link href={col.href} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/3]">
                 <Image src={col.image} alt={col.name} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
@@ -493,19 +476,19 @@ function CollectionsBanner() {
 
 
 /* ════════════════════════════════════════════════════════
-   7. ACCESSORIES HIGHLIGHT
+   7. CATEGORY SHOWCASE — balanced across all 6 categories
    ════════════════════════════════════════════════════════ */
 
-function AccessoriesHighlight({ products }: { products: any[] }) {
-  const accessories = products.filter((p: any) =>
-    (p.category_slug || p.category || '').toString().toLowerCase().includes('strap') ||
-    (p.category_slug || p.category || '').toString().toLowerCase().includes('accessor') ||
-    (p.category_slug || p.category || '').toString().toLowerCase().includes('band') ||
-    (p.category_slug || p.category || '').toString().toLowerCase().includes('charger')
-  )
+function CategoryShowcase({
+  productsByCategory,
+}: {
+  productsByCategory: Record<string, any[]>
+}) {
+  const rows = storeCategories
+    .map((cat) => ({ cat, products: productsByCategory[cat.slug] ?? [] }))
+    .filter((row) => row.products.length > 0)
 
-  const displayProducts = accessories.length >= 4 ? accessories.slice(0, 4) : products.slice(-4)
-  if (!displayProducts.length) return null
+  if (!rows.length) return null
 
   return (
     <section className="py-8 md:py-16 lg:py-24 bg-[#080A0D] border-y border-white/5">
@@ -516,31 +499,51 @@ function AccessoriesHighlight({ products }: { products: any[] }) {
           className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-14 gap-4"
         >
           <div>
-            <motion.div variants={staggerItem}><SectionLabel text="Enhance" /></motion.div>
-            <motion.div variants={staggerItem}><SectionTitle>Complete Your Experience</SectionTitle></motion.div>
+            <motion.div variants={staggerItem}><SectionLabel text="Every Collection" /></motion.div>
+            <motion.div variants={staggerItem}><SectionTitle>Shop All Categories</SectionTitle></motion.div>
             <motion.p variants={staggerItem} className="text-white/50 mt-3 text-sm max-w-lg">
-              Premium straps, chargers, and accessories to match every style.
+              A balanced pick from each line — watches, bands, cases, and essentials.
             </motion.p>
           </div>
           <motion.div variants={staggerItem}>
             <Link href="/products" className="text-white/50 hover:text-[#B8860B] text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 shrink-0">
-              Shop Accessories <ArrowRight className="w-4 h-4" />
+              Browse Full Catalog <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
         </motion.div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
-          {displayProducts.map((product: any, i: number) => (
-            <motion.div
-              key={product.id || i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className="snap-start shrink-0 w-[240px] sm:w-[280px] md:w-auto"
-            >
-              <ProductCard product={product} />
-            </motion.div>
+        <div className="space-y-12 md:space-y-16">
+          {rows.map(({ cat, products }, rowIndex) => (
+            <div key={cat.slug}>
+              <div className="flex items-center justify-between gap-4 mb-5">
+                <h3
+                  className="text-white text-xl md:text-2xl font-bold"
+                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                >
+                  {cat.name}
+                </h3>
+                <Link
+                  href={`/products?category=${cat.slug}`}
+                  className="text-[#B8860B] hover:text-[#D4A017] text-xs font-bold uppercase tracking-widest transition-colors shrink-0"
+                >
+                  View All
+                </Link>
+              </div>
+              <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
+                {products.map((product: any, i: number) => (
+                  <motion.div
+                    key={product.id || i}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: rowIndex * 0.05 + i * 0.08, duration: 0.5 }}
+                    className="snap-start shrink-0 w-[240px] sm:w-[280px] md:w-auto"
+                  >
+                    <ProductCard product={product} />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -729,27 +732,63 @@ export default function HomePage() {
     load()
   }, [])
 
-  const bestsellers = allProducts.filter((p: any) => p.is_featured || p.rating >= 4.5).slice(0, 8)
-  const fallbackBestsellers = bestsellers.length >= 4 ? bestsellers : allProducts.slice(0, 8)
+  const categoryImageMap = useMemo(
+    () => buildCategoryImageMap(allProducts),
+    [allProducts]
+  )
 
-  const newArrivals = [...allProducts]
-    .sort((a: any, b: any) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
-    .slice(0, 8)
+  const shopCategoryCards = useMemo<ShopCategoryCard[]>(
+    () =>
+      storeCategories.map((cat) => ({
+        name: cat.name,
+        slug: cat.slug,
+        image: categoryImageMap[cat.slug] || cat.image,
+        icon: categoryIcons[cat.slug] ?? Package,
+        description: cat.description,
+      })),
+    [categoryImageMap]
+  )
+
+  const bestsellers = useMemo(
+    () =>
+      pickBalancedProducts(allProducts, {
+        perCategory: 2,
+        maxTotal: 8,
+        sortFn: (a, b) => {
+          if (!!a.is_featured !== !!b.is_featured) return a.is_featured ? -1 : 1
+          return (b.rating || 0) - (a.rating || 0)
+        },
+      }),
+    [allProducts]
+  )
+
+  const newArrivals = useMemo(
+    () => pickBalancedNewArrivals(allProducts, 1, 6),
+    [allProducts]
+  )
+
+  const showcaseByCategory = useMemo(
+    () =>
+      Object.fromEntries(
+        storeCategories.map((cat) => [cat.slug, pickFromCategory(allProducts, cat.slug, 2)])
+      ) as Record<string, any[]>,
+    [allProducts]
+  )
 
   return (
     <div className="min-h-screen bg-[#0C0F14]">
       <HeroBanner />
       <TrustBadges />
-      <ShopByCategory />
+      <ShopByCategory items={shopCategoryCards} />
       {!loading && (
         <ProductSection
           label="Trending"
           title="Bestsellers"
-          products={fallbackBestsellers}
+          products={bestsellers}
           badge="Bestseller"
         />
       )}
-      <CollectionsBanner />
+      <CollectionsBanner categoryImages={categoryImageMap} />
       {!loading && (
         <ProductSection
           label="Fresh Drops"
@@ -759,7 +798,7 @@ export default function HomePage() {
         />
       )}
       <WhyChooseUs />
-      {!loading && <AccessoriesHighlight products={allProducts} />}
+      {!loading && <CategoryShowcase productsByCategory={showcaseByCategory} />}
       <CustomerTestimonials />
       <NewsletterSignup />
     </div>

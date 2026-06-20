@@ -6,42 +6,42 @@ export const categories: Category[] = [
     id: 'sw',
     name: 'Smart Watches',
     slug: 'smart-watches',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop',
+    image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&h=600&fit=crop&q=80',
     description: 'Modern complications for the ambitious professional.'
   },
   {
     id: 'aw',
     name: 'Analog Watches',
     slug: 'analog-watches',
-    image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&h=600&fit=crop',
+    image: 'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&h=600&fit=crop&q=80',
     description: 'Heritage timepieces — the quiet luxury of generations.'
   },
   {
     id: 'lw',
     name: 'Ladies Watches',
     slug: 'ladies-watches',
-    image: 'https://images.unsplash.com/photo-1549972574-8742bba40a7a?w=800&h=600&fit=crop',
+    image: 'https://images.unsplash.com/photo-1612817159949-195b6eb9e1af?w=800&h=600&fit=crop&q=80',
     description: 'Elegant and graceful designs for every occasion.'
   },
   {
     id: 'wb',
     name: 'Watch Bands & Straps',
     slug: 'watch-bands',
-    image: 'https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=800&h=600&fit=crop',
+    image: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=800&h=600&fit=crop&q=80',
     description: 'Style your watch your way with premium bands.'
   },
   {
     id: 'pc',
     name: 'Phone Cases',
     slug: 'phone-cases',
-    image: 'https://images.unsplash.com/photo-1603313011101-320f26a4f6f6?w=800&h=600&fit=crop',
+    image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=800&h=600&fit=crop&q=80',
     description: 'Ultimate protection and style for your device.'
   },
   {
     id: 'acc',
     name: 'Accessories',
     slug: 'accessories',
-    image: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop',
+    image: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=800&h=600&fit=crop&q=80',
     description: 'Premium cables, chargers, and audio gear.'
   }
 ]
