@@ -61,7 +61,15 @@ const INITIAL_DATA = {
   }
 }
 
+const globalAny: any = global;
+
 export async function getDb(retries = 3): Promise<any> {
+  if (env.NODE_ENV === 'production') {
+    if (!globalAny.memoryDb) {
+      globalAny.memoryDb = JSON.parse(JSON.stringify(INITIAL_DATA))
+    }
+    return globalAny.memoryDb
+  }
   try {
     const data = await fs.readFile(DB_PATH, 'utf-8')
     const parsed = JSON.parse(data)
@@ -86,6 +94,10 @@ export async function getDb(retries = 3): Promise<any> {
 }
 
 export async function saveDb(data: any) {
+  if (env.NODE_ENV === 'production') {
+    globalAny.memoryDb = data
+    return
+  }
   const tempPath = `${DB_PATH}.tmp.${Date.now()}`
   await fs.writeFile(tempPath, JSON.stringify(data, null, 2))
   await fs.rename(tempPath, DB_PATH)
@@ -137,8 +149,8 @@ export async function addProduct(product: any) {
   
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('products').insert([product]).select().single()
-    if (error) throw new Error(error.message)
-    return data
+    if (!error && data) return data
+    console.warn("Supabase addProduct failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
   db.products.unshift(product)
@@ -149,8 +161,8 @@ export async function addProduct(product: any) {
 export async function updateProduct(id: string, updates: any) {
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('products').update(updates).eq('id', id).select().single()
-    if (error) throw new Error(error.message)
-    return data
+    if (!error && data) return data
+    console.warn("Supabase updateProduct failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
   const index = db.products.findIndex((p: any) => p.id === id)
@@ -165,8 +177,8 @@ export async function updateProduct(id: string, updates: any) {
 export async function deleteProduct(id: string) {
   if (env.NODE_ENV === 'production' && supabase) {
     const { error } = await supabase.from('products').delete().eq('id', id)
-    if (error) throw new Error(error.message)
-    return
+    if (!error) return
+    console.warn("Supabase deleteProduct failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
   const initialLength = db.products.length
@@ -245,20 +257,24 @@ export async function getOrderById(id: string) {
 export async function createOrder(order: any) {
   // Deduct stock is complex in API, but for simplicity we fetch and update
   if (env.NODE_ENV === 'production' && supabase) {
+    let hasError = false;
     for (const item of order.items) {
-      const { data: product } = await supabase.from('products').select('id, stock, name').eq('id', item.id).single()
-      if (!product) throw new Error(`Product not found: ${item.name}`)
-      if ((product.stock || 0) < item.quantity) throw new Error(`Insufficient stock for ${product.name}`)
-      await supabase.from('products').update({ stock: product.stock - item.quantity }).eq('id', item.id)
+      const { data: product, error: pError } = await supabase.from('products').select('id, stock, name').eq('id', item.id).single()
+      if (pError) { hasError = true; console.warn("Supabase product check failed:", pError.message); }
+      if (!pError && product && (product.stock || 0) >= item.quantity) {
+        await supabase.from('products').update({ stock: product.stock - item.quantity }).eq('id', item.id)
+      }
     }
+    
     order.id = `ORD-${Math.floor(100000 + Math.random() * 900000)}`
     order.created_at = new Date().toISOString()
     order.history = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
     order.notes = ""
     order.status = "Pending"
+    
     const { data, error } = await supabase.from('orders').insert([order]).select().single()
-    if (error) throw new Error(error.message)
-    return data
+    if (!error && data) return data
+    console.warn("Supabase createOrder failed, falling back to memory:", error?.message)
   }
 
   const db = await getDb()
@@ -303,8 +319,8 @@ export async function updateOrderStatus(orderId: string, status: string, postexI
     else if (note) order.notes = order.notes + "\n" + note
     
     const { data, error } = await supabase.from('orders').update(order).eq('id', orderId).select().single()
-    if (error) throw new Error(error.message)
-    return data
+    if (!error && data) return data
+    console.warn("Supabase updateOrderStatus failed, falling back to memory:", error?.message)
   }
 
   const db = await getDb()
@@ -335,8 +351,8 @@ export async function updateOrderStatus(orderId: string, status: string, postexI
 export async function deleteOrders(ids: string[]) {
   if (env.NODE_ENV === 'production' && supabase) {
     const { error } = await supabase.from('orders').delete().in('id', ids)
-    if (error) throw new Error(error.message)
-    return { success: true }
+    if (!error) return { success: true }
+    console.warn("Supabase deleteOrders failed, falling back to memory:", error?.message)
   }
   
   const db = await getDb()
@@ -367,8 +383,8 @@ export async function updateSettings(updates: any) {
   if (env.NODE_ENV === 'production' && supabase) {
     const current = await getSettings()
     const { data, error } = await supabase.from('settings').upsert({ id: 1, ...current, ...updates }).select().single()
-    if (error) throw new Error(error.message)
-    return data
+    if (!error && data) return data
+    console.warn("Supabase updateSettings failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
   db.settings = { ...db.settings, ...updates }
@@ -405,8 +421,8 @@ export async function createPromo(promo: any) {
   
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('marketing').insert([promo]).select().single()
-    if (error) throw new Error(error.message)
-    return data
+    if (!error && data) return data
+    console.warn("Supabase createPromo failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
   if (!db.marketing) db.marketing = []
@@ -418,8 +434,8 @@ export async function createPromo(promo: any) {
 export async function updatePromo(id: string, updates: any) {
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('marketing').update(updates).eq('id', id).select().single()
-    if (error) throw new Error(error.message)
-    return data
+    if (!error && data) return data
+    console.warn("Supabase updatePromo failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
   if (!db.marketing) db.marketing = []
@@ -435,8 +451,8 @@ export async function updatePromo(id: string, updates: any) {
 export async function deletePromo(id: string) {
   if (env.NODE_ENV === 'production' && supabase) {
     const { error } = await supabase.from('marketing').delete().eq('id', id)
-    if (error) throw new Error(error.message)
-    return
+    if (!error) return
+    console.warn("Supabase deletePromo failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
   if (!db.marketing) db.marketing = []

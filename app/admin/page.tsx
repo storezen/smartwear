@@ -14,6 +14,10 @@ import {
   Eye,
   Download,
   BarChart3,
+  Server,
+  Database,
+  CheckCircle2,
+  XCircle
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -114,18 +118,23 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<StatCardProps[]>([])
   const [recentOrders, setRecentOrders] = useState<any[]>([])
   const [topProducts, setTopProducts] = useState<any[]>([])
+  const [healthData, setHealthData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
       try {
-        const [prodRes, ordRes] = await Promise.all([
+        const [prodRes, ordRes, healthRes] = await Promise.all([
           fetch('/api/products'),
-          fetch('/api/orders')
+          fetch('/api/orders'),
+          fetch('/api/health')
         ])
         
         const products = prodRes.ok ? await prodRes.json() : []
         const orders = ordRes.ok ? await ordRes.json() : []
+        const health = healthRes.ok ? await healthRes.json() : null
+        
+        setHealthData(health)
         
         const totalRevenue = orders.reduce((sum: number, o: any) => sum + (o.total || 0), 0)
 
@@ -441,6 +450,59 @@ export default function AdminDashboard() {
               </Link>
             ))}
           </div>
+        </div>
+
+        {/* System Health */}
+        <div className="bg-[#0F1923] rounded-[24px] border border-white/5 p-6 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <div className="text-[11px] tracking-[2px] text-white/60 mb-1">MONITORING</div>
+              <h3 className="text-base font-semibold text-white">System Health</h3>
+            </div>
+            {healthData?.supabaseConnection ? (
+              <Badge className="bg-[#4ADE80]/10 text-[#4ADE80] border-[#4ADE80]/20 gap-1.5 px-2.5 py-1">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Healthy
+              </Badge>
+            ) : (
+              <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 gap-1.5 px-2.5 py-1">
+                <Server className="w-3.5 h-3.5" /> Memory Fallback
+              </Badge>
+            )}
+          </div>
+          
+          {healthData && (
+            <div className="space-y-4">
+              <div className="p-3 bg-white/5 border border-white/5 rounded-xl text-xs text-white/70 leading-relaxed">
+                {healthData.message}
+              </div>
+              
+              <div className="space-y-3 pt-1">
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2 text-white/80">
+                    <Database className="w-4 h-4 text-blue-400" />
+                    Supabase Configured
+                  </div>
+                  {healthData.supabaseConfigured ? (
+                    <span className="text-[#4ADE80]">Yes</span>
+                  ) : (
+                    <span className="text-white/40">No</span>
+                  )}
+                </div>
+                
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2 text-white/80">
+                    <Server className="w-4 h-4 text-purple-400" />
+                    Tables Sync Status
+                  </div>
+                  {healthData.supabaseConnection ? (
+                    <span className="text-[#4ADE80]">100% Synced</span>
+                  ) : (
+                    <span className="text-amber-500">Missing Tables</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

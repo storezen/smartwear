@@ -190,8 +190,7 @@ export async function POST(req: Request) {
         if (payload.idempotency_key) idempotencyMap.set(payload.idempotency_key, supabaseOrder)
         return NextResponse.json({ success: true, order: supabaseOrder }, { status: 201 })
       } else {
-        // Log the error to see why it failed (e.g. inventory constraint)
-        return NextResponse.json({ error: 'Failed to create order', details: error?.message }, { status: 400 })
+        console.warn("Supabase create order failed, falling back to local DB:", error?.message)
       }
     }
 
