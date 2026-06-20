@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Eye, Map, Maximize2 } from "lucide-react"
-import { AnimatedCounter } from "@/components/ui/animated-counter"
+import { Eye, Map as MapIcon, Maximize2 } from "lucide-react"
 import dynamic from "next/dynamic"
 
+const AnimatedCounter = dynamic(() => import('@/components/ui/animated-counter').then(m => m.AnimatedCounter), { ssr: false })
 const LiveGlobe = dynamic(() => import('@/components/ui/live-globe'), { ssr: false })
 
 // A mapping of major PK cities to lat/lng for the globe
@@ -103,7 +103,7 @@ export default function LiveAnalyticsPage() {
             <Eye className="w-4 h-4" />
           </button>
           <button className="p-2 bg-white border border-[#e1e3e5] rounded-md shadow-sm text-[#5c5f62] hover:bg-gray-50">
-            <Map className="w-4 h-4" />
+            <MapIcon className="w-4 h-4" />
           </button>
           <button className="p-2 bg-white border border-[#e1e3e5] rounded-md shadow-sm text-[#5c5f62] hover:bg-gray-50">
             <Maximize2 className="w-4 h-4" />
