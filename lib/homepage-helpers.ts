@@ -2,6 +2,9 @@ import { categories } from '@/lib/mock-data'
 
 export const CATEGORY_SLUGS = categories.map((c) => c.slug)
 
+/** Consistent product card count across homepage sections. */
+export const HOMEPAGE_CARDS_PER_SECTION = 4
+
 type ProductLike = {
   id?: string
   slug?: string
@@ -69,7 +72,11 @@ export function pickBalancedProducts(
   return picked.slice(0, maxTotal)
 }
 
-export function pickBalancedNewArrivals(products: ProductLike[], perCategory = 1, maxTotal = 6) {
+export function pickBalancedNewArrivals(
+  products: ProductLike[],
+  perCategory = 1,
+  maxTotal = HOMEPAGE_CARDS_PER_SECTION
+) {
   return pickBalancedProducts(products, {
     perCategory,
     maxTotal,
@@ -78,7 +85,11 @@ export function pickBalancedNewArrivals(products: ProductLike[], perCategory = 1
   })
 }
 
-export function pickFromCategory(products: ProductLike[], slug: string, limit = 2) {
+export function pickFromCategory(
+  products: ProductLike[],
+  slug: string,
+  limit = HOMEPAGE_CARDS_PER_SECTION
+) {
   return [...productsInCategory(products, slug)]
     .sort((a, b) => (b.rating || 0) - (a.rating || 0))
     .slice(0, limit)

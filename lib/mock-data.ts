@@ -1,6 +1,6 @@
 import { Product, Category, Review, Order, User, Address } from '@/types'
 
-// 8 store categories
+// 10 store categories
 export const categories: Category[] = [
   {
     id: 'sw',
@@ -38,6 +38,27 @@ export const categories: Category[] = [
     description: 'Ultimate protection and style for your device.'
   },
   {
+    id: 'wc',
+    name: 'Watch Cases & Protectors',
+    slug: 'watch-cases',
+    image: 'https://images.unsplash.com/photo-1617625802912-888f43813e2f?w=800&h=600&fit=crop&q=80',
+    description: 'Cases and tempered glass for Apple Watch.'
+  },
+  {
+    id: 'pb',
+    name: 'Power Banks',
+    slug: 'power-banks',
+    image: 'https://images.unsplash.com/photo-1609091839311-9ed94aeb2f64?w=800&h=600&fit=crop&q=80',
+    description: 'MagSafe battery packs and portable power.'
+  },
+  {
+    id: 'chg',
+    name: 'Chargers & Cables',
+    slug: 'chargers',
+    image: 'https://images.unsplash.com/photo-1591290619762-d2d4e1d8b8c8?w=800&h=600&fit=crop&q=80',
+    description: 'Fast chargers, adapters, and data cables.'
+  },
+  {
     id: 'audio',
     name: 'Audio',
     slug: 'audio',
@@ -45,18 +66,11 @@ export const categories: Category[] = [
     description: 'AirPods, earbuds, headphones, and premium sound.'
   },
   {
-    id: 'chg',
-    name: 'Chargers & Cables',
-    slug: 'chargers',
-    image: 'https://images.unsplash.com/photo-1591290619762-d2d4e1d8b8c8?w=800&h=600&fit=crop&q=80',
-    description: 'Fast chargers, adapters, cables, and power banks.'
-  },
-  {
     id: 'acc',
     name: 'Accessories',
     slug: 'accessories',
     image: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=800&h=600&fit=crop&q=80',
-    description: 'Watch cases, screen protectors, boxes, and essentials.'
+    description: 'Boxes, locks, lens protectors, and essentials.'
   }
 ]
 

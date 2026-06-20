@@ -23,8 +23,10 @@ const categoryTabLabels: Record<string, string> = {
   "ladies-watches": "Ladies",
   "watch-bands": "Bands",
   "phone-cases": "Cases",
+  "watch-cases": "Watch",
+  "power-banks": "Power",
   "audio": "Audio",
-  "chargers": "Chargers",
+  "chargers": "Charge",
   "accessories": "More",
 }
 

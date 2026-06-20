@@ -14,6 +14,7 @@ import { ProductCard } from "@/components/store/premium-product-card"
 import { categories as storeCategories } from "@/lib/mock-data"
 import {
   buildCategoryImageMap,
+  HOMEPAGE_CARDS_PER_SECTION,
   pickBalancedNewArrivals,
   pickBalancedProducts,
   pickFromCategory,
@@ -236,9 +237,11 @@ const categoryIcons: Record<string, typeof Watch> = {
   "ladies-watches": Sparkles,
   "watch-bands": Heart,
   "phone-cases": Smartphone,
+  "watch-cases": Shield,
+  "power-banks": Battery,
   audio: Headphones,
   chargers: Zap,
-  accessories: Battery,
+  accessories: Package,
 }
 
 type ShopCategoryCard = {
@@ -311,12 +314,14 @@ function ProductSection({
   products,
   badge,
   viewAllHref = "/products",
+  limit = HOMEPAGE_CARDS_PER_SECTION,
 }: {
   label: string
   title: string
   products: any[]
   badge?: string
   viewAllHref?: string
+  limit?: number
 }) {
   if (!products?.length) return null
 
@@ -340,7 +345,7 @@ function ProductSection({
         </motion.div>
 
         <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
-          {products.slice(0, 8).map((product: any, i: number) => (
+          {products.slice(0, limit).map((product: any, i: number) => (
             <motion.div
               key={product.id || i}
               initial={{ opacity: 0, y: 30 }}
@@ -754,8 +759,8 @@ export default function HomePage() {
   const bestsellers = useMemo(
     () =>
       pickBalancedProducts(allProducts, {
-        perCategory: 2,
-        maxTotal: 8,
+        perCategory: 1,
+        maxTotal: HOMEPAGE_CARDS_PER_SECTION,
         sortFn: (a, b) => {
           if (!!a.is_featured !== !!b.is_featured) return a.is_featured ? -1 : 1
           return (b.rating || 0) - (a.rating || 0)
@@ -765,14 +770,17 @@ export default function HomePage() {
   )
 
   const newArrivals = useMemo(
-    () => pickBalancedNewArrivals(allProducts, 1, 6),
+    () => pickBalancedNewArrivals(allProducts, 1, HOMEPAGE_CARDS_PER_SECTION),
     [allProducts]
   )
 
   const showcaseByCategory = useMemo(
     () =>
       Object.fromEntries(
-        storeCategories.map((cat) => [cat.slug, pickFromCategory(allProducts, cat.slug, 2)])
+        storeCategories.map((cat) => [
+          cat.slug,
+          pickFromCategory(allProducts, cat.slug, HOMEPAGE_CARDS_PER_SECTION),
+        ])
       ) as Record<string, any[]>,
     [allProducts]
   )
