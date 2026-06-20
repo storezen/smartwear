@@ -1,4 +1,5 @@
 import { categories } from '@/lib/mock-data'
+import { normalizeCategorySlug } from '@/lib/normalize-product'
 
 export const CATEGORY_SLUGS = categories.map((c) => c.slug)
 
@@ -20,8 +21,10 @@ function normalizeSlug(slug?: string) {
 }
 
 function productsInCategory(products: ProductLike[], slug: string) {
-  const target = normalizeSlug(slug)
-  return products.filter((p) => normalizeSlug(p.category_slug) === target)
+  const target = normalizeCategorySlug(slug)
+  return products.filter(
+    (p) => normalizeCategorySlug(p.category_slug) === target && (p as { is_active?: boolean }).is_active !== false
+  )
 }
 
 /** Best cover image for a category — featured → highest rated → first available. */

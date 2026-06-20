@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Slider } from "@/components/ui/slider"
 import { ProductCardGrid } from "@/components/store/premium-product-card"
 import { categories, formatPrice } from "@/lib/mock-data"
+import { normalizeCategorySlug, normalizeProductList } from "@/lib/normalize-product"
 
 const sortOpts = [
   { value: "featured", label: "Featured" },
@@ -118,7 +119,10 @@ function ProductsContent() {
   useEffect(() => {
     fetch('/api/products')
       .then(res => res.json())
-      .then(d => { setAllProducts(d); setLoading(false) })
+      .then(d => {
+        if (Array.isArray(d)) setAllProducts(normalizeProductList(d))
+        setLoading(false)
+      })
       .catch(() => setLoading(false))
   }, [])
 
@@ -126,12 +130,10 @@ function ProductsContent() {
     let r = [...allProducts]
     if (q) { const lq = q.toLowerCase(); r = r.filter(p => p.name.toLowerCase().includes(lq) || p.brand.toLowerCase().includes(lq)) }
     if (catSlug) {
-      r = r.filter(p => {
-        const c = (p.category_slug || '').toLowerCase();
-        const cat = catSlug.toLowerCase();
-        return c === cat;
-      });
+      const cat = normalizeCategorySlug(catSlug)
+      r = r.filter((p) => normalizeCategorySlug(p.category_slug) === cat)
     }
+    r = r.filter((p) => p.is_active !== false)
     if (saleOnly === "true") r = r.filter(p => p.compare_price)
     r = r.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1])
     if (sort === "newest") r.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
@@ -242,11 +244,19 @@ function ProductsContent() {
               >
                 All
               </button>
-              {categories.map(c => (
+              {categories
+                .filter((c) =>
+                  allProducts.some((p) => normalizeCategorySlug(p.category_slug) === c.slug && p.is_active !== false)
+                )
+                .map(c => {
+                  const count = allProducts.filter(
+                    (p) => normalizeCategorySlug(p.category_slug) === c.slug && p.is_active !== false
+                  ).length
+                  return (
                 <button
                   key={c.id}
                   onClick={() => { const p = new URLSearchParams(params.toString()); p.set("category", c.slug); router.push(`/products?${p.toString()}`) }}
-                  title={c.name}
+                  title={`${c.name} (${count})`}
                   className="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border"
                   style={{
                     background: catSlug === c.slug ? "linear-gradient(135deg, #B8860B, #D4A017)" : "rgba(255,255,255,0.03)",
@@ -256,8 +266,10 @@ function ProductsContent() {
                 >
                   <span className="sm:hidden">{categoryTabLabels[c.slug] || c.name}</span>
                   <span className="hidden sm:inline">{c.name}</span>
+                  <span className="ml-1 opacity-60">({count})</span>
                 </button>
-              ))}
+                  )
+                })}
               {saleOnly === "true" && (
                 <button
                   onClick={() => { const p = new URLSearchParams(params.toString()); p.delete("sale"); router.push(`/products?${p.toString()}`) }}

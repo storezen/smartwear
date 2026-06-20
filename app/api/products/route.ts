@@ -5,11 +5,6 @@ import { ProductCreationSchema, ProductUpdateSchema } from '@/lib/validations/pr
 
 export async function GET() {
   try {
-    if (isSupabaseConfigured() && supabase) {
-      const { data, error } = await supabase.from('products').select('*')
-      if (!error && data) return NextResponse.json(data)
-    }
-
     const products = await getProducts()
     return NextResponse.json(products)
   } catch (error) {

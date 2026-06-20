@@ -1,6 +1,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { env } from './env'
+import { normalizeProductList } from './normalize-product'
 import { supabase } from './supabase'
 
 const DB_PATH = path.join(process.cwd(), 'database.json')
@@ -93,13 +94,21 @@ export async function saveDb(data: any) {
 
 // Products
 export async function getProducts() {
+  const db = await getDb()
+  const local = normalizeProductList(db.products || [])
+
+  // database.json is the maintained catalog — prefer it when populated
+  if (local.length > 0) {
+    return local
+  }
+
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
     if (error) console.error('Supabase getProducts error:', error)
-    return data || []
+    return normalizeProductList(data || [])
   }
-  const db = await getDb()
-  return db.products || []
+
+  return []
 }
 
 export async function getProduct(slug: string) {

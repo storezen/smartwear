@@ -19,6 +19,7 @@ import {
   pickBalancedProducts,
   pickFromCategory,
 } from "@/lib/homepage-helpers"
+import { normalizeCategorySlug, normalizeProductList } from "@/lib/normalize-product"
 
 /* ════════════════════════════════════════════════════════
    SHARED ANIMATION VARIANTS
@@ -729,7 +730,7 @@ export default function HomePage() {
         const res = await fetch("/api/products")
         const data = await res.json()
         if (Array.isArray(data)) {
-          setAllProducts(data)
+          setAllProducts(normalizeProductList(data))
         }
       } catch (e) {
         console.error("Failed to fetch products")
@@ -746,14 +747,20 @@ export default function HomePage() {
 
   const shopCategoryCards = useMemo<ShopCategoryCard[]>(
     () =>
-      storeCategories.map((cat) => ({
-        name: cat.name,
-        slug: cat.slug,
-        image: categoryImageMap[cat.slug] || cat.image,
-        icon: categoryIcons[cat.slug] ?? Package,
-        description: cat.description,
-      })),
-    [categoryImageMap]
+      storeCategories
+        .filter((cat) =>
+          allProducts.some(
+            (p) => normalizeCategorySlug(p.category_slug) === cat.slug && p.is_active !== false
+          )
+        )
+        .map((cat) => ({
+          name: cat.name,
+          slug: cat.slug,
+          image: categoryImageMap[cat.slug] || cat.image,
+          icon: categoryIcons[cat.slug] ?? Package,
+          description: cat.description,
+        })),
+    [categoryImageMap, allProducts]
   )
 
   const bestsellers = useMemo(
