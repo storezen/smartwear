@@ -90,8 +90,28 @@ type HeroFeatured = {
 const HERO_FALLBACK: HeroFeatured = {
   name: "Series 11",
   slug: "series-11-(allow-to-open-|-cash-on-delivery)",
-  image: "https://cdn.shopify.com/s/files/1/0669/1189/5650/files/dee74f9feeac670bfa2db80404362205.webp?v=1774961750",
+  image: "/hero-watch-transparent.png",
   price: 5500,
+}
+
+/** Box/packaging shots and chat exports clash with the dark cinematic hero. */
+const HERO_IMAGE_BLOCKLIST = /dee74f9feeac670bfa2db80404362205|screenshot|whatsapp/i
+
+function isHeroQualityImage(url: string): boolean {
+  return Boolean(url) && !HERO_IMAGE_BLOCKLIST.test(url)
+}
+
+function pickHeroImage(images: string[] | undefined): string {
+  if (!images?.length) return HERO_FALLBACK.image
+
+  const capture = images.find((u) => /\/Capture[^/?]*\.png/i.test(u) && isHeroQualityImage(u))
+  if (capture) return capture
+
+  const listing = images.find((u) => /s-l1600.*\.webp/i.test(u) && isHeroQualityImage(u))
+  if (listing) return listing
+
+  const acceptable = images.find(isHeroQualityImage)
+  return acceptable || HERO_FALLBACK.image
 }
 
 const heroSpecs = [
@@ -232,14 +252,12 @@ function HeroBanner({ featured = HERO_FALLBACK }: { featured?: HeroFeatured }) {
               <div className="absolute inset-[-12px] rounded-[40%] border border-[#B8860B]/15 animate-[spin_24s_linear_infinite]" />
               <div className="absolute inset-[-28px] rounded-[42%] border border-dashed border-[#B8860B]/10 animate-[spin_36s_linear_infinite_reverse]" />
 
-              <div className="absolute inset-0 rounded-[32px] bg-gradient-to-b from-white/[0.04] to-transparent border border-white/5 backdrop-blur-[2px]" />
-
               <Image
                 src={featured.image}
                 alt={`${featured.name} smartwatch`}
                 fill
                 sizes="(max-width: 640px) 260px, (max-width: 1024px) 420px, 500px"
-                className="object-contain object-center drop-shadow-[0_30px_80px_rgba(184,134,11,0.35)] z-10 p-4 md:p-6"
+                className="object-contain object-center drop-shadow-[0_30px_80px_rgba(184,134,11,0.35)] z-10 p-2 md:p-4 scale-[1.02]"
                 priority
               />
 
@@ -301,12 +319,12 @@ function pickHeroFeatured(products: any[]): HeroFeatured {
         p.images?.[0]
     )
 
-  if (!match?.images?.[0]) return HERO_FALLBACK
+  if (!match?.images?.length) return HERO_FALLBACK
 
   return {
     name: "Series 11",
     slug: match.slug || HERO_FALLBACK.slug,
-    image: match.images[0],
+    image: pickHeroImage(match.images),
     price: match.price ?? HERO_FALLBACK.price,
   }
 }
