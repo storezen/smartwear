@@ -25,13 +25,13 @@ export function useOrderNotifications(): UseOrderNotificationsReturn {
   const [notifications, setNotifications] = useState<OrderNotification[]>([])
   const [isConnected, setIsConnected] = useState(false)
   const lastIdRef = useRef<string | null>(null)
+  const initializedRef = useRef(false)
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const addNotification = useCallback((notif: OrderNotification) => {
     setNotifications((prev) => {
       if (prev.some((n) => n.id === notif.id)) return prev
-      const next = [notif, ...prev].slice(0, 20)
-      return next
+      return [notif, ...prev].slice(0, 20)
     })
 
     toast.success(
@@ -45,7 +45,7 @@ export function useOrderNotifications(): UseOrderNotificationsReturn {
         duration: 6000,
         action: {
           label: "View",
-          onClick: () => window.open(`/admin/orders`, "_self"),
+          onClick: () => window.open("/admin/orders", "_self"),
         },
       }
     )
@@ -59,7 +59,15 @@ export function useOrderNotifications(): UseOrderNotificationsReturn {
       const orders: any[] = Array.isArray(data) ? data : data.orders ?? []
       if (orders.length === 0) return
       const latest = orders[0]
-      if (latest && latest.id !== lastIdRef.current) {
+      if (!latest) return
+
+      if (!initializedRef.current) {
+        lastIdRef.current = latest.id
+        initializedRef.current = true
+        return
+      }
+
+      if (latest.id !== lastIdRef.current) {
         lastIdRef.current = latest.id
         addNotification({
           id: latest.id,
@@ -87,6 +95,7 @@ export function useOrderNotifications(): UseOrderNotificationsReturn {
               const row = payload.new as any
               if (!row) return
               lastIdRef.current = row.id
+              initializedRef.current = true
               addNotification({
                 id: row.id,
                 customer_name: row.customer_name || row.customer?.name || "Guest",
@@ -99,20 +108,14 @@ export function useOrderNotifications(): UseOrderNotificationsReturn {
           )
           .subscribe((status: string) => {
             setIsConnected(status === "SUBSCRIBED")
-            if (status === "SUBSCRIBED" && pollTimerRef.current) {
-              clearInterval(pollTimerRef.current)
-              pollTimerRef.current = null
-            }
           })
       } catch {
         channel = null
       }
     }
 
-    if (!supabase) {
-      fetchLatest()
-      pollTimerRef.current = setInterval(fetchLatest, 8000)
-    }
+    fetchLatest()
+    pollTimerRef.current = setInterval(fetchLatest, 8000)
 
     return () => {
       if (channel) {

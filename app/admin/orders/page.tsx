@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { Search, Filter, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, MapPin, X, History, MessageSquare, Plus } from "lucide-react"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
@@ -68,24 +68,27 @@ export default function AdminOrdersPage() {
     }
   }
 
-  useEffect(() => {
-    fetch('/api/orders')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setOrders(data)
-        } else {
-          console.error("API did not return an array of orders:", data)
-          setOrders([])
-        }
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error("Failed to fetch orders", err)
-        setOrders([])
-        setLoading(false)
-      })
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const fetchOrders = useCallback(async () => {
+    try {
+      const res = await fetch('/api/orders')
+      if (!res.ok) return
+      const data = await res.json()
+      if (Array.isArray(data)) {
+        setOrders(data)
+      }
+    } catch {}
+    setLoading(false)
   }, [])
+
+  useEffect(() => {
+    fetchOrders()
+    pollRef.current = setInterval(fetchOrders, 8000)
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current)
+    }
+  }, [fetchOrders])
 
   const updateOrderStatus = async (orderId: string, status: string, additionalNote?: string) => {
     const order = orders.find(o => o.id === orderId)
