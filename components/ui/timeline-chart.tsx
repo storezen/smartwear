@@ -56,7 +56,7 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
             <p className="text-[9px] text-white/25 mt-0.5">Last 2 hours · per minute</p>
           </div>
         </div>
-        <div className="h-52 flex items-center justify-center mt-auto mb-auto">
+        <div className="flex-1 min-h-0 flex items-center justify-center">
           <div className="text-center">
             <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center">
               <BarChart3 className="w-5 h-5 text-white/15" />
@@ -112,7 +112,7 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
         </div>
       </div>
 
-      <div className="h-52 -mx-1">
+      <div className="flex-1 min-h-0 -mx-1">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 4, right: 4, bottom: 4, left: -16 }}>
             <defs>

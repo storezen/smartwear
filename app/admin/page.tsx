@@ -227,7 +227,7 @@ export default function AdminDashboard() {
       {/* ── Charts Row ── */}
       <div className="grid lg:grid-cols-2 gap-3 mb-4">
         {/* Revenue Chart */}
-        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl h-full flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">REVENUE</div>
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
               +12.5%
             </div>
           </div>
-          <div className="h-[180px]">
+          <div className="flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                 <defs>
@@ -278,7 +278,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Orders */}
-        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl h-full flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">LATEST</div>
