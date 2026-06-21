@@ -61,25 +61,25 @@ interface StatCardProps {
 
 function StatCard({ title, rawValue, prefix, value, change, trend, icon: Icon, accentColor, iconBg }: StatCardProps) {
   return (
-    <SpotlightCard className="p-6" style={{ borderLeft: `3px solid ${accentColor}` }}>
+    <SpotlightCard className="p-4" style={{ borderLeft: `2px solid ${accentColor}` }}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-[11px] tracking-[2px] text-white/60 font-medium uppercase mb-2">
+          <p className="text-[9px] tracking-[1.5px] text-white/60 font-medium uppercase mb-1">
             {title}
           </p>
-          <p className="text-[28px] font-bold tracking-tight text-white leading-none">
+          <p className="text-xl font-bold tracking-tight text-white leading-none">
             {rawValue !== undefined ? <AnimatedCounter value={rawValue} prefix={prefix} /> : value}
           </p>
-          <div className={`flex items-center gap-1 mt-2 text-xs font-semibold ${trend === "up" ? "text-[#4ADE80]" : "text-red-500"}`}>
-            <TrendingUp className="w-3.5 h-3.5" />
+          <div className={`flex items-center gap-1 mt-1.5 text-[10px] font-semibold ${trend === "up" ? "text-[#4ADE80]" : "text-red-500"}`}>
+            <TrendingUp className="w-3 h-3" />
             <span>{change} this month</span>
           </div>
         </div>
         <div
-          className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
+          className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
           style={{ background: iconBg }}
         >
-          <Icon className="w-5 h-5" style={{ color: accentColor }} />
+          <Icon className="w-4 h-4" style={{ color: accentColor }} />
         </div>
       </div>
     </SpotlightCard>
@@ -95,7 +95,7 @@ function OrderStatusBadge({ status }: { status: string }) {
   }
   const c = config[status] || config["pending"]
   return (
-    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg border text-[10px] font-semibold tracking-wide ${c.bg} ${c.text}`}>
+    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md border text-[8px] font-semibold tracking-wide ${c.bg} ${c.text}`}>
       {c.label}
     </span>
   )
@@ -190,56 +190,55 @@ export default function AdminDashboard() {
   }, [])
 
   return (
-    <div className="p-6 lg:p-8 min-h-screen">
+    <div>
       {/* ── Header ── */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex items-start justify-between mb-4">
         <div>
           <h1
-            className="text-2xl md:text-3xl font-semibold tracking-tight text-white"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            className="text-lg font-semibold tracking-tight text-white"
           >
             Operations Overview
           </h1>
-          <p className="text-sm text-white/70 mt-1">
+          <p className="text-[11px] text-white/60 mt-0.5">
             Smartwear Pakistan • {new Date().toLocaleDateString("en-PK", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </p>
         </div>
-        <div className="hidden sm:flex items-center gap-2">
-          <button className="sw-btn-ghost-white h-9 px-4 rounded-xl flex items-center gap-2 text-sm">
-            <Download className="w-3.5 h-3.5" />
+        <div className="hidden sm:flex items-center gap-1.5">
+          <button className="sw-btn-ghost-white h-8 px-3 rounded-lg flex items-center gap-1.5 text-[11px]">
+            <Download className="w-3 h-3" />
             Export
           </button>
         </div>
       </div>
 
       {/* ── Stats Grid ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
         {loading
           ? Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="admin-stat-card">
-                <div className="h-4 w-24 skeleton rounded mb-3" />
-                <div className="h-8 w-32 skeleton rounded mb-2" />
-                <div className="h-3 w-20 skeleton rounded" />
+                <div className="h-3 w-20 skeleton rounded mb-2" />
+                <div className="h-6 w-24 skeleton rounded mb-1.5" />
+                <div className="h-2.5 w-16 skeleton rounded" />
               </div>
             ))
           : stats.map((stat, i) => <StatCard key={i} {...stat} />)}
       </div>
 
       {/* ── Charts Row ── */}
-      <div className="grid lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid lg:grid-cols-2 gap-3 mb-4">
         {/* Revenue Chart */}
-        <div className="bg-[#0F1923] rounded-[24px] border border-white/5 p-6 backdrop-blur-xl">
-          <div className="flex items-center justify-between mb-5">
+        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[11px] tracking-[2px] text-white/60 mb-1">REVENUE</div>
-              <h3 className="text-base font-semibold text-white">Monthly Overview</h3>
+              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">REVENUE</div>
+              <h3 className="text-[13px] font-semibold text-white">Monthly Overview</h3>
             </div>
-            <div className="flex items-center gap-1.5 bg-[#4ADE80]/10 text-[#4ADE80] px-3 py-1.5 rounded-xl text-xs font-semibold">
-              <TrendingUp className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1 bg-[#4ADE80]/10 text-[#4ADE80] px-2 py-1 rounded-lg text-[10px] font-semibold">
+              <TrendingUp className="w-3 h-3" />
               +12.5%
             </div>
           </div>
-          <div className="h-[220px]">
+          <div className="h-[180px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                 <defs>
@@ -279,61 +278,61 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Orders */}
-        <div className="bg-[#0F1923] rounded-[24px] border border-white/5 p-6 backdrop-blur-xl">
-          <div className="flex items-center justify-between mb-5">
+        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[11px] tracking-[2px] text-white/60 mb-1">LATEST</div>
-              <h3 className="text-base font-semibold text-white">Recent Orders</h3>
+              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">LATEST</div>
+              <h3 className="text-[13px] font-semibold text-white">Recent Orders</h3>
             </div>
             <Link href="/admin/orders">
-              <button className="sw-btn-ghost-white h-8 px-3 rounded-xl text-xs flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5" />
+              <button className="sw-btn-ghost-white h-7 px-2.5 rounded-lg text-[10px] flex items-center gap-1">
+                <Eye className="w-3 h-3" />
                 View All
               </button>
             </Link>
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-1">
             {loading ? (
               Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-3 p-3">
-                  <div className="w-9 h-9 bg-white/5 rounded-xl animate-pulse" />
-                  <div className="flex-1 space-y-1.5">
-                    <div className="h-3.5 w-28 bg-white/5 rounded animate-pulse" />
-                    <div className="h-3 w-16 bg-white/5 rounded animate-pulse" />
+                <div key={i} className="flex items-center gap-2 p-2">
+                  <div className="w-7 h-7 bg-white/5 rounded-lg animate-pulse" />
+                  <div className="flex-1 space-y-1">
+                    <div className="h-3 w-24 bg-white/5 rounded animate-pulse" />
+                    <div className="h-2.5 w-12 bg-white/5 rounded animate-pulse" />
                   </div>
-                  <div className="h-4 w-16 bg-white/5 rounded animate-pulse" />
+                  <div className="h-3 w-14 bg-white/5 rounded animate-pulse" />
                 </div>
               ))
             ) : recentOrders.length > 0 ? (
               recentOrders.map((order) => (
                 <div
                   key={order.id}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors"
+                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 transition-colors"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-[#C8972A]/10 flex items-center justify-center shrink-0">
-                    <span className="text-[11px] font-bold text-[#C8972A]">
+                  <div className="w-7 h-7 rounded-lg bg-[#C8972A]/10 flex items-center justify-center shrink-0">
+                    <span className="text-[9px] font-bold text-[#C8972A]">
                       #{order.id.slice(-3)}
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate text-white">
+                    <p className="text-[12px] font-semibold truncate text-white">
                       {order.customer_name || "Guest Customer"}
                     </p>
-                    <p className="text-xs text-white/60">
+                    <p className="text-[10px] text-white/50">
                       {(order.items || []).length} item{(order.items || []).length !== 1 ? "s" : ""}
                     </p>
                   </div>
-                  <div className="text-right shrink-0 space-y-1">
-                    <p className="text-sm font-bold text-white">{formatPrice(order.total)}</p>
+                  <div className="text-right shrink-0 space-y-0.5">
+                    <p className="text-[12px] font-bold text-white">{formatPrice(order.total)}</p>
                     <OrderStatusBadge status={order.status} />
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-center py-8">
-                <p className="text-sm text-white/60">No orders yet.</p>
-                <p className="text-xs text-white/60 mt-1">Place a test order from the store.</p>
+              <div className="text-center py-6">
+                <p className="text-[12px] text-white/60">No orders yet.</p>
+                <p className="text-[10px] text-white/60 mt-0.5">Place a test order from the store.</p>
               </div>
             )}
           </div>
@@ -341,50 +340,50 @@ export default function AdminDashboard() {
       </div>
 
       {/* ── Bottom Row: Top Products + Quick Actions ── */}
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 gap-3">
         {/* Top Products */}
-        <div className="lg:col-span-2 bg-[#0F1923] rounded-[24px] border border-white/5 p-6 backdrop-blur-xl">
-          <div className="flex items-center justify-between mb-5">
+        <div className="lg:col-span-2 bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[11px] tracking-[2px] text-white/60 mb-1">INVENTORY</div>
-              <h3 className="text-base font-semibold text-white">Top Products</h3>
+              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">INVENTORY</div>
+              <h3 className="text-[13px] font-semibold text-white">Top Products</h3>
             </div>
             <Link href="/admin/products">
-              <button className="sw-btn-ghost-white h-8 px-4 rounded-xl text-xs">
+              <button className="sw-btn-ghost-white h-7 px-3 rounded-lg text-[10px]">
                 Manage All
               </button>
             </Link>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-1.5">
             {loading ? (
-              <div className="text-center py-4 text-white/50 text-sm">Loading...</div>
+              <div className="text-center py-3 text-white/50 text-[12px]">Loading...</div>
             ) : topProducts.length === 0 ? (
-              <div className="text-center py-4 text-white/50 text-sm">No products added yet.</div>
+              <div className="text-center py-3 text-white/50 text-[12px]">No products added yet.</div>
             ) : topProducts.map((product: any, index: number) => (
               <div
                 key={product.id}
-                className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors"
               >
-                <span className="text-[11px] font-bold text-white/60 w-4 shrink-0">
+                <span className="text-[10px] font-bold text-white/60 w-3 shrink-0">
                   {index + 1}
                 </span>
-                <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-[#0C0F14] border border-white/10 shrink-0">
+                <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-[#0C0F14] border border-white/10 shrink-0">
                   {product.images && product.images.length > 0 ? (
                     <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Package className="w-5 h-5 text-white/30" />
+                      <Package className="w-4 h-4 text-white/30" />
                     </div>
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold truncate text-white">{product.name}</p>
-                  <p className="text-xs text-[#C8972A] font-medium">{product.brand}</p>
+                  <p className="text-[12px] font-semibold truncate text-white">{product.name}</p>
+                  <p className="text-[10px] text-[#C8972A] font-medium">{product.brand}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-sm font-bold text-white">{formatPrice(product.price)}</p>
-                  <p className="text-[10px] text-white/60 mt-0.5">
+                  <p className="text-[12px] font-bold text-white">{formatPrice(product.price)}</p>
+                  <p className="text-[9px] text-white/60 mt-0.5">
                     {product.stock} in stock
                   </p>
                 </div>
@@ -394,11 +393,11 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-[#0F1923] rounded-[24px] border border-white/5 p-6 backdrop-blur-xl">
-          <div className="text-[11px] tracking-[2px] text-white/60 mb-1">SHORTCUTS</div>
-          <h3 className="text-base font-semibold mb-5 text-white">Quick Actions</h3>
+        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+          <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">SHORTCUTS</div>
+          <h3 className="text-[13px] font-semibold mb-3 text-white">Quick Actions</h3>
 
-          <div className="space-y-2.5">
+          <div className="space-y-1">
             {[
               {
                 label: "Add New Product",
@@ -434,18 +433,18 @@ export default function AdminDashboard() {
               },
             ].map(({ label, desc, href, icon: Icon, color, bg }) => (
               <Link key={href} href={href}>
-                <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                <div className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer group">
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
                     style={{ background: bg }}
                   >
-                    <Icon className="w-4.5 h-4.5" style={{ color }} />
+                    <Icon className="w-4 h-4" style={{ color }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-white">{label}</p>
-                    <p className="text-xs text-white/60">{desc}</p>
+                    <p className="text-[12px] font-semibold text-white">{label}</p>
+                    <p className="text-[10px] text-white/50">{desc}</p>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-white/60 group-hover:text-white transition-colors" />
+                  <ArrowUpRight className="w-3.5 h-3.5 text-white/60 group-hover:text-white transition-colors" />
                 </div>
               </Link>
             ))}
@@ -453,51 +452,51 @@ export default function AdminDashboard() {
         </div>
 
         {/* System Health */}
-        <div className="bg-[#0F1923] rounded-[24px] border border-white/5 p-6 backdrop-blur-xl">
-          <div className="flex items-center justify-between mb-5">
+        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[11px] tracking-[2px] text-white/60 mb-1">MONITORING</div>
-              <h3 className="text-base font-semibold text-white">System Health</h3>
+              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">MONITORING</div>
+              <h3 className="text-[13px] font-semibold text-white">System Health</h3>
             </div>
             {healthData?.supabaseConnection ? (
-              <Badge className="bg-[#4ADE80]/10 text-[#4ADE80] border-[#4ADE80]/20 gap-1.5 px-2.5 py-1">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Healthy
+              <Badge className="bg-[#4ADE80]/10 text-[#4ADE80] border-[#4ADE80]/20 gap-1 px-2 py-0.5 text-[9px]">
+                <CheckCircle2 className="w-3 h-3" /> Healthy
               </Badge>
             ) : (
-              <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 gap-1.5 px-2.5 py-1">
-                <Server className="w-3.5 h-3.5" /> Memory Fallback
+              <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 gap-1 px-2 py-0.5 text-[9px]">
+                <Server className="w-3 h-3" /> Memory Fallback
               </Badge>
             )}
           </div>
           
           {healthData && (
-            <div className="space-y-4">
-              <div className="p-3 bg-white/5 border border-white/5 rounded-xl text-xs text-white/70 leading-relaxed">
+            <div className="space-y-3">
+              <div className="p-2.5 bg-white/5 border border-white/5 rounded-lg text-[11px] text-white/70 leading-relaxed">
                 {healthData.message}
               </div>
               
-              <div className="space-y-3 pt-1">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-white/80">
-                    <Database className="w-4 h-4 text-blue-400" />
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-[12px]">
+                  <div className="flex items-center gap-1.5 text-white/80">
+                    <Database className="w-3.5 h-3.5 text-blue-400" />
                     Supabase Configured
                   </div>
                   {healthData.supabaseConfigured ? (
-                    <span className="text-[#4ADE80]">Yes</span>
+                    <span className="text-[#4ADE80] text-[11px]">Yes</span>
                   ) : (
-                    <span className="text-white/40">No</span>
+                    <span className="text-white/40 text-[11px]">No</span>
                   )}
                 </div>
                 
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-white/80">
-                    <Server className="w-4 h-4 text-purple-400" />
+                <div className="flex items-center justify-between text-[12px]">
+                  <div className="flex items-center gap-1.5 text-white/80">
+                    <Server className="w-3.5 h-3.5 text-purple-400" />
                     Tables Sync Status
                   </div>
                   {healthData.supabaseConnection ? (
-                    <span className="text-[#4ADE80]">100% Synced</span>
+                    <span className="text-[#4ADE80] text-[11px]">100% Synced</span>
                   ) : (
-                    <span className="text-amber-500">Missing Tables</span>
+                    <span className="text-amber-500 text-[11px]">Missing Tables</span>
                   )}
                 </div>
               </div>
@@ -507,7 +506,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Demo note */}
-      <p className="text-xs text-white/60 text-center mt-6">
+      <p className="text-[10px] text-white/60 text-center mt-4">
         Revenue and customer figures are demonstration data. Real tracking is enabled via Supabase.
       </p>
     </div>

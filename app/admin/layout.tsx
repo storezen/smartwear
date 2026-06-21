@@ -34,9 +34,9 @@ const adminNav = [
 
 function AdminLogo({ collapsed }: { collapsed?: boolean }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(184,134,11,0.3)]">
-        <svg viewBox="0 0 36 36" fill="none" width={24} height={24} className="shrink-0">
+    <div className="flex items-center gap-2">
+      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center shrink-0 shadow-[0_0_16px_rgba(184,134,11,0.25)]">
+        <svg viewBox="0 0 36 36" fill="none" width={20} height={20} className="shrink-0">
           <circle cx="18" cy="18" r="14.5" fill="#0C0F14" stroke="#0C0F14" strokeWidth="1.5"/>
           <line x1="18" y1="18" x2="18" y2="11" stroke="#B8860B" strokeWidth="2" strokeLinecap="round"/>
           <line x1="18" y1="18" x2="23" y2="18" stroke="#B8860B" strokeWidth="2" strokeLinecap="round"/>
@@ -52,12 +52,12 @@ function AdminLogo({ collapsed }: { collapsed?: boolean }) {
             className="leading-none overflow-hidden whitespace-nowrap"
           >
             <span
-              className="block text-white text-[16px] font-bold tracking-tight"
+              className="block text-white text-[14px] font-bold tracking-tight"
               style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}
             >
               Smartwear
             </span>
-            <span className="block text-[9px] tracking-[0.25em] text-[#B8860B] font-bold mt-1 uppercase">
+            <span className="block text-[8px] tracking-[0.2em] text-[#B8860B] font-bold mt-0.5 uppercase">
               Command Center
             </span>
           </motion.div>
@@ -113,23 +113,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* ── DESKTOP SIDEBAR ── */}
       <motion.aside
         initial={false}
-        animate={{ width: sidebarCollapsed ? 80 : 280 }}
+        animate={{ width: sidebarCollapsed ? 72 : 240 }}
         className="hidden lg:flex flex-col bg-[#0F1923] border-r border-white/5 relative z-20 shrink-0"
       >
-        <div className="h-[80px] flex items-center px-6 border-b border-white/5">
+        <div className="h-[56px] flex items-center px-4 border-b border-white/5">
           <AdminLogo collapsed={sidebarCollapsed} />
         </div>
 
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="absolute -right-3 top-24 w-6 h-6 rounded-full bg-[#1A2530] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors z-30 sw-interactive"
+          className="absolute -right-3 top-[60px] w-5 h-5 rounded-full bg-[#1A2530] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors z-30 sw-interactive"
         >
           <motion.div animate={{ rotate: sidebarCollapsed ? 180 : 0 }}>
-            <ChevronLeft className="w-3 h-3" />
+            <ChevronLeft className="w-2.5 h-2.5" />
           </motion.div>
         </button>
 
-        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto">
+        <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
           {adminNav.map((item) => {
             const isActive = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href)
             return (
@@ -156,11 +156,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 )}
                 
                 <div className={cn(
-                  "relative z-10 flex items-center h-12 px-4 rounded-xl transition-colors",
+                  "relative z-10 flex items-center h-9 px-3 rounded-lg transition-colors text-[13px]",
                   sidebarCollapsed ? "justify-center w-full" : "w-full",
-                  isActive ? "text-[#B8860B]" : "text-white/70 group-hover:text-white"
+                  isActive ? "text-[#B8860B]" : "text-white/60 group-hover:text-white"
                 )}>
-                  <item.icon className={cn("w-5 h-5 shrink-0 transition-transform duration-300", isActive ? "scale-110" : "group-hover:scale-110", sidebarCollapsed ? "" : "mr-3")} />
+                  <item.icon className={cn("w-4 h-4 shrink-0 transition-transform duration-300", isActive ? "scale-110" : "group-hover:scale-110", sidebarCollapsed ? "" : "mr-2.5")} />
                   <AnimatePresence>
                     {!sidebarCollapsed && (
                       <motion.span
@@ -179,16 +179,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/5">
+        <div className="p-3 border-t border-white/5">
           <button
             onClick={handleLogout}
             className={cn(
-              "w-full flex items-center h-12 px-4 rounded-xl text-red-400 hover:bg-red-400/10 transition-colors sw-interactive group",
+              "w-full flex items-center h-9 px-3 rounded-lg text-red-400/80 hover:bg-red-400/10 transition-colors sw-interactive group text-[13px]",
               sidebarCollapsed ? "justify-center" : ""
             )}
             title="Log Out"
           >
-            <LogOut className={cn("w-5 h-5 shrink-0 transition-transform group-hover:-translate-x-1", sidebarCollapsed ? "" : "mr-3")} />
+            <LogOut className={cn("w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-1", sidebarCollapsed ? "" : "mr-2.5")} />
             {!sidebarCollapsed && <span className="font-medium">Log Out</span>}
           </button>
         </div>
@@ -208,19 +208,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className="absolute left-0 top-0 bottom-0 w-[280px] bg-[#0F1923] border-r border-white/5 flex flex-col"
+              className="absolute left-0 top-0 bottom-0 w-[240px] bg-[#0F1923] border-r border-white/5 flex flex-col"
             >
-              <div className="h-[80px] flex items-center justify-between px-6 border-b border-white/5">
+              <div className="h-[56px] flex items-center justify-between px-4 border-b border-white/5">
                 <AdminLogo />
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/60 hover:text-white sw-interactive"
+                  className="w-7 h-7 flex items-center justify-center rounded-full bg-white/5 text-white/60 hover:text-white sw-interactive"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto">
+              <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
                 {adminNav.map((item) => {
                   const isActive = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href)
                   return (
@@ -229,23 +229,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       href={item.href}
                       onClick={() => setSidebarOpen(false)}
                       className={cn(
-                        "flex items-center h-12 px-4 rounded-xl font-medium transition-all sw-interactive",
-                        isActive ? "bg-white/5 border border-white/10 text-[#B8860B] shadow-[inset_4px_0_0_#B8860B]" : "text-white/70 hover:text-white hover:bg-white/[0.02]"
+                        "flex items-center h-9 px-3 rounded-lg font-medium transition-all sw-interactive text-[13px]",
+                        isActive ? "bg-white/5 border border-white/10 text-[#B8860B] shadow-[inset_3px_0_0_#B8860B]" : "text-white/60 hover:text-white hover:bg-white/[0.02]"
                       )}
                     >
-                      <item.icon className="w-5 h-5 mr-3" />
+                      <item.icon className="w-4 h-4 mr-2.5" />
                       {item.label}
                     </Link>
                   )
                 })}
               </nav>
 
-              <div className="p-4 border-t border-white/5">
+              <div className="p-3 border-t border-white/5">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center h-12 px-4 rounded-xl text-red-400 hover:bg-red-400/10 transition-colors font-medium sw-interactive"
+                  className="w-full flex items-center h-9 px-3 rounded-lg text-red-400/80 hover:bg-red-400/10 transition-colors font-medium sw-interactive text-[13px]"
                 >
-                  <LogOut className="w-5 h-5 mr-3" />
+                  <LogOut className="w-4 h-4 mr-2.5" />
                   Log Out
                 </button>
               </div>
@@ -261,36 +261,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[150px] opacity-[0.05] bg-[#B8860B] pointer-events-none" />
 
         {/* Top Header */}
-        <header className="h-[80px] shrink-0 border-b border-white/5 bg-[#0C0F14]/80 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-10">
-          <div className="flex items-center gap-4">
+        <header className="h-[56px] shrink-0 border-b border-white/5 bg-[#0C0F14]/80 backdrop-blur-xl flex items-center justify-between px-4 sticky top-0 z-10">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 -ml-2 text-white/60 hover:text-white sw-interactive"
+              className="lg:hidden p-1.5 -ml-1.5 text-white/60 hover:text-white sw-interactive"
             >
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5" />
             </button>
             <Breadcrumb pathname={pathname} />
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex flex-col items-end mr-4">
-              <span className="text-white font-medium text-sm">{timeStr}</span>
-              <span className="text-white/60 text-[10px] uppercase tracking-wider">{dateStr}</span>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex flex-col items-end mr-2">
+              <span className="text-white font-medium text-xs">{timeStr}</span>
+              <span className="text-white/60 text-[9px] uppercase tracking-wider">{dateStr}</span>
             </div>
 
-            <button className="relative w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive">
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-[#B8860B] shadow-[0_0_8px_#B8860B]" />
+            <button className="relative w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive">
+              <Bell className="w-3.5 h-3.5" />
+              <span className="absolute top-1.5 right-2 w-1.5 h-1.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_#B8860B]" />
             </button>
 
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0F1923] to-[#1A2530] border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
-              <span className="text-[#B8860B] font-bold text-sm">A</span>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0F1923] to-[#1A2530] border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
+              <span className="text-[#B8860B] font-bold text-xs">A</span>
             </div>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-8 scroll-smooth relative z-0">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-5 scroll-smooth relative z-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -110,13 +110,13 @@ function formatTimeAgo(ts: string): string {
 
 function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
   return (
-    <div className="flex items-end justify-between mb-4">
+    <div className="flex items-end justify-between mb-3">
       <div>
-        <div className="flex items-center gap-3">
-          <div className="w-0.5 h-4 bg-[#B8860B] rounded-full shadow-[0_0_8px_rgba(184,134,11,0.3)]" />
-          <h2 className="text-sm font-semibold text-white/80 tracking-tight">{title}</h2>
+        <div className="flex items-center gap-2">
+          <div className="w-0.5 h-3 bg-[#B8860B] rounded-full shadow-[0_0_6px_rgba(184,134,11,0.3)]" />
+          <h2 className="text-[12px] font-semibold text-white/80 tracking-tight">{title}</h2>
         </div>
-        {subtitle && <p className="text-[9px] text-white/20 mt-1 ml-3.5">{subtitle}</p>}
+        {subtitle && <p className="text-[8px] text-white/20 mt-0.5 ml-3">{subtitle}</p>}
       </div>
       {action && <div>{action}</div>}
     </div>
@@ -125,7 +125,7 @@ function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: 
 
 function SectionDivider() {
   return (
-    <div className="relative my-6">
+    <div className="relative my-4">
       <div className="h-px bg-gradient-to-r from-[#B8860B]/10 via-white/[0.03] to-transparent" />
     </div>
   )
@@ -195,28 +195,25 @@ export default function LiveAnalyticsPage() {
       <div className="fixed top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#B8860B]/30 to-transparent pointer-events-none z-50" />
 
       {/* ─── Header ─── */}
-      <div className="sticky top-0 z-30 bg-[#0A0D12]/85 backdrop-blur-2xl border-b border-white/[0.04] px-4 md:px-6 lg:px-8 py-3">
+      <div className="sticky top-0 z-30 bg-[#0A0D12]/85 backdrop-blur-2xl border-b border-white/[0.04] px-3 md:px-4 py-2">
         <div className="flex items-center justify-between max-w-[1600px] mx-auto">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#B8860B]/25 to-[#B8860B]/5 border border-[#B8860B]/20 flex items-center justify-center shadow-[0_0_20px_rgba(184,134,11,0.1)]">
-              <Gauge className="w-4 h-4 text-[#B8860B]" />
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#B8860B]/25 to-[#B8860B]/5 border border-[#B8860B]/20 flex items-center justify-center shadow-[0_0_16px_rgba(184,134,11,0.1)]">
+              <Gauge className="w-3.5 h-3.5 text-[#B8860B]" />
             </div>
             <div>
-              <div className="flex items-center gap-2.5">
-                <h1 className="text-sm font-bold tracking-tight" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+              <div className="flex items-center gap-1.5">
+                <h1 className="text-[12px] font-bold tracking-tight" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
                   Command Center
                 </h1>
-                <div className="px-1.5 py-0.5 rounded bg-[#B8860B]/10 border border-[#B8860B]/15">
-                  <span className="text-[7px] font-semibold text-[#B8860B]/70 tracking-[0.15em] uppercase">Live</span>
-                </div>
               </div>
-              <div className="flex items-center gap-2 mt-0.5">
+              <div className="flex items-center gap-1.5 mt-0">
                 <StatusBadge status={status} reconnecting={reconnecting} error={error} retry={retry} />
                 {lastUpdated && (
                   <>
-                    <span className="text-[7px] text-white/15">|</span>
-                    <Clock className="w-2 h-2 text-white/25" />
-                    <span className="text-[8px] text-white/25 tabular-nums font-mono">
+                    <span className="text-[6px] text-white/15">|</span>
+                    <Clock className="w-1.5 h-1.5 text-white/25" />
+                    <span className="text-[7px] text-white/25 tabular-nums font-mono">
                       {now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false })}
                     </span>
                   </>
@@ -225,40 +222,40 @@ export default function LiveAnalyticsPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <div className="bg-[#0A0D12] rounded-lg border border-white/[0.06] p-0.5 flex shadow-[0_1px_6px_rgba(0,0,0,0.2)]">
               <button
                 onClick={() => { setViewMode("globe"); setGlobeEngine("premium") }}
-                className={`p-1.5 rounded-md transition-all ${
+                className={`p-1 rounded-md transition-all ${
                   viewMode === "globe" && globeEngine === "premium"
                     ? "bg-[#B8860B]/20 text-[#B8860B] shadow-[0_0_12px_rgba(184,134,11,0.15)]"
                     : "text-white/25 hover:text-white/50"
                 }`}
                 title="Premium 3D Globe"
               >
-                <Globe className="w-3.5 h-3.5" />
+                <Globe className="w-3 h-3" />
               </button>
               <button
                 onClick={() => { setViewMode("globe"); setGlobeEngine("classic") }}
-                className={`p-1.5 rounded-md transition-all ${
+                className={`p-1 rounded-md transition-all ${
                   viewMode === "globe" && globeEngine === "classic"
                     ? "bg-white/10 text-white"
                     : "text-white/25 hover:text-white/50"
                 }`}
                 title="Classic Globe"
               >
-                <span className="text-[10px] font-bold px-0.5">C</span>
+                <span className="text-[9px] font-bold px-0.5">C</span>
               </button>
               <button
                 onClick={() => setViewMode("map")}
-                className={`p-1.5 rounded-md transition-all ${
+                className={`p-1 rounded-md transition-all ${
                   viewMode === "map"
                     ? "bg-white/10 text-white"
                     : "text-white/25 hover:text-white/50"
                 }`}
                 title="Pakistan Map"
               >
-                <MapIcon className="w-3.5 h-3.5" />
+                <MapIcon className="w-3 h-3" />
               </button>
             </div>
 
@@ -273,17 +270,17 @@ export default function LiveAnalyticsPage() {
             <button
               onClick={handleClear}
               disabled={isClearing}
-              className="p-1.5 bg-red-500/8 border border-red-500/15 rounded-lg text-red-400/60 hover:bg-red-500/15 hover:text-red-400 transition-all disabled:opacity-40"
+              className="p-1 bg-red-500/8 border border-red-500/15 rounded-lg text-red-400/60 hover:bg-red-500/15 hover:text-red-400 transition-all disabled:opacity-40"
               title="Clear all data"
             >
-              {isClearing ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+              {isClearing ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
             </button>
           </div>
         </div>
       </div>
 
       {/* ─── Main Content ─── */}
-      <div className="px-4 md:px-6 lg:px-8 py-6 max-w-[1600px] mx-auto">
+      <div className="px-3 md:px-4 py-4 max-w-[1600px] mx-auto">
         {loading ? (
           <div className="space-y-5">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
@@ -359,7 +356,7 @@ export default function LiveAnalyticsPage() {
               variants={{
                 visible: { transition: { staggerChildren: 0.06 } },
               }}
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6"
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3"
             >
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
                 <LiveStatsCard
@@ -414,7 +411,7 @@ export default function LiveAnalyticsPage() {
             <SectionDivider />
 
             {/* ── Timeline + Funnel ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4">
               <div className="lg:col-span-1 h-full">
                 <TimelineChart data={summary?.timeline ?? []} />
               </div>
@@ -427,7 +424,7 @@ export default function LiveAnalyticsPage() {
             </div>
 
             {/* ── Sources + Products + Globe ── */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
               <div className="md:col-span-1 h-full">
                 <TrafficSourcesChart sources={summary?.trafficSources ?? []} />
               </div>
@@ -455,7 +452,7 @@ export default function LiveAnalyticsPage() {
             </div>
 
             {/* ── Events Feed ── */}
-            <div className="mb-6">
+            <div className="mb-4">
               <div className="w-full">
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
