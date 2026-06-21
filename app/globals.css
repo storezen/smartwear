@@ -156,16 +156,6 @@
 @media (min-width: 768px)  { .sw-container { padding-inline: 32px; } }
 @media (min-width: 1280px) { .sw-container { padding-inline: 48px; } }
 
-/* Keep old container-main working */
-.container-main {
-  width: 100%;
-  max-width: 1536px;
-  margin: 0 auto;
-  padding-inline: 20px;
-}
-@media (min-width: 768px)  { .container-main { padding-inline: 32px; } }
-@media (min-width: 1280px) { .container-main { padding-inline: 48px; } }
-
 /* ═══════════════════════════════════════════
    PRODUCT GRID
    ═══════════════════════════════════════════ */
@@ -461,6 +451,10 @@
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 @keyframes pulse-gold {
   0%,100% { box-shadow: 0 0 0 0 rgba(184,134,11,0.4); }
   50%      { box-shadow: 0 0 0 8px rgba(184,134,11,0); }
@@ -495,6 +489,11 @@
 ::-webkit-scrollbar-thumb:hover { background: rgba(14,17,23,0.28); }
 .dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); }
 
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
 /* ═══════════════════════════════════════════
    FOCUS
    ═══════════════════════════════════════════ */
@@ -526,4 +525,27 @@
   display: flex;
   gap: 0;
   width: max-content;
+}
+
+/* Dashboard-specific */
+.card-glow {
+  box-shadow:
+    0 2px 24px rgba(0,0,0,0.25),
+    0 1px 4px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.card-glow-hover {
+  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+.card-glow-hover:hover {
+  box-shadow:
+    0 4px 40px rgba(0,0,0,0.3),
+    0 1px 8px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+  transform: translateY(-1px);
+}
+
+.gold-glow {
+  box-shadow: 0 0 20px rgba(184,134,11,0.15);
 }

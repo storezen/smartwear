@@ -51,7 +51,7 @@ export default function LiveGlobe({ locations }: { locations: { lat: number, lng
   }, [locations])
 
   return (
-    <div className="w-full h-full min-h-[500px] flex items-center justify-center relative pointer-events-auto">
+    <div className="w-full h-full min-h-[280px] flex items-center justify-center relative pointer-events-auto">
       {/* Soft background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(184,134,11,0.05)_0%,transparent_70%)] pointer-events-none"></div>
       

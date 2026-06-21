@@ -52,7 +52,7 @@ export default function AdminProductsPage() {
   useEffect(() => {
     load()
     if (typeof window !== 'undefined' && window.location.search.includes('new=true')) {
-      setIsModalOpen(true)
+      setShowAddModal(true)
     }
   }, [])
 

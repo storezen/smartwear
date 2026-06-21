@@ -16,16 +16,17 @@ export function AnimatedCounter({
   prefix = "",
   suffix = "",
   decimals = 0,
-  duration = 2
+  duration = 0.8
 }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: "-10px" })
-  
+
   const spring = useSpring(0, {
-    duration: duration * 1000,
-    bounce: 0,
+    stiffness: 80,
+    damping: 20,
+    mass: 0.6,
   })
-  
+
   const display = useTransform(spring, (current) => {
     return prefix + current.toFixed(decimals) + suffix
   })

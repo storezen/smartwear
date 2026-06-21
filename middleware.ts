@@ -14,6 +14,8 @@ function isPublicApi(pathname: string, method: string): boolean {
   if (pathname === "/api/orders" && method === "POST") return true
   if (pathname === "/api/orders/promo" && method === "POST") return true
   if (pathname.startsWith("/api/orders/track")) return true
+  // Analytics — needed by TikTok pixel (POST) and dashboard (GET)
+  if (pathname.startsWith("/api/analytics")) return true
   return false
 }
 

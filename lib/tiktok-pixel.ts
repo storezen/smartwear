@@ -19,7 +19,7 @@ function generateUUID() {
   });
 }
 
-export const TIKTOK_DEBUG_MODE = true; // Set to false in production if desired
+export const TIKTOK_DEBUG_MODE = process.env.NODE_ENV !== "production";
 
 declare global {
   interface Window {
