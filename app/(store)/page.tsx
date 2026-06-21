@@ -246,20 +246,22 @@ function HeroBanner({ featured = HERO_FALLBACK }: { featured?: HeroFeatured }) {
           <div className="order-1 lg:order-2 flex justify-center relative px-2 sm:px-0">
             <motion.div
               style={{ x: translateX, y: translateY }}
-              className="relative w-[260px] h-[260px] sm:w-[340px] sm:h-[340px] md:w-[420px] md:h-[420px] lg:w-[500px] lg:h-[500px] rounded-full overflow-hidden"
+              className="relative w-[260px] h-[300px] sm:w-[340px] sm:h-[380px] md:w-[420px] md:h-[460px] lg:w-[500px] lg:h-[540px] flex items-center justify-center"
             >
-              <div className="absolute inset-[10%] rounded-full bg-[#B8860B]/12 blur-[80px]" />
-              <div className="absolute inset-[-12px] rounded-full border border-[#B8860B]/15 animate-[spin_24s_linear_infinite]" />
-              <div className="absolute inset-[-28px] rounded-full border border-dashed border-[#B8860B]/10 animate-[spin_36s_linear_infinite_reverse]" />
+              <div className="absolute inset-[8%] rounded-full bg-[#B8860B]/10 blur-[80px]" />
+              <div className="absolute inset-[-16px] rounded-full border border-[#B8860B]/15 animate-[spin_24s_linear_infinite]" />
+              <div className="absolute inset-[-32px] rounded-full border border-dashed border-[#B8860B]/10 animate-[spin_36s_linear_infinite_reverse]" />
 
-              <Image
-                src={featured.image}
-                alt={`${featured.name} smartwatch`}
-                fill
-                sizes="(max-width: 640px) 260px, (max-width: 1024px) 420px, 500px"
-                className="object-cover object-center drop-shadow-[0_30px_80px_rgba(184,134,11,0.35)] z-10 scale-[1.15]"
-                priority
-              />
+              <div className="relative w-[85%] aspect-square rounded-full overflow-hidden ring-2 ring-[#B8860B]/20 ring-offset-[6px] ring-offset-[#06080A] shadow-[0_0_60px_rgba(184,134,11,0.15)]">
+                <Image
+                  src={featured.image}
+                  alt={`${featured.name} smartwatch`}
+                  fill
+                  sizes="(max-width: 640px) 260px, (max-width: 1024px) 420px, 500px"
+                  className="object-contain object-center drop-shadow-[0_20px_60px_rgba(184,134,11,0.3)] z-10 p-4 md:p-6"
+                  priority
+                />
+              </div>
 
               <HeroWatchFace />
 
