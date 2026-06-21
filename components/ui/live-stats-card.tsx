@@ -15,6 +15,7 @@ interface LiveStatsCardProps {
   trendLabel?: string
   icon?: React.ReactNode
   accentColor?: string
+  isInverseTrend?: boolean
 }
 
 function TrendIcon({ value: trend }: { value: number }) {
@@ -37,6 +38,7 @@ export function LiveStatsCard({
   trendLabel,
   icon,
   accentColor = "#B8860B",
+  isInverseTrend = false,
 }: LiveStatsCardProps) {
   const [flash, setFlash] = useState(false)
   const prevValue = useRef(value)
@@ -51,13 +53,11 @@ export function LiveStatsCard({
   }, [value])
 
   const trendColor =
-    trend === undefined
+    trend === undefined || trend === 0
       ? "text-white/40"
-      : trend > 0
+      : (trend > 0 && !isInverseTrend) || (trend < 0 && isInverseTrend)
         ? "text-emerald-400"
-        : trend < 0
-          ? "text-red-400"
-          : "text-white/40"
+        : "text-red-400"
 
   return (
     <motion.div

@@ -84,13 +84,15 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
           <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
           <h3 className="text-[13px] font-semibold text-white/70">Hot Products</h3>
         </div>
-        <div className="h-44 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-white/15" />
+        <div className="h-44 flex items-center justify-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]" />
+          <div className="text-center relative z-10">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#B8860B]/5 border border-[#B8860B]/20 flex items-center justify-center relative">
+              <div className="absolute inset-0 rounded-full border border-[#B8860B]/20 animate-ping opacity-20" />
+              <TrendingUp className="w-6 h-6 text-[#B8860B]/60" />
             </div>
-            <p className="text-[11px] text-white/25">No trending products yet</p>
-            <p className="text-[8px] text-white/15 mt-1">Products appear as they get views</p>
+            <p className="text-[12px] font-medium text-white/50 mb-1">No trending products yet</p>
+            <p className="text-[9px] text-white/30 max-w-[160px] mx-auto leading-relaxed">Products will appear here automatically as visitors view them.</p>
           </div>
         </div>
       </div>

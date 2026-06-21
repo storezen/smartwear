@@ -406,6 +406,7 @@ export default function LiveAnalyticsPage() {
                   trendLabel="cart abandonment"
                   icon={<Eye className="w-3 h-3" />}
                   accentColor="#EC4899"
+                  isInverseTrend={true}
                 />
               </motion.div>
             </motion.div>
@@ -482,21 +483,27 @@ export default function LiveAnalyticsPage() {
                     return (
                       <motion.div
                         key={event.id || i}
-                        initial={{ opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: Math.min(i * 0.03, 0.3) }}
-                        className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/[0.015] transition-colors group"
-                        style={{ animation: i < 3 ? `slideIn 0.3s ease-out ${i * 0.05}s both` : undefined }}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 24, delay: i * 0.05 }}
+                        className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/[0.02] transition-colors group border-b border-white/[0.02] last:border-0"
                       >
-                        <div
-                          className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                            isPurchase
-                              ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.5)]"
-                              : isCart
-                                ? "bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.5)]"
-                                : "bg-white/15"
-                          } ${isNew ? "animate-ping" : ""}`}
-                        />
+                        <div className="relative flex items-center justify-center shrink-0 w-2 h-2">
+                          {isNew && (
+                            <span className={`absolute inset-0 rounded-full animate-ping opacity-75 ${
+                              isPurchase ? "bg-emerald-400" : isCart ? "bg-[#B8860B]" : "bg-white/40"
+                            }`} />
+                          )}
+                          <div
+                            className={`w-1.5 h-1.5 rounded-full relative z-10 ${
+                              isPurchase
+                                ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.5)]"
+                                : isCart
+                                  ? "bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.5)]"
+                                  : "bg-white/20"
+                            }`}
+                          />
+                        </div>
                         <span className="text-[11px] text-white/60 truncate flex-1 min-w-0">
                           <span
                             className={

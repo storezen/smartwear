@@ -210,19 +210,20 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
 
   if (error) {
     return (
-      <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden min-h-[280px] flex items-center justify-center shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
-        <div className="text-center p-6">
-          <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center">
-            <svg className="w-6 h-6 text-[#B8860B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden min-h-[280px] flex flex-col items-center justify-center shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
+        <div className="w-16 h-16 relative mb-4">
+          <div className="absolute inset-0 rounded-full border border-[#B8860B]/20 animate-ping opacity-50" />
+          <div className="absolute inset-2 rounded-full border border-[#B8860B]/40 animate-spin" style={{ animationDuration: '3s' }} />
+          <div className="absolute inset-4 rounded-full bg-[#B8860B]/10 flex items-center justify-center">
+            <svg className="w-4 h-4 text-[#B8860B]/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
             </svg>
           </div>
-          <p className="text-[13px] text-white/50 mb-2">Premium 3D Globe</p>
-          <p className="text-[10px] text-white/25 leading-relaxed">
-            Install <code className="text-[#B8860B] bg-[#B8860B]/10 px-1 py-0.5 rounded text-[9px]">react-globe.gl</code> and <code className="text-[#B8860B] bg-[#B8860B]/10 px-1 py-0.5 rounded text-[9px]">three</code>
-          </p>
-          <p className="text-[9px] text-white/15 mt-1.5 font-mono">npm install react-globe.gl three</p>
         </div>
+        <p className="text-[14px] font-medium text-white/80 mb-1 tracking-wide" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Premium 3D Globe</p>
+        <p className="text-[11px] text-white/40 max-w-[200px] text-center leading-relaxed">
+          Rendering advanced visualization...
+        </p>
       </div>
     )
   }

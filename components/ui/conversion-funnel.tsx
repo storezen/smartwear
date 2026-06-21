@@ -59,9 +59,9 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
           <div className="w-0.5 h-3.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.3)]" />
           <h3 className="text-[13px] font-semibold text-white/70">Conversion Funnel</h3>
         </div>
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20">
-          <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-          <span className="text-[10px] font-semibold text-red-400 tabular-nums">
+        <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${abandonmentRate <= 20 ? 'bg-emerald-500/10 border-emerald-500/20' : abandonmentRate <= 50 ? 'bg-yellow-500/10 border-yellow-500/20' : 'bg-red-500/10 border-red-500/20'}`}>
+          <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${abandonmentRate <= 20 ? 'bg-emerald-400' : abandonmentRate <= 50 ? 'bg-yellow-400' : 'bg-red-400'}`} />
+          <span className={`text-[10px] font-semibold tabular-nums ${abandonmentRate <= 20 ? 'text-emerald-400' : abandonmentRate <= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
             {abandonmentRate}% Abandoned
           </span>
         </div>
@@ -123,7 +123,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
                     </div>
                   </div>
 
-                  <div className="relative h-3 bg-white/[0.04] rounded-full overflow-hidden">
+                  <div className="relative h-4 bg-white/[0.04] rounded-full overflow-hidden shadow-inner">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${barWidth}%` }}
@@ -153,7 +153,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
 
       <div className="mt-4 pt-3.5 border-t border-white/[0.04] flex items-center justify-between text-[10px]">
         <span className="text-white/25">Cart abandonment rate</span>
-        <span className="text-red-400 font-bold tabular-nums">{abandonmentRate}%</span>
+        <span className={`font-bold tabular-nums ${abandonmentRate <= 20 ? 'text-emerald-400' : abandonmentRate <= 50 ? 'text-yellow-400' : 'text-red-400'}`}>{abandonmentRate}%</span>
       </div>
     </motion.div>
   )
