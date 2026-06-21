@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic"
 import { NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
 import { env } from "@/lib/env"
+import { clearAllPresence } from "@/lib/presence"
 
 const globalAny: any = global
 globalAny.liveAnalytics = globalAny.liveAnalytics || []
@@ -17,6 +18,7 @@ export async function POST() {
     }
 
     globalAny.liveAnalytics = []
+    clearAllPresence()
 
     return NextResponse.json({ success: true })
   } catch (error) {

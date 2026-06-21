@@ -98,6 +98,13 @@ function isInWindow(ts: string, windowMs: number): boolean {
 }
 
 export function getActiveVisitors(events: AnalyticsEvent[]): number {
+  if (typeof window === "undefined") {
+    try {
+      const { getActiveCount } = require("@/lib/presence")
+      const count = getActiveCount()
+      if (count > 0) return count
+    } catch {}
+  }
   return new Set(
     events.filter((e) => isInWindow(e.timestamp, LAST_5_MIN)).map((e) => e.session_id)
   ).size
