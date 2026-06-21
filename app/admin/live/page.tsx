@@ -413,24 +413,50 @@ export default function LiveAnalyticsPage() {
 
             <SectionDivider />
 
-            {/* ── Timeline ── */}
+            {/* ── Timeline + Funnel ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-6">
+              <div className="lg:col-span-2 h-full">
+                <TimelineChart data={summary?.timeline ?? []} />
+              </div>
+              <div className="lg:col-span-1 h-full">
+                <ConversionFunnel
+                  funnel={summary?.funnel ?? []}
+                  abandonmentRate={summary?.abandonmentRate ?? 0}
+                />
+              </div>
+            </div>
+
+            {/* ── Sources + Products + Globe ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-6">
+              <div className="lg:col-span-1 h-full">
+                <TrafficSourcesChart sources={summary?.trafficSources ?? []} />
+              </div>
+              <div className="lg:col-span-1 h-full">
+                <HotProducts products={summary?.hotProducts ?? []} />
+              </div>
+              <div className="lg:col-span-1 h-full min-h-[400px]">
+                {viewMode === "globe" ? (
+                  globeEngine === "premium" ? (
+                    <PremiumGlobe locations={globeLocations} autoRotate />
+                  ) : (
+                    <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden relative h-full card-glow">
+                      <div className="absolute top-3 left-3 z-10">
+                        <div className="bg-[#0A0D12]/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/5">
+                          <span className="text-[9px] font-medium text-white/50">Classic Globe</span>
+                        </div>
+                      </div>
+                      <LiveGlobe locations={globeLocations} />
+                    </div>
+                  )
+                ) : (
+                  <PakistanMap locations={summary?.locationBreakdown ?? []} />
+                )}
+              </div>
+            </div>
+
+            {/* ── Events Feed ── */}
             <div className="mb-6">
-              <TimelineChart data={summary?.timeline ?? []} />
-            </div>
-
-            {/* ── Funnel + Sources + Products ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-6">
-              <ConversionFunnel
-                funnel={summary?.funnel ?? []}
-                abandonmentRate={summary?.abandonmentRate ?? 0}
-              />
-              <TrafficSourcesChart sources={summary?.trafficSources ?? []} />
-              <HotProducts products={summary?.hotProducts ?? []} />
-            </div>
-
-            {/* ── Events Feed & Globe ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-6">
-              <div className="lg:col-span-2">
+              <div className="w-full">
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -517,26 +543,8 @@ export default function LiveAnalyticsPage() {
                 </div>
               )}
             </motion.div>
+              </div>
             </div>
-            <div className="lg:col-span-1 h-full min-h-[400px]">
-              {viewMode === "globe" ? (
-                globeEngine === "premium" ? (
-                  <PremiumGlobe locations={globeLocations} autoRotate />
-                ) : (
-                  <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden relative h-full card-glow">
-                    <div className="absolute top-3 left-3 z-10">
-                      <div className="bg-[#0A0D12]/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/5">
-                        <span className="text-[9px] font-medium text-white/50">Classic Globe</span>
-                      </div>
-                    </div>
-                    <LiveGlobe locations={globeLocations} />
-                  </div>
-                )
-              ) : (
-                <PakistanMap locations={summary?.locationBreakdown ?? []} />
-              )}
-            </div>
-          </div>
             <div className="mt-8 pb-4 text-center flex items-center justify-center gap-3">
               <span className="text-[8px] text-white/10 font-mono tracking-[0.2em] uppercase">
                 Smartwear Pakistan · Command Center v2
