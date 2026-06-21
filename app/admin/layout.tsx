@@ -19,8 +19,10 @@ import {
   Activity,
   Megaphone
 } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
+import { useOrderNotifications } from "@/lib/use-order-notifications"
+import { formatPrice } from "@/lib/mock-data"
 
 const adminNav = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -89,6 +91,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [now, setNow] = useState<Date | null>(null)
+  const [showNotifs, setShowNotifs] = useState(false)
+  const notifRef = useRef<HTMLDivElement>(null)
+  const { notifications, unreadCount, markAllRead } = useOrderNotifications()
+
+  useEffect(() => {
+    if (!showNotifs) return
+    const handler = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotifs(false)
+      }
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [showNotifs])
 
   // Clock
   useEffect(() => {
@@ -278,10 +294,81 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span className="text-white/60 text-[9px] uppercase tracking-wider">{dateStr}</span>
             </div>
 
-            <button className="relative w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive">
-              <Bell className="w-3.5 h-3.5" />
-              <span className="absolute top-1.5 right-2 w-1.5 h-1.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_#B8860B]" />
-            </button>
+            <div className="relative" ref={notifRef}>
+              <button
+                onClick={() => setShowNotifs(!showNotifs)}
+                className="relative w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive"
+              >
+                <Bell className="w-3.5 h-3.5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-[#B8860B] text-[9px] font-bold text-black flex items-center justify-center shadow-[0_0_6px_#B8860B]">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {showNotifs && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -4, scale: 0.96 }}
+                    transition={{ duration: 0.12 }}
+                    className="absolute right-0 top-full mt-2 w-80 z-50"
+                  >
+                  <div className="bg-[#0F1923] border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
+                      <span className="text-[11px] font-semibold text-white/70">Notifications</span>
+                      {unreadCount > 0 && (
+                        <button
+                          onClick={markAllRead}
+                          className="text-[9px] text-[#B8860B]/70 hover:text-[#B8860B] transition-colors"
+                        >
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-80 overflow-y-auto custom-scrollbar">
+                      {notifications.length === 0 ? (
+                        <div className="px-4 py-8 text-center">
+                          <Bell className="w-5 h-5 mx-auto mb-2 text-white/15" />
+                          <p className="text-[11px] text-white/30">No notifications yet</p>
+                        </div>
+                      ) : (
+                        notifications.map((n) => (
+                          <Link
+                            key={n.id}
+                            href="/admin/orders"
+                            onClick={() => setShowNotifs(false)}
+                            className={`flex items-start gap-3 px-4 py-3 transition-colors hover:bg-white/[0.02] border-b border-white/[0.02] last:border-0 ${
+                              !n.read ? "bg-[#B8860B]/[0.03]" : ""
+                            }`}
+                          >
+                            <div className="w-7 h-7 rounded-lg bg-[#B8860B]/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <ShoppingCart className="w-3.5 h-3.5 text-[#B8860B]" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className="text-[12px] font-medium text-white truncate">
+                                  {n.customer_name}
+                                </span>
+                                {!n.read && (
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B] shrink-0" />
+                                )}
+                              </div>
+                              <p className="text-[10px] text-white/50 mt-0.5">
+                                Order {formatPrice(n.total)}
+                              </p>
+                            </div>
+                          </Link>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              </AnimatePresence>
+            </div>
 
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0F1923] to-[#1A2530] border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
               <span className="text-[#B8860B] font-bold text-xs">A</span>
