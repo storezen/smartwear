@@ -224,46 +224,46 @@ export default function AdminProductsPage() {
   })
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="space-y-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight font-playfair mb-2">Products Catalog</h1>
-          <p className="text-white/60 text-sm">Manage inventory, pricing, and statuses.</p>
+          <h1 className="text-lg font-bold text-white tracking-tight mb-1">Products Catalog</h1>
+          <p className="text-white/60 text-[12px]">Manage inventory, pricing, and statuses.</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button 
             onClick={handleDeleteAllProducts}
-            className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors font-medium"
+            className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 transition-colors font-medium"
           >
-            <Trash2 className="w-4 h-4" /> Delete All
+            <Trash2 className="w-3.5 h-3.5" /> Delete All
           </button>
           <button 
             onClick={() => setShowImporter(true)}
-            className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors"
+            className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 transition-colors"
           >
-            <FileSpreadsheet className="w-4 h-4" /> Import CSV
+            <FileSpreadsheet className="w-3.5 h-3.5" /> Import CSV
           </button>
           <button 
             onClick={openAdd}
-            className="flex items-center gap-2 bg-[#B8860B] hover:bg-[#D4A017] text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-[0_0_20px_rgba(184,134,11,0.2)]"
+            className="flex items-center gap-1.5 bg-[#B8860B] hover:bg-[#D4A017] text-white px-4 py-1.5 rounded-lg font-medium transition-colors shadow-[0_0_16px_rgba(184,134,11,0.2)] text-[11px]"
           >
-            <Plus className="w-4 h-4" /> Add Product
+            <Plus className="w-3.5 h-3.5" /> Add Product
           </button>
         </div>
       </div>
 
       {/* Filters and Tabs */}
-      <div className="flex flex-col md:flex-row justify-between gap-4 border-b border-white/10 pb-4">
+      <div className="flex flex-col md:flex-row justify-between gap-3 border-b border-white/10 pb-3">
         {/* Category Tabs */}
-        <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+        <div className="flex gap-1.5 overflow-x-auto hide-scrollbar">
           {CATEGORIES.map(cat => (
             <button
               key={cat}
               onClick={() => setFilterCategory(cat)}
-              className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-colors flex items-center gap-2 ${
+              className={`px-3 py-1.5 rounded-full text-[10px] font-medium whitespace-nowrap transition-colors ${
                 filterCategory === cat 
-                ? 'bg-[#B8860B] text-white shadow-[0_0_15px_rgba(184,134,11,0.3)]' 
-                : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                  ? 'bg-[#B8860B]/20 text-[#B8860B] border border-[#B8860B]/30' 
+                  : 'bg-white/5 text-white/60 hover:bg-white/10 border border-transparent'
               }`}
             >
               {cat === 'All' ? 'All Categories' : cat.replace('-', ' ').toUpperCase()}

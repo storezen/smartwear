@@ -99,7 +99,7 @@ export default function AdminSettingsPage() {
             value={formData[id] || ''}
             onChange={(e) => setFormData(prev => ({ ...prev, [id]: e.target.value }))}
             placeholder={placeholder}
-            className="w-full h-12 bg-white/[0.02] border border-white/10 rounded-xl px-4 text-white placeholder-white/20 focus:border-[#B8860B] focus:bg-white/[0.05] outline-none transition-all text-sm"
+            className="w-full h-10 bg-white/[0.02] border border-white/10 rounded-lg px-3 text-white placeholder-white/20 focus:border-[#B8860B] focus:bg-white/[0.05] outline-none transition-all text-[12px]"
           />
         </div>
       </div>
@@ -111,26 +111,26 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto">
+    <div className="space-y-5 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight font-playfair mb-2">Command Center</h1>
-          <p className="text-white/60">Configure your store's core operations and integrations.</p>
+          <h1 className="text-lg font-bold text-white tracking-tight mb-1">Command Center</h1>
+          <p className="text-white/60 text-[12px]">Configure your store&apos;s core operations and integrations.</p>
         </div>
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#B8860B] to-[#D4A017] hover:to-[#E5B83B] text-black px-8 py-3 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(184,134,11,0.2)] disabled:opacity-50"
+          className="flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#B8860B] to-[#D4A017] hover:to-[#E5B83B] text-black px-5 py-1.5 rounded-lg font-bold transition-all shadow-[0_0_16px_rgba(184,134,11,0.2)] disabled:opacity-50 text-[12px]"
         >
-          <Save className="w-4 h-4" />
+          <Save className="w-3.5 h-3.5" />
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Sidebar Nav */}
-        <div className="lg:col-span-3 space-y-2">
+        <div className="lg:col-span-3 space-y-1">
           {tabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
@@ -138,18 +138,18 @@ export default function AdminSettingsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-start gap-4 p-4 rounded-2xl text-left transition-all duration-300 ${
+                className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-all duration-300 ${
                   isActive 
                     ? 'bg-gradient-to-r from-[#B8860B]/10 to-transparent border-l-2 border-[#B8860B]' 
                     : 'hover:bg-white/[0.02] border-l-2 border-transparent opacity-60 hover:opacity-100'
                 }`}
               >
-                <div className={`p-2 rounded-xl shrink-0 ${isActive ? 'bg-[#B8860B]/20 text-[#B8860B]' : 'bg-white/5 text-white/60'}`}>
-                  <Icon className="w-5 h-5" />
+                <div className={`p-1.5 rounded-lg shrink-0 ${isActive ? 'bg-[#B8860B]/20 text-[#B8860B]' : 'bg-white/5 text-white/60'}`}>
+                  <Icon className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className={`font-semibold ${isActive ? 'text-[#B8860B]' : 'text-white'}`}>{tab.label}</h3>
-                  <p className="text-[10px] text-white/40 uppercase tracking-wider mt-1 hidden md:block">{tab.desc}</p>
+                  <h3 className={`font-semibold text-[13px] ${isActive ? 'text-[#B8860B]' : 'text-white'}`}>{tab.label}</h3>
+                  <p className="text-[9px] text-white/40 uppercase tracking-wider mt-0.5 hidden md:block">{tab.desc}</p>
                 </div>
               </button>
             )
@@ -166,15 +166,15 @@ export default function AdminSettingsPage() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
             >
-              <SpotlightCard className="p-8 bg-white/[0.02] border-white/5">
+              <SpotlightCard className="p-5 bg-white/[0.02] border-white/5">
                 
                 {activeTab === "store" && (
-                  <div className="space-y-8">
+                  <div className="space-y-5">
                     <div>
-                      <h2 className="text-xl font-playfair text-white mb-1">Store Identity</h2>
-                      <p className="text-sm text-white/50">Your brand's core details visible to customers.</p>
+                      <h2 className="text-base font-bold text-white mb-0.5">Store Identity</h2>
+                      <p className="text-[12px] text-white/50">Your brand&apos;s core details visible to customers.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="md:col-span-2">
                         {renderInput('store_name', 'Store Name', 'text', 'Smartwear Pakistan')}
                       </div>
@@ -185,54 +185,54 @@ export default function AdminSettingsPage() {
                 )}
 
                 {activeTab === "shipping" && (
-                  <div className="space-y-8">
+                  <div className="space-y-5">
                     <div>
-                      <h2 className="text-xl font-playfair text-white mb-1">Fulfillment Rules</h2>
-                      <p className="text-sm text-white/50">Configure shipping rates and delivery options.</p>
+                      <h2 className="text-base font-bold text-white mb-0.5">Fulfillment Rules</h2>
+                      <p className="text-[12px] text-white/50">Configure shipping rates and delivery options.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {renderInput('shipping_flat_rate', 'Flat Shipping Rate (PKR)', 'number', 'e.g. 250')}
                     </div>
-                    <div className="p-4 bg-[#B8860B]/10 border border-[#B8860B]/20 rounded-xl flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 text-[#B8860B] shrink-0 mt-0.5" />
+                    <div className="p-3 bg-[#B8860B]/10 border border-[#B8860B]/20 rounded-lg flex items-start gap-2.5">
+                      <AlertCircle className="w-4 h-4 text-[#B8860B] shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-sm text-[#B8860B] font-medium">Free Shipping Threshold</p>
-                        <p className="text-xs text-white/60 mt-1">Currently hardcoded to PKR 10,000 in the cart logic. To make it dynamic, it will require cart logic refactoring.</p>
+                        <p className="text-[12px] text-[#B8860B] font-medium">Free Shipping Threshold</p>
+                        <p className="text-[11px] text-white/60 mt-0.5">Currently hardcoded to PKR 10,000 in the cart logic. To make it dynamic, it will require cart logic refactoring.</p>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {activeTab === "integrations" && (
-                  <div className="space-y-12">
+                  <div className="space-y-8">
                     {/* PostEx */}
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-                        <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400">
-                          <Truck className="w-5 h-5" />
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2.5 border-b border-white/10 pb-3">
+                        <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-400">
+                          <Truck className="w-4 h-4" />
                         </div>
                         <div>
-                          <h2 className="text-lg font-bold text-white">PostEx Logistics</h2>
-                          <p className="text-xs text-white/50">Automated order booking and tracking.</p>
+                          <h2 className="text-sm font-bold text-white">PostEx Logistics</h2>
+                          <p className="text-[10px] text-white/50">Automated order booking and tracking.</p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 gap-6">
+                      <div className="grid grid-cols-1 gap-4">
                         {renderInput('postex_api_token', 'PostEx API Token', 'password', 'Enter token to encrypt', true)}
                       </div>
                     </div>
 
                     {/* TikTok */}
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-                        <div className="p-2 bg-pink-500/10 rounded-lg text-pink-400">
-                          <Globe className="w-5 h-5" />
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2.5 border-b border-white/10 pb-3">
+                        <div className="p-1.5 bg-pink-500/10 rounded-lg text-pink-400">
+                          <Globe className="w-4 h-4" />
                         </div>
                         <div>
-                          <h2 className="text-lg font-bold text-white">TikTok Conversions API</h2>
-                          <p className="text-xs text-white/50">Server-side event tracking for TikTok Ads.</p>
+                          <h2 className="text-sm font-bold text-white">TikTok Conversions API</h2>
+                          <p className="text-[10px] text-white/50">Server-side event tracking for TikTok Ads.</p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {renderInput('tiktok_pixel_id', 'TikTok Pixel ID', 'text', 'e.g. CQU9XYZ123...')}
                         {renderInput('tiktok_access_token', 'TikTok CAPI Access Token', 'password', 'Enter token to encrypt', true)}
                       </div>

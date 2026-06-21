@@ -86,22 +86,22 @@ export default function MarketingPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight font-playfair mb-2">Marketing & Campaigns</h1>
-          <p className="text-white/60 text-sm">Manage store banners, promo codes, and special offers.</p>
+          <h1 className="text-lg font-bold text-white tracking-tight mb-1">Marketing & Campaigns</h1>
+          <p className="text-white/60 text-[12px]">Manage store banners, promo codes, and special offers.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 bg-[#B8860B] hover:bg-[#D4A017] text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-[0_0_20px_rgba(184,134,11,0.2)]"
+          className="flex items-center gap-1.5 bg-[#B8860B] hover:bg-[#D4A017] text-white px-4 py-1.5 rounded-lg font-medium transition-colors shadow-[0_0_16px_rgba(184,134,11,0.2)] text-[11px]"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-3.5 h-3.5" />
           Create Campaign
         </button>
       </div>
 
-      <div className="flex gap-4 border-b border-white/10 overflow-x-auto pb-2">
+      <div className="flex gap-3 border-b border-white/10 overflow-x-auto pb-2">
         {[
           { id: 'banners', label: 'Store Banners', icon: ImageIcon },
           { id: 'promos', label: 'Promo Codes', icon: Tag },
@@ -110,13 +110,13 @@ export default function MarketingPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors whitespace-nowrap ${
               activeTab === tab.id 
               ? 'bg-white/10 text-white' 
               : 'text-white/50 hover:text-white hover:bg-white/5'
             }`}
           >
-            <tab.icon className="w-4 h-4" />
+            <tab.icon className="w-3.5 h-3.5" />
             {tab.label}
           </button>
         ))}
