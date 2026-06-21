@@ -39,6 +39,11 @@ export function useRealtimeAnalytics(
   const reconnectAttemptRef = useRef(0)
   const maxReconnectDelay = 30000
   const mountedRef = useRef(true)
+  const statusRef = useRef<ConnectionStatus>(status)
+
+  useEffect(() => {
+    statusRef.current = status
+  }, [status])
 
   useEffect(() => {
     eventsRef.current = events
@@ -75,6 +80,7 @@ export function useRealtimeAnalytics(
 
   const subscribe = useCallback(() => {
     if (!isSupabaseConfigured()) {
+      console.warn("[realtime-analytics] Supabase not configured — check env vars NEXT_PUBLIC_SUPABASE_URL / ANON_KEY")
       setStatus("disconnected")
       return null
     }
@@ -160,15 +166,13 @@ export function useRealtimeAnalytics(
     mountedRef.current = true
     reconnectAttemptRef.current = 0
 
-    fetchData().then((ok) => {
-      if (!ok) setStatus("disconnected")
-    })
+    fetchData().catch(() => {})
 
     const channel = subscribe()
 
     if (channel) {
       const channelErrorTimeout = setTimeout(() => {
-        if (mountedRef.current && status !== "connected") {
+        if (mountedRef.current && statusRef.current !== "connected") {
           startPolling()
           setStatus("degraded")
         }
@@ -215,7 +219,7 @@ export function useRealtimeAnalytics(
       const newChannel = subscribe()
       if (newChannel) {
         const fallbackTimer = setTimeout(() => {
-          if (mountedRef.current && status !== "connected") {
+        if (mountedRef.current && statusRef.current !== "connected") {
             startPolling()
           }
         }, 5000)

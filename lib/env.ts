@@ -1,19 +1,21 @@
 import { z } from "zod";
 
 const envSchema = z.object({
-  // Server-side variables
-  JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
-  ADMIN_USERNAME: z.string().min(1, "ADMIN_USERNAME is required"),
-  ADMIN_PASSWORD: z.string().min(1, "ADMIN_PASSWORD is required"),
+  // Server-side variables — marked optional here so client-side code
+  // (where process.env doesn't expose non-NEXT_PUBLIC_ vars) still parses
+  // successfully and can access NEXT_PUBLIC_ values. Enforced at point of use.
+  JWT_SECRET: z.string().optional().or(z.literal("")),
+  ADMIN_USERNAME: z.string().optional().or(z.literal("")),
+  ADMIN_PASSWORD: z.string().optional().or(z.literal("")),
   POSTEX_API_TOKEN: z.string().optional(),
   POSTEX_WEBHOOK_SECRET: z.string().optional(),
   TIKTOK_ACCESS_TOKEN: z.string().optional(),
   TIKTOK_PIXEL_ID: z.string().optional(),
-  
+
   // Database Configuration
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional().or(z.literal("")),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional().or(z.literal("")),
-  
+
   // Node Environment
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
