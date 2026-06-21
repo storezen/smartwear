@@ -79,7 +79,7 @@ function RankBadge({ rank }: { rank: number }) {
 export const HotProducts = memo(function HotProducts({ products }: HotProductsProps) {
   if (!products.length) {
     return (
-      <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow">
+      <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow h-full flex flex-col">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
           <h3 className="text-[13px] font-semibold text-white/70">Hot Products</h3>
@@ -103,7 +103,7 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow"
+      className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
@@ -160,7 +160,7 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
       </div>
 
       {products.length > 0 && (
-        <div className="mt-4 pt-3.5 border-t border-white/[0.04] flex items-center gap-3 text-[9px] text-white/20">
+        <div className="mt-auto pt-3.5 border-t border-white/[0.04] flex items-center gap-3 text-[9px] text-white/20">
           <span className="flex items-center gap-1">
             <TrendingUp className="w-2.5 h-2.5 text-emerald-400" /> Rising
           </span>

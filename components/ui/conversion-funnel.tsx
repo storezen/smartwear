@@ -30,7 +30,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
 
   if (!funnel.length) {
     return (
-      <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow">
+      <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow h-full flex flex-col">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
           <h3 className="text-[13px] font-semibold text-white/70">Conversion Funnel</h3>
@@ -52,7 +52,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow"
+      className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2.5">
@@ -151,7 +151,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
         })}
       </div>
 
-      <div className="mt-4 pt-3.5 border-t border-white/[0.04] flex items-center justify-between text-[10px]">
+      <div className="mt-auto pt-3.5 border-t border-white/[0.04] flex items-center justify-between text-[10px]">
         <span className="text-white/25">Cart abandonment rate</span>
         <span className={`font-bold tabular-nums ${abandonmentRate <= 20 ? 'text-emerald-400' : abandonmentRate <= 50 ? 'text-yellow-400' : 'text-red-400'}`}>{abandonmentRate}%</span>
       </div>
