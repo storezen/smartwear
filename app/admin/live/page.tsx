@@ -270,7 +270,7 @@ export default function LiveAnalyticsPage() {
 
             {/* ── Overview Stats ── */}
             <div className="text-[9px] tracking-[1.5px] text-white/60 mb-3">REAL-TIME METRICS</div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
               <div className="h-full">
                 <LiveStatsCard
                   title="Active Visitors"
