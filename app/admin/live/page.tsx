@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import { Globe, MapIcon, Trash2, RefreshCw, Activity, Users, DollarSign, ShoppingCart, Eye, WifiOff, Clock, Loader2, Gauge, Sparkles } from "lucide-react"
+import { Globe, MapIcon, Trash2, RefreshCw, Activity, Users, DollarSign, ShoppingCart, Eye, WifiOff, Clock, Loader2 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { motion, AnimatePresence } from "framer-motion"
 import { useRealtimeAnalytics } from "@/lib/realtime-analytics"
@@ -108,29 +108,6 @@ function formatTimeAgo(ts: string): string {
   return `${Math.floor(minutes / 60)}h ago`
 }
 
-function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
-  return (
-    <div className="flex items-end justify-between mb-3">
-      <div>
-        <div className="flex items-center gap-2">
-          <div className="w-0.5 h-3 bg-[#B8860B] rounded-full shadow-[0_0_6px_rgba(184,134,11,0.3)]" />
-          <h2 className="text-[12px] font-semibold text-white/80 tracking-tight">{title}</h2>
-        </div>
-        {subtitle && <p className="text-[8px] text-white/20 mt-0.5 ml-3">{subtitle}</p>}
-      </div>
-      {action && <div>{action}</div>}
-    </div>
-  )
-}
-
-function SectionDivider() {
-  return (
-    <div className="relative my-4">
-      <div className="h-px bg-gradient-to-r from-[#B8860B]/10 via-white/[0.03] to-transparent" />
-    </div>
-  )
-}
-
 function EmptyState({ icon: Icon, label, sublabel }: { icon: any; label: string; sublabel?: string }) {
   return (
     <div className="flex items-center justify-center h-full min-h-[200px]">
@@ -184,181 +161,117 @@ export default function LiveAnalyticsPage() {
   const liveEventCount = events.length
 
   return (
-    <div className="bg-[#0A0D12] min-h-[calc(100vh-4rem)] text-white font-sans overflow-y-auto">
-      <div className="fixed inset-0 pointer-events-none opacity-[0.012]"
-        style={{
-          backgroundImage: "radial-gradient(circle at 25px 25px, rgba(255,255,255,0.6) 1px, transparent 1px)",
-          backgroundSize: "50px 50px",
-        }}
-      />
+    <div>
+      {/* ── Toolbar (globe toggle + health + clear) ── */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <StatusBadge status={status} reconnecting={reconnecting} error={error} retry={retry} />
+          {lastUpdated && (
+            <>
+              <span className="text-[8px] text-white/20">|</span>
+              <Clock className="w-3 h-3 text-white/30" />
+              <span className="text-[9px] text-white/30 tabular-nums font-mono">
+                {now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false })}
+              </span>
+            </>
+          )}
+        </div>
 
-      <div className="fixed top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#B8860B]/30 to-transparent pointer-events-none z-50" />
-
-      {/* ─── Header ─── */}
-      <div className="sticky top-0 z-30 bg-[#0A0D12]/85 backdrop-blur-2xl border-b border-white/[0.04] px-3 md:px-4 py-2">
-        <div className="flex items-center justify-between max-w-[1600px] mx-auto">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#B8860B]/25 to-[#B8860B]/5 border border-[#B8860B]/20 flex items-center justify-center shadow-[0_0_16px_rgba(184,134,11,0.1)]">
-              <Gauge className="w-3.5 h-3.5 text-[#B8860B]" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <h1 className="text-[12px] font-bold tracking-tight" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
-                  Command Center
-                </h1>
-              </div>
-              <div className="flex items-center gap-1.5 mt-0">
-                <StatusBadge status={status} reconnecting={reconnecting} error={error} retry={retry} />
-                {lastUpdated && (
-                  <>
-                    <span className="text-[6px] text-white/15">|</span>
-                    <Clock className="w-1.5 h-1.5 text-white/25" />
-                    <span className="text-[7px] text-white/25 tabular-nums font-mono">
-                      {now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false })}
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1">
-            <div className="bg-[#0A0D12] rounded-lg border border-white/[0.06] p-0.5 flex shadow-[0_1px_6px_rgba(0,0,0,0.2)]">
-              <button
-                onClick={() => { setViewMode("globe"); setGlobeEngine("premium") }}
-                className={`p-1 rounded-md transition-all ${
-                  viewMode === "globe" && globeEngine === "premium"
-                    ? "bg-[#B8860B]/20 text-[#B8860B] shadow-[0_0_12px_rgba(184,134,11,0.15)]"
-                    : "text-white/25 hover:text-white/50"
-                }`}
-                title="Premium 3D Globe"
-              >
-                <Globe className="w-3 h-3" />
-              </button>
-              <button
-                onClick={() => { setViewMode("globe"); setGlobeEngine("classic") }}
-                className={`p-1 rounded-md transition-all ${
-                  viewMode === "globe" && globeEngine === "classic"
-                    ? "bg-white/10 text-white"
-                    : "text-white/25 hover:text-white/50"
-                }`}
-                title="Classic Globe"
-              >
-                <span className="text-[9px] font-bold px-0.5">C</span>
-              </button>
-              <button
-                onClick={() => setViewMode("map")}
-                className={`p-1 rounded-md transition-all ${
-                  viewMode === "map"
-                    ? "bg-white/10 text-white"
-                    : "text-white/25 hover:text-white/50"
-                }`}
-                title="Pakistan Map"
-              >
-                <MapIcon className="w-3 h-3" />
-              </button>
-            </div>
-
-            <HealthCheckPanel
-              connectionStatus={status}
-              error={error}
-              eventCount={liveEventCount}
-              lastUpdated={lastUpdated}
-              reconnecting={reconnecting}
-            />
-
+        <div className="flex items-center gap-1.5">
+          <div className="bg-[#0F1923] rounded-lg border border-white/[0.06] p-0.5 flex">
             <button
-              onClick={handleClear}
-              disabled={isClearing}
-              className="p-1 bg-red-500/8 border border-red-500/15 rounded-lg text-red-400/60 hover:bg-red-500/15 hover:text-red-400 transition-all disabled:opacity-40"
-              title="Clear all data"
+              onClick={() => { setViewMode("globe"); setGlobeEngine("premium") }}
+              className={`p-1 rounded-md transition-all ${
+                viewMode === "globe" && globeEngine === "premium"
+                  ? "bg-[#B8860B]/20 text-[#B8860B]" : "text-white/25 hover:text-white/50"
+              }`}
+              title="Premium 3D Globe"
             >
-              {isClearing ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+              <Globe className="w-3 h-3" />
+            </button>
+            <button
+              onClick={() => { setViewMode("globe"); setGlobeEngine("classic") }}
+              className={`p-1 rounded-md transition-all ${
+                viewMode === "globe" && globeEngine === "classic"
+                  ? "bg-white/10 text-white" : "text-white/25 hover:text-white/50"
+              }`}
+              title="Classic Globe"
+            >
+              <span className="text-[9px] font-bold px-0.5">C</span>
+            </button>
+            <button
+              onClick={() => setViewMode("map")}
+              className={`p-1 rounded-md transition-all ${
+                viewMode === "map" ? "bg-white/10 text-white" : "text-white/25 hover:text-white/50"
+              }`}
+              title="Pakistan Map"
+            >
+              <MapIcon className="w-3 h-3" />
             </button>
           </div>
+          <HealthCheckPanel connectionStatus={status} error={error} eventCount={liveEventCount} lastUpdated={lastUpdated} reconnecting={reconnecting} />
+          <button
+            onClick={handleClear}
+            disabled={isClearing}
+            className="p-1.5 bg-red-500/8 border border-red-500/15 rounded-lg text-red-400/60 hover:bg-red-500/15 hover:text-red-400 transition-all disabled:opacity-40"
+            title="Clear all data"
+          >
+            {isClearing ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+          </button>
         </div>
       </div>
 
-      {/* ─── Main Content ─── */}
-      <div className="px-3 md:px-4 py-4 max-w-[1600px] mx-auto">
-        {loading ? (
-          <div className="space-y-5">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06 }}
-                  className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow"
-                >
-                  <div className="w-16 h-2.5 skeleton rounded mb-3" />
-                  <div className="w-24 h-7 skeleton rounded mb-2" />
-                  <div className="w-12 h-2 skeleton rounded" />
-                  <div className="mt-3 h-px w-full bg-white/[0.02]" />
-                </motion.div>
-              ))}
+      {loading ? (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="bg-[#0F1923] rounded-xl border border-white/5 p-4">
+                <div className="w-14 h-2 skeleton rounded mb-2" />
+                <div className="w-20 h-6 skeleton rounded mb-1.5" />
+                <div className="w-10 h-2 skeleton rounded" />
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
+            <div className="lg:col-span-3 h-48 bg-[#0F1923] rounded-xl border border-white/5">
+              <div className="p-4 space-y-3">
+                <div className="w-28 h-2.5 skeleton rounded" />
+                <div className="w-full h-36 skeleton rounded" />
+              </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.15 }}
-                className="lg:col-span-3 h-64 bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06]"
-              >
-                <div className="p-5 space-y-4">
-                  <div className="w-32 h-3 skeleton rounded" />
-                  <div className="w-48 h-40 skeleton rounded" />
-                </div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="lg:col-span-2 h-64 bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06]"
-              >
-                <div className="p-5 space-y-4">
-                  <div className="w-24 h-3 skeleton rounded" />
-                  <div className="w-full h-40 skeleton rounded" />
-                </div>
-              </motion.div>
+            <div className="lg:col-span-2 h-48 bg-[#0F1923] rounded-xl border border-white/5">
+              <div className="p-4 space-y-3">
+                <div className="w-20 h-2.5 skeleton rounded" />
+                <div className="w-full h-36 skeleton rounded" />
+              </div>
             </div>
           </div>
-        ) : (
-          <>
-            <AnimatePresence>
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8, height: 0 }}
-                  animate={{ opacity: 1, y: 0, height: "auto" }}
-                  exit={{ opacity: 0, y: -8, height: 0 }}
-                  className="mb-5 px-4 py-2.5 bg-red-500/8 border border-red-500/20 rounded-xl flex items-center justify-between overflow-hidden"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-                    <span className="text-[11px] text-red-300/80">{error}</span>
-                  </div>
-                  <button
-                    onClick={retry}
-                    className="text-[10px] font-medium text-red-400/70 hover:text-red-300 transition-colors underline underline-offset-2"
-                  >
-                    Retry now
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+        </div>
+      ) : (
+        <>
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -8, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: "auto" }}
+                exit={{ opacity: 0, y: -8, height: 0 }}
+                className="mb-4 px-3 py-2 bg-red-500/8 border border-red-500/20 rounded-lg flex items-center justify-between overflow-hidden"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                  <span className="text-[11px] text-red-300/80">{error}</span>
+                </div>
+                <button onClick={retry} className="text-[10px] font-medium text-red-400/70 hover:text-red-300 underline underline-offset-2">
+                  Retry now
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
             {/* ── Overview Stats ── */}
-            <SectionHeader title="Overview" subtitle="Real-time store performance metrics" />
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={{
-                visible: { transition: { staggerChildren: 0.06 } },
-              }}
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3"
-            >
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
+            <div className="text-[9px] tracking-[1.5px] text-white/60 mb-3">REAL-TIME METRICS</div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+              <div className="h-full">
                 <LiveStatsCard
                   title="Active Visitors"
                   value={summary?.activeVisitors ?? 0}
@@ -367,8 +280,8 @@ export default function LiveAnalyticsPage() {
                   icon={<Users className="w-3 h-3" />}
                   accentColor="#B8860B"
                 />
-              </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
+              </div>
+              <div className="h-full">
                 <LiveStatsCard
                   title="Total Revenue"
                   value={summary?.totalRevenue ?? 0}
@@ -377,24 +290,24 @@ export default function LiveAnalyticsPage() {
                   icon={<DollarSign className="w-3 h-3" />}
                   accentColor="#10B981"
                 />
-              </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
+              </div>
+              <div className="h-full">
                 <LiveStatsCard
                   title="Sessions"
                   value={summary?.totalSessions ?? 0}
                   icon={<Activity className="w-3 h-3" />}
                   accentColor="#6366F1"
                 />
-              </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
+              </div>
+              <div className="h-full">
                 <LiveStatsCard
                   title="Orders"
                   value={summary?.totalOrders ?? 0}
                   icon={<ShoppingCart className="w-3 h-3" />}
                   accentColor="#F59E0B"
                 />
-              </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
+              </div>
+              <div className="h-full">
                 <LiveStatsCard
                   title="Abandonment"
                   value={summary?.abandonmentRate ?? 0}
@@ -405,10 +318,8 @@ export default function LiveAnalyticsPage() {
                   accentColor="#EC4899"
                   isInverseTrend={true}
                 />
-              </motion.div>
-            </motion.div>
-
-            <SectionDivider />
+              </div>
+            </div>
 
             {/* ── Timeline + Funnel ── */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4">
@@ -436,7 +347,7 @@ export default function LiveAnalyticsPage() {
                   globeEngine === "premium" ? (
                     <PremiumGlobe locations={globeLocations} autoRotate />
                   ) : (
-                    <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden relative h-full flex flex-col card-glow">
+                    <div className="bg-[#0F1923] rounded-xl border border-white/5 overflow-hidden relative h-full flex flex-col">
                       <div className="absolute top-3 left-3 z-10">
                         <div className="bg-[#0A0D12]/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/5">
                           <span className="text-[9px] font-medium text-white/50">Classic Globe</span>
@@ -452,26 +363,20 @@ export default function LiveAnalyticsPage() {
             </div>
 
             {/* ── Events Feed ── */}
-            <div className="mb-4">
-              <div className="w-full">
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden card-glow h-full flex flex-col"
-                >
-                  <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="w-0.5 h-3.5 bg-[#B8860B] rounded-full shadow-[0_0_6px_rgba(184,134,11,0.3)]" />
-                  <h3 className="text-[12px] font-semibold text-white/70">Live Events Feed</h3>
-                  <span className="text-[9px] text-white/20 font-mono tabular-nums">({liveEventCount})</span>
+            <div className="bg-[#0F1923] rounded-xl border border-white/5 overflow-hidden">
+              <div className="flex items-center justify-between p-4">
+                <div>
+                  <div className="text-[9px] tracking-[1.5px] text-white/60">LIVE FEED</div>
+                  <h3 className="text-[13px] font-semibold text-white mt-0.5">Events</h3>
                 </div>
                 <div className="flex items-center gap-3">
+                  <span className="text-[9px] text-white/20 font-mono tabular-nums">({liveEventCount})</span>
                   <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_4px_rgba(52,211,153,0.5)]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                     <span className="text-[8px] text-white/25 font-medium">Purchase</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B] shadow-[0_0_4px_rgba(184,134,11,0.5)]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B]" />
                     <span className="text-[8px] text-white/25 font-medium">Cart</span>
                   </div>
                 </div>
@@ -491,7 +396,7 @@ export default function LiveAnalyticsPage() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ type: "spring", stiffness: 300, damping: 24, delay: i * 0.05 }}
-                        className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/[0.02] transition-colors group border-b border-white/[0.02] last:border-0"
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.02] transition-colors group"
                       >
                         <div className="relative flex items-center justify-center shrink-0 w-2 h-2">
                           {isNew && (
@@ -502,9 +407,9 @@ export default function LiveAnalyticsPage() {
                           <div
                             className={`w-1.5 h-1.5 rounded-full relative z-10 ${
                               isPurchase
-                                ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.5)]"
+                                ? "bg-emerald-400"
                                 : isCart
-                                  ? "bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.5)]"
+                                  ? "bg-[#B8860B]"
                                   : "bg-white/20"
                             }`}
                           />
@@ -539,22 +444,10 @@ export default function LiveAnalyticsPage() {
                   })}
                 </div>
               )}
-            </motion.div>
-              </div>
-            </div>
-            <div className="mt-8 pb-4 text-center flex items-center justify-center gap-3">
-              <span className="text-[8px] text-white/10 font-mono tracking-[0.2em] uppercase">
-                Smartwear Pakistan · Command Center v2
-              </span>
-              <span className="w-1 h-1 rounded-full bg-white/10" />
-              <span className="text-[8px] text-white/10 flex items-center gap-1">
-                <Sparkles className="w-2.5 h-2.5" />
-                Real-time analytics
-              </span>
             </div>
           </>
         )}
-      </div>
+      <p className="text-[10px] text-white/60 text-center mt-4">Real-time analytics with Supabase Realtime and heartbeat presence.</p>
     </div>
   )
 }

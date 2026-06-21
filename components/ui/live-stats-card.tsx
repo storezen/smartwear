@@ -66,10 +66,10 @@ export function LiveStatsCard({
       className="relative group h-full"
     >
       <div
-        className="relative bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border overflow-hidden transition-all duration-500 ease-out card-glow card-glow-hover h-full flex flex-col"
+        className="relative bg-[#0F1923] rounded-xl border border-white/5 overflow-hidden transition-all duration-500 ease-out h-full flex flex-col"
         style={{
           padding: "clamp(1rem, 2vw, 1.5rem)",
-          borderColor: flash ? `${accentColor}50` : "rgba(255,255,255,0.06)",
+          borderColor: flash ? `${accentColor}50` : undefined,
           boxShadow: flash ? `0 0 30px ${accentColor}20` : undefined,
         }}
       >
