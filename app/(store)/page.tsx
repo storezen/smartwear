@@ -246,18 +246,18 @@ function HeroBanner({ featured = HERO_FALLBACK }: { featured?: HeroFeatured }) {
           <div className="order-1 lg:order-2 flex justify-center relative px-2 sm:px-0">
             <motion.div
               style={{ x: translateX, y: translateY }}
-              className="relative w-[260px] h-[300px] sm:w-[340px] sm:h-[380px] md:w-[420px] md:h-[460px] lg:w-[500px] lg:h-[540px]"
+              className="relative w-[260px] h-[260px] sm:w-[340px] sm:h-[340px] md:w-[420px] md:h-[420px] lg:w-[500px] lg:h-[500px] rounded-full overflow-hidden"
             >
               <div className="absolute inset-[10%] rounded-full bg-[#B8860B]/12 blur-[80px]" />
-              <div className="absolute inset-[-12px] rounded-[40%] border border-[#B8860B]/15 animate-[spin_24s_linear_infinite]" />
-              <div className="absolute inset-[-28px] rounded-[42%] border border-dashed border-[#B8860B]/10 animate-[spin_36s_linear_infinite_reverse]" />
+              <div className="absolute inset-[-12px] rounded-full border border-[#B8860B]/15 animate-[spin_24s_linear_infinite]" />
+              <div className="absolute inset-[-28px] rounded-full border border-dashed border-[#B8860B]/10 animate-[spin_36s_linear_infinite_reverse]" />
 
               <Image
                 src={featured.image}
                 alt={`${featured.name} smartwatch`}
                 fill
                 sizes="(max-width: 640px) 260px, (max-width: 1024px) 420px, 500px"
-                className="object-contain object-center drop-shadow-[0_30px_80px_rgba(184,134,11,0.35)] z-10 p-2 md:p-4 scale-[1.02]"
+                className="object-cover object-center drop-shadow-[0_30px_80px_rgba(184,134,11,0.35)] z-10 scale-[1.15]"
                 priority
               />
 
