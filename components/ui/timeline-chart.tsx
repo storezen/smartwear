@@ -47,7 +47,7 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow"
+        className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow h-full flex flex-col"
       >
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
@@ -56,7 +56,7 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
             <p className="text-[9px] text-white/25 mt-0.5">Last 2 hours · per minute</p>
           </div>
         </div>
-        <div className="h-52 flex items-center justify-center">
+        <div className="h-52 flex items-center justify-center mt-auto mb-auto">
           <div className="text-center">
             <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center">
               <BarChart3 className="w-5 h-5 text-white/15" />
@@ -73,7 +73,7 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow"
+      className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] p-5 card-glow h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -178,7 +178,7 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
         </ResponsiveContainer>
       </div>
 
-      <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-white/[0.04]">
+      <div className="flex items-center justify-between mt-auto pt-2.5 border-t border-white/[0.04]">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.4)]" />

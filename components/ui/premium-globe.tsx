@@ -211,7 +211,7 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
 
   if (error) {
     return (
-      <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden min-h-[280px] flex flex-col items-center justify-center shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
+      <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden min-h-[280px] h-full flex flex-col items-center justify-center shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
         <div className="w-16 h-16 relative mb-4">
           <div className="absolute inset-0 rounded-full border border-[#B8860B]/20 animate-ping opacity-50" />
           <div className="absolute inset-2 rounded-full border border-[#B8860B]/40 animate-spin" style={{ animationDuration: '3s' }} />
@@ -230,7 +230,7 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
   }
 
   return (
-    <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden min-h-[280px] relative group shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
+    <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden min-h-[280px] h-full flex flex-col relative group shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
 
       <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
         <div className="flex items-center gap-1.5 bg-[#0A0D12]/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/[0.06]">
@@ -276,7 +276,7 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
         </div>
       )}
 
-      <div ref={containerRef} className="w-full min-h-[280px]" />
+      <div ref={containerRef} className="w-full min-h-[280px] flex-1 mt-auto mb-auto" />
 
       <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between">
         {hoveredCity ? (

@@ -439,7 +439,7 @@ export default function LiveAnalyticsPage() {
                   globeEngine === "premium" ? (
                     <PremiumGlobe locations={globeLocations} autoRotate />
                   ) : (
-                    <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden relative h-full card-glow">
+                    <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden relative h-full flex flex-col card-glow">
                       <div className="absolute top-3 left-3 z-10">
                         <div className="bg-[#0A0D12]/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/5">
                           <span className="text-[9px] font-medium text-white/50">Classic Globe</span>
