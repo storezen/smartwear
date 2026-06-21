@@ -427,14 +427,14 @@ export default function LiveAnalyticsPage() {
             </div>
 
             {/* ── Sources + Products + Globe ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-6">
-              <div className="lg:col-span-1 h-full">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 mb-6">
+              <div className="md:col-span-1 h-full">
                 <TrafficSourcesChart sources={summary?.trafficSources ?? []} />
               </div>
-              <div className="lg:col-span-1 h-full">
+              <div className="md:col-span-1 h-full">
                 <HotProducts products={summary?.hotProducts ?? []} />
               </div>
-              <div className="lg:col-span-1 h-full min-h-[400px]">
+              <div className="md:col-span-1 h-full min-h-[400px]">
                 {viewMode === "globe" ? (
                   globeEngine === "premium" ? (
                     <PremiumGlobe locations={globeLocations} autoRotate />
