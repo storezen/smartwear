@@ -361,7 +361,7 @@ export default function LiveAnalyticsPage() {
               }}
               className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6"
             >
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
                 <LiveStatsCard
                   title="Active Visitors"
                   value={summary?.activeVisitors ?? 0}
@@ -371,7 +371,7 @@ export default function LiveAnalyticsPage() {
                   accentColor="#B8860B"
                 />
               </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
                 <LiveStatsCard
                   title="Total Revenue"
                   value={summary?.totalRevenue ?? 0}
@@ -381,7 +381,7 @@ export default function LiveAnalyticsPage() {
                   accentColor="#10B981"
                 />
               </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
                 <LiveStatsCard
                   title="Sessions"
                   value={summary?.totalSessions ?? 0}
@@ -389,7 +389,7 @@ export default function LiveAnalyticsPage() {
                   accentColor="#6366F1"
                 />
               </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
                 <LiveStatsCard
                   title="Orders"
                   value={summary?.totalOrders ?? 0}
@@ -397,7 +397,7 @@ export default function LiveAnalyticsPage() {
                   accentColor="#F59E0B"
                 />
               </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="h-full">
                 <LiveStatsCard
                   title="Abandonment"
                   value={summary?.abandonmentRate ?? 0}

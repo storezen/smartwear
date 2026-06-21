@@ -56,7 +56,8 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
 
     async function init() {
       try {
-              const { default: GlobeModule }: any = await import("react-globe.gl")
+        const pkg: any = await import("react-globe.gl")
+        const GlobeModule = pkg.default || pkg
         if (!mounted || !containerRef.current) return
 
         const container = containerRef.current

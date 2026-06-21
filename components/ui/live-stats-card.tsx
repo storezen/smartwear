@@ -63,10 +63,10 @@ export function LiveStatsCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative group"
+      className="relative group h-full"
     >
       <div
-        className="relative bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border overflow-hidden transition-all duration-500 ease-out card-glow card-glow-hover"
+        className="relative bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border overflow-hidden transition-all duration-500 ease-out card-glow card-glow-hover h-full flex flex-col"
         style={{
           padding: "clamp(1rem, 2vw, 1.5rem)",
           borderColor: flash ? `${accentColor}50` : "rgba(255,255,255,0.06)",
@@ -124,7 +124,7 @@ export function LiveStatsCard({
         )}
 
         <div
-          className="mt-3 h-px w-full bg-gradient-to-r from-[var(--accent)]/20 via-[var(--accent)]/5 to-transparent"
+          className="mt-auto pt-3 h-px w-full bg-gradient-to-r from-[var(--accent)]/20 via-[var(--accent)]/5 to-transparent"
           style={{ "--accent": accentColor } as React.CSSProperties}
         />
       </div>
