@@ -19,6 +19,7 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
   const [pos, setPos] = useState({ top: 0, left: 0, width: 0 })
   const inputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const portalRef = useRef<HTMLDivElement>(null)
 
   const grouped = getCitiesByProvince()
 
@@ -35,13 +36,20 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
   }, [])
 
   useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+    function handleClick(e: MouseEvent | TouchEvent) {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(e.target as Node) &&
+        (!portalRef.current || !portalRef.current.contains(e.target as Node))
+      ) {
         setOpen(false)
       }
     }
     document.addEventListener("mousedown", handleClick)
-    return () => document.removeEventListener("mousedown", handleClick)
+    document.addEventListener("touchstart", handleClick, { passive: true })
+    return () => {
+      document.removeEventListener("mousedown", handleClick)
+      document.removeEventListener("touchstart", handleClick)
+    }
   }, [])
 
   useEffect(() => {
@@ -85,6 +93,7 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
 
       {open && typeof document !== 'undefined' && createPortal(
         <div
+          ref={portalRef}
           style={{
             position: 'fixed',
             top: pos.top,
