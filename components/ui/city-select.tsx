@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import { createPortal } from "react-dom"
 import { getCitiesByProvince, getPostexCoverageStyle, isPostexServiceable } from "@/lib/address-validator"
 import { Search, ChevronDown } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface CitySelectProps {
   value: string
@@ -67,10 +68,10 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
         onClick={() => setOpen(!open)}
         className={`w-full bg-[#0C0F14] border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] transition-colors flex items-center justify-between min-h-[44px] ${className}`}
       >
-        <span className={value ? "text-white" : "text-white/40"}>
+        <span className={cn("truncate mr-2 text-left", value ? "text-white" : "text-white/40")}>
           {value || "Select a city..."}
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {showCoverage && selectedCity && (
             <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
               getPostexCoverageStyle(selectedCity.postex).bg

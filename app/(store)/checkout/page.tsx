@@ -390,10 +390,10 @@ export default function CheckoutPage() {
                       placeholder="e.g. House 4, Street 5, Phase 6, DHA"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
                     />
-                    <p className="text-[10px] text-white/40 mt-1.5 flex items-start gap-1">
-                      <AlertCircle className="w-3 h-3 shrink-0 text-[#B8860B]" />
-                      Makaan number, Street, aur Area laazmi likhein taake rider asani se parcel pohncha sakay.
-                    </p>
+                    <div className="text-[10px] text-white/40 mt-1.5 flex items-start gap-1.5 leading-relaxed">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
+                      <span className="flex-1">Makaan number, Street, aur Area laazmi likhein taake rider asani se parcel pohncha sakay.</span>
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm text-white/70 mb-1.5">City</label>
