@@ -618,11 +618,6 @@ export default function CheckoutPage() {
             )}
             {currentStep < 4 ? (
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 order-1 sm:order-2 w-full sm:w-auto">
-                {currentStep === 1 && !canProceed() && (
-                  <span className="text-xs text-rose-400 font-medium bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20 text-center">
-                    Please provide a valid 11-digit phone number and complete address.
-                  </span>
-                )}
                 <button className="sw-btn-gold h-12 px-8 flex items-center justify-center text-sm disabled:opacity-50 w-full sm:w-auto" onClick={handleNext} disabled={!canProceed()}>
                   Continue
                   <ChevronRight className="w-4 h-4 ml-2" />
