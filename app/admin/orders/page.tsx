@@ -469,18 +469,30 @@ export default function AdminOrdersPage() {
                       </div>
                     </div>
 
-                    {/* Tracking Info */}
-                    {selectedOrder.postex && (
-                      <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
-                        <div className="p-4 border-b border-emerald-500/10 bg-emerald-500/5 flex items-center gap-2">
-                          <Truck className="w-4 h-4 text-emerald-400"/>
-                          <h3 className="font-semibold text-emerald-400">PostEx Tracking</h3>
-                        </div>
-                        <div className="p-4">
-                          <p className="font-mono text-sm text-white/90">{selectedOrder.postex}</p>
-                        </div>
+                    {/* PostEx Actions */}
+                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                      <div className="p-4 border-b border-white/5 bg-[#141414]">
+                        <h3 className="font-semibold text-white/90 flex items-center gap-2"><Truck className="w-4 h-4 text-white/50"/> PostEx Shipping</h3>
                       </div>
-                    )}
+                      <div className="p-4">
+                        {selectedOrder.postex ? (
+                          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+                            <p className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-1">Tracking ID</p>
+                            <p className="font-mono text-sm text-white/90">{selectedOrder.postex}</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            <p className="text-xs text-white/50">Not yet booked on PostEx.</p>
+                            <button
+                              onClick={() => updateOrderStatus(selectedOrder.id, 'Shipped')}
+                              className="w-full bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(184,134,11,0.3)] transition-all flex items-center justify-center gap-2"
+                            >
+                              <Truck className="w-3.5 h-3.5" /> Send to PostEx
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
 
                     {/* Internal Notes */}
                     <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">

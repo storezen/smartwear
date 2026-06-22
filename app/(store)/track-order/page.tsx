@@ -147,11 +147,11 @@ export default function TrackOrderPage() {
                 <p className="text-sm text-white/70">
                   Placed on {new Date(searchedOrder.created_at).toLocaleDateString('en-PK')}
                 </p>
-                {searchedOrder.tracking_number && (
+                {(searchedOrder.tracking_number || searchedOrder.postex) && (
                   <div className="mt-4 p-4 bg-[#0F1923] border border-white/5 rounded-xl flex items-center gap-3">
                     <Truck className="w-5 h-5 text-[#B8860B]" />
                     <span className="text-sm text-white/60">Tracking:</span>
-                    <span className="font-mono text-sm text-[#B8860B]">{searchedOrder.tracking_number}</span>
+                    <span className="font-mono text-sm text-[#B8860B]">{searchedOrder.postex || searchedOrder.tracking_number}</span>
                   </div>
                 )}
               </div>
