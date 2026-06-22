@@ -23,6 +23,7 @@ import { useCart } from '@/context/cart-context'
 import { useAuth } from '@/context/auth-context'
 import { formatPrice } from '@/lib/mock-data'
 import { detectProvince, isPostexServiceable, getPostexCoverageStyle } from '@/lib/address-validator'
+import { CitySelect } from '@/components/ui/city-select'
 import { TikTokEvents } from '@/lib/tiktok-pixel'
 import { SHIPPING_ZONES, Address } from '@/types'
 import { cn } from '@/lib/utils'
@@ -395,51 +396,15 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                   <div>
-                    <label className="block text-sm text-white/70 mb-1.5 flex items-center gap-2">
-                      City
-                      {guestAddress.city && (
-                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
-                          (() => {
-                            const style = getPostexCoverageStyle(isPostexServiceable(guestAddress.city))
-                            return `${style.bg} ${style.color} ${style.border}`
-                          })()
-                        }`}>
-                          {getPostexCoverageStyle(isPostexServiceable(guestAddress.city)).label}
-                        </span>
-                      )}
-                    </label>
-                    <select 
+                    <label className="block text-sm text-white/70 mb-1.5">City</label>
+                    <CitySelect
                       value={guestAddress.city}
-                      onChange={(e) => setGuestAddress({
-                        ...guestAddress, 
-                        city: e.target.value,
-                        province: detectProvince(e.target.value),
+                      onChange={(city) => setGuestAddress({
+                        ...guestAddress,
+                        city,
+                        province: detectProvince(city),
                       })}
-                      className="w-full bg-[#0C0F14] border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors appearance-none min-h-[44px]"
-                    >
-                      <option value="Karachi">Karachi</option>
-                      <option value="Lahore">Lahore</option>
-                      <option value="Islamabad">Islamabad</option>
-                      <option value="Rawalpindi">Rawalpindi</option>
-                      <option value="Faisalabad">Faisalabad</option>
-                      <option value="Multan">Multan</option>
-                      <option value="Peshawar">Peshawar</option>
-                      <option value="Quetta">Quetta</option>
-                      <option value="Sialkot">Sialkot</option>
-                      <option value="Gujranwala">Gujranwala</option>
-                      <option value="Hyderabad">Hyderabad</option>
-                      <option value="Bahawalpur">Bahawalpur</option>
-                      <option value="Sukkur">Sukkur</option>
-                      <option value="Abbottabad">Abbottabad</option>
-                      <option value="Sargodha">Sargodha</option>
-                      <option value="Gujrat">Gujrat</option>
-                      <option value="Sheikhupura">Sheikhupura</option>
-                      <option value="Rahim Yar Khan">Rahim Yar Khan</option>
-                      <option value="Larkana">Larkana</option>
-                      <option value="Gilgit">Gilgit</option>
-                      <option value="Muzaffarabad">Muzaffarabad</option>
-                      <option value="Other">Other</option>
-                    </select>
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>

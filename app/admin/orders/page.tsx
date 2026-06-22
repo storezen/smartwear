@@ -8,7 +8,8 @@ import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { toast } from "sonner"
 import { OrderStatusEnum } from "@/lib/validations/orders"
-import { detectProvince, isPostexServiceable, getPostexCoverageStyle } from "@/lib/address-validator"
+import { detectProvince } from "@/lib/address-validator"
+import { CitySelect } from "@/components/ui/city-select"
 
 const ALL_STATUSES = OrderStatusEnum.options;
 
@@ -655,21 +656,12 @@ export default function AdminOrdersPage() {
                   <textarea value={postexForm.address} onChange={e => setPostexForm(p => ({ ...p, address: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 resize-none min-h-[60px]" />
                 </div>
                 <div>
-                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 flex items-center gap-2">
-                    City
-                    {postexForm.city && (
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
-                        getPostexCoverageStyle(isPostexServiceable(postexForm.city)).bg
-                      } ${
-                        getPostexCoverageStyle(isPostexServiceable(postexForm.city)).color
-                      } ${
-                        getPostexCoverageStyle(isPostexServiceable(postexForm.city)).border
-                      }`}>
-                        {getPostexCoverageStyle(isPostexServiceable(postexForm.city)).label}
-                      </span>
-                    )}
-                  </label>
-                  <input type="text" value={postexForm.city} onChange={e => setPostexForm(p => ({ ...p, city: e.target.value, province: detectProvince(e.target.value) }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5">City</label>
+                  <CitySelect
+                    value={postexForm.city}
+                    onChange={(city) => setPostexForm(p => ({ ...p, city, province: detectProvince(city) }))}
+                    className="bg-[#141414]"
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
