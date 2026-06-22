@@ -12,9 +12,9 @@ const settingsSchema = z.object({
   store_phone: z.string().optional(),
   store_email: z.string().email("Invalid email").optional().or(z.literal("")),
   shipping_flat_rate: z.string().optional(),
-  postex_api_token: z.string().optional(),
-  tiktok_pixel_id: z.string().optional(),
-  tiktok_access_token: z.string().optional(),
+  postex_api_token: z.string().optional().nullable(),
+  tiktok_pixel_id: z.string().optional().nullable(),
+  tiktok_access_token: z.string().optional().nullable(),
 })
 
 type SettingsForm = z.infer<typeof settingsSchema>
@@ -43,7 +43,7 @@ export default function AdminSettingsPage() {
     fetch('/api/admin/settings')
       .then(res => res.json())
       .then(data => {
-        setFormData(data)
+        setFormData((prev) => ({ ...prev, ...Object.fromEntries(Object.entries(data).map(([k, v]) => [k, v ?? ''])) }))
         setLoading(false)
       })
       .catch(() => {
