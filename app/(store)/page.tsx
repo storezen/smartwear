@@ -205,12 +205,12 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
               >
                 <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
                   <motion.div variants={staggerItem} className="mb-5">
-                    <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/25 text-[#D4A017] text-[10px] md:text-xs font-bold uppercase tracking-[0.22em]">
-                      <span className="relative flex h-2 w-2">
+                    <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/25 text-[#D4A017] text-[10px] md:text-xs font-bold uppercase tracking-[0.22em] max-w-full">
+                      <span className="relative flex h-2 w-2 shrink-0">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-60" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]" />
                       </span>
-                      Flagship Drop · {featured.name}
+                      <span className="truncate">Flagship Drop · {featured.name}</span>
                     </span>
                   </motion.div>
 
@@ -241,11 +241,12 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                     </span>
                   </motion.div>
 
-                  <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                    <Link href={productHref} className="w-full sm:w-auto sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
-                      Shop {featured.name} <ArrowRight className="w-4 h-4" />
+                  <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start w-full overflow-hidden">
+                    <Link href={productHref} title={`Shop ${featured.name}`} className="w-full sm:w-auto sm:max-w-[60%] sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
+                      <span className="truncate">Shop {featured.name}</span>
+                      <ArrowRight className="w-4 h-4 shrink-0" />
                     </Link>
-                    <Link href="/products?category=smart-watches" className="w-full sm:w-auto sw-btn-ghost-white px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
+                    <Link href="/products?category=smart-watches" className="w-full sm:w-auto sw-btn-ghost-white px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px] shrink-0">
                       All Smart Watches
                     </Link>
                   </motion.div>
