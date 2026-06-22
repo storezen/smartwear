@@ -266,11 +266,11 @@ export default function CheckoutPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 text-xs text-white/70 mb-4 justify-center uppercase tracking-widest">
+          <div className="inline-flex items-center gap-2 text-xs text-white/70 mb-4 justify-center uppercase tracking-widest flex-wrap">
             <span>Home</span>
-            <ChevronRight className="w-3 h-3 text-[#B8860B]" />
+            <ChevronRight className="w-3 h-3 text-[#B8860B] shrink-0" />
             <span>Cart</span>
-            <ChevronRight className="w-3 h-3 text-[#B8860B]" />
+            <ChevronRight className="w-3 h-3 text-[#B8860B] shrink-0" />
             <span className="text-[#B8860B]">Secure Checkout</span>
           </div>
           <h1
@@ -283,13 +283,13 @@ export default function CheckoutPage() {
       </div>
       <div className="sw-container pb-16">
       {/* Progress Steps */}
-      <div className="mb-10">
-        <div className="flex items-center justify-center">
+      <div className="mb-8 sm:mb-10 px-0 sm:px-4 overflow-x-auto">
+        <div className="flex items-center justify-start sm:justify-center min-w-max sm:min-w-0 px-2 sm:px-0">
           {steps.map((step, index) => (
             <div key={step.id} className="flex items-center">
               <motion.div
                 className={cn(
-                  "flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors",
+                  "flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 transition-colors",
                   currentStep >= step.id
                     ? "bg-[linear-gradient(135deg,#B8860B,#D4A017)] border-transparent text-black"
                     : "border-white/10 text-white/60 bg-white/5"
@@ -300,20 +300,20 @@ export default function CheckoutPage() {
                 transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 {currentStep > step.id ? (
-                  <Check className="w-5 h-5" />
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                 ) : (
-                  <step.icon className="w-5 h-5" />
+                  <step.icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 )}
               </motion.div>
               <span className={cn(
-                "hidden sm:block ml-2 text-sm font-medium",
+                "hidden sm:block ml-2 text-sm font-medium whitespace-nowrap",
                 currentStep >= step.id ? "text-white" : "text-white/60"
               )}>
                 {step.name}
               </span>
               {index < steps.length - 1 && (
                 <div className={cn(
-                  "w-12 sm:w-20 h-0.5 mx-2",
+                  "w-8 sm:w-16 md:w-20 h-0.5 mx-1.5 sm:mx-2",
                   currentStep > step.id ? "bg-[#B8860B]" : "bg-white/10"
                 )} />
               )}
@@ -552,15 +552,15 @@ export default function CheckoutPage() {
                   <p className="font-medium mb-4 text-[#B8860B]">Order Items ({items.length})</p>
                   <div className="space-y-3">
                     {items.map((item) => (
-                      <div key={item.id} className="flex items-center gap-4 text-sm bg-white/5 p-3 border border-white/5 rounded-xl">
-                        <div className="w-12 h-12 bg-[#0F1923] rounded-lg overflow-hidden shrink-0 border border-white/10">
-                          <Image src={item.product.images[0]} alt={item.product.name} width={48} height={48} className="object-cover" />
+                      <div key={item.id} className="flex items-center gap-3 sm:gap-4 text-sm bg-white/5 p-3 border border-white/5 rounded-xl">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#0F1923] rounded-lg overflow-hidden shrink-0 border border-white/10">
+                          <Image src={item.product.images[0]} alt={item.product.name} width={40} height={40} className="object-cover sm:w-12 sm:h-12" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="truncate font-medium text-white">{item.product.name}</p>
                           <p className="text-white/60 mt-0.5">Qty: {item.quantity}</p>
                         </div>
-                        <p className="font-bold text-white">{formatPrice(item.product.price * item.quantity)}</p>
+                        <p className="font-bold text-white shrink-0">{formatPrice(item.product.price * item.quantity)}</p>
                       </div>
                     ))}
                   </div>
@@ -571,30 +571,30 @@ export default function CheckoutPage() {
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="flex justify-between mt-8">
+          <div className="flex flex-col sm:flex-row justify-between mt-8 gap-3">
             {currentStep > 1 ? (
-              <button className="sw-btn-ghost-white h-12 px-6 rounded-xl flex items-center text-sm" onClick={handleBack}>
+              <button className="sw-btn-ghost-white h-12 px-6 rounded-xl flex items-center justify-center text-sm order-2 sm:order-1" onClick={handleBack}>
                 <ChevronRight className="w-4 h-4 mr-2 rotate-180" />
                 Back
               </button>
             ) : (
-              <div />
+              <div className="hidden sm:block" />
             )}
             {currentStep < 4 ? (
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 order-1 sm:order-2">
                 {currentStep === 1 && !canProceed() && (
-                  <span className="text-xs text-rose-400 font-medium bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20">
+                  <span className="text-xs text-rose-400 font-medium bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20 text-center">
                     Please provide a valid 11-digit phone number and complete address.
                   </span>
                 )}
-                <button className="sw-btn-gold h-12 px-8 flex items-center text-sm disabled:opacity-50" onClick={handleNext} disabled={!canProceed()}>
+                <button className="sw-btn-gold h-12 px-8 flex items-center justify-center text-sm disabled:opacity-50" onClick={handleNext} disabled={!canProceed()}>
                   Continue
                   <ChevronRight className="w-4 h-4 ml-2" />
                 </button>
               </div>
             ) : (
               <button 
-                className="sw-btn-gold h-12 px-8 flex items-center text-sm gap-2 disabled:opacity-50" 
+                className="sw-btn-gold h-12 px-8 flex items-center justify-center text-sm gap-2 disabled:opacity-50 order-2"
                 onClick={handlePlaceOrder}
                 disabled={isProcessing}
               >
@@ -614,8 +614,8 @@ export default function CheckoutPage() {
               <div className="space-y-4 mb-6">
                 {items.map((item) => (
                   <div key={item.id} className="flex items-center gap-3">
-                    <div className="relative w-14 h-14 bg-[#0F1923] border border-white/5 rounded-xl overflow-hidden shrink-0">
-                      <Image src={item.product.images[0]} alt={item.product.name} fill sizes="56px" className="object-cover" />
+                    <div className="relative w-12 h-12 sm:w-14 sm:h-14 bg-[#0F1923] border border-white/5 rounded-xl overflow-hidden shrink-0">
+                      <Image src={item.product.images[0]} alt={item.product.name} fill sizes="(max-width: 640px) 48px, 56px" className="object-cover" />
                       <span className="absolute top-0 right-0 w-5 h-5 bg-[#B8860B] text-black font-bold text-[10px] flex items-center justify-center rounded-bl-lg">
                         {item.quantity}
                       </span>
@@ -673,12 +673,12 @@ export default function CheckoutPage() {
               {/* Special Upsell Offer */}
               <div className="mt-8 pt-6 border-t border-white/10">
                 <p className="text-xs font-bold text-[#B8860B] uppercase tracking-wider mb-3">Special Offer</p>
-                <div className="bg-[#B8860B]/10 border border-[#B8860B]/30 rounded-xl p-4 flex gap-4 items-center">
-                  <div className="w-16 h-16 bg-[#0F1923] rounded-lg overflow-hidden shrink-0">
-                    <Image src="https://images.unsplash.com/photo-1546868871-7041f2a55e12" alt="Premium Watch Box" width={64} height={64} className="object-cover" />
+                <div className="bg-[#B8860B]/10 border border-[#B8860B]/30 rounded-xl p-3 sm:p-4 flex gap-3 sm:gap-4 items-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#0F1923] rounded-lg overflow-hidden shrink-0">
+                    <Image src="https://images.unsplash.com/photo-1546868871-7041f2a55e12" alt="Premium Watch Box" width={48} height={48} className="object-cover sm:w-16 sm:h-16" />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-white">Premium Leather Box</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">Premium Leather Box</p>
                     <div className="flex items-center gap-2 mt-1">
                       <p className="text-sm font-bold text-[#D4A017]">₨ 2,500</p>
                       <p className="text-xs text-white/40 line-through">₨ 4,000</p>

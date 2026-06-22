@@ -93,9 +93,9 @@ export default function CartPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 text-xs text-white/70 mb-6 justify-center uppercase tracking-widest">
+          <div className="inline-flex items-center gap-2 text-xs text-white/70 mb-6 justify-center uppercase tracking-widest flex-wrap">
             <span>Home</span>
-            <ChevronRight className="w-3 h-3 text-[#B8860B]" />
+            <ChevronRight className="w-3 h-3 text-[#B8860B] shrink-0" />
             <span className="text-[#B8860B]">Shopping Cart</span>
           </div>
           <motion.h1
@@ -131,7 +131,7 @@ export default function CartPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.08 }}
-                  className="flex gap-4 p-4 rounded-2xl transition-all duration-200 group hover:border-[#B8860B]/40 hover:shadow-[0_0_20px_rgba(184,134,11,0.08)]"
+                  className="flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl transition-all duration-200 group hover:border-[#B8860B]/40 hover:shadow-[0_0_20px_rgba(184,134,11,0.08)]"
                   style={{
                     background: "rgba(255,255,255,0.02)",
                     border: "1px solid rgba(255,255,255,0.05)",
@@ -139,12 +139,12 @@ export default function CartPage() {
                 >
                   {/* Image */}
                   <Link href={`/products/${item.product.slug}`} className="shrink-0">
-                    <div className="relative overflow-hidden rounded-xl border border-white/5" style={{ width: 88, height: 88, background: "#0F1923" }}>
+                    <div className="relative overflow-hidden rounded-xl border border-white/5 w-[72px] h-[72px] sm:w-[88px] sm:h-[88px]" style={{ background: "#0F1923" }}>
                       <Image
                         src={item.product.images[0]}
                         alt={item.product.name}
                         fill
-                        sizes="88px"
+                        sizes="(max-width: 640px) 72px, 88px"
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
@@ -167,21 +167,21 @@ export default function CartPage() {
                       </p>
                     )}
 
-                    <div className="flex items-center justify-between mt-3">
+                    <div className="flex items-center justify-between mt-3 gap-2 flex-wrap">
                       {/* Quantity */}
                       <div className="flex items-center rounded-xl overflow-hidden border border-white/5" style={{ background: "rgba(255,255,255,0.03)" }}>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           disabled={item.quantity <= 1}
-                          className="w-11 h-11 flex items-center justify-center text-white/60 hover:text-white transition-colors disabled:opacity-30 sw-interactive"
+                          className="w-10 sm:w-11 h-10 sm:h-11 flex items-center justify-center text-white/60 hover:text-white transition-colors disabled:opacity-30 sw-interactive"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="w-8 text-center text-sm font-semibold">{item.quantity}</span>
+                        <span className="w-7 sm:w-8 text-center text-sm font-semibold">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-11 h-11 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive"
+                          className="w-10 sm:w-11 h-10 sm:h-11 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-3 h-3" />
@@ -217,7 +217,7 @@ export default function CartPage() {
               className="lg:col-span-1"
             >
               <div
-                className="rounded-2xl p-6 sticky top-[calc(60px+16px)] backdrop-blur-xl"
+                className="rounded-2xl p-4 sm:p-6 sticky top-[calc(60px+16px)] backdrop-blur-xl"
                 style={{
                   background: "rgba(255,255,255,0.02)",
                   border: "1px solid rgba(255,255,255,0.05)",
