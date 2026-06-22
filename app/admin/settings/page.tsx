@@ -36,6 +36,7 @@ export default function AdminSettingsPage() {
     store_email: "",
     shipping_flat_rate: "",
     postex_api_token: "",
+    postex_webhook_secret: "",
     tiktok_pixel_id: "",
     tiktok_access_token: "",
   })
@@ -64,7 +65,10 @@ export default function AdminSettingsPage() {
         body: JSON.stringify(validated)
       })
 
-      if (!res.ok) throw new Error("Failed to save")
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        throw new Error(errData.error || `Server error (${res.status})`)
+      }
       
       toast.success("Settings saved successfully!")
     } catch (error) {
