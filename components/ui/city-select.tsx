@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
+import { createPortal } from "react-dom"
 import { getCitiesByProvince, getPostexCoverageStyle, isPostexServiceable } from "@/lib/address-validator"
 import { Search, ChevronDown } from "lucide-react"
 
@@ -14,6 +15,7 @@ interface CitySelectProps {
 export function CitySelect({ value, onChange, showCoverage = true, className = "" }: CitySelectProps) {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState("")
+  const [pos, setPos] = useState({ top: 0, left: 0, width: 0 })
   const inputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -23,6 +25,13 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
     province,
     cities: cities.filter(c => c.name.toLowerCase().includes(search.toLowerCase())),
   })).filter(g => g.cities.length > 0)
+
+  const updatePos = useCallback(() => {
+    if (dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect()
+      setPos({ top: rect.bottom + 4, left: rect.left, width: rect.width })
+    }
+  }, [])
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -35,10 +44,17 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
   }, [])
 
   useEffect(() => {
-    if (open && inputRef.current) {
-      inputRef.current.focus()
+    if (open) {
+      updatePos()
+      inputRef.current?.focus()
+      window.addEventListener("scroll", updatePos, true)
+      window.addEventListener("resize", updatePos)
+      return () => {
+        window.removeEventListener("scroll", updatePos, true)
+        window.removeEventListener("resize", updatePos)
+      }
     }
-  }, [open])
+  }, [open, updatePos])
 
   const selectedCity = value
     ? Object.values(grouped).flat().find(c => c.name === value)
@@ -66,8 +82,16 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
         </div>
       </button>
 
-      {open && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-[#0F1923] border border-white/10 rounded-xl shadow-2xl z-50 max-h-72 overflow-hidden flex flex-col">
+      {open && typeof document !== 'undefined' && createPortal(
+        <div
+          style={{
+            position: 'fixed',
+            top: pos.top,
+            left: pos.left,
+            width: pos.width,
+          }}
+          className="bg-[#0F1923] border border-white/10 rounded-xl shadow-2xl z-[9999] max-h-72 overflow-hidden flex flex-col"
+        >
           <div className="p-2 border-b border-white/5">
             <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2">
               <Search className="w-4 h-4 text-white/40 shrink-0" />
@@ -117,7 +141,8 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
               ))
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
