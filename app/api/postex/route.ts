@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { isSupabaseConfigured, supabase } from '@/lib/supabase'
 import { getSettings } from '@/lib/db'
 import { decrypt } from '@/lib/encryption'
+import { fetchPostexCharges } from '@/lib/postex'
 
 /**
  * Fetch wrapper with exponential backoff retry logic.
@@ -78,6 +79,18 @@ export async function POST(req: Request) {
 
     const trackingNumber = result.dist?.trackingNumber
     console.log(`[POSTEX SUCCESS] Order ${orderId} booked with Tracking ID: ${trackingNumber}`)
+
+    // Fetch actual charges from PostEx (runs in background)
+    if (trackingNumber && postexToken) {
+      fetchPostexCharges(trackingNumber, postexToken).then(charges => {
+        if (charges) {
+          console.log(`[POSTEX] Charges for ${orderId}:`, charges)
+          if (isSupabaseConfigured() && supabase) {
+            supabase.from('orders').update({ postex_charges: charges }).eq('id', orderId).then()
+          }
+        }
+      })
+    }
 
     // Store tracking ID in Supabase
     if (trackingNumber && isSupabaseConfigured() && supabase) {

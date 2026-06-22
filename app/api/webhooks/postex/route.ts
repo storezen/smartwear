@@ -3,6 +3,7 @@ import { isSupabaseConfigured, supabase } from '@/lib/supabase'
 import { getSettings } from '@/lib/db'
 import { decrypt } from '@/lib/encryption'
 import { env } from '@/lib/env'
+import { fetchPostexCharges } from '@/lib/postex'
 
 export async function POST(req: Request) {
   try {
@@ -62,10 +63,26 @@ export async function POST(req: Request) {
       if (Object.keys(updates).length > 0) {
         await supabase.from('orders').update(updates).eq('id', orderRef)
       }
+
+      // Fetch actual charges in background
+      const trackId = distTrackingNumber || currentOrder.postex
+      if (trackId && settings.postex_api_token) {
+        const token = decrypt(settings.postex_api_token) || env.POSTEX_API_TOKEN
+        if (token) {
+          fetchPostexCharges(trackId, token).then(charges => {
+            if (charges) {
+              supabase.from('orders').update({ postex_charges: charges }).eq('id', orderRef).then()
+            }
+          })
+        }
+      }
     } else {
       const { updateOrderStatus } = await import('@/lib/db')
-      // Save tracking number + status
-      await updateOrderStatus(orderRef, mappedStatus, distTrackingNumber || undefined, webhookNote)
+      const token = decrypt(settings.postex_api_token) || env.POSTEX_API_TOKEN
+      const trackId = distTrackingNumber
+      // Fetch charges then update status with them
+      const charges = trackId && token ? await fetchPostexCharges(trackId, token) : undefined
+      await updateOrderStatus(orderRef, mappedStatus, trackId || undefined, webhookNote, charges || undefined)
     }
 
     return NextResponse.json({ success: true, mappedStatus }, { status: 200 })

@@ -38,7 +38,8 @@ CREATE TABLE public.orders (
   promo_discount NUMERIC DEFAULT 0,
   notes TEXT,
   history JSONB,
-  postex TEXT
+  postex TEXT,
+  postex_charges JSONB
 );
 
 -- 3. Marketing (Promo Codes) Table

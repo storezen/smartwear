@@ -305,7 +305,7 @@ export async function createOrder(order: any) {
   return order
 }
 
-export async function updateOrderStatus(orderId: string, status: string, postexId?: string, note?: string) {
+export async function updateOrderStatus(orderId: string, status: string, postexId?: string, note?: string, postexCharges?: Record<string, unknown>) {
   if (env.NODE_ENV === 'production' && supabase) {
     const { data: order } = await supabase.from('orders').select('*').eq('id', orderId).single()
     if (!order) return null
@@ -323,6 +323,7 @@ export async function updateOrderStatus(orderId: string, status: string, postexI
     }
     order.status = status
     if (postexId) order.postex = postexId
+    if (postexCharges) order.postex_charges = postexCharges
     if (note && !order.notes) order.notes = note
     else if (note) order.notes = order.notes + "\n" + note
     
@@ -348,6 +349,7 @@ export async function updateOrderStatus(orderId: string, status: string, postexI
     }
     order.status = status
     if (postexId) order.postex = postexId
+    if (postexCharges) order.postex_charges = postexCharges
     if (note && !order.notes) order.notes = note
     else if (note) order.notes = order.notes + "\n" + note
     await saveDb(db)

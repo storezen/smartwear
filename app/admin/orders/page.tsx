@@ -498,6 +498,23 @@ export default function AdminOrdersPage() {
                               <p className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-1">Tracking ID</p>
                               <p className="font-mono text-sm text-white/90">{selectedOrder.postex}</p>
                             </div>
+
+                            {selectedOrder.postex_charges && (
+                              <div className="grid grid-cols-2 gap-2">
+                                {[
+                                  { label: "Shipping Fee", key: "transactionFee", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
+                                  { label: "Tax", key: "transactionTax", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
+                                  { label: "Upfront Payment", key: "upfrontPayment", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
+                                  { label: "Balance Payment", key: "balancePayment", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
+                                ].filter(({ key }) => selectedOrder.postex_charges[key] != null).map(({ label, key, format }) => (
+                                  <div key={key} className="bg-white/5 rounded-lg p-2.5">
+                                    <p className="text-[10px] text-white/40 uppercase tracking-wider mb-0.5">{label}</p>
+                                    <p className="text-sm font-mono text-white/80">{format(selectedOrder.postex_charges[key])}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
                             <a
                               href={`https://postex.pk/track?tracking=${selectedOrder.postex}`}
                               target="_blank"
