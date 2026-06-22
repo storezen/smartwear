@@ -193,7 +193,7 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
 
       <div className="sw-container relative z-10 w-full" style={{ maxWidth: "1536px" }}>
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center py-16 md:py-24 lg:py-28 mt-14 md:mt-0">
-          <div className="order-2 lg:order-1 text-center lg:text-left relative min-h-[380px] flex items-center">
+          <div className="order-2 lg:order-1 text-center lg:text-left relative min-h-[380px] flex items-center min-w-0">
             <AnimatePresence mode="wait">
               <motion.div
                 key={featured.slug}
@@ -201,11 +201,11 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.5 }}
-                className="w-full"
+                className="w-full min-w-0"
               >
-                <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
-                  <motion.div variants={staggerItem} className="mb-5">
-                    <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/25 text-[#D4A017] text-[10px] md:text-xs font-bold uppercase tracking-[0.22em] max-w-full">
+                <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="min-w-0">
+                  <motion.div variants={staggerItem} className="mb-5 min-w-0">
+                    <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/25 text-[#D4A017] text-[10px] md:text-xs font-bold uppercase tracking-[0.22em] max-w-full min-w-0">
                       <span className="relative flex h-2 w-2 shrink-0">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-60" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]" />
@@ -241,8 +241,8 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                     </span>
                   </motion.div>
 
-                  <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start w-full overflow-hidden">
-                    <Link href={productHref} title={`Shop ${featured.name}`} className="w-full sm:w-auto sm:max-w-[60%] sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
+                  <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start w-full overflow-hidden min-w-0">
+                    <Link href={productHref} title={`Shop ${featured.name}`} className="w-full sm:w-auto sm:max-w-[60%] sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px] min-w-0">
                       <span className="truncate">Shop {featured.name}</span>
                       <ArrowRight className="w-4 h-4 shrink-0" />
                     </Link>
