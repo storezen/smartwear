@@ -63,6 +63,7 @@ CREATE TABLE public.settings (
   store_email TEXT,
   shipping_flat_rate TEXT DEFAULT '250',
   postex_api_token TEXT,
+  postex_webhook_secret TEXT,
   tiktok_pixel_id TEXT,
   tiktok_access_token TEXT
 );

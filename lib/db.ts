@@ -369,19 +369,43 @@ export async function deleteOrders(ids: string[]) {
   return { success: true }
 }
 
+const SETTINGS_DEFAULTS = {
+  store_name: "Smartwear Pakistan",
+  store_phone: "",
+  store_email: "",
+  shipping_flat_rate: "250",
+  postex_api_token: "",
+  postex_webhook_secret: "",
+  tiktok_pixel_id: "",
+  tiktok_access_token: "",
+}
+
+// Fields that exist in the Supabase `settings` table schema.
+// When adding new columns, add to this list AND create a DB migration.
+const KNOWN_SETTINGS_COLUMNS = new Set([
+  'id',
+  'store_name',
+  'store_phone',
+  'store_email',
+  'shipping_flat_rate',
+  'postex_api_token',
+  'postex_webhook_secret',
+  'tiktok_pixel_id',
+  'tiktok_access_token',
+])
+
 // Settings
 export async function getSettings() {
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('settings').select('*').single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getSettings error:', error)
-    if (data) return data
-    // Fallback default
-    return { store_name: "Smartwear Pakistan", store_phone: "", store_email: "", shipping_flat_rate: "250", postex_api_token: "", postex_webhook_secret: "", tiktok_pixel_id: "", tiktok_access_token: "" }
+    // Merge so all fields are present even if column is missing in Supabase
+    return { ...SETTINGS_DEFAULTS, ...data }
   }
 
   const db = await getDb()
   if (!db.settings) {
-    db.settings = { store_name: "Smartwear Pakistan", store_phone: "", store_email: "", shipping_flat_rate: "250", postex_api_token: "", postex_webhook_secret: "", tiktok_pixel_id: "", tiktok_access_token: "" }
+    db.settings = { ...SETTINGS_DEFAULTS }
     await saveDb(db)
   }
   return db.settings
@@ -390,9 +414,18 @@ export async function getSettings() {
 export async function updateSettings(updates: any) {
   if (env.NODE_ENV === 'production' && supabase) {
     const current = await getSettings()
-    const { data, error } = await supabase.from('settings').upsert({ id: 1, ...current, ...updates }).select().single()
+    // Only upsert columns that actually exist in Supabase (skip unknown ones)
+    const payload: Record<string, unknown> = { id: 1 }
+    for (const [key, value] of Object.entries({ ...current, ...updates })) {
+      if (KNOWN_SETTINGS_COLUMNS.has(key)) {
+        payload[key] = value
+      }
+    }
+    const { data, error } = await supabase.from('settings').upsert(payload).select().single()
     if (!error && data) return data
-    console.warn("Supabase updateSettings failed, falling back to memory:", error?.message)
+    console.error("Supabase updateSettings failed:", error?.message)
+    // If column doesn't exist yet, Supabase will error — return merged result anyway
+    return { ...current, ...updates }
   }
   const db = await getDb()
   db.settings = { ...db.settings, ...updates }
