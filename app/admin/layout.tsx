@@ -379,7 +379,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-5 scroll-smooth relative z-0">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-5 scroll-smooth">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
