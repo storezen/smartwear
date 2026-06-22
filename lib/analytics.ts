@@ -88,14 +88,14 @@ export function parseEvent(raw: any): AnalyticsEvent {
   }
 }
 
-const LAST_5_MIN = 5 * 60 * 1000
-const LAST_10_MIN = 10 * 60 * 1000
 const LAST_30_MIN = 30 * 60 * 1000
 const LAST_2_HOURS = 2 * 60 * 60 * 1000
 
 function isInWindow(ts: string, windowMs: number): boolean {
   return Date.now() - new Date(ts).getTime() <= windowMs
 }
+
+const ACTIVE_WINDOW_MS = 30_000
 
 export function getActiveVisitors(events: AnalyticsEvent[]): number {
   if (typeof window === "undefined") {
@@ -106,19 +106,19 @@ export function getActiveVisitors(events: AnalyticsEvent[]): number {
     } catch {}
   }
   return new Set(
-    events.filter((e) => isInWindow(e.timestamp, LAST_5_MIN)).map((e) => e.session_id)
+    events.filter((e) => isInWindow(e.timestamp, ACTIVE_WINDOW_MS)).map((e) => e.session_id)
   ).size
 }
 
 export function getActiveVisitorsTrend(events: AnalyticsEvent[]): number {
   const now = Date.now()
   const current = new Set(
-    events.filter((e) => now - new Date(e.timestamp).getTime() <= LAST_5_MIN).map((e) => e.session_id)
+    events.filter((e) => now - new Date(e.timestamp).getTime() <= ACTIVE_WINDOW_MS).map((e) => e.session_id)
   )
   const previous = new Set(
     events.filter((e) => {
       const t = new Date(e.timestamp).getTime()
-      return t >= now - LAST_10_MIN && t < now - LAST_5_MIN
+      return t >= now - 2 * ACTIVE_WINDOW_MS && t < now - ACTIVE_WINDOW_MS
     }).map((e) => e.session_id)
   )
   if (previous.size === 0) return current.size > 0 ? 100 : 0

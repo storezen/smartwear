@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
-import { AnalyticsEvent, parseEvent, computeSummary, LiveSummary } from "@/lib/analytics"
+import { AnalyticsEvent, parseEvent, LiveSummary } from "@/lib/analytics"
 
 export type ConnectionStatus = "connecting" | "connected" | "degraded" | "disconnected"
 
@@ -17,10 +17,6 @@ interface UseRealtimeAnalyticsResult {
   retry: () => void
   reconnecting: boolean
   lastUpdated: Date | null
-}
-
-function getId(newEvent: any): string {
-  return newEvent.id || `evt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
 export function useRealtimeAnalytics(
@@ -106,7 +102,6 @@ export function useRealtimeAnalytics(
           const updated = [parsed, ...eventsRef.current].slice(0, 500)
           eventsRef.current = updated
           setEvents(updated)
-          debouncedSetSummary(updated)
           setLastUpdated(new Date())
           setError(null)
           reconnectAttemptRef.current = 0
@@ -151,17 +146,6 @@ export function useRealtimeAnalytics(
     }
   }, [])
 
-  const summaryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const debouncedSetSummary = useCallback((updated: AnalyticsEvent[]) => {
-    if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current)
-    summaryTimeoutRef.current = setTimeout(() => {
-      if (mountedRef.current) {
-        setSummary(computeSummary(updated))
-      }
-    }, 150)
-  }, [])
-
   useEffect(() => {
     mountedRef.current = true
     reconnectAttemptRef.current = 0
@@ -181,7 +165,6 @@ export function useRealtimeAnalytics(
       return () => {
         mountedRef.current = false
         clearTimeout(channelErrorTimeout)
-        if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current)
         supabase?.removeChannel(channel)
         stopPolling()
       }
