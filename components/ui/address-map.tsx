@@ -1,134 +1,182 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from "react-leaflet"
 import L from "leaflet"
-import { MapPin, Navigation } from "lucide-react"
+import { MapPin, Navigation, Search, Crosshair } from "lucide-react"
+import "leaflet/dist/leaflet.css"
 
-// Fix Leaflet default marker icon (broken in webpack/Next.js)
 const iconUrl = "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png"
 const iconRetinaUrl = "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png"
 const shadowUrl = "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png"
 
 const defaultIcon = L.icon({
-  iconUrl,
-  iconRetinaUrl,
-  shadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+  iconUrl, iconRetinaUrl, shadowUrl,
+  iconSize: [25, 41], iconAnchor: [12, 41],
+  popupAnchor: [1, -34], shadowSize: [41, 41],
 })
-
 L.Marker.prototype.options.icon = defaultIcon
 
-interface AddressMapProps {
-  address: string
+export interface AddressMapResult {
+  formattedAddress: string
   city: string
-  province?: string
-  onCoordinateChange?: (lat: number, lng: number, formattedAddress: string) => void
-  editable?: boolean
-  height?: number
+  province: string
+  lat: number
+  lng: number
 }
 
-interface GeocodingResult {
+interface SearchResult {
   lat: number
   lng: number
   displayName: string
+  city: string
+  province: string
 }
 
-async function geocode(address: string, city: string): Promise<GeocodingResult | null> {
-  const q = encodeURIComponent(`${address}, ${city}, Pakistan`)
-  try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${q}&limit=1&accept-language=en`, {
-      headers: { "User-Agent": "SmartwearApp/1.0" },
-    })
-    const data = await res.json()
-    if (data && data.length > 0) {
-      return {
-        lat: Number(data[0].lat),
-        lng: Number(data[0].lon),
-        displayName: data[0].display_name,
-      }
-    }
-  } catch {}
-  return null
-}
-
-async function reverseGeocode(lat: number, lng: number): Promise<string> {
+async function nominatimSearch(query: string): Promise<SearchResult[]> {
   try {
     const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=en`,
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1&accept-language=en`,
       { headers: { "User-Agent": "SmartwearApp/1.0" } }
     )
     const data = await res.json()
-    return data?.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`
-  } catch {
-    return `${lat.toFixed(4)}, ${lng.toFixed(4)}`
-  }
+    return data.map((r: any) => ({
+      lat: Number(r.lat), lng: Number(r.lon),
+      displayName: r.display_name,
+      city: r.address?.city || r.address?.town || r.address?.village || r.address?.county || "",
+      province: r.address?.state || r.address?.region || "",
+    }))
+  } catch { return [] }
 }
 
-function MapClickHandler({
-  editable,
-  onCoordinateChange,
-}: {
-  editable?: boolean
-  onCoordinateChange?: (lat: number, lng: number, formattedAddress: string) => void
-}) {
-  useMapEvents({
-    async click(e) {
-      if (!editable || !onCoordinateChange) return
-      const { lat, lng } = e.latlng
-      const addr = await reverseGeocode(lat, lng)
-      onCoordinateChange(lat, lng, addr)
-    },
-  })
-  return null
+async function reverseGeocode(lat: number, lng: number): Promise<SearchResult> {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=en`,
+      { headers: { "User-Agent": "SmartwearApp/1.0" } }
+    )
+    const data = await res.json()
+    return {
+      lat, lng,
+      displayName: data?.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+      city: data?.address?.city || data?.address?.town || data?.address?.village || data?.address?.county || "",
+      province: data?.address?.state || data?.address?.region || "",
+    }
+  } catch {
+    return { lat, lng, displayName: `${lat.toFixed(4)}, ${lng.toFixed(4)}`, city: "", province: "" }
+  }
 }
 
 function ChangeView({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap()
-  useEffect(() => {
-    map.setView(center, zoom)
-  }, [center[0], center[1], zoom, map])
+  useEffect(() => { map.setView(center, zoom) }, [center[0], center[1], zoom, map])
   return null
 }
 
-export default function AddressMap({
-  address,
-  city,
-  province,
-  onCoordinateChange,
-  editable = false,
-  height = 220,
-}: AddressMapProps) {
-  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
-  const [tooltip, setTooltip] = useState("")
+interface MapClickHandlerProps {
+  onPin: (lat: number, lng: number) => void
+}
+function MapClickHandler({ onPin }: MapClickHandlerProps) {
+  useMapEvents({
+    click(e) { onPin(e.latlng.lat, e.latlng.lng) },
+  })
+  return null
+}
 
+interface AddressMapProps {
+  address: string
+  city: string
+  onCorrect?: (result: AddressMapResult) => void
+  height?: number
+}
+
+export default function AddressMap({ address, city, onCorrect, height = 220 }: AddressMapProps) {
+  const [center, setCenter] = useState<[number, number]>([30.3753, 69.3451])
+  const [zoom, setZoom] = useState(5)
+  const [markerPos, setMarkerPos] = useState<[number, number] | null>(null)
+  const [popupText, setPopupText] = useState("")
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+  const [searching, setSearching] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
+  const searchRef = useRef<HTMLDivElement>(null)
+  const markerRef = useRef<L.Marker | null>(null)
+
+  // Initial geocode of the address
   useEffect(() => {
     let cancelled = false
     setLoading(true)
-    setError(false)
-    geocode(address, city).then(result => {
-      if (cancelled) return
-      if (result) {
-        setCoords({ lat: result.lat, lng: result.lng })
-        setTooltip(result.displayName)
-      } else {
-        setError(true)
-      }
-      setLoading(false)
-    })
+    const q = encodeURIComponent(`${address}, ${city}, Pakistan`)
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${q}&limit=1&accept-language=en`,
+      { headers: { "User-Agent": "SmartwearApp/1.0" } })
+      .then(r => r.json())
+      .then(data => {
+        if (cancelled) return
+        if (data && data.length > 0) {
+          const pos: [number, number] = [Number(data[0].lat), Number(data[0].lon)]
+          setCenter(pos)
+          setZoom(15)
+          setMarkerPos(pos)
+          setPopupText(data[0].display_name)
+        }
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
     return () => { cancelled = true }
   }, [address, city])
 
-  const handleCoordChange = async (lat: number, lng: number, formattedAddress: string) => {
-    setCoords({ lat, lng })
-    setTooltip(formattedAddress)
-    onCoordinateChange?.(lat, lng, formattedAddress)
+  // Click on map → reverse geocode → update
+  const handleMapPin = async (lat: number, lng: number) => {
+    const result = await reverseGeocode(lat, lng)
+    setMarkerPos([lat, lng])
+    setCenter([lat, lng])
+    setZoom(15)
+    setPopupText(result.displayName)
+    onCorrect?.({
+      formattedAddress: result.displayName,
+      city: result.city || city,
+      province: result.province,
+      lat, lng,
+    })
   }
+
+  // Search place
+  const handleSearch = async (q: string) => {
+    setSearchQuery(q)
+    if (q.length < 3) { setSearchResults([]); return }
+    setSearching(true)
+    const results = await nominatimSearch(q)
+    setSearchResults(results)
+    setSearching(false)
+  }
+
+  const selectSearchResult = (r: SearchResult) => {
+    setMarkerPos([r.lat, r.lng])
+    setCenter([r.lat, r.lng])
+    setZoom(16)
+    setPopupText(r.displayName)
+    setShowSearch(false)
+    setSearchQuery("")
+    setSearchResults([])
+    onCorrect?.({
+      formattedAddress: r.displayName,
+      city: r.city || city,
+      province: r.province,
+      lat: r.lat, lng: r.lng,
+    })
+  }
+
+  // Close search on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowSearch(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClick)
+    return () => document.removeEventListener("mousedown", handleClick)
+  }, [])
 
   if (loading) {
     return (
@@ -141,69 +189,93 @@ export default function AddressMap({
     )
   }
 
-  if (error || !coords) {
-    const provinceCoords: Record<string, [number, number]> = {
-      Punjab: [31.5, 74], Sindh: [25, 68], "Khyber Pakhtunkhwa": [34, 72],
-      Balochistan: [29, 66], "Islamabad Capital Territory": [33.7, 73],
-      "Gilgit-Baltistan": [36, 75], "Azad Kashmir": [34, 74],
-    }
-    const defaultCoord: [number, number] = province
-      ? (provinceCoords[province] || [30.3753, 69.3451])
-      : [30.3753, 69.3451]
-
-    return (
-      <div className="relative" style={{ height }}>
-        <div className="absolute inset-0 z-0 rounded-xl overflow-hidden border border-white/10">
-          <MapContainer
-            center={defaultCoord}
-            zoom={5}
-            scrollWheelZoom={false}
-            style={{ height: "100%", width: "100%" }}
-            className="z-0"
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <ChangeView center={defaultCoord} zoom={5} />
-            {editable && onCoordinateChange && (
-              <MapClickHandler editable onCoordinateChange={handleCoordChange} />
-            )}
-          </MapContainer>
-        </div>
-        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-          <div className="bg-black/70 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10 text-center">
-            <MapPin className="w-5 h-5 text-amber-400 mx-auto mb-1" />
-            <p className="text-xs text-white/70">Address not found on map</p>
-            {editable && <p className="text-[10px] text-white/40 mt-1">Click on map to pin the location</p>}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const position: [number, number] = [coords.lat, coords.lng]
-
   return (
-    <div className="rounded-xl overflow-hidden border border-white/10" style={{ height }}>
-      <MapContainer
-        center={position}
-        zoom={15}
-        scrollWheelZoom={false}
-        style={{ height: "100%", width: "100%" }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <ChangeView center={position} zoom={15} />
-        <Marker position={position}>
-          <Popup>{tooltip || address}</Popup>
-        </Marker>
-        {editable && onCoordinateChange && (
-          <MapClickHandler editable onCoordinateChange={handleCoordChange} />
+    <div className="space-y-2">
+      {/* Search Bar */}
+      {onCorrect && (
+        <div className="relative" ref={searchRef}>
+          <div className="flex items-center gap-2 bg-[#141414] border border-white/10 rounded-lg px-3 py-2">
+            <Search className="w-4 h-4 text-white/40 shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => handleSearch(e.target.value)}
+              onFocus={() => setShowSearch(true)}
+              placeholder="Search location on map..."
+              className="bg-transparent text-sm text-white placeholder-white/30 focus:outline-none w-full"
+            />
+          </div>
+          {showSearch && searchResults.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-[#0F1923] border border-white/10 rounded-xl shadow-2xl z-[9999] max-h-48 overflow-y-auto">
+              {searchResults.map((r, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => selectSearchResult(r)}
+                  className="w-full text-left px-3 py-2.5 text-xs text-white/80 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+                >
+                  <span className="block truncate">{r.displayName}</span>
+                  {(r.city || r.province) && (
+                    <span className="text-[10px] text-white/40 mt-0.5 block">
+                      {[r.city, r.province].filter(Boolean).join(", ")}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+          {showSearch && searching && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-[#0F1923] border border-white/10 rounded-xl p-3 text-center text-xs text-white/30">
+              Searching...
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Map */}
+      <div className="rounded-xl overflow-hidden border border-white/10 relative" style={{ height }}>
+        <MapContainer
+          center={center}
+          zoom={zoom}
+          scrollWheelZoom={false}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <ChangeView center={center} zoom={zoom} />
+          {markerPos && (
+            <Marker
+              position={markerPos}
+              ref={markerRef}
+              draggable={!!onCorrect}
+              eventHandlers={{
+                dragend: async (e) => {
+                  const m = e.target as L.Marker
+                  const pos = m.getLatLng()
+                  await handleMapPin(pos.lat, pos.lng)
+                },
+              }}
+            >
+              <Popup>{popupText}</Popup>
+            </Marker>
+          )}
+          {onCorrect && <MapClickHandler onPin={handleMapPin} />}
+        </MapContainer>
+
+        {!markerPos && onCorrect && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
+            <button
+              type="button"
+              onClick={() => handleMapPin(center[0], center[1])}
+              className="bg-black/80 backdrop-blur-sm border border-white/10 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-black/90 transition-colors"
+            >
+              <Crosshair className="w-3 h-3" /> Pin current location
+            </button>
+          </div>
         )}
-      </MapContainer>
+      </div>
     </div>
   )
 }

@@ -670,6 +670,14 @@ export default function AdminOrdersPage() {
                     address={postexForm.address}
                     city={postexForm.city}
                     height={160}
+                    onCorrect={(result) => {
+                      setPostexForm(p => ({
+                        ...p,
+                        address: result.formattedAddress,
+                        city: result.city || p.city,
+                        province: result.province || p.province,
+                      }))
+                    }}
                   />
                 )}
                 <div>
