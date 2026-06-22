@@ -13,6 +13,7 @@ import { TimelineChart } from "@/components/ui/timeline-chart"
 import { HotProducts } from "@/components/ui/hot-products"
 import { PakistanMap } from "@/components/ui/pakistan-map"
 import { HealthCheckPanel } from "@/components/ui/health-check-panel"
+import { LiveEventsFeed } from "@/components/ui/live-events-feed"
 
 const LiveGlobe = dynamic(() => import("@/components/ui/live-globe"), { ssr: false })
 const PremiumGlobe = dynamic(() => import("@/components/ui/premium-globe").then((m) => ({ default: m.PremiumGlobe })), { ssr: false })
@@ -97,29 +98,6 @@ function StatusBadge({ status, reconnecting, error, retry }: { status: Connectio
         </div>
       )
   }
-}
-
-function formatTimeAgo(ts: string): string {
-  const diff = Date.now() - new Date(ts).getTime()
-  const seconds = Math.floor(diff / 1000)
-  if (seconds < 60) return `${seconds}s`
-  const minutes = Math.floor(seconds / 60)
-  if (minutes < 60) return `${minutes}m ago`
-  return `${Math.floor(minutes / 60)}h ago`
-}
-
-function EmptyState({ icon: Icon, label, sublabel }: { icon: any; label: string; sublabel?: string }) {
-  return (
-    <div className="flex items-center justify-center h-full min-h-[200px]">
-      <div className="text-center">
-        <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center">
-          <Icon className="w-5 h-5 text-white/15" />
-        </div>
-        <p className="text-[11px] text-white/25">{label}</p>
-        {sublabel && <p className="text-[8px] text-white/15 mt-1">{sublabel}</p>}
-      </div>
-    </div>
-  )
 }
 
 export default function LiveAnalyticsPage() {
@@ -366,88 +344,7 @@ export default function LiveAnalyticsPage() {
             </div>
 
             {/* ── Events Feed ── */}
-            <div className="bg-[#0F1923] rounded-xl border border-white/5 overflow-hidden">
-              <div className="flex items-center justify-between p-4">
-                <div>
-                  <div className="text-[9px] tracking-[1.5px] text-white/60">LIVE FEED</div>
-                  <h3 className="text-[13px] font-semibold text-white mt-0.5">Events</h3>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[9px] text-white/20 font-mono tabular-nums">({liveEventCount})</span>
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    <span className="text-[8px] text-white/25 font-medium">Purchase</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B]" />
-                    <span className="text-[8px] text-white/25 font-medium">Cart</span>
-                  </div>
-                </div>
-              </div>
-
-              {!recentEvents.length ? (
-                <EmptyState icon={Activity} label="No events yet. Start browsing the store!" sublabel="Events appear here in real-time as customers interact" />
-              ) : (
-                <div className="max-h-64 overflow-y-auto custom-scrollbar divide-y divide-white/[0.02]">
-                  {recentEvents.map((event, i) => {
-                    const isPurchase = event.base_event === "Purchase" || event.base_event === "CompletePayment"
-                    const isCart = event.base_event === "AddToCart"
-                    const isNew = i === 0 && events.length > 1
-                    return (
-                      <motion.div
-                        key={event.id || i}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 24, delay: i * 0.05 }}
-                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.02] transition-colors group"
-                      >
-                        <div className="relative flex items-center justify-center shrink-0 w-2 h-2">
-                          {isNew && (
-                            <span className={`absolute inset-0 rounded-full animate-ping opacity-75 ${
-                              isPurchase ? "bg-emerald-400" : isCart ? "bg-[#B8860B]" : "bg-white/40"
-                            }`} />
-                          )}
-                          <div
-                            className={`w-1.5 h-1.5 rounded-full relative z-10 ${
-                              isPurchase
-                                ? "bg-emerald-400"
-                                : isCart
-                                  ? "bg-[#B8860B]"
-                                  : "bg-white/20"
-                            }`}
-                          />
-                        </div>
-                        <span className="text-[11px] text-white/60 truncate flex-1 min-w-0">
-                          <span
-                            className={
-                              isPurchase
-                                ? "text-emerald-400 font-semibold"
-                                : isCart
-                                  ? "text-[#B8860B] font-semibold"
-                                  : "text-white/80"
-                            }
-                          >
-                            {event.item_name}
-                          </span>
-                          <span className="text-white/15"> — {event.base_event}</span>
-                        </span>
-                        <span className="text-[8px] text-white/20 shrink-0 hidden sm:inline font-medium">{event.city}</span>
-                        <span className="text-[8px] text-white/15 shrink-0 tabular-nums font-mono min-w-[3ch] text-right">
-                          {isNew ? (
-                            <span className="inline-flex items-center gap-1 text-emerald-400/60 font-semibold">
-                              <span className="w-1 h-1 rounded-full bg-emerald-400 animate-ping" />
-                              now
-                            </span>
-                          ) : (
-                            formatTimeAgo(event.timestamp)
-                          )}
-                        </span>
-                      </motion.div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+            <LiveEventsFeed events={recentEvents} />
           </>
         )}
       <p className="text-[10px] text-white/60 text-center mt-4">Real-time analytics with Supabase Realtime and heartbeat presence.</p>
