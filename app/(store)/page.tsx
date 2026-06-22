@@ -160,9 +160,9 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
 
   const specsEntries = Object.entries(featured.specifications || {}).slice(0, 4)
   const defaultSpecs = [
-    { icon: Activity, label: "Premium Build" },
-    { icon: Shield, label: "Durable" },
-    { icon: Battery, label: "Long Battery" },
+    { icon: Activity, label: "AMOLED Display" },
+    { icon: Shield, label: "Water Resistant" },
+    { icon: Battery, label: "2-Day Battery" },
     { icon: Wifi, label: "BT Calling" },
   ]
   const dynamicSpecs = specsEntries.length >= 2 ? specsEntries.map(([k, v]) => ({
@@ -173,12 +173,19 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
     label: v.length > 15 ? k : v
   })) : defaultSpecs
 
-  const float1 = specsEntries[0] ? specsEntries[0][1].substring(0, 15) : "Health Suite"
-  const float2 = specsEntries[1] ? specsEntries[1][1].substring(0, 15) : "Always-On"
+  const hasRealSpecs = specsEntries.length >= 2
   const dynamicFloatChips = [
-    { icon: HeartPulse, label: float1, className: "top-[8%] -left-2 md:left-0" },
-    { icon: Clock, label: float2, className: "top-[42%] -right-1 md:right-2" },
-    { icon: Truck, label: "Open Before Pay", className: "bottom-[12%] left-[5%]" },
+    {
+      icon: Truck,
+      label: hasRealSpecs ? specsEntries[0]?.[1]?.substring(0, 15) || "Cash on Delivery" : "Cash on Delivery",
+      className: "top-[8%] -left-2 md:left-0"
+    },
+    {
+      icon: CheckCircle2,
+      label: hasRealSpecs ? specsEntries[1]?.[1]?.substring(0, 15) || "Open Box Check" : "Open Box Check",
+      className: "top-[42%] -right-1 md:right-2"
+    },
+    { icon: Package, label: "Free Delivery", className: "bottom-[12%] left-[5%]" },
   ]
 
   const mouseX = useMotionValue(0)
@@ -242,15 +249,15 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                     className="text-[2rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white leading-[1.05] mb-5"
                     style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                   >
-                    Uncompromised Luxury.
+                    Premium Quality.
                     <br />
                     <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                      Unbeatable Price.
+                      No Premium Price.
                     </span>
                   </motion.h1>
 
                   <motion.p variants={staggerItem} className="text-white/55 text-sm md:text-lg max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed">
-                    Meet the <strong className="text-white font-medium">{shortName}</strong> — an absolute head-turner. Engineered with a stunning edge-to-edge display and premium build quality. Experience true luxury delivered right to your doorstep anywhere in Pakistan. <strong className="text-[#D4A017]">Check the parcel first, then pay.</strong>
+                    <strong className="text-white font-medium">{shortName}</strong> — genuine specs, clean design, straight price. No middleman markup, no inflated MRPs. Free delivery across Pakistan with open-box verification. <strong className="text-[#D4A017]">Check first, pay later.</strong>
                   </motion.p>
 
                   <motion.div variants={staggerItem} className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/8 mb-7">
