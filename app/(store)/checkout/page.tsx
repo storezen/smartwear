@@ -573,7 +573,7 @@ export default function CheckoutPage() {
           {/* Navigation */}
           <div className="flex flex-col sm:flex-row justify-between mt-8 gap-3">
             {currentStep > 1 ? (
-              <button className="sw-btn-ghost-white h-12 px-6 rounded-xl flex items-center justify-center text-sm order-2 sm:order-1" onClick={handleBack}>
+              <button className="sw-btn-ghost-white h-12 px-6 rounded-xl flex items-center justify-center text-sm order-2 sm:order-1 w-full sm:w-auto" onClick={handleBack}>
                 <ChevronRight className="w-4 h-4 mr-2 rotate-180" />
                 Back
               </button>
@@ -581,20 +581,20 @@ export default function CheckoutPage() {
               <div className="hidden sm:block" />
             )}
             {currentStep < 4 ? (
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 order-1 sm:order-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 order-1 sm:order-2 w-full sm:w-auto">
                 {currentStep === 1 && !canProceed() && (
                   <span className="text-xs text-rose-400 font-medium bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20 text-center">
                     Please provide a valid 11-digit phone number and complete address.
                   </span>
                 )}
-                <button className="sw-btn-gold h-12 px-8 flex items-center justify-center text-sm disabled:opacity-50" onClick={handleNext} disabled={!canProceed()}>
+                <button className="sw-btn-gold h-12 px-8 flex items-center justify-center text-sm disabled:opacity-50 w-full sm:w-auto" onClick={handleNext} disabled={!canProceed()}>
                   Continue
                   <ChevronRight className="w-4 h-4 ml-2" />
                 </button>
               </div>
             ) : (
               <button 
-                className="sw-btn-gold h-12 px-8 flex items-center justify-center text-sm gap-2 disabled:opacity-50 order-2"
+                className="sw-btn-gold h-12 px-8 flex items-center justify-center text-sm gap-2 disabled:opacity-50 order-2 w-full sm:w-auto"
                 onClick={handlePlaceOrder}
                 disabled={isProcessing}
               >

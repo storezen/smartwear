@@ -193,7 +193,7 @@ export default function AdminCustomersPage() {
                         
                         <div className="flex items-center gap-2 overflow-x-auto pb-2">
                           {order.items.map((item: any, idx: number) => (
-                            <div key={idx} className="w-8 h-8 rounded bg-white/10 flex-shrink-0 overflow-hidden" title={item.name}>
+                            <div key={idx} className="relative w-8 h-8 rounded bg-white/10 flex-shrink-0 overflow-hidden" title={item.name}>
                               {item.image && <Image src={item.image} alt="" fill sizes="32px" className="object-cover"/>}
                             </div>
                           ))}

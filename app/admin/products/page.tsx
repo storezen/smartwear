@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Search, Plus, Eye, Edit2, Package as PackageIcon, Trash2, Tag, DollarSign, Image as ImageIcon, Box, CheckSquare } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { toast } from "sonner"
 import { ProductStatusEnum } from "@/lib/validations/products"
@@ -377,7 +376,7 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded bg-[#0F1923] border border-white/5 overflow-hidden shrink-0">
+                        <div className="relative w-10 h-10 rounded bg-[#0F1923] border border-white/5 overflow-hidden shrink-0">
                           <Image src={product.images[0]} alt={product.name} fill sizes="40px" className="object-cover" />
                         </div>
                         <div>
@@ -533,7 +532,7 @@ export default function AdminProductsPage() {
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-white/40 uppercase tracking-widest">Primary Image URL</label>
                   <div className="flex gap-4 items-center">
-                    <div className="w-12 h-12 rounded-lg bg-black/40 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
+                    <div className="relative w-12 h-12 rounded-lg bg-black/40 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
                       {formData.images[0] ? (
                         <Image src={formData.images[0]} alt="Preview" fill sizes="48px" className="object-cover" />
                       ) : (
