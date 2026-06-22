@@ -152,11 +152,14 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
     if (!featuredList || featuredList.length <= 1) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % featuredList.length)
-    }, 5000)
+    }, 10000)
     return () => clearInterval(timer)
   }, [featuredList])
 
   const featured = featuredList[currentIndex] || HERO_FALLBACK
+  
+  // Clean product name for the hero display (e.g. "Series 11 (Allow to open)" -> "Series 11")
+  const shortName = featured.name.replace(/\s*[\(\[].*?[\)\]]\s*/g, '').trim()
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -210,7 +213,7 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-60" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]" />
                       </span>
-                      <span className="truncate">Flagship Drop · {featured.name}</span>
+                      <span className="truncate">Flagship Drop · {shortName}</span>
                     </span>
                   </motion.div>
 
@@ -227,7 +230,7 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                   </motion.h1>
 
                   <motion.p variants={staggerItem} className="text-white/55 text-sm md:text-lg max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed">
-                    The <strong className="text-white font-medium">{featured.name}</strong> brings a cinematic 2.05″ always-on AMOLED face, Bluetooth calling, and IP67 durability — delivered across Pakistan with{" "}
+                    The <strong className="text-white font-medium">{shortName}</strong> brings a cinematic 2.05″ always-on AMOLED face, Bluetooth calling, and IP67 durability — delivered across Pakistan with{" "}
                     <strong className="text-[#D4A017]">Cash on Delivery</strong>. Open the parcel. Love it. Then pay.
                   </motion.p>
 
@@ -243,7 +246,7 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
 
                   <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start w-full overflow-hidden min-w-0">
                     <Link href={productHref} title={`Shop ${featured.name}`} className="w-full sm:w-auto sm:max-w-[60%] sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px] min-w-0">
-                      <span className="truncate">Shop {featured.name}</span>
+                      <span className="truncate">Shop {shortName}</span>
                       <ArrowRight className="w-4 h-4 shrink-0" />
                     </Link>
                     <Link href="/products?category=smart-watches" className="w-full sm:w-auto sw-btn-ghost-white px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px] shrink-0">
