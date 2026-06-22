@@ -145,7 +145,19 @@ function HeroWatchFace() {
   )
 }
 
-function HeroBanner({ featured = HERO_FALLBACK }: { featured?: HeroFeatured }) {
+function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFeatured[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  
+  useEffect(() => {
+    if (!featuredList || featuredList.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % featuredList.length)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [featuredList])
+
+  const featured = featuredList[currentIndex] || HERO_FALLBACK
+
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const springConfig = { damping: 28, stiffness: 120 }
@@ -181,66 +193,77 @@ function HeroBanner({ featured = HERO_FALLBACK }: { featured?: HeroFeatured }) {
 
       <div className="sw-container relative z-10 w-full" style={{ maxWidth: "1536px" }}>
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center py-16 md:py-24 lg:py-28 mt-14 md:mt-0">
-          <div className="order-2 lg:order-1 text-center lg:text-left">
-            <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
-              <motion.div variants={staggerItem} className="mb-5">
-                <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/25 text-[#D4A017] text-[10px] md:text-xs font-bold uppercase tracking-[0.22em]">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-60" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]" />
-                  </span>
-                  Flagship Drop · {featured.name}
-                </span>
-              </motion.div>
-
-              <motion.h1
-                variants={staggerItem}
-                className="text-[2rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white leading-[1.05] mb-5"
-                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+          <div className="order-2 lg:order-1 text-center lg:text-left relative min-h-[380px] flex items-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={featured.slug}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.5 }}
+                className="w-full"
               >
-                Thinner Profile.
-                <br />
-                <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                  Bigger Display.
-                </span>
-              </motion.h1>
+                <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
+                  <motion.div variants={staggerItem} className="mb-5">
+                    <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/25 text-[#D4A017] text-[10px] md:text-xs font-bold uppercase tracking-[0.22em]">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-60" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]" />
+                      </span>
+                      Flagship Drop · {featured.name}
+                    </span>
+                  </motion.div>
 
-              <motion.p variants={staggerItem} className="text-white/55 text-sm md:text-lg max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed">
-                The <strong className="text-white font-medium">{featured.name}</strong> brings a cinematic 2.05″ always-on AMOLED face, Bluetooth calling, and IP67 durability — delivered across Pakistan with{" "}
-                <strong className="text-[#D4A017]">Cash on Delivery</strong>. Open the parcel. Love it. Then pay.
-              </motion.p>
-
-              <motion.div variants={staggerItem} className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/8 mb-7">
-                <span className="text-white/40 text-xs uppercase tracking-widest">From</span>
-                <span className="text-white text-xl md:text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
-                  {formatPrice(featured.price)}
-                </span>
-                <span className="text-[10px] text-emerald-400/90 font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                  In Stock
-                </span>
-              </motion.div>
-
-              <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                <Link href={productHref} className="w-full sm:w-auto sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
-                  Shop {featured.name} <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link href="/products?category=smart-watches" className="w-full sm:w-auto sw-btn-ghost-white px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
-                  All Smart Watches
-                </Link>
-              </motion.div>
-
-              <motion.div variants={staggerItem} className="mt-8 flex flex-wrap gap-2.5 justify-center lg:justify-start">
-                {heroSpecs.map((spec) => (
-                  <span
-                    key={spec.label}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/8 text-white/60 text-[11px] font-medium"
+                  <motion.h1
+                    variants={staggerItem}
+                    className="text-[2rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white leading-[1.05] mb-5"
+                    style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                   >
-                    <spec.icon className="w-3 h-3 text-[#B8860B]" />
-                    {spec.label}
-                  </span>
-                ))}
+                    Thinner Profile.
+                    <br />
+                    <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
+                      Bigger Display.
+                    </span>
+                  </motion.h1>
+
+                  <motion.p variants={staggerItem} className="text-white/55 text-sm md:text-lg max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed">
+                    The <strong className="text-white font-medium">{featured.name}</strong> brings a cinematic 2.05″ always-on AMOLED face, Bluetooth calling, and IP67 durability — delivered across Pakistan with{" "}
+                    <strong className="text-[#D4A017]">Cash on Delivery</strong>. Open the parcel. Love it. Then pay.
+                  </motion.p>
+
+                  <motion.div variants={staggerItem} className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/8 mb-7">
+                    <span className="text-white/40 text-xs uppercase tracking-widest">From</span>
+                    <span className="text-white text-xl md:text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+                      {formatPrice(featured.price)}
+                    </span>
+                    <span className="text-[10px] text-emerald-400/90 font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                      In Stock
+                    </span>
+                  </motion.div>
+
+                  <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+                    <Link href={productHref} className="w-full sm:w-auto sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
+                      Shop {featured.name} <ArrowRight className="w-4 h-4" />
+                    </Link>
+                    <Link href="/products?category=smart-watches" className="w-full sm:w-auto sw-btn-ghost-white px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px]">
+                      All Smart Watches
+                    </Link>
+                  </motion.div>
+
+                  <motion.div variants={staggerItem} className="mt-8 flex flex-wrap gap-2.5 justify-center lg:justify-start">
+                    {heroSpecs.map((spec) => (
+                      <span
+                        key={spec.label}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/8 text-white/60 text-[11px] font-medium"
+                      >
+                        <spec.icon className="w-3 h-3 text-[#B8860B]" />
+                        {spec.label}
+                      </span>
+                    ))}
+                  </motion.div>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            </AnimatePresence>
           </div>
 
           <div className="order-1 lg:order-2 flex justify-center relative px-2 sm:px-0">
@@ -253,14 +276,25 @@ function HeroBanner({ featured = HERO_FALLBACK }: { featured?: HeroFeatured }) {
               <div className="absolute inset-[-32px] rounded-full border border-dashed border-[#B8860B]/10 animate-[spin_36s_linear_infinite_reverse]" />
 
               <div className="relative w-[85%] aspect-square rounded-full overflow-hidden ring-2 ring-[#B8860B]/20 ring-offset-[6px] ring-offset-[#06080A] shadow-[0_0_60px_rgba(184,134,11,0.15)]">
-                <Image
-                  src={featured.image}
-                  alt={`${featured.name} smartwatch`}
-                  fill
-                  sizes="(max-width: 640px) 260px, (max-width: 1024px) 420px, 500px"
-                  className="object-contain object-center drop-shadow-[0_20px_60px_rgba(184,134,11,0.3)] z-10 p-4 md:p-6"
-                  priority
-                />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={featured.slug}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={featured.image}
+                      alt={`${featured.name} smartwatch`}
+                      fill
+                      sizes="(max-width: 640px) 260px, (max-width: 1024px) 420px, 500px"
+                      className="object-contain object-center drop-shadow-[0_20px_60px_rgba(184,134,11,0.3)] z-10 p-4 md:p-6"
+                      priority
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
               <HeroWatchFace />
@@ -292,10 +326,26 @@ function HeroBanner({ featured = HERO_FALLBACK }: { featured?: HeroFeatured }) {
             </motion.div>
           </div>
         </div>
+
+        {/* Slider Navigation Dots */}
+        {featuredList && featuredList.length > 1 && (
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+            {featuredList.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                  idx === currentIndex ? "bg-[#B8860B] w-8 shadow-[0_0_8px_rgba(184,134,11,0.6)]" : "bg-white/20 hover:bg-white/40"
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <motion.div
-        className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-white/30"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10 opacity-60"
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
@@ -306,29 +356,25 @@ function HeroBanner({ featured = HERO_FALLBACK }: { featured?: HeroFeatured }) {
   )
 }
 
-function pickHeroFeatured(products: any[]): HeroFeatured {
-  const match =
-    products.find(
-      (p) =>
-        p.is_active !== false &&
-        normalizeCategorySlug(p.category_slug) === "smart-watches" &&
-        /\bseries\s*11\b/i.test(`${p.name || ""} ${p.slug || ""}`)
-    ) ??
-    products.find(
-      (p) =>
-        p.is_active !== false &&
-        normalizeCategorySlug(p.category_slug) === "smart-watches" &&
-        p.images?.[0]
-    )
+function pickHeroFeaturedList(products: any[]): HeroFeatured[] {
+  const activeWatches = products.filter(
+    (p) =>
+      p.is_active !== false &&
+      normalizeCategorySlug(p.category_slug) === "smart-watches" &&
+      p.images?.length > 0
+  );
 
-  if (!match?.images?.length) return HERO_FALLBACK
+  // Take up to 4 top products
+  const top = activeWatches.slice(0, 4);
+  
+  if (!top.length) return [HERO_FALLBACK]
 
-  return {
-    name: "Series 11",
+  return top.map(match => ({
+    name: match.name || "Smart Watch",
     slug: match.slug || HERO_FALLBACK.slug,
     image: pickHeroImage(match.images),
     price: match.price ?? HERO_FALLBACK.price,
-  }
+  }));
 }
 
 
@@ -966,11 +1012,11 @@ export default function HomePage() {
     [allProducts]
   )
 
-  const heroFeatured = useMemo(() => pickHeroFeatured(allProducts), [allProducts])
+  const heroFeaturedList = useMemo(() => pickHeroFeaturedList(allProducts), [allProducts])
 
   return (
-    <div className="min-h-screen bg-[#0C0F14]">
-      <HeroBanner featured={heroFeatured} />
+    <main className="min-h-screen bg-[#06080A]">
+      <HeroBanner featuredList={heroFeaturedList} />
       <TrustBadges />
       <ShopByCategory items={shopCategoryCards} />
       {!loading && (
@@ -994,6 +1040,6 @@ export default function HomePage() {
       {!loading && <CategoryShowcase productsByCategory={showcaseByCategory} />}
       <CustomerTestimonials />
       <NewsletterSignup />
-    </div>
+    </main>
   )
 }
