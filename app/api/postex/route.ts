@@ -47,13 +47,13 @@ export async function POST(req: Request) {
 
     // Actual PostEx API Integration (v2/v3 endpoint example)
     const postexPayload = {
-      orderRef: orderId,
+      orderRefNumber: orderId,
       customerName,
       customerPhone: phone,
       deliveryAddress: address,
       cityName: city,
-      invoiceDivision: 1, // Standard Delivery
-      orderType: 1, // COD
+      invoiceDivision: 1,
+      orderType: 1,
       invoicePayment: amount,
       items: 1,
     }

@@ -18,10 +18,9 @@ export async function POST(req: Request) {
     }
 
     const data = await req.json()
-    // Expected Payload structure (varies by PostEx API version, assuming a generic structure)
-    // { "orderRef": "ORD-123456", "distTrackingNumber": "PEX-123", "status": "Delivered", "timestamp": "..." }
-
-    const { orderRef, distTrackingNumber, status } = data
+    // PostEx v2 sends orderRefNumber; fallback to orderRef for older versions
+    const orderRef = data.orderRefNumber || data.orderRef
+    const { distTrackingNumber, status } = data
 
     if (!orderRef || !status) {
       return NextResponse.json({ error: 'Missing required webhook fields' }, { status: 400 })
