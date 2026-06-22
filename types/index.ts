@@ -156,7 +156,16 @@ export const MAJOR_CITIES = [
   'Sialkot',
   'Gujranwala',
   'Hyderabad',
-  'Bahawalpur'
+  'Bahawalpur',
+  'Sukkur',
+  'Abbottabad',
+  'Sargodha',
+  'Gujrat',
+  'Sheikhupura',
+  'Rahim Yar Khan',
+  'Larkana',
+  'Gilgit',
+  'Muzaffarabad',
 ] as const
 
 export const SHIPPING_ZONES = {

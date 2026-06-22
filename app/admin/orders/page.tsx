@@ -7,6 +7,7 @@ import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { toast } from "sonner"
 import { OrderStatusEnum } from "@/lib/validations/orders"
+import { detectProvince, isPostexServiceable, getPostexCoverageStyle } from "@/lib/address-validator"
 
 const ALL_STATUSES = OrderStatusEnum.options;
 
@@ -24,6 +25,7 @@ export default function AdminOrdersPage() {
     phone: "",
     address: "",
     city: "",
+    province: "",
     amount: 0,
     orderDetail: "",
     pickupAddressCode: "001",
@@ -38,11 +40,12 @@ export default function AdminOrdersPage() {
       customerName: order.customer_name || order.shipping_address?.name || "Guest",
       phone: order.phone || order.shipping_address?.phone || "03000000000",
       address: order.shipping_address?.address_line1 || "No Address provided",
-      city: order.shipping_address?.city || "Unknown",
-      amount: order.total || 0,
-      orderDetail: orderDetail ? `[${orderDetail}]` : "",
-      pickupAddressCode: "001",
-      bookingWeight: 1,
+    city: order.shipping_address?.city || "Unknown",
+    province: detectProvince(order.shipping_address?.city || ""),
+    amount: order.total || 0,
+    orderDetail: orderDetail ? `[${orderDetail}]` : "",
+    pickupAddressCode: "001",
+    bookingWeight: 1,
     })
     setShowPostexModal(true)
   }
@@ -651,8 +654,21 @@ export default function AdminOrdersPage() {
                   <textarea value={postexForm.address} onChange={e => setPostexForm(p => ({ ...p, address: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 resize-none min-h-[60px]" />
                 </div>
                 <div>
-                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">City</label>
-                  <input type="text" value={postexForm.city} onChange={e => setPostexForm(p => ({ ...p, city: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 flex items-center gap-2">
+                    City
+                    {postexForm.city && (
+                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
+                        getPostexCoverageStyle(isPostexServiceable(postexForm.city)).bg
+                      } ${
+                        getPostexCoverageStyle(isPostexServiceable(postexForm.city)).color
+                      } ${
+                        getPostexCoverageStyle(isPostexServiceable(postexForm.city)).border
+                      }`}>
+                        {getPostexCoverageStyle(isPostexServiceable(postexForm.city)).label}
+                      </span>
+                    )}
+                  </label>
+                  <input type="text" value={postexForm.city} onChange={e => setPostexForm(p => ({ ...p, city: e.target.value, province: detectProvince(e.target.value) }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -666,9 +682,15 @@ export default function AdminOrdersPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
+                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Province</label>
+                    <input type="text" value={postexForm.province} onChange={e => setPostexForm(p => ({ ...p, province: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white/70 focus:outline-none focus:border-white/30" />
+                  </div>
+                  <div>
                     <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Pickup Address Code</label>
                     <input type="text" value={postexForm.pickupAddressCode} onChange={e => setPostexForm(p => ({ ...p, pickupAddressCode: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
                   </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Order #</label>
                     <div className="w-full bg-[#141414] border border-white/5 rounded-lg px-3.5 py-2.5 text-sm text-white/60 font-mono">{selectedOrder.id}</div>

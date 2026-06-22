@@ -22,6 +22,7 @@ import {
 import { useCart } from '@/context/cart-context'
 import { useAuth } from '@/context/auth-context'
 import { formatPrice } from '@/lib/mock-data'
+import { detectProvince, isPostexServiceable, getPostexCoverageStyle } from '@/lib/address-validator'
 import { TikTokEvents } from '@/lib/tiktok-pixel'
 import { SHIPPING_ZONES, Address } from '@/types'
 import { cn } from '@/lib/utils'
@@ -58,7 +59,9 @@ export default function CheckoutPage() {
     name: '',
     phone: '',
     address_line1: '',
-    city: 'Karachi'
+    city: 'Karachi',
+    province: detectProvince('Karachi'),
+    postal_code: '',
   })
   const [selectedShipping, setSelectedShipping] = useState(shippingMethods[0])
   const [selectedPayment, setSelectedPayment] = useState(paymentMethods[0])
@@ -123,12 +126,14 @@ export default function CheckoutPage() {
           const area = data.address.neighbourhood || data.address.residential || ''
           const city = data.address.city || data.address.town || data.address.state || 'Other'
           
+          const detectedCity = city.includes('Karachi') ? 'Karachi' : 
+            city.includes('Lahore') ? 'Lahore' : 
+            city.includes('Islamabad') ? 'Islamabad' : 'Other'
           setGuestAddress({
             ...guestAddress,
             address_line1: `${street} ${area}`.trim(),
-            city: city.includes('Karachi') ? 'Karachi' : 
-                  city.includes('Lahore') ? 'Lahore' : 
-                  city.includes('Islamabad') ? 'Islamabad' : 'Other'
+            city: detectedCity,
+            province: detectProvince(detectedCity),
           })
           toast.success("Location detected successfully!")
         }
@@ -390,10 +395,26 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                   <div>
-                    <label className="block text-sm text-white/70 mb-1.5">City</label>
+                    <label className="block text-sm text-white/70 mb-1.5 flex items-center gap-2">
+                      City
+                      {guestAddress.city && (
+                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
+                          (() => {
+                            const style = getPostexCoverageStyle(isPostexServiceable(guestAddress.city))
+                            return `${style.bg} ${style.color} ${style.border}`
+                          })()
+                        }`}>
+                          {getPostexCoverageStyle(isPostexServiceable(guestAddress.city)).label}
+                        </span>
+                      )}
+                    </label>
                     <select 
                       value={guestAddress.city}
-                      onChange={(e) => setGuestAddress({...guestAddress, city: e.target.value})}
+                      onChange={(e) => setGuestAddress({
+                        ...guestAddress, 
+                        city: e.target.value,
+                        province: detectProvince(e.target.value),
+                      })}
                       className="w-full bg-[#0C0F14] border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors appearance-none min-h-[44px]"
                     >
                       <option value="Karachi">Karachi</option>
@@ -404,8 +425,43 @@ export default function CheckoutPage() {
                       <option value="Multan">Multan</option>
                       <option value="Peshawar">Peshawar</option>
                       <option value="Quetta">Quetta</option>
+                      <option value="Sialkot">Sialkot</option>
+                      <option value="Gujranwala">Gujranwala</option>
+                      <option value="Hyderabad">Hyderabad</option>
+                      <option value="Bahawalpur">Bahawalpur</option>
+                      <option value="Sukkur">Sukkur</option>
+                      <option value="Abbottabad">Abbottabad</option>
+                      <option value="Sargodha">Sargodha</option>
+                      <option value="Gujrat">Gujrat</option>
+                      <option value="Sheikhupura">Sheikhupura</option>
+                      <option value="Rahim Yar Khan">Rahim Yar Khan</option>
+                      <option value="Larkana">Larkana</option>
+                      <option value="Gilgit">Gilgit</option>
+                      <option value="Muzaffarabad">Muzaffarabad</option>
                       <option value="Other">Other</option>
                     </select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-white/70 mb-1.5">Province</label>
+                      <input 
+                        type="text" 
+                        value={guestAddress.province}
+                        onChange={(e) => setGuestAddress({...guestAddress, province: e.target.value})}
+                        placeholder="Auto-detected from city"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/70 text-base md:text-sm focus:outline-none focus:border-[#B8860B] transition-colors min-h-[44px]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-white/70 mb-1.5">Postal Code <span className="text-white/30">(optional)</span></label>
+                      <input 
+                        type="text" 
+                        value={guestAddress.postal_code}
+                        onChange={(e) => setGuestAddress({...guestAddress, postal_code: e.target.value})}
+                        placeholder="e.g. 54000"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -535,6 +591,21 @@ export default function CheckoutPage() {
                     <p className="text-sm font-medium">{guestAddress.name}</p>
                     <p className="text-xs text-white/60 mt-1">{guestAddress.phone}</p>
                     <p className="text-xs text-white/60">{guestAddress.address_line1}, {guestAddress.city}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                      {guestAddress.province && guestAddress.province !== 'Unknown' && (
+                        <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-full">{guestAddress.province}</span>
+                      )}
+                      {guestAddress.postal_code && (
+                        <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-full">{guestAddress.postal_code}</span>
+                      )}
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                        isPostexServiceable(guestAddress.city)
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                      }`}>
+                        {isPostexServiceable(guestAddress.city) ? 'PostEx Delivers ✓' : 'PostEx Not Available ✗'}
+                      </span>
+                    </div>
                   </div>
                 )}
 
