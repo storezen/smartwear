@@ -11,13 +11,12 @@ async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3)
     try {
       const res = await fetch(url, options)
       if (res.ok || res.status === 400) {
-        return res // 400 is usually validation error, don't retry
+        return res
       }
       if (i === maxRetries - 1) return res
     } catch (err) {
       if (i === maxRetries - 1) throw err
     }
-    // Exponential backoff
     await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)))
   }
   throw new Error("Max retries reached")

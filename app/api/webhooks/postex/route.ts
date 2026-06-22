@@ -29,27 +29,37 @@ export async function POST(req: Request) {
     else if (postexStatus.includes('transit') || postexStatus.includes('dispatched')) mappedStatus = "In Transit"
 
     // 2. Update Database
-    if (isSupabaseConfigured() && supabase) {
-      // Fetch current to append history
-      const { data: currentOrder } = await supabase.from('orders').select('history, status').eq('id', orderRef).single()
-      
-      if (currentOrder && currentOrder.status !== mappedStatus) {
-        const newHistory = [...(currentOrder.history || []), { 
-          status: mappedStatus, 
-          timestamp: new Date().toISOString(), 
-          note: `Auto-updated by PostEx Webhook (${status})` 
-        }]
+    const webhookNote = `Auto-updated by PostEx Webhook (${status})`
 
-        await supabase.from('orders')
-          .update({ status: mappedStatus, history: newHistory })
-          .eq('id', orderRef)
+    if (isSupabaseConfigured() && supabase) {
+      const { data: currentOrder } = await supabase.from('orders').select('history, status, postex').eq('id', orderRef).single()
+      
+      if (!currentOrder) {
+        return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+      }
+
+      // Save tracking number if not already saved
+      const updates: any = {}
+      if (distTrackingNumber && !currentOrder.postex) {
+        updates.postex = distTrackingNumber
+      }
+
+      if (currentOrder.status !== mappedStatus) {
+        updates.status = mappedStatus
+        updates.history = [...(currentOrder.history || []), {
+          status: mappedStatus,
+          timestamp: new Date().toISOString(),
+          note: webhookNote
+        }]
+      }
+
+      if (Object.keys(updates).length > 0) {
+        await supabase.from('orders').update(updates).eq('id', orderRef)
       }
     } else {
-      // Local DB fallback note: since lib/db.ts is running in-memory for the mock, 
-      // webhook updates from external servers might hit a different lambda instance in production. 
-      // But for this mock setup, we'll import and use updateOrderStatus.
       const { updateOrderStatus } = await import('@/lib/db')
-      await updateOrderStatus(orderRef, mappedStatus, undefined, `Auto-updated by PostEx Webhook (${status})`)
+      // Save tracking number + status
+      await updateOrderStatus(orderRef, mappedStatus, distTrackingNumber || undefined, webhookNote)
     }
 
     return NextResponse.json({ success: true, mappedStatus }, { status: 200 })

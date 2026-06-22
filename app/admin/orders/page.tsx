@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
-import { Search, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, X, History, MessageSquare } from "lucide-react"
+import { Search, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, X, History, MessageSquare, RotateCw } from "lucide-react"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { toast } from "sonner"
@@ -100,17 +100,18 @@ export default function AdminOrdersPage() {
 
       if (status === 'Shipped' && !postexTrackingId) {
         toast.info("Booking parcel with PostEx...")
+        const payload = {
+          orderId: order.id,
+          customerName: order.customer_name || order.shipping_address?.name || 'Guest',
+          phone: order.phone || order.shipping_address?.phone || '03000000000',
+          address: order.shipping_address?.address_line1 || 'No Address provided',
+          city: order.shipping_address?.city || 'Unknown',
+          amount: order.total
+        }
         const postexRes = await fetch('/api/postex', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId: order.id,
-            customerName: order.customer_name,
-            phone: order.phone,
-            address: order.shipping_address?.address_line1 || 'No Address provided',
-            city: order.shipping_address?.city || 'Unknown',
-            amount: order.total
-          })
+          body: JSON.stringify(payload)
         })
         
         if (postexRes.ok) {
@@ -118,7 +119,8 @@ export default function AdminOrdersPage() {
           postexTrackingId = postexData.trackingNumber
           toast.success(`Booked on PostEx! Tracking: ${postexTrackingId}`)
         } else {
-          toast.error("Failed to book on PostEx, continuing local update.")
+          const err = await postexRes.text()
+          toast.error(`PostEx: ${err}`)
         }
       }
 
@@ -146,6 +148,12 @@ export default function AdminOrdersPage() {
   const handleAddNote = () => {
     if (!newNote.trim() || !selectedOrder) return;
     updateOrderStatus(selectedOrder.id, selectedOrder.status, newNote.trim())
+  }
+
+  const refreshOrderStatus = async () => {
+    if (!selectedOrder) return
+    fetchOrders()
+    toast.success("Order status refreshed")
   }
 
   const openOrderDetail = (order: any) => {
@@ -471,14 +479,27 @@ export default function AdminOrdersPage() {
 
                     {/* PostEx Actions */}
                     <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
-                      <div className="p-4 border-b border-white/5 bg-[#141414]">
+                      <div className="p-4 border-b border-white/5 bg-[#141414] flex items-center justify-between">
                         <h3 className="font-semibold text-white/90 flex items-center gap-2"><Truck className="w-4 h-4 text-white/50"/> PostEx Shipping</h3>
+                        <button onClick={refreshOrderStatus} className="text-white/40 hover:text-white transition-colors" title="Refresh status">
+                          <RotateCw className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                       <div className="p-4">
                         {selectedOrder.postex ? (
-                          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
-                            <p className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-1">Tracking ID</p>
-                            <p className="font-mono text-sm text-white/90">{selectedOrder.postex}</p>
+                          <div className="space-y-3">
+                            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+                              <p className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-1">Tracking ID</p>
+                              <p className="font-mono text-sm text-white/90">{selectedOrder.postex}</p>
+                            </div>
+                            <a
+                              href={`https://postex.pk/track?tracking=${selectedOrder.postex}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block w-full text-center bg-white/5 hover:bg-white/10 border border-white/10 text-white py-2 rounded-lg text-xs font-medium transition-colors"
+                            >
+                              Track on PostEx →
+                            </a>
                           </div>
                         ) : (
                           <div className="space-y-3">
