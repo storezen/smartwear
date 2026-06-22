@@ -158,8 +158,13 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
 
   const featured = featuredList[currentIndex] || HERO_FALLBACK
   
-  // Clean product name for the hero display (e.g. "Series 11 (Allow to open)" -> "Series 11")
-  const shortName = featured.name.replace(/\s*[\(\[].*?[\)\]]\s*/g, '').trim()
+  // Clean product name for the hero display (strictly 1-2 words as requested)
+  const shortName = featured.name
+    .replace(/\s*[\(\[].*?[\)\]]\s*/g, '') // remove brackets first
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .join(' ')
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
