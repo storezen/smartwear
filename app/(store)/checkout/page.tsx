@@ -331,7 +331,8 @@ export default function CheckoutPage() {
       <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2">
-          <AnimatePresence mode="wait">
+          <div className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 sm:p-8">
+            <AnimatePresence mode="wait">
           {/* Step 1: Address */}
           {currentStep === 1 && (
             <motion.div
@@ -340,9 +341,8 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
             >
-              <div className="p-5 sm:p-8">
+              <div>
                 <h2 className="text-lg sm:text-xl font-bold text-white mb-5 sm:mb-6 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                   Delivery Address
@@ -441,9 +441,8 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
             >
-              <div className="p-5 sm:p-8">
+              <div>
                 <h2 className="text-lg sm:text-xl font-bold text-white mb-5 sm:mb-6 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
                   <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                   Shipping Method
@@ -490,9 +489,8 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
             >
-              <div className="p-5 sm:p-8">
+              <div>
                 <h2 className="text-lg sm:text-xl font-bold text-white mb-5 sm:mb-6 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
                   <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                   Payment Method
@@ -543,9 +541,8 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
             >
-              <div className="p-5 sm:p-8 space-y-4">
+              <div className="space-y-4">
                 <h2 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
                   <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                   Review Your Order
@@ -607,7 +604,7 @@ export default function CheckoutPage() {
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="flex flex-col sm:flex-row justify-between mt-8 gap-3">
+          <div className="flex flex-col sm:flex-row justify-between mt-6 pt-6 border-t border-white/10 gap-3">
             {currentStep > 1 ? (
               <button className="sw-btn-ghost-white h-12 px-6 rounded-xl flex items-center justify-center text-sm order-2 sm:order-1 w-full sm:w-auto" onClick={handleBack}>
                 <ChevronRight className="w-4 h-4 mr-2 rotate-180" />
@@ -633,6 +630,7 @@ export default function CheckoutPage() {
                 {!isProcessing && <Check className="w-4 h-4" />}
               </button>
             )}
+          </div>
           </div>
         </div>
 
