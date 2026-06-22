@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
-import { Search, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, X, History, MessageSquare, RotateCw } from "lucide-react"
+import { Search, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, X, History, MessageSquare, RotateCw, Edit3 } from "lucide-react"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { toast } from "sonner"
@@ -18,6 +18,59 @@ export default function AdminOrdersPage() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [newNote, setNewNote] = useState("")
   const [selectedOrders, setSelectedOrders] = useState<string[]>([])
+  const [showPostexModal, setShowPostexModal] = useState(false)
+  const [postexForm, setPostexForm] = useState({
+    customerName: "",
+    phone: "",
+    address: "",
+    city: "",
+    amount: 0,
+    orderDetail: "",
+    pickupAddressCode: "001",
+    bookingWeight: 1,
+  })
+  const [postexBooking, setPostexBooking] = useState(false)
+
+  const openPostexModal = (order: any) => {
+    const items = order.items || []
+    const orderDetail = items.map((i: any) => `${i.quantity} x ${i.name}`).join(", ")
+    setPostexForm({
+      customerName: order.customer_name || order.shipping_address?.name || "Guest",
+      phone: order.phone || order.shipping_address?.phone || "03000000000",
+      address: order.shipping_address?.address_line1 || "No Address provided",
+      city: order.shipping_address?.city || "Unknown",
+      amount: order.total || 0,
+      orderDetail: orderDetail ? `[${orderDetail}]` : "",
+      pickupAddressCode: "001",
+      bookingWeight: 1,
+    })
+    setShowPostexModal(true)
+  }
+
+  const confirmPostexBooking = async (orderId: string) => {
+    setPostexBooking(true)
+    try {
+      const res = await fetch("/api/postex", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId, ...postexForm }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setShowPostexModal(false)
+        return data.trackingNumber as string
+      } else {
+        const err = await res.text()
+        toast.error(`PostEx: ${err}`)
+        return null
+      }
+    } catch {
+      toast.error("Failed to book on PostEx")
+      return null
+    } finally {
+      setPostexBooking(false)
+    }
+  }
 
   const toggleOrderSelection = (e: React.MouseEvent, orderId: string) => {
     e.stopPropagation()
@@ -99,35 +152,8 @@ export default function AdminOrdersPage() {
       let postexTrackingId = order.postex || null
 
       if (status === 'Shipped' && !postexTrackingId) {
-        toast.info("Booking parcel with PostEx...")
-
-        const items = order.items || []
-        const orderDetail = items.map((i: any) => `${i.quantity} x ${i.name}`).join(", ")
-        const orderDetailStr = orderDetail ? `[${orderDetail}]` : ""
-
-        const payload = {
-          orderId: order.id,
-          customerName: order.customer_name || order.shipping_address?.name || 'Guest',
-          phone: order.phone || order.shipping_address?.phone || '03000000000',
-          address: order.shipping_address?.address_line1 || 'No Address provided',
-          city: order.shipping_address?.city || 'Unknown',
-          amount: order.total,
-          orderDetail: orderDetailStr,
-        }
-        const postexRes = await fetch('/api/postex', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        })
-        
-        if (postexRes.ok) {
-          const postexData = await postexRes.json()
-          postexTrackingId = postexData.trackingNumber
-          toast.success(`Booked on PostEx! Tracking: ${postexTrackingId}`)
-        } else {
-          const err = await postexRes.text()
-          toast.error(`PostEx: ${err}`)
-        }
+        openPostexModal(order)
+        return
       }
 
       const res = await fetch('/api/orders', {
@@ -148,6 +174,31 @@ export default function AdminOrdersPage() {
     } catch (e) {
       toast.error("An error occurred while updating the order")
       console.error(e)
+    }
+  }
+
+  const handlePostexConfirm = async () => {
+    const orderId = selectedOrder?.id
+    if (!orderId) return
+    const trackingNumber = await confirmPostexBooking(orderId)
+    if (trackingNumber) {
+      toast.success(`Booked on PostEx! Tracking: ${trackingNumber}`)
+      await updateOrderStatusAfterBooking(orderId, trackingNumber)
+    }
+  }
+
+  const updateOrderStatusAfterBooking = async (orderId: string, trackingNumber: string) => {
+    const res = await fetch('/api/orders', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: orderId, status: 'Shipped', postexId: trackingNumber }),
+    })
+    if (res.ok) {
+      const { order: updatedOrder } = await res.json()
+      setOrders(orders.map(o => o.id === orderId ? updatedOrder : o))
+      if (selectedOrder?.id === orderId) setSelectedOrder(updatedOrder)
+    } else {
+      toast.error('Order status update failed')
     }
   }
 
@@ -572,6 +623,76 @@ export default function AdminOrdersPage() {
           )}
         </SheetContent>
       </Sheet>
+
+      {/* PostEx Confirmation Modal */}
+      {showPostexModal && selectedOrder && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="sticky top-0 z-10 bg-[#0a0a0a] border-b border-white/5 px-6 py-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Edit3 className="w-4 h-4 text-[#B8860B]" /> Review PostEx Booking
+              </h2>
+              <button onClick={() => setShowPostexModal(false)} className="text-white/40 hover:text-white/70 transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 space-y-5">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Customer Name</label>
+                  <input type="text" value={postexForm.customerName} onChange={e => setPostexForm(p => ({ ...p, customerName: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                </div>
+                <div>
+                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Phone</label>
+                  <input type="text" value={postexForm.phone} onChange={e => setPostexForm(p => ({ ...p, phone: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                </div>
+                <div>
+                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Delivery Address</label>
+                  <textarea value={postexForm.address} onChange={e => setPostexForm(p => ({ ...p, address: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 resize-none min-h-[60px]" />
+                </div>
+                <div>
+                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">City</label>
+                  <input type="text" value={postexForm.city} onChange={e => setPostexForm(p => ({ ...p, city: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Order Total (Rs.)</label>
+                    <input type="number" value={postexForm.amount} onChange={e => setPostexForm(p => ({ ...p, amount: Number(e.target.value) }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Booking Weight (kg)</label>
+                    <input type="number" step="0.1" value={postexForm.bookingWeight} onChange={e => setPostexForm(p => ({ ...p, bookingWeight: Number(e.target.value) }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Pickup Address Code</label>
+                    <input type="text" value={postexForm.pickupAddressCode} onChange={e => setPostexForm(p => ({ ...p, pickupAddressCode: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Order #</label>
+                    <div className="w-full bg-[#141414] border border-white/5 rounded-lg px-3.5 py-2.5 text-sm text-white/60 font-mono">{selectedOrder.id}</div>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Order Detail</label>
+                  <input type="text" value={postexForm.orderDetail} onChange={e => setPostexForm(p => ({ ...p, orderDetail: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button onClick={() => setShowPostexModal(false)} className="flex-1 border border-white/10 hover:bg-white/5 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">Cancel</button>
+                <button onClick={handlePostexConfirm} disabled={postexBooking} className="flex-1 bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(184,134,11,0.3)] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                  {postexBooking ? (
+                    <>Booking...</>
+                  ) : (
+                    <><Truck className="w-3.5 h-3.5" /> Confirm & Ship</>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
