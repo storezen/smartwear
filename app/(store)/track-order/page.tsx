@@ -29,19 +29,26 @@ export default function TrackOrderPage() {
   const [notFound, setNotFound] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const [postexTracking, setPostexTracking] = useState<any>(null)
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setNotFound(false)
     setSearchedOrder(null)
+    setPostexTracking(null)
 
     try {
-      const res = await fetch(`/api/orders/track?id=${encodeURIComponent(orderId)}`)
+      const res = await fetch(`/api/postex/track?orderId=${encodeURIComponent(orderId)}`)
       if (res.ok) {
         const data = await res.json()
-        setSearchedOrder(data.order)
+        if (data.order) {
+          setSearchedOrder(data.order)
+          setPostexTracking(data.postexTracking)
+        } else {
+          setNotFound(true)
+        }
       } else {
-        // Fallback to mock
         const mockOrder = mockOrders.find(o => o.id.toLowerCase() === orderId.toLowerCase())
         if (mockOrder) {
           setSearchedOrder(mockOrder)
@@ -148,10 +155,38 @@ export default function TrackOrderPage() {
                   Placed on {new Date(searchedOrder.created_at).toLocaleDateString('en-PK')}
                 </p>
                 {(searchedOrder.tracking_number || searchedOrder.postex) && (
-                  <div className="mt-4 p-4 bg-[#0F1923] border border-white/5 rounded-xl flex items-center gap-3">
-                    <Truck className="w-5 h-5 text-[#B8860B]" />
-                    <span className="text-sm text-white/60">Tracking:</span>
-                    <span className="font-mono text-sm text-[#B8860B]">{searchedOrder.postex || searchedOrder.tracking_number}</span>
+                  <div className="mt-4 p-4 bg-[#0F1923] border border-white/5 rounded-xl">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Truck className="w-5 h-5 text-[#B8860B]" />
+                      <span className="text-sm text-white/60">PostEx Tracking:</span>
+                      <span className="font-mono text-sm text-[#B8860B]">{searchedOrder.postex || searchedOrder.tracking_number}</span>
+                    </div>
+
+                    {/* PostEx Live Timeline */}
+                    {postexTracking?.timeline && postexTracking.timeline.length > 0 && (
+                      <div className="space-y-0">
+                        {postexTracking.timeline.map((event: any, i: number) => (
+                          <div key={i} className="flex gap-3">
+                            <div className="flex flex-col items-center">
+                              <div className={`w-2 h-2 rounded-full mt-1.5 ${i === 0 ? 'bg-[#B8860B]' : 'bg-white/20'}`} />
+                              {i < postexTracking.timeline.length - 1 && <div className="w-px flex-1 bg-white/10" />}
+                            </div>
+                            <div className={`pb-4 ${i === 0 ? '' : ''}`}>
+                              <p className={`text-sm ${i === 0 ? 'text-white font-medium' : 'text-white/60'}`}>{event.status}</p>
+                              {event.date && <p className="text-xs text-white/40 mt-0.5">{new Date(event.date).toLocaleString('en-PK')}</p>}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Current PostEx Status Badge */}
+                    {postexTracking?.status && (
+                      <div className="mt-3 pt-3 border-t border-white/5 flex items-center gap-2 text-xs text-white/50">
+                        <Clock className="w-3 h-3" />
+                        Current: <span className="text-[#B8860B] font-medium">{postexTracking.status}</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -182,6 +217,22 @@ export default function TrackOrderPage() {
                     </div>
                   ))}
                 </div>
+
+                {postexTracking?.transactionFee != null && (
+                  <div className="mt-4 p-3 bg-[#0F1923] border border-white/5 rounded-xl">
+                    <p className="text-xs text-white/40 uppercase tracking-wider mb-2">PostEx Charges</p>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <span className="text-white/60">Shipping Fee:</span>
+                      <span className="text-white/90 text-right font-mono">Rs. {postexTracking.transactionFee?.toLocaleString()}</span>
+                      {postexTracking.transactionTax != null && (
+                        <><span className="text-white/60">Tax:</span><span className="text-white/90 text-right font-mono">Rs. {postexTracking.transactionTax?.toLocaleString()}</span></>
+                      )}
+                      {postexTracking.upfrontPayment != null && (
+                        <><span className="text-white/60">Upfront Payment:</span><span className="text-emerald-400 text-right font-mono">Rs. {postexTracking.upfrontPayment?.toLocaleString()}</span></>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="mt-6 pt-4 border-t border-white/10">
                   <div className="flex justify-between font-bold text-lg">

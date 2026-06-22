@@ -39,6 +39,8 @@ CREATE TABLE public.orders (
   notes TEXT,
   history JSONB,
   postex TEXT,
+  postex_status TEXT,
+  postex_timeline JSONB,
   postex_charges JSONB
 );
 
