@@ -12,6 +12,9 @@ export async function GET() {
     if (maskedSettings.postex_api_token) {
       maskedSettings.postex_api_token = "********";
     }
+    if (maskedSettings.postex_webhook_secret) {
+      maskedSettings.postex_webhook_secret = "********";
+    }
     if (maskedSettings.tiktok_access_token) {
       maskedSettings.tiktok_access_token = "********";
     }
@@ -37,6 +40,12 @@ export async function POST(request: Request) {
     } else if (updates.postex_api_token) {
       // It was changed, encrypt it
       updates.postex_api_token = encrypt(updates.postex_api_token);
+    }
+
+    if (updates.postex_webhook_secret === "********") {
+      delete updates.postex_webhook_secret;
+    } else if (updates.postex_webhook_secret) {
+      updates.postex_webhook_secret = encrypt(updates.postex_webhook_secret);
     }
 
     if (updates.tiktok_access_token === "********") {

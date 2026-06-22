@@ -13,6 +13,7 @@ const settingsSchema = z.object({
   store_email: z.string().email("Invalid email").optional().or(z.literal("")),
   shipping_flat_rate: z.string().optional(),
   postex_api_token: z.string().optional().nullable(),
+  postex_webhook_secret: z.string().optional().nullable(),
   tiktok_pixel_id: z.string().optional().nullable(),
   tiktok_access_token: z.string().optional().nullable(),
 })
@@ -216,8 +217,21 @@ export default function AdminSettingsPage() {
                           <p className="text-[10px] text-white/50">Automated order booking and tracking.</p>
                         </div>
                       </div>
+
+                      {/* Webhook URL - read-only */}
+                      <div className="bg-white/[0.02] border border-white/10 rounded-lg p-3 space-y-2">
+                        <p className="text-[10px] font-semibold tracking-widest uppercase text-white/70">Webhook URL</p>
+                        <p className="text-xs font-mono text-[#B8860B] break-all select-all">
+                          {typeof window !== 'undefined' ? window.location.origin : 'https://smartwear-psi.vercel.app'}/api/webhooks/postex
+                        </p>
+                        <p className="text-[10px] text-white/40">
+                          PostEx dashboard me yeh URL set karein. Yeh PostEx se real-time status updates receive karta hai.
+                        </p>
+                      </div>
+
                       <div className="grid grid-cols-1 gap-4">
                         {renderInput('postex_api_token', 'PostEx API Token', 'password', 'Enter token to encrypt', true)}
+                        {renderInput('postex_webhook_secret', 'PostEx Webhook Secret', 'password', 'x-postex-secret header value', true)}
                       </div>
                     </div>
 

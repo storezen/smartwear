@@ -1,12 +1,19 @@
 import { NextResponse } from 'next/server'
 import { isSupabaseConfigured, supabase } from '@/lib/supabase'
+import { getSettings } from '@/lib/db'
+import { decrypt } from '@/lib/encryption'
 import { env } from '@/lib/env'
 
 export async function POST(req: Request) {
   try {
-    // 1. Verify Webhook Secret (if configured)
-    const signature = req.headers.get('x-postex-signature') || req.headers.get('authorization')
-    if (env.POSTEX_WEBHOOK_SECRET && signature !== env.POSTEX_WEBHOOK_SECRET) {
+    // 1. Verify Webhook Secret (from settings or env)
+    const signature = req.headers.get('x-postex-secret') || req.headers.get('x-postex-signature') || req.headers.get('authorization')
+    
+    // Try settings first, fallback to env
+    const settings = await getSettings()
+    const webhookSecret = decrypt(settings.postex_webhook_secret) || env.POSTEX_WEBHOOK_SECRET
+    
+    if (webhookSecret && signature !== webhookSecret) {
       return NextResponse.json({ error: 'Unauthorized webhook request' }, { status: 401 })
     }
 

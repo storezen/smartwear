@@ -56,6 +56,7 @@ const INITIAL_DATA = {
     store_email: "support@smartwear.pk",
     shipping_flat_rate: "250",
     postex_api_token: "",
+    postex_webhook_secret: "",
     tiktok_pixel_id: "",
     tiktok_access_token: ""
   }
@@ -375,12 +376,12 @@ export async function getSettings() {
     if (error && error.code !== 'PGRST116') console.error('Supabase getSettings error:', error)
     if (data) return data
     // Fallback default
-    return { store_name: "Smartwear Pakistan", store_phone: "", store_email: "", shipping_flat_rate: "250", postex_api_token: "", tiktok_pixel_id: "", tiktok_access_token: "" }
+    return { store_name: "Smartwear Pakistan", store_phone: "", store_email: "", shipping_flat_rate: "250", postex_api_token: "", postex_webhook_secret: "", tiktok_pixel_id: "", tiktok_access_token: "" }
   }
 
   const db = await getDb()
   if (!db.settings) {
-    db.settings = { store_name: "Smartwear Pakistan", store_phone: "", store_email: "", shipping_flat_rate: "250", postex_api_token: "", tiktok_pixel_id: "", tiktok_access_token: "" }
+    db.settings = { store_name: "Smartwear Pakistan", store_phone: "", store_email: "", shipping_flat_rate: "250", postex_api_token: "", postex_webhook_secret: "", tiktok_pixel_id: "", tiktok_access_token: "" }
     await saveDb(db)
   }
   return db.settings
