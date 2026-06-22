@@ -132,7 +132,7 @@ export default function LiveAnalyticsPage() {
     retry,
     reconnecting,
     lastUpdated,
-  } = useRealtimeAnalytics({ pollInterval: 3000 })
+  } = useRealtimeAnalytics({ pollInterval: 1500 })
 
   const [viewMode, setViewMode] = useState<"globe" | "map">("globe")
   const [globeEngine, setGlobeEngine] = useState<"premium" | "classic">("premium")

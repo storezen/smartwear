@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
-import { AnalyticsEvent, parseEvent, LiveSummary } from "@/lib/analytics"
+import { AnalyticsEvent, parseEvent, computeSummary, LiveSummary } from "@/lib/analytics"
 
 export type ConnectionStatus = "connecting" | "connected" | "degraded" | "disconnected"
 
@@ -102,6 +102,7 @@ export function useRealtimeAnalytics(
           const updated = [parsed, ...eventsRef.current].slice(0, 500)
           eventsRef.current = updated
           setEvents(updated)
+          debouncedSetSummary(updated)
           setLastUpdated(new Date())
           setError(null)
           reconnectAttemptRef.current = 0
@@ -146,6 +147,32 @@ export function useRealtimeAnalytics(
     }
   }, [])
 
+  const fetchHeartbeatCount = useCallback(async (): Promise<number> => {
+    try {
+      const res = await fetch(`/api/analytics/heartbeat?t=${Date.now()}`, { cache: "no-store" })
+      const data = await res.json()
+      return data.active ?? 0
+    } catch {
+      return 0
+    }
+  }, [])
+
+  const summaryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const debouncedSetSummary = useCallback(async (updated: AnalyticsEvent[]) => {
+    if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current)
+    summaryTimeoutRef.current = setTimeout(async () => {
+      if (!mountedRef.current) return
+      const [local, heartbeat] = await Promise.all([
+        Promise.resolve(computeSummary(updated)),
+        fetchHeartbeatCount(),
+      ])
+      if (mountedRef.current) {
+        setSummary({ ...local, activeVisitors: heartbeat || local.activeVisitors })
+      }
+    }, 150)
+  }, [fetchHeartbeatCount])
+
   useEffect(() => {
     mountedRef.current = true
     reconnectAttemptRef.current = 0
@@ -165,6 +192,7 @@ export function useRealtimeAnalytics(
       return () => {
         mountedRef.current = false
         clearTimeout(channelErrorTimeout)
+        if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current)
         supabase?.removeChannel(channel)
         stopPolling()
       }
