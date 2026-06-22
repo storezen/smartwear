@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
+import { createPortal } from "react-dom"
 import Image from "next/image"
 import { Search, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, X, History, MessageSquare, RotateCw, Edit3 } from "lucide-react"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
@@ -628,7 +629,7 @@ export default function AdminOrdersPage() {
       </Sheet>
 
       {/* PostEx Confirmation Modal */}
-      {showPostexModal && selectedOrder && (
+      {showPostexModal && selectedOrder && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto shadow-2xl">
             <div className="sticky top-0 z-10 bg-[#0a0a0a] border-b border-white/5 px-6 py-4 flex items-center justify-between">
@@ -713,7 +714,8 @@ export default function AdminOrdersPage() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
