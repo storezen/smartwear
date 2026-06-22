@@ -53,7 +53,7 @@ export function useOrderNotifications(): UseOrderNotificationsReturn {
 
   const fetchLatest = useCallback(async () => {
     try {
-      const res = await fetch("/api/orders")
+      const res = await fetch(`/api/orders?t=${Date.now()}`, { cache: "no-store" })
       if (!res.ok) return
       const data = await res.json()
       const orders: any[] = Array.isArray(data) ? data : data.orders ?? []
