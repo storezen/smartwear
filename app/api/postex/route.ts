@@ -25,7 +25,7 @@ async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3)
 export async function POST(req: Request) {
   try {
     const data = await req.json()
-    const { orderId, customerName, phone, address, city, amount } = data
+    const { orderId, customerName, phone, address, city, amount, orderDetail, pickupAddressCode, bookingWeight } = data
 
     // Required fields for PostEx
     if (!orderId || !customerName || !phone || !address || !city) {
@@ -38,28 +38,29 @@ export async function POST(req: Request) {
     // If no token is provided, mock the response for local development
     if (!postexToken) {
       console.log(`[POSTEX MOCK] Booking parcel for ${orderId}...`)
-      return NextResponse.json({ 
-        success: true, 
+      return NextResponse.json({
+        success: true,
         trackingNumber: `PEX-${Math.floor(100000 + Math.random() * 900000)}`,
         message: "Mock booked successfully (No API Token)"
       }, { status: 200 })
     }
 
-    // Actual PostEx API Integration (v2/v3 endpoint example)
     const postexPayload = {
       orderRefNumber: orderId,
       customerName,
       customerPhone: phone,
       deliveryAddress: address,
       cityName: city,
-      invoiceDivision: 1,
-      orderType: 1,
       invoicePayment: amount,
-      items: 1,
+      orderDetail: orderDetail || "",
+      orderType: "Normal",
+      pickupAddressCode: pickupAddressCode || "001",
+      bookingWeight: bookingWeight || 1,
+      transactionNotes: "",
     }
 
-    console.log(`[POSTEX] Attempting to book parcel for Order ${orderId}...`)
-    const response = await fetchWithRetry('https://api.postex.pk/services/integration/api/order/v2/create-order', {
+    console.log(`[POSTEX] Booking parcel for Order ${orderId}...`)
+    const response = await fetchWithRetry('https://api.postex.pk/services/integration/api/order/v3/create-order', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,23 +69,24 @@ export async function POST(req: Request) {
       body: JSON.stringify(postexPayload)
     })
 
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error(`[POSTEX ERROR] Booking failed for ${orderId}:`, errorText)
-      return NextResponse.json({ error: 'PostEx API Error', details: errorText }, { status: response.status })
+    const result = await response.json()
+
+    if (result.statusCode !== "200") {
+      console.error(`[POSTEX ERROR] Booking failed for ${orderId}:`, result.statusMessage)
+      return NextResponse.json({ error: result.statusMessage || 'PostEx API Error' }, { status: 400 })
     }
 
-    const result = await response.json()
-    console.log(`[POSTEX SUCCESS] Order ${orderId} booked with Tracking ID: ${result.distTrackingNumber}`)
+    const trackingNumber = result.dist?.trackingNumber
+    console.log(`[POSTEX SUCCESS] Order ${orderId} booked with Tracking ID: ${trackingNumber}`)
 
-    // Store the PostEx tracking ID into Supabase if configured
-    if (isSupabaseConfigured() && supabase) {
-      await supabase.from('orders').update({ postex_tracking: result.distTrackingNumber }).eq('id', orderId)
+    // Store tracking ID in Supabase
+    if (trackingNumber && isSupabaseConfigured() && supabase) {
+      await supabase.from('orders').update({ postex: trackingNumber }).eq('id', orderId)
     }
 
     return NextResponse.json({
       success: true,
-      trackingNumber: result.distTrackingNumber, // Example response key
+      trackingNumber,
       message: "Order booked on PostEx successfully"
     }, { status: 200 })
 

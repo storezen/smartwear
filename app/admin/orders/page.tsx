@@ -100,13 +100,19 @@ export default function AdminOrdersPage() {
 
       if (status === 'Shipped' && !postexTrackingId) {
         toast.info("Booking parcel with PostEx...")
+
+        const items = order.items || []
+        const orderDetail = items.map((i: any) => `${i.quantity} x ${i.name}`).join(", ")
+        const orderDetailStr = orderDetail ? `[${orderDetail}]` : ""
+
         const payload = {
           orderId: order.id,
           customerName: order.customer_name || order.shipping_address?.name || 'Guest',
           phone: order.phone || order.shipping_address?.phone || '03000000000',
           address: order.shipping_address?.address_line1 || 'No Address provided',
           city: order.shipping_address?.city || 'Unknown',
-          amount: order.total
+          amount: order.total,
+          orderDetail: orderDetailStr,
         }
         const postexRes = await fetch('/api/postex', {
           method: 'POST',
