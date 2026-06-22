@@ -287,10 +287,10 @@ export default function CheckoutPage() {
           </h1>
         </div>
       </div>
-      <div className="sw-container pb-16">
+      <div className="sw-container pb-12 md:pb-16">
       {/* Progress Steps */}
-      <div className="mb-8 sm:mb-10 px-0 sm:px-4 overflow-x-auto">
-        <div className="flex items-center justify-start sm:justify-center min-w-max sm:min-w-0 px-2 sm:px-0">
+      <div className="mb-6 sm:mb-10 px-0 sm:px-4 overflow-x-auto -mx-5 sm:mx-0">
+        <div className="flex items-center justify-start sm:justify-center min-w-max sm:min-w-0 px-5 sm:px-0">
           {steps.map((step, index) => (
             <div key={step.id} className="flex items-center">
               <motion.div
@@ -328,7 +328,7 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2">
           <AnimatePresence mode="wait">
@@ -340,11 +340,11 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
+              className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
             >
-              <div className="p-6 md:p-8">
-                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
-                  <MapPin className="w-5 h-5 text-[#B8860B]" />
+              <div className="p-5 sm:p-8">
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-5 sm:mb-6 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                   Delivery Address
                 </h2>
 
@@ -406,7 +406,7 @@ export default function CheckoutPage() {
                       })}
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-sm text-white/70 mb-1.5">Province</label>
                       <input 
@@ -441,11 +441,11 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
+              className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
             >
-              <div className="p-6 md:p-8">
-                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
-                  <Truck className="w-5 h-5 text-[#B8860B]" />
+              <div className="p-5 sm:p-8">
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-5 sm:mb-6 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+                  <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                   Shipping Method
                 </h2>
 
@@ -490,11 +490,11 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
+              className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
             >
-              <div className="p-6 md:p-8">
-                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
-                  <CreditCard className="w-5 h-5 text-[#B8860B]" />
+              <div className="p-5 sm:p-8">
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-5 sm:mb-6 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+                  <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                   Payment Method
                 </h2>
 
@@ -543,11 +543,11 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
+              className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
             >
-              <div className="p-6 md:p-8 space-y-4">
-                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
-                  <Check className="w-5 h-5 text-[#B8860B]" />
+              <div className="p-5 sm:p-8 space-y-4">
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                   Review Your Order
                 </h2>
 
@@ -643,9 +643,9 @@ export default function CheckoutPage() {
 
         {/* Order Summary Sidebar */}
         <div className="lg:col-span-1">
-          <div className="sticky top-24 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl">
-            <div className="p-6 md:p-8">
-              <h3 className="font-bold text-lg text-white mb-6" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Order Summary</h3>
+          <div className="sticky top-24 rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl">
+            <div className="p-5 sm:p-8">
+              <h3 className="font-bold text-base sm:text-lg text-white mb-5 sm:mb-6" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Order Summary</h3>
 
               <div className="space-y-4 mb-6">
                 {items.map((item) => (
