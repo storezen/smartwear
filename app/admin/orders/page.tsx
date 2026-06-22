@@ -539,12 +539,10 @@ export default function AdminOrdersPage() {
                             <p className="text-sm text-white/80">{selectedOrder.shipping_address.city}{selectedOrder.shipping_address.country ? `, ${selectedOrder.shipping_address.country}` : ''}</p>
                           )}
                         </div>
-                        {selectedOrder.shipping_address?.address_line1 && selectedOrder.shipping_address?.city && (
-                          <AddressMap
-                            address={selectedOrder.shipping_address.address_line1}
-                            city={selectedOrder.shipping_address.city}
-                            height={180}
-                          />
+                        {selectedOrder.shipping_address?.city && (
+                          <AddressMap onSelect={(result) => {
+                            toast.success(`Location: ${result.city || result.formattedAddress.slice(0, 50)}`)
+                          }} />
                         )}
                       </div>
                     </div>
@@ -665,21 +663,13 @@ export default function AdminOrdersPage() {
                   <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Delivery Address</label>
                   <textarea value={postexForm.address} onChange={e => setPostexForm(p => ({ ...p, address: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 resize-none min-h-[60px]" />
                 </div>
-                {postexForm.address && postexForm.city && (
-                  <AddressMap
-                    address={postexForm.address}
-                    city={postexForm.city}
-                    height={160}
-                    onCorrect={(result) => {
-                      setPostexForm(p => ({
-                        ...p,
-                        address: result.formattedAddress,
-                        city: result.city || p.city,
-                        province: result.province || p.province,
-                      }))
-                    }}
-                  />
-                )}
+                <AddressMap onSelect={(result) => {
+                  setPostexForm(p => ({
+                    ...p,
+                    address: result.formattedAddress,
+                    city: result.city || p.city,
+                  }))
+                }} />
                 <div>
                   <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5">City</label>
                   <CitySelect
