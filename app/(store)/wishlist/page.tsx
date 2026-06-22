@@ -138,6 +138,7 @@ export default function PremiumWishlistPage() {
                           src={item.product.images[0]}
                           alt={item.product.name}
                           fill
+                          sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 20vw"
                           className="object-cover"
                         />
                       </motion.div>

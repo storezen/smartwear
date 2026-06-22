@@ -8,7 +8,6 @@ import {
   Package,
   ShoppingCart,
   Users,
-  Tags,
   Settings,
   ChevronLeft,
   Menu,
@@ -139,6 +138,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
           className="absolute -right-3 top-[60px] w-5 h-5 rounded-full bg-[#1A2530] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors z-30 sw-interactive"
+          aria-label="Toggle sidebar"
         >
           <motion.div animate={{ rotate: sidebarCollapsed ? 180 : 0 }}>
             <ChevronLeft className="w-2.5 h-2.5" />
@@ -282,6 +282,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden p-1.5 -ml-1.5 text-white/60 hover:text-white sw-interactive"
+              aria-label="Open sidebar"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -298,6 +299,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <button
                 onClick={() => setShowNotifs(!showNotifs)}
                 className="relative w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive"
+                aria-label="Notifications"
               >
                 <Bell className="w-3.5 h-3.5" />
                 {unreadCount > 0 && (

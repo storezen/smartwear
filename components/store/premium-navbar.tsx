@@ -162,6 +162,7 @@ export function PremiumNavbar() {
             <button
               onClick={() => setMobileOpen(true)}
               className="lg:hidden p-2 -ml-2 text-white/70 hover:text-white sw-interactive"
+              aria-label="Open menu"
             >
               <Menu className="w-6 h-6" />
             </button>
@@ -201,6 +202,7 @@ export function PremiumNavbar() {
                 <button
                   onClick={() => setShowSearch(true)}
                   className="md:hidden relative z-10 w-10 h-10 flex items-center justify-center rounded-full transition-colors sw-interactive text-white/70 hover:text-white hover:bg-white/5"
+                  aria-label="Search"
                 >
                   <Search className="w-5 h-5" />
                 </button>
@@ -242,6 +244,7 @@ export function PremiumNavbar() {
               <button
                 onClick={() => setMobileOpen(false)}
                 className="p-2 text-white/70 hover:text-white bg-white/5 rounded-full sw-interactive"
+                aria-label="Close menu"
               >
                 <X className="w-6 h-6" />
               </button>

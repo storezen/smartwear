@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Product } from "@/types"
 import { formatPrice } from "@/lib/mock-data"
@@ -101,7 +102,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
 
         <div className="bg-[#0C0F14] rounded-xl p-4 flex gap-4 items-center mb-6 mt-2 border border-white/5">
           <div className="w-16 h-16 rounded-lg bg-[#0F1923] overflow-hidden shrink-0 relative border border-white/5">
-            <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+            <Image src={product.images[0]} alt={product.name} fill sizes="64px" className="object-cover" />
           </div>
           <div className="flex-1">
             <p className="font-medium text-sm line-clamp-1">{product.name}</p>

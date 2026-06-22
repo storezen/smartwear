@@ -185,6 +185,7 @@ export default function LiveAnalyticsPage() {
                 viewMode === "globe" && globeEngine === "premium"
                   ? "bg-[#B8860B]/20 text-[#B8860B]" : "text-white/25 hover:text-white/50"
               }`}
+              aria-label="Premium 3D globe"
               title="Premium 3D Globe"
             >
               <Globe className="w-3 h-3" />
@@ -204,6 +205,7 @@ export default function LiveAnalyticsPage() {
               className={`p-1 rounded-md transition-all ${
                 viewMode === "map" ? "bg-white/10 text-white" : "text-white/25 hover:text-white/50"
               }`}
+              aria-label="Pakistan map"
               title="Pakistan Map"
             >
               <MapIcon className="w-3 h-3" />
@@ -214,6 +216,7 @@ export default function LiveAnalyticsPage() {
             onClick={handleClear}
             disabled={isClearing}
             className="p-1.5 bg-red-500/8 border border-red-500/15 rounded-lg text-red-400/60 hover:bg-red-500/15 hover:text-red-400 transition-all disabled:opacity-40"
+            aria-label="Clear all data"
             title="Clear all data"
           >
             {isClearing ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}

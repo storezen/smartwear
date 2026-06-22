@@ -197,7 +197,7 @@ export default function MarketingPage() {
                         </button>
                       </td>
                       <td className="p-4 text-right flex justify-end gap-3">
-                        <button onClick={() => handleDeletePromo(promo.id)} className="text-red-400 hover:text-red-300">
+                        <button onClick={() => handleDeletePromo(promo.id)} className="text-red-400 hover:text-red-300" aria-label="Delete promo">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </td>

@@ -33,16 +33,27 @@ const fadeUp: any = {
 function parseDescription(html: string) {
   if (!html) return { textOnlyHtml: '', images: [] };
   
+  // Strip dangerous tags and attributes (XSS sanitize)
+  const sanitized = html
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
+    .replace(/<embed[\s\S]*?<\/embed>/gi, '')
+    .replace(/<object[\s\S]*?<\/object>/gi, '')
+    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+    .replace(/on\w+\s*=\s*\S+/gi, '')
+    .replace(/javascript\s*:/gi, '')
+    .replace(/data\s*:\s*\S+/gi, '')
+  
   const images: string[] = [];
   const imgRegex = /<img[^>]+src="([^">]+)"[^>]*>/gi;
   
   let match;
-  while ((match = imgRegex.exec(html)) !== null) {
+  while ((match = imgRegex.exec(sanitized)) !== null) {
     images.push(match[1]);
   }
   
   // Remove images from HTML
-  let textOnlyHtml = html.replace(/<img[^>]*>/gi, '');
+  let textOnlyHtml = sanitized.replace(/<img[^>]*>/gi, '');
   
   // Clean up empty paragraph tags that wrapped the images
   textOnlyHtml = textOnlyHtml.replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '');
@@ -303,7 +314,7 @@ function ProductContent({ product }: { product: any }) {
                         selectedImage === idx ? (lumeMode ? "ring-2 ring-emerald-500 ring-offset-2 ring-offset-black" : "ring-2 ring-[#B8860B] ring-offset-2 ring-offset-[#0C0F14]") : "opacity-60 hover:opacity-100"
                       )}
                     >
-                      <Image src={img} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
+                      <Image src={img} alt={`Thumbnail ${idx + 1}`} fill sizes="80px" className="object-cover" />
                     </button>
                   </SpotlightCard>
                 ))}
@@ -426,11 +437,11 @@ function ProductContent({ product }: { product: any }) {
               <motion.div initial="hidden" animate="show" variants={fadeUp} custom={4} className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center bg-[#0F1923] border border-white/10 rounded-xl p-1 h-12">
-                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors sw-interactive">
+                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors sw-interactive" aria-label="Decrease quantity">
                       <Minus className="w-4 h-4" />
                     </button>
                     <span className="w-10 text-center font-semibold text-white">{quantity}</span>
-                    <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="w-10 h-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors sw-interactive">
+                    <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="w-10 h-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors sw-interactive" aria-label="Increase quantity">
                       <Plus className="w-4 h-4" />
                     </button>
                   </div>
@@ -441,6 +452,7 @@ function ProductContent({ product }: { product: any }) {
                       "w-12 h-12 rounded-xl border flex items-center justify-center transition-all sw-interactive shrink-0",
                       isWishlisted ? "bg-[#B8860B]/10 border-[#B8860B] text-[#B8860B]" : "bg-[#0F1923] border-white/10 text-white/60 hover:text-white hover:bg-white/5 hover:border-white/20"
                     )}
+                    aria-label="Toggle wishlist"
                   >
                     <Heart className={cn("w-5 h-5 transition-all", isWishlisted && "fill-current scale-110")} />
                   </button>

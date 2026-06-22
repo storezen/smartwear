@@ -80,13 +80,13 @@ function SuccessContent() {
           if (realOrder) {
             total = realOrder.total
             setOrderDetails(realOrder)
+            TikTokEvents.purchase(realOrder)
+            return
           }
         }
       } catch (_) {}
       
-      if (orderDetails || total > 0) {
-        TikTokEvents.purchase(orderDetails || { id: orderId, total, items: [] })
-      }
+      TikTokEvents.purchase({ id: orderId, total, items: [] })
     }
     firePurchase()
 

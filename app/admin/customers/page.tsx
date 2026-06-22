@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { Search, User, Phone, MapPin, ShoppingBag, DollarSign, Calendar, ChevronRight, X } from "lucide-react"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
@@ -146,7 +147,7 @@ export default function AdminCustomersPage() {
                       <p className="text-sm text-white/60 flex items-center gap-1"><Phone className="w-4 h-4"/> {selectedCustomer.phone}</p>
                     </div>
                   </div>
-                  <SheetClose className="text-white/40 hover:text-white"><X className="w-5 h-5"/></SheetClose>
+                  <SheetClose className="text-white/40 hover:text-white" aria-label="Close"><X className="w-5 h-5"/></SheetClose>
                 </div>
               </SheetHeader>
 
@@ -193,7 +194,7 @@ export default function AdminCustomersPage() {
                         <div className="flex items-center gap-2 overflow-x-auto pb-2">
                           {order.items.map((item: any, idx: number) => (
                             <div key={idx} className="w-8 h-8 rounded bg-white/10 flex-shrink-0 overflow-hidden" title={item.name}>
-                              {item.image && <img src={item.image} alt="" className="w-full h-full object-cover"/>}
+                              {item.image && <Image src={item.image} alt="" fill sizes="32px" className="object-cover"/>}
                             </div>
                           ))}
                         </div>

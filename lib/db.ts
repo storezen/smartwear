@@ -104,10 +104,7 @@ export async function getDb(retries = 3): Promise<any> {
 }
 
 export async function saveDb(data: any) {
-  if (env.NODE_ENV === 'production') {
-    globalAny.memoryDb = data
-    return
-  }
+  globalAny.memoryDb = data
   const tempPath = `${DB_PATH}.tmp.${Date.now()}`
   await fs.writeFile(tempPath, JSON.stringify(data, null, 2))
   await fs.rename(tempPath, DB_PATH)

@@ -134,7 +134,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                   className="flex-1 bg-transparent border-none outline-none text-white placeholder-white/40 text-lg"
                 />
                 {query && (
-                  <button onClick={() => setQuery('')} className="p-1 text-white/40 hover:text-white mr-2">
+                  <button onClick={() => setQuery('')} className="p-1 text-white/40 hover:text-white mr-2" aria-label="Clear search">
                     <X className="w-4 h-4" />
                   </button>
                 )}
@@ -174,7 +174,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-[#0C0F14] border border-white/10 overflow-hidden shrink-0 relative">
                             {product.images && product.images[0] ? (
-                              <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+                              <Image src={product.images[0]} alt={product.name} fill sizes="40px" className="object-cover" />
                             ) : (
                               <div className="w-full h-full bg-white/5" />
                             )}
@@ -228,6 +228,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                           src={selectedProduct.images[0]} 
                           alt={selectedProduct.name} 
                           fill 
+                          sizes="40vw"
                           className="object-cover transition-transform duration-700 group-hover:scale-110" 
                         />
                       ) : null}

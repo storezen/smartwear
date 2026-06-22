@@ -615,7 +615,7 @@ export default function CheckoutPage() {
                 {items.map((item) => (
                   <div key={item.id} className="flex items-center gap-3">
                     <div className="relative w-14 h-14 bg-[#0F1923] border border-white/5 rounded-xl overflow-hidden shrink-0">
-                      <Image src={item.product.images[0]} alt={item.product.name} fill className="object-cover" />
+                      <Image src={item.product.images[0]} alt={item.product.name} fill sizes="56px" className="object-cover" />
                       <span className="absolute top-0 right-0 w-5 h-5 bg-[#B8860B] text-black font-bold text-[10px] flex items-center justify-center rounded-bl-lg">
                         {item.quantity}
                       </span>
@@ -687,6 +687,7 @@ export default function CheckoutPage() {
                   <button 
                     type="button"
                     className="w-8 h-8 rounded-full bg-[#B8860B] text-black flex items-center justify-center hover:bg-[#D4A017] transition-colors"
+                    aria-label="Add premium leather box"
                     onClick={() => {
                       alert("In a full setup, this would add to the global cart array. Added to order notes for now!")
                     }}

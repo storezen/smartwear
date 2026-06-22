@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Plus, Archive, Eye, Edit2, Package as PackageIcon, Trash2, Tag, DollarSign, Image as ImageIcon, Box, ArrowLeft, CheckSquare, X } from "lucide-react"
+import Image from "next/image"
+import { Search, Plus, Eye, Edit2, Package as PackageIcon, Trash2, Tag, DollarSign, Image as ImageIcon, Box, CheckSquare } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
@@ -46,6 +47,10 @@ export default function AdminProductsPage() {
       .then(data => {
         setProducts(data)
         setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+        toast.error("Failed to load products")
       })
   }
 
@@ -373,7 +378,7 @@ export default function AdminProductsPage() {
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded bg-[#0F1923] border border-white/5 overflow-hidden shrink-0">
-                          <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                          <Image src={product.images[0]} alt={product.name} fill sizes="40px" className="object-cover" />
                         </div>
                         <div>
                           <p className="text-sm font-medium text-white group-hover:text-[#B8860B] transition-colors">{product.name}</p>
@@ -530,7 +535,7 @@ export default function AdminProductsPage() {
                   <div className="flex gap-4 items-center">
                     <div className="w-12 h-12 rounded-lg bg-black/40 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
                       {formData.images[0] ? (
-                        <img src={formData.images[0]} alt="Preview" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                        <Image src={formData.images[0]} alt="Preview" fill sizes="48px" className="object-cover" />
                       ) : (
                         <ImageIcon className="w-4 h-4 text-white/20" />
                       )}

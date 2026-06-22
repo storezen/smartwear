@@ -105,6 +105,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
               <button
                 onClick={handleWishlist}
                 className="pointer-events-auto min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center bg-black/20 backdrop-blur-md border border-white/10 text-white hover:bg-[#B8860B]/20 hover:border-[#B8860B]/50 transition-all sw-interactive group/heart shadow-lg"
+                aria-label="Toggle wishlist"
               >
                 <Heart
                   className={cn("w-4 h-4 transition-all duration-300", inWishlist ? "fill-[#B8860B] text-[#B8860B]" : "group-hover/heart:scale-110")}
@@ -172,7 +173,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
                   onClick={handleCart}
                   disabled={!inStock}
                   className="col-span-1 min-h-[40px] sm:min-h-[44px] rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors sw-interactive disabled:opacity-50"
-                  title="Add to Cart"
+                  aria-label="Add to cart"
                 >
                   <ShoppingBag className="w-4 h-4" />
                 </button>

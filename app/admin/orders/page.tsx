@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { Search, Filter, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, MapPin, X, History, MessageSquare, Plus } from "lucide-react"
+import Image from "next/image"
+import { Search, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, X, History, MessageSquare } from "lucide-react"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { toast } from "sonner"
@@ -336,7 +337,7 @@ export default function AdminOrdersPage() {
                     </SheetTitle>
                     <p className="text-sm text-white/50 mt-1">{new Date(selectedOrder.created_at).toLocaleString()}</p>
                   </div>
-                  <SheetClose className="text-white/40 hover:text-white bg-white/5 p-2 rounded-full"><X className="w-4 h-4"/></SheetClose>
+                  <SheetClose className="text-white/40 hover:text-white bg-white/5 p-2 rounded-full" aria-label="Close"><X className="w-4 h-4"/></SheetClose>
                 </div>
               </SheetHeader>
 
@@ -355,7 +356,7 @@ export default function AdminOrdersPage() {
                           <div key={i} className="flex justify-between items-start">
                             <div className="flex gap-4">
                               <div className="w-12 h-12 bg-[#1a1a1a] rounded-md border border-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center relative">
-                                {item.image ? <img src={item.image} alt="" className="w-full h-full object-cover"/> : <div className="text-white/20 text-xs">No img</div>}
+                                {item.image ? <Image src={item.image} alt="" fill sizes="48px" className="object-cover"/> : <div className="text-white/20 text-xs">No img</div>}
                                 <span className="absolute -top-2 -right-2 bg-white/20 backdrop-blur-md text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border border-white/10">{item.quantity}</span>
                               </div>
                               <div className="pt-1">

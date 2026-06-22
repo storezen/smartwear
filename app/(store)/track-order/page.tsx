@@ -170,6 +170,7 @@ export default function TrackOrderPage() {
                           src={item.product_image || ''}
                           alt={item.product_name || 'Item'}
                           fill
+                          sizes="64px"
                           className="object-cover"
                         />
                       </div>

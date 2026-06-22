@@ -17,15 +17,10 @@ import {
   Server,
   Database,
   CheckCircle2,
-  XCircle
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { formatPrice } from "@/lib/mock-data"
-import { products as mockProducts } from "@/lib/mock-data"
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -370,7 +365,7 @@ export default function AdminDashboard() {
                 </span>
                 <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-[#0C0F14] border border-white/10 shrink-0">
                   {product.images && product.images.length > 0 ? (
-                    <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+                    <Image src={product.images[0]} alt={product.name} fill sizes="36px" className="object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <Package className="w-4 h-4 text-white/30" />

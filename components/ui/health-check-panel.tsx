@@ -150,6 +150,7 @@ export function HealthCheckPanel({ connectionStatus, error, eventCount, lastUpda
                 ? "bg-amber-500/8 border-amber-500/15 text-amber-400/60 hover:bg-amber-500/15"
                 : "bg-white/[0.03] border-white/5 text-white/30 hover:text-white/50"
         }`}
+        aria-label="System health"
         title="System Health"
       >
         <Activity className="w-3.5 h-3.5" />
@@ -174,6 +175,7 @@ export function HealthCheckPanel({ connectionStatus, error, eventCount, lastUpda
                   onClick={runCheck}
                   disabled={checking}
                   className="text-[9px] text-white/30 hover:text-white/50 transition-colors disabled:opacity-40"
+                  aria-label="Run health check"
                 >
                   <RefreshCw className={`w-3 h-3 ${checking ? "animate-spin" : ""}`} />
                 </button>

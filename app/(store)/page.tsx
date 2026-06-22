@@ -628,7 +628,7 @@ function CollectionsBanner({ categoryImages }: { categoryImages: Record<string, 
               className="snap-start shrink-0 w-[280px] sm:w-[320px] md:w-auto"
             >
               <Link href={col.href} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/3]">
-                <Image src={col.image} alt={col.name} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                <Image src={col.image} alt={col.name} fill sizes="(max-width: 768px) 280px, 320px" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
                 <div className="absolute top-4 left-4">

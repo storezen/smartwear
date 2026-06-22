@@ -101,7 +101,7 @@ export function StoreFooter() {
                 placeholder="Enter your email address"
                 className="w-full md:w-80 h-12 pl-5 pr-12 text-sm rounded-xl outline-none transition-all bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] focus:bg-white/[0.08]"
               />
-              <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg bg-[#B8860B] text-[#0C0F14] hover:bg-[#D4A017] transition-colors sw-interactive">
+              <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg bg-[#B8860B] text-[#0C0F14] hover:bg-[#D4A017] transition-colors sw-interactive" aria-label="Subscribe">
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>

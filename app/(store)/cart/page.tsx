@@ -144,6 +144,7 @@ export default function CartPage() {
                         src={item.product.images[0]}
                         alt={item.product.name}
                         fill
+                        sizes="88px"
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
@@ -173,6 +174,7 @@ export default function CartPage() {
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           disabled={item.quantity <= 1}
                           className="w-11 h-11 flex items-center justify-center text-white/60 hover:text-white transition-colors disabled:opacity-30 sw-interactive"
+                          aria-label="Decrease quantity"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
@@ -180,6 +182,7 @@ export default function CartPage() {
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           className="w-11 h-11 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive"
+                          aria-label="Increase quantity"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
@@ -194,6 +197,7 @@ export default function CartPage() {
                   <button
                     onClick={() => setItemToDelete(item.id)}
                     className="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center transition-all text-white/60 hover:text-red-400 hover:bg-red-500/10 sw-interactive"
+                    aria-label="Remove item"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
