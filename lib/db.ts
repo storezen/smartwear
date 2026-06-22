@@ -305,7 +305,8 @@ export async function createOrder(order: any) {
   return order
 }
 
-export async function updateOrderStatus(orderId: string, status: string, postexId?: string, note?: string, postexCharges?: Record<string, unknown>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function updateOrderStatus(orderId: string, status: string, postexId?: string, note?: string, postexCharges?: any) {
   if (env.NODE_ENV === 'production' && supabase) {
     const { data: order } = await supabase.from('orders').select('*').eq('id', orderId).single()
     if (!order) return null

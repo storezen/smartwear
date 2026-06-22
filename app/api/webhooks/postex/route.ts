@@ -83,9 +83,10 @@ export async function POST(req: Request) {
       if (trackId && settings.postex_api_token) {
         const token = decrypt(settings.postex_api_token) || env.POSTEX_API_TOKEN
         if (token) {
+          const sb = supabase
           fetchPostexCharges(trackId, token).then(charges => {
-            if (charges) {
-              supabase.from('orders').update({ postex_charges: charges }).eq('id', orderRef).then()
+            if (charges && sb) {
+              sb.from('orders').update({ postex_charges: charges }).eq('id', orderRef).then()
             }
           })
         }
