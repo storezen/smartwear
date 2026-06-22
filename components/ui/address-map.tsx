@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet"
 import L from "leaflet"
-import { MapPin, Search, X } from "lucide-react"
+import { MapPin, Search, X, Star, Map, Building2, Route } from "lucide-react"
 import "leaflet/dist/leaflet.css"
+import { getAllCities } from "@/lib/address-validator"
 
 const iconUrl = "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png"
 const iconRetinaUrl = "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png"
@@ -28,7 +29,15 @@ interface SearchItem {
   lng: number
   displayName: string
   city: string
+  type: "city" | "area" | "street"
+  shortName: string
 }
+
+const POPULAR_CITIES = getAllCities().map(c => ({
+  name: c.name,
+  province: c.province,
+  lat: 0, lng: 0,
+}))
 
 function ChangeView({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap()
@@ -53,35 +62,62 @@ export default function AddressMap({ onSelect }: AddressMapProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [results, setResults] = useState<SearchItem[]>([])
   const [searching, setSearching] = useState(false)
+  const [showCities, setShowCities] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     function handle(e: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
         setResults([])
+        setShowCities(false)
       }
     }
     document.addEventListener("mousedown", handle)
     return () => document.removeEventListener("mousedown", handle)
   }, [])
 
-  const handleSearch = async (q: string) => {
-    setSearchQuery(q)
-    if (q.length < 3) { setResults([]); return }
+  useEffect(() => {
+    if (open && inputRef.current) {
+      setTimeout(() => inputRef.current?.focus(), 100)
+    }
+  }, [open])
+
+  const doSearch = useCallback(async (q: string) => {
+    if (q.length < 2) { setResults([]); return }
     setSearching(true)
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=6&addressdetails=1&countrycodes=pk&accept-language=en`,
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=8&addressdetails=1&countrycodes=pk&accept-language=en`,
         { headers: { "User-Agent": "SmartwearApp/1.0" } }
       )
       const data = await res.json()
-      setResults(data.map((r: any) => ({
-        lat: Number(r.lat), lng: Number(r.lon),
-        displayName: r.display_name,
-        city: r.address?.city || r.address?.town || r.address?.village || r.address?.county || "",
-      })))
+      const items: SearchItem[] = data.map((r: any) => {
+        const addr = r.address || {}
+        const city = addr.city || addr.town || addr.village || addr.county || addr.state || ""
+        const type: SearchItem["type"] =
+          addr.city || addr.town ? "city" :
+          addr.suburb || addr.neighbourhood ? "area" : "street"
+        const shortName = r.display_name.split(",")[0]?.trim() || r.display_name
+        return { lat: Number(r.lat), lng: Number(r.lon), displayName: r.display_name, city, type, shortName }
+      })
+      // Sort: cities first, then areas, then streets
+      items.sort((a, b) => {
+        const order = { city: 0, area: 1, street: 2 }
+        return order[a.type] - order[b.type]
+      })
+      setResults(items)
     } catch {}
     setSearching(false)
+  }, [])
+
+  const handleSearchChange = (q: string) => {
+    setSearchQuery(q)
+    setShowCities(false)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    if (q.length < 2) { setResults([]); return }
+    debounceRef.current = setTimeout(() => doSearch(q), 300)
   }
 
   const selectPlace = (item: SearchItem) => {
@@ -90,6 +126,12 @@ export default function AddressMap({ onSelect }: AddressMapProps) {
     setZoom(16)
     setResults([])
     setSearchQuery("")
+  }
+
+  const selectPopularCity = async (name: string) => {
+    setSearchQuery(name)
+    setShowCities(false)
+    await doSearch(name)
   }
 
   const confirmLocation = async () => {
@@ -117,6 +159,18 @@ export default function AddressMap({ onSelect }: AddressMapProps) {
     setZoom(16)
   }
 
+  const typeIcon = (t: SearchItem["type"]) => {
+    if (t === "city") return <Building2 className="w-3.5 h-3.5 shrink-0" />
+    if (t === "area") return <Map className="w-3.5 h-3.5 shrink-0" />
+    return <Route className="w-3.5 h-3.5 shrink-0" />
+  }
+
+  const typeLabel = (t: SearchItem["type"]) => {
+    if (t === "city") return "City"
+    if (t === "area") return "Area"
+    return "Street"
+  }
+
   return (
     <>
       <button
@@ -139,31 +193,62 @@ export default function AddressMap({ onSelect }: AddressMapProps) {
               </button>
             </div>
 
-            {/* Search */}
+            {/* Search + Quick Cities */}
             <div className="px-5 py-3 border-b border-white/5" ref={searchRef}>
               <div className="relative">
-                <div className="flex items-center gap-2 bg-[#141414] border border-white/10 rounded-lg px-3 py-2.5">
+                <div className="flex items-center gap-2 bg-[#141414] border border-white/10 rounded-lg px-3 py-2.5 focus-within:border-[#B8860B] transition-colors">
                   <Search className="w-4 h-4 text-white/40 shrink-0" />
                   <input
+                    ref={inputRef}
                     type="text"
                     value={searchQuery}
-                    onChange={e => handleSearch(e.target.value)}
-                    placeholder="Search city or area in Pakistan..."
+                    onChange={e => handleSearchChange(e.target.value)}
+                    onFocus={() => { if (!searchQuery) setShowCities(true) }}
+                    placeholder="Search city, area, or street in Pakistan..."
                     className="bg-transparent text-sm text-white placeholder-white/30 focus:outline-none w-full"
                   />
-                  {searching && <span className="text-[10px] text-white/30">Searching...</span>}
+                  {searching && <span className="text-[10px] text-white/30 animate-pulse">Searching...</span>}
                 </div>
-                {results.length > 0 && (
+
+                {/* Quick popular cities */}
+                {showCities && !searchQuery && (
                   <div className="absolute top-full left-0 right-0 mt-1 bg-[#0F1923] border border-white/10 rounded-xl shadow-2xl z-[9999] max-h-56 overflow-y-auto">
+                    <div className="px-3 py-2 text-[10px] uppercase tracking-wider text-white/30 flex items-center gap-1.5">
+                      <Star className="w-3 h-3" /> Popular Cities
+                    </div>
+                    {POPULAR_CITIES.map((c, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => selectPopularCity(c.name)}
+                        className="w-full text-left px-3 py-2 text-xs text-white/80 hover:bg-white/5 transition-colors flex items-center justify-between"
+                      >
+                        <span>{c.name}</span>
+                        <span className="text-[10px] text-white/30">{c.province}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Search results */}
+                {results.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-[#0F1923] border border-white/10 rounded-xl shadow-2xl z-[9999] max-h-64 overflow-y-auto">
                     {results.map((item, i) => (
                       <button
                         key={i}
                         type="button"
                         onClick={() => selectPlace(item)}
-                        className="w-full text-left px-3 py-2.5 text-xs text-white/80 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+                        className="w-full text-left px-3 py-2.5 text-xs text-white/80 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0 flex items-start gap-2.5"
                       >
-                        <span className="block truncate">{item.displayName}</span>
-                        {item.city && <span className="text-[10px] text-white/40 mt-0.5 block">{item.city}</span>}
+                        <span className={`mt-0.5 ${item.type === "city" ? "text-[#B8860B]" : "text-white/40"}`}>
+                          {typeIcon(item.type)}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <span className="block truncate font-medium">{item.shortName}</span>
+                          <span className="block text-[10px] text-white/40 mt-0.5 truncate">
+                            {item.city} · <span className="text-white/30">{typeLabel(item.type)}</span>
+                          </span>
+                        </div>
                       </button>
                     ))}
                   </div>
@@ -194,7 +279,7 @@ export default function AddressMap({ onSelect }: AddressMapProps) {
               {!markerPos && (
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000]">
                   <p className="text-[10px] bg-black/70 backdrop-blur-sm text-white/50 px-3 py-1.5 rounded-lg border border-white/10">
-                    Search a place or click on the map to drop a pin
+                    Search a place or click the map to drop a pin
                   </p>
                 </div>
               )}
