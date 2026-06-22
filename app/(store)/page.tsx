@@ -85,6 +85,7 @@ type HeroFeatured = {
   slug: string
   image: string
   price: number
+  specifications?: Record<string, string>
 }
 
 const HERO_FALLBACK: HeroFeatured = {
@@ -92,6 +93,7 @@ const HERO_FALLBACK: HeroFeatured = {
   slug: "series-11-(allow-to-open-|-cash-on-delivery)",
   image: "/hero-watch-transparent.png",
   price: 5500,
+  specifications: { "Display": "2.05″ AMOLED", "Protection": "IP67 Rated", "Battery": "420mAh Cell", "Connectivity": "BT Calling" }
 }
 
 /** Box/packaging shots and chat exports clash with the dark cinematic hero. */
@@ -114,18 +116,8 @@ function pickHeroImage(images: string[] | undefined): string {
   return acceptable || HERO_FALLBACK.image
 }
 
-const heroSpecs = [
-  { icon: Activity, label: "2.05″ AMOLED" },
-  { icon: Shield, label: "IP67 Rated" },
-  { icon: Battery, label: "420mAh Cell" },
-  { icon: Wifi, label: "BT Calling" },
-]
+// We now generate specs and float chips dynamically inside the HeroBanner component
 
-const heroFloatChips = [
-  { icon: HeartPulse, label: "Health Suite", className: "top-[8%] -left-2 md:left-0" },
-  { icon: Clock, label: "Always-On", className: "top-[42%] -right-1 md:right-2" },
-  { icon: Truck, label: "COD Pakistan", className: "bottom-[12%] left-[5%]" },
-]
 
 function HeroWatchFace() {
   return (
@@ -165,6 +157,29 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
     .split(/\s+/)
     .slice(0, 2)
     .join(' ')
+
+  const specsEntries = Object.entries(featured.specifications || {}).slice(0, 4)
+  const defaultSpecs = [
+    { icon: Activity, label: "Premium Build" },
+    { icon: Shield, label: "Durable" },
+    { icon: Battery, label: "Long Battery" },
+    { icon: Wifi, label: "BT Calling" },
+  ]
+  const dynamicSpecs = specsEntries.length >= 2 ? specsEntries.map(([k, v]) => ({
+    icon: k.toLowerCase().includes('water') ? Shield :
+          k.toLowerCase().includes('battery') ? Battery :
+          k.toLowerCase().includes('display') ? Activity :
+          k.toLowerCase().includes('case') ? Shield : Star,
+    label: v.length > 15 ? k : v
+  })) : defaultSpecs
+
+  const float1 = specsEntries[0] ? specsEntries[0][1].substring(0, 15) : "Health Suite"
+  const float2 = specsEntries[1] ? specsEntries[1][1].substring(0, 15) : "Always-On"
+  const dynamicFloatChips = [
+    { icon: HeartPulse, label: float1, className: "top-[8%] -left-2 md:left-0" },
+    { icon: Clock, label: float2, className: "top-[42%] -right-1 md:right-2" },
+    { icon: Truck, label: "Open Before Pay", className: "bottom-[12%] left-[5%]" },
+  ]
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -227,16 +242,15 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                     className="text-[2rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white leading-[1.05] mb-5"
                     style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                   >
-                    Thinner Profile.
+                    Uncompromised Luxury.
                     <br />
                     <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                      Bigger Display.
+                      Unbeatable Price.
                     </span>
                   </motion.h1>
 
                   <motion.p variants={staggerItem} className="text-white/55 text-sm md:text-lg max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed">
-                    The <strong className="text-white font-medium">{shortName}</strong> brings a cinematic 2.05″ always-on AMOLED face, Bluetooth calling, and IP67 durability — delivered across Pakistan with{" "}
-                    <strong className="text-[#D4A017]">Cash on Delivery</strong>. Open the parcel. Love it. Then pay.
+                    Meet the <strong className="text-white font-medium">{shortName}</strong> — an absolute head-turner. Engineered with a stunning edge-to-edge display and premium build quality. Experience true luxury delivered right to your doorstep anywhere in Pakistan. <strong className="text-[#D4A017]">Check the parcel first, then pay.</strong>
                   </motion.p>
 
                   <motion.div variants={staggerItem} className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/8 mb-7">
@@ -260,7 +274,7 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                   </motion.div>
 
                   <motion.div variants={staggerItem} className="mt-8 flex flex-wrap gap-2.5 justify-center lg:justify-start">
-                    {heroSpecs.map((spec) => (
+                    {dynamicSpecs.map((spec) => (
                       <span
                         key={spec.label}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/8 text-white/60 text-[11px] font-medium"
@@ -308,7 +322,7 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
 
               <HeroWatchFace />
 
-              {heroFloatChips.map((chip, i) => (
+              {dynamicFloatChips.map((chip, i) => (
                 <motion.div
                   key={chip.label}
                   initial={{ opacity: 0, y: 12 }}
@@ -383,6 +397,7 @@ function pickHeroFeaturedList(products: any[]): HeroFeatured[] {
     slug: match.slug || HERO_FALLBACK.slug,
     image: pickHeroImage(match.images),
     price: match.price ?? HERO_FALLBACK.price,
+    specifications: match.specifications || {}
   }));
 }
 
