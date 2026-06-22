@@ -251,7 +251,7 @@ export default function LiveAnalyticsPage() {
 
             {/* ── Overview Stats ── */}
             <div className="text-[9px] tracking-[1.5px] text-white/60 mb-3">REAL-TIME METRICS</div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
               <div className="h-full">
                 <LiveStatsCard
                   title="Active Visitors"
@@ -303,7 +303,7 @@ export default function LiveAnalyticsPage() {
             </div>
 
             {/* ── Timeline + Funnel ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
               <div className="lg:col-span-1 h-full">
                 <TimelineChart data={summary?.timeline ?? []} />
               </div>
@@ -316,14 +316,14 @@ export default function LiveAnalyticsPage() {
             </div>
 
             {/* ── Sources + Products + Globe ── */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div className="md:col-span-1 h-full">
                 <TrafficSourcesChart sources={summary?.trafficSources ?? []} />
               </div>
               <div className="md:col-span-1 h-full">
                 <HotProducts products={summary?.hotProducts ?? []} />
               </div>
-              <div className="md:col-span-1 h-full min-h-[400px]">
+              <div className="md:col-span-1 h-full min-h-[320px]">
                 {viewMode === "globe" ? (
                   globeEngine === "premium" ? (
                     <PremiumGlobe locations={globeLocations} autoRotate />
