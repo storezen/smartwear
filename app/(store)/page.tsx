@@ -108,20 +108,20 @@ function HeroBanner() {
                     const parts = settings.hero_headline.split('.')
                     return (
                       <>
-                        {parts[0] || 'Timeless Craftsmanship'}{parts[0] ? '.' : ''}
+                        {parts[0] || 'Premium Quality'}{parts[0] ? '.' : ''}
                         <br />
                         <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                          {parts.slice(1).join('.').trim() || 'Modern Intelligence'}
+                          {parts.slice(1).join('.').trim() || 'No Premium Price'}
                         </span>
                       </>
                     )
                   })()
                 ) : (
                   <>
-                    Timeless Craftsmanship.
+                    Premium Quality.
                     <br />
                     <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                      Modern Intelligence.
+                      No Premium Price.
                     </span>
                   </>
                 )}
