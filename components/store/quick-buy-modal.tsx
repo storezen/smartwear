@@ -95,7 +95,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="!p-0 sm:max-w-md bg-[#0F1923] border-[#B8860B]/20 text-white overflow-hidden rounded-[24px] [animation-duration:0ms!important]" showCloseButton={true}>
+      <DialogContent className="sm:max-w-md bg-[#0F1923] border-[#B8860B]/20 text-white overflow-hidden rounded-[24px] [animation-duration:0ms!important]" showCloseButton={true}>
         {/* Glow effect */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#B8860B] to-[#D4A017]" />
         
