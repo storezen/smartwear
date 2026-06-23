@@ -142,12 +142,40 @@ CREATE TABLE public.chat_messages (
 CREATE INDEX idx_chat_messages_session ON public.chat_messages(session_id, created_at ASC);
 
 -- 5. Analytics Table (also stores chat analytics)
-CREATE TABLE public.analytics (
+CREATE TABLE IF NOT EXISTS public.analytics (
   id TEXT PRIMARY KEY,
   timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   event_name TEXT NOT NULL,
   value NUMERIC DEFAULT 0
 );
+
+-- Enable Realtime (safe — checks if pub exists)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'supabase_realtime') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.analytics;
+  END IF;
+END
+$$;
+
+ALTER TABLE public.analytics REPLICA IDENTITY FULL;
+CREATE INDEX IF NOT EXISTS idx_analytics_timestamp ON public.analytics (timestamp DESC);
+ALTER TABLE public.analytics ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow anonymous inserts" ON public.analytics;
+CREATE POLICY "Allow anonymous inserts"
+  ON public.analytics FOR INSERT TO anon, authenticated
+  WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow anonymous reads" ON public.analytics;
+CREATE POLICY "Allow anonymous reads"
+  ON public.analytics FOR SELECT TO anon, authenticated
+  USING (true);
+
+DROP POLICY IF EXISTS "Allow anonymous deletes" ON public.analytics;
+CREATE POLICY "Allow anonymous deletes"
+  ON public.analytics FOR DELETE TO anon, authenticated
+  USING (true);
 
 -- 7. Chat Feedback & Rate Limiting
 CREATE TABLE public.chat_feedback (
