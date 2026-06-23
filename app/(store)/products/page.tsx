@@ -328,9 +328,9 @@ function ProductsContent() {
               <>
                 <ProductCardGrid products={paginatedProducts as any} />
                 
-                {/* Pagination */}
+                {/* Pagination — desktop only, mobile scrolls naturally */}
                 {totalPages > 1 && (
-                  <div className="mt-12 flex justify-center items-center gap-2">
+                  <div className="hidden md:flex mt-12 justify-center items-center gap-2">
                     <button
                       onClick={() => setPage(p => Math.max(1, p - 1))}
                       disabled={page === 1}
