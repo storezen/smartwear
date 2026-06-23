@@ -11,16 +11,13 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { mockOrders, formatPrice } from '@/lib/mock-data'
 import { cn } from '@/lib/utils'
-import { OrderStatus } from '@/types'
 
-const statusColors: Record<OrderStatus, string> = {
+const statusColors: Record<string, string> = {
   pending: 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20',
-  confirmed: 'bg-blue-500/10 text-blue-500 border border-blue-500/20',
   processing: 'bg-purple-500/10 text-purple-500 border border-purple-500/20',
   shipped: 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/20',
   delivered: 'bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/20',
   cancelled: 'bg-red-500/10 text-red-500 border border-red-500/20',
-  refunded: 'bg-white/10 text-white/70 border border-white/20',
 }
 
 export default function TrackOrderPage() {
@@ -146,7 +143,7 @@ export default function TrackOrderPage() {
             <div className="rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl">
               <div className="p-6 border-b border-white/5 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Order #{searchedOrder.id}</h3>
-                <span className={cn("px-3 py-1 rounded-full text-xs font-semibold capitalize", (statusColors as any)[searchedOrder.status])}>
+                <span className={cn("px-3 py-1 rounded-full text-xs font-semibold", statusColors[searchedOrder.status.toLowerCase()] || 'bg-white/10 text-white/70 border border-white/20')}>
                   {searchedOrder.status}
                 </span>
               </div>

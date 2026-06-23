@@ -334,6 +334,11 @@ export async function createOrder(order: any) {
   return order
 }
 
+function isCancelledOrReturned(status: string): boolean {
+  const s = status.toLowerCase()
+  return s === 'cancelled' || s === 'returned' || s === 'rto' || s === 'rto delivered' || s.includes('return to origin')
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateOrderStatus(orderId: string, status: string, postexId?: string, note?: string, postexCharges?: any) {
   if (env.NODE_ENV === 'production' && supabase) {
@@ -343,8 +348,8 @@ export async function updateOrderStatus(orderId: string, status: string, postexI
       if (!order.history) order.history = []
       order.history.push({ status, timestamp: new Date().toISOString(), note: note || `Status updated to ${status}` })
     }
-    if (order.status !== 'Cancelled' && order.status !== 'Returned') {
-      if (status === 'Cancelled' || status === 'Returned') {
+    if (!isCancelledOrReturned(order.status)) {
+      if (isCancelledOrReturned(status)) {
         for (const item of order.items) {
           const { data: product } = await supabase.from('products').select('stock').eq('id', item.id).single()
           if (product) await supabase.from('products').update({ stock: (product.stock || 0) + item.quantity }).eq('id', item.id)
@@ -369,8 +374,8 @@ export async function updateOrderStatus(orderId: string, status: string, postexI
       if (!order.history) order.history = []
       order.history.push({ status, timestamp: new Date().toISOString(), note: note || `Status updated to ${status}` })
     }
-    if (order.status !== 'Cancelled' && order.status !== 'Returned') {
-      if (status === 'Cancelled' || status === 'Returned') {
+    if (!isCancelledOrReturned(order.status)) {
+      if (isCancelledOrReturned(status)) {
         for (const item of order.items) {
           const product = db.products.find((p: any) => p.id === item.id)
           if (product) product.stock = (product.stock || 0) + item.quantity

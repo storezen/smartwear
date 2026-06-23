@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const OrderStatusEnum = z.enum([
+export const ORDER_STATUSES = [
   "Pending",
   "Processing",
   "Shipped",
@@ -8,7 +8,9 @@ export const OrderStatusEnum = z.enum([
   "Delivered",
   "Returned",
   "Cancelled",
-]);
+] as const
+
+export const OrderStatusEnum = z.string()
 
 export const OrderStatusUpdateSchema = z.object({
   id: z.string().min(1, "Order ID is required"),

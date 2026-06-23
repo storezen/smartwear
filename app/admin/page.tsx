@@ -82,16 +82,17 @@ function StatCard({ title, rawValue, prefix, value, change, trend, icon: Icon, a
 }
 
 function OrderStatusBadge({ status }: { status: string }) {
-  const config: Record<string, { bg: string; text: string; label: string }> = {
-    delivered: { bg: "bg-[#4ADE80]/10 border-[#4ADE80]/20", text: "text-[#4ADE80]", label: "Delivered" },
-    shipped: { bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-500", label: "Shipped" },
-    pending: { bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-500", label: "Pending" },
-    cancelled: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500", label: "Cancelled" },
+  const s = status.toLowerCase()
+  const palette: Record<string, { bg: string; text: string }> = {
+    delivered: { bg: "bg-[#4ADE80]/10 border-[#4ADE80]/20", text: "text-[#4ADE80]" },
+    shipped: { bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-500" },
+    pending: { bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-500" },
+    cancelled: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
   }
-  const c = config[status] || config["pending"]
+  const c = palette[s] || { bg: "bg-white/10 border-white/20", text: "text-white/70" }
   return (
     <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md border text-[8px] font-semibold tracking-wide ${c.bg} ${c.text}`}>
-      {c.label}
+      {status}
     </span>
   )
 }

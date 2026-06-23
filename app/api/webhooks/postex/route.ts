@@ -27,20 +27,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required webhook fields' }, { status: 400 })
     }
 
-    const postexStatusLower = status.toLowerCase()
-
-    // Map PostEx status → our OMS status
-    let mappedStatus = "Shipped"
-    if (postexStatusLower.includes('delivered')) mappedStatus = "Delivered"
-    else if (postexStatusLower.includes('returned') || postexStatusLower.includes('cancelled') || postexStatusLower.includes('rto') || postexStatusLower.includes('return to origin')) mappedStatus = "Returned"
-    else if (postexStatusLower.includes('transit') || postexStatusLower.includes('dispatched') || postexStatusLower.includes('out for delivery')) mappedStatus = "In Transit"
-
     // 2. Update Database
     const webhookNote = `PostEx: ${status}`
 
     // Build PostEx tracking history entry
     const historyEntry = {
-      status: mappedStatus,
+      status,
       postexStatus: status,
       timestamp: new Date().toISOString(),
       note: webhookNote
@@ -61,8 +53,8 @@ export async function POST(req: Request) {
       }
 
       // Update status if changed
-      if (currentOrder.status !== mappedStatus) {
-        updates.status = mappedStatus
+      if (currentOrder.status !== status) {
+        updates.status = status
         updates.history = [...(currentOrder.history || []), historyEntry]
       }
 
@@ -96,10 +88,10 @@ export async function POST(req: Request) {
       const token = decrypt(settings.postex_api_token) || env.POSTEX_API_TOKEN
       const trackId = distTrackingNumber
       const charges = trackId && token ? await fetchPostexCharges(trackId, token) : undefined
-      await updateOrderStatus(orderRef, mappedStatus, trackId || undefined, webhookNote, charges || undefined)
+      await updateOrderStatus(orderRef, status, trackId || undefined, webhookNote, charges || undefined)
     }
 
-    return NextResponse.json({ success: true, mappedStatus }, { status: 200 })
+    return NextResponse.json({ success: true, status }, { status: 200 })
   } catch (error) {
     console.error("PostEx Webhook Error:", error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })

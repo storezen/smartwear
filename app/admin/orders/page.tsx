@@ -7,14 +7,14 @@ import { Search, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, X, Histo
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { toast } from "sonner"
-import { OrderStatusEnum } from "@/lib/validations/orders"
+import { ORDER_STATUSES } from "@/lib/validations/orders"
 import { detectProvince } from "@/lib/address-validator"
 import { CitySelect } from "@/components/ui/city-select"
 import dynamic from "next/dynamic"
 
 const AddressMap = dynamic(() => import("@/components/ui/address-map"), { ssr: false })
 
-const ALL_STATUSES = OrderStatusEnum.options;
+const ALL_STATUSES = ORDER_STATUSES;
 
 export default function AdminOrdersPage() {
   const [activeTab, setActiveTab] = useState('All')
@@ -260,7 +260,7 @@ export default function AdminOrdersPage() {
 
       {/* Tabs */}
       <div className="flex gap-1.5 border-b border-white/10 pb-3 overflow-x-auto">
-        {['All', 'Pending', 'Processing', 'Shipped', 'In Transit', 'Delivered', 'Cancelled'].map(tab => {
+        {['All', ...ALL_STATUSES].map(tab => {
           const count = (orders || []).filter(o => o.status === tab).length
           return (
             <button
@@ -364,6 +364,8 @@ export default function AdminOrdersPage() {
                     order.status === 'Shipped' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
                     order.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                     order.status === 'Cancelled' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
+                    order.status === 'In Transit' || order.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
+                    order.status === 'Returned' || order.status === 'RTO' || order.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                     'bg-white/10 text-white/60 border-white/20'
                   }`}>
                     {order.status}
@@ -403,6 +405,8 @@ export default function AdminOrdersPage() {
                         selectedOrder.status === 'Shipped' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
                         selectedOrder.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                         selectedOrder.status === 'Cancelled' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
+                        selectedOrder.status === 'In Transit' || selectedOrder.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
+                        selectedOrder.status === 'Returned' || selectedOrder.status === 'RTO' || selectedOrder.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                         'bg-white/10 text-white/60 border-white/20'
                       }`}>
                         {selectedOrder.status}

@@ -16,6 +16,12 @@ const idempotencyMap = new Map<string, any>();
 const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 5;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isCancelledOrReturned(status: string): boolean {
+  const s = status.toLowerCase()
+  return s === 'cancelled' || s === 'returned' || s === 'rto' || s === 'rto delivered' || s.includes('return to origin')
+}
+
 // Helper to get real product prices
 async function getRealProductPrice(productId: string): Promise<number | null> {
   const products = await getProducts()
@@ -242,7 +248,7 @@ export async function PUT(req: Request) {
     const auditNote = note || `Status updated to ${status} by ${adminName}`
 
     // PostEx Cancellation Logic (mocked call since we don't have full credentials)
-    if (status === 'Cancelled' || status === 'Returned') {
+    if (isCancelledOrReturned(status)) {
       try {
         // Ideally we would fetch the order first to get the existing postex tracking ID
         // For now, we simulate a cancellation hit
