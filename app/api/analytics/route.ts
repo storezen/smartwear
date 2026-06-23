@@ -49,15 +49,15 @@ export async function POST(req: Request) {
       timestamp: new Date().toISOString(),
     }
 
+    globalAny.liveAnalytics.unshift(newEvent)
+    if (globalAny.liveAnalytics.length > 500) {
+      globalAny.liveAnalytics.length = 500
+    }
+
     if (env.NODE_ENV === "production" && supabase) {
       const { error } = await supabase.from("analytics").insert([newEvent])
       if (error) {
         console.warn("Supabase Analytics Insert Error:", error.message)
-      }
-    } else {
-      globalAny.liveAnalytics.unshift(newEvent)
-      if (globalAny.liveAnalytics.length > 500) {
-        globalAny.liveAnalytics.length = 500
       }
     }
 
