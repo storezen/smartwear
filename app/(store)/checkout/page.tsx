@@ -250,7 +250,7 @@ export default function CheckoutPage() {
           })
           
           clearCart()
-          router.push(`/checkout/success?order=${orderId}`)
+          router.push(`/checkout/success?order=${orderId}&total=${total}`)
         } else {
           const errorData = await response.json()
           toast.error(errorData.error || "Order processing failed", {

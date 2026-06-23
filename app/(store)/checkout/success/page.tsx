@@ -64,6 +64,7 @@ function GoldParticles({ active }: { active: boolean }) {
 function SuccessContent() {
   const searchParams = useSearchParams()
   const orderIdFromQuery = searchParams.get('order')
+  const totalFromQuery = parseFloat(searchParams.get('total') || '0')
   const orderId = orderIdFromQuery || `ORD-${Date.now().toString().slice(-8)}`
 
   const [orderDetails, setOrderDetails] = useState<any>(null)
@@ -82,8 +83,8 @@ function SuccessContent() {
           }
         }
       } catch (_) {}
-      // Fallback: fire with order ID only (items fetched async in background)
-      TikTokEvents.purchase({ id: orderId, total: 0, items: [] })
+      // Fallback: fire with URL params (total survives redirect)
+      TikTokEvents.purchase({ id: orderId, total: totalFromQuery, items: [] })
     }
     firePurchase()
 

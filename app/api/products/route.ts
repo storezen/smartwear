@@ -75,9 +75,9 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    const { searchParams } = new URL(req.url)
-    const id = searchParams.get('id')
-    const deleteAll = searchParams.get('deleteAll') === 'true'
+    const url = new URL(req.url, 'http://n')
+    const id = url.searchParams.get('id')
+    const deleteAll = url.searchParams.get('deleteAll') === 'true'
 
     if (deleteAll) {
       if (isSupabaseConfigured() && supabase) {

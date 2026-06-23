@@ -4,8 +4,8 @@ import { isSupabaseConfigured, supabase } from '@/lib/supabase'
 
 export async function GET(req: Request) {
   try {
-    const { searchParams } = new URL(req.url)
-    const id = searchParams.get('id')
+    const url = new URL(req.url, 'http://n')
+    const id = url.searchParams.get('id')
     if (!id) return NextResponse.json({ error: 'Missing Order ID' }, { status: 400 })
 
     if (isSupabaseConfigured() && supabase) {
