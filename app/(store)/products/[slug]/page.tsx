@@ -158,7 +158,7 @@ export default function ProductPage({ params }: ProductPageProps) {
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-3" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
             This timepiece isn&apos;t in our catalog
           </h1>
-          <p className="text-white/55 text-sm mb-8">
+          <p className="text-white/55 text-sm mb-4 md:mb-8">
             The link may be outdated or the product was removed. Browse the collection to find your next watch.
           </p>
           <Link
@@ -277,7 +277,7 @@ function ProductContent({ product }: { product: any }) {
       <div className={cn("fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[150px] pointer-events-none transition-all duration-1000", lumeMode ? "opacity-[0.05] bg-green-400" : "opacity-[0.1] bg-[#D4A017]")} />
 
       {/* Breadcrumb */}
-      <div className="sw-container pt-28 pb-4 relative z-10">
+      <div className="sw-container pt-20 md:pt-28 pb-4 relative z-10">
         <motion.div
           initial="hidden" animate="show" variants={fadeUp} custom={0}
           className="flex flex-wrap items-center gap-2 text-[10px] text-white/70 uppercase tracking-[0.2em] w-full"
@@ -290,7 +290,7 @@ function ProductContent({ product }: { product: any }) {
         </motion.div>
       </div>
 
-      <div className="sw-container pb-24 relative z-10" ref={heroRef}>
+      <div className="sw-container pb-12 md:pb-24 relative z-10" ref={heroRef}>
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
           
           {/* LEFT: Cinematic Image Gallery */}
@@ -370,7 +370,7 @@ function ProductContent({ product }: { product: any }) {
           </motion.div>
 
           {/* RIGHT: Floating Product Info Panel */}
-          <div className="lg:col-span-5 pb-24 md:pb-0 min-w-0 w-full">
+          <div className="lg:col-span-5 pb-16 md:pb-0 min-w-0 w-full">
             <div className="md:sticky md:top-32 flex flex-col space-y-6 md:space-y-8">
               <motion.div initial="hidden" animate="show" variants={fadeUp} custom={1}>
                 <div className="flex items-center justify-between mb-3">
@@ -577,9 +577,9 @@ function ProductContent({ product }: { product: any }) {
         </div>
 
         {/* Product Details Tabs */}
-        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-24 lg:mt-32 pb-24 md:pb-0">
+        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-16 lg:mt-32 pb-16 md:pb-0">
           {/* Tab Navigation */}
-          <div className="p-1 rounded-2xl bg-white/[0.02] border border-white/10 w-fit mb-8 overflow-x-auto hide-scrollbar">
+          <div className="p-1 rounded-2xl bg-white/[0.02] border border-white/10 w-fit mb-4 md:mb-8 overflow-x-auto hide-scrollbar">
             <div className="flex items-center gap-1">
               {[
                 { key: 'description' as const, label: 'Description' },
@@ -860,8 +860,8 @@ function ProductContent({ product }: { product: any }) {
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-32">
-            <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-16 md:mt-32">
+            <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-white/5 pb-4">
               <h3 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Complete Your Collection</h3>
               <Link href={`/products?category=${product.category_slug}`} className="text-sm text-[#B8860B] hover:text-[#D4A017] transition-colors sw-interactive font-medium flex items-center gap-1">
                 View All <ChevronRight className="w-4 h-4" />

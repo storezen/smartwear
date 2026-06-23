@@ -25,7 +25,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#0C0F14] text-white">
       {/* Header */}
-      <div className="relative overflow-hidden text-white pt-20 pb-12 md:pt-28 md:pb-16 border-b border-white/5 mb-8">
+      <div className="relative overflow-hidden text-white pt-16 pb-8 md:pt-28 md:pb-16 border-b border-white/5 mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -54,7 +54,7 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="sw-container pb-24">
+        <div className="sw-container pb-12 md:pb-24">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-24 items-start">
           {/* Contact Information Cards */}
           <div className="space-y-6">
@@ -108,9 +108,9 @@ export default function ContactPage() {
             animate={{ opacity: 1, x: 0 }}
             className="p-6 md:p-10 rounded-[32px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-8" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Send a Message</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Send a Message</h2>
             {sent ? (
-              <div className="text-center py-12">
+              <div className="text-center py-10">
                 <div className="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Send className="w-8 h-8" />
                 </div>

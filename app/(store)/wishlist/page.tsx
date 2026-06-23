@@ -71,7 +71,7 @@ export default function PremiumWishlistPage() {
       <div className="fixed inset-0 bg-[#0C0F14] opacity-30 pointer-events-none" />
 
       {/* Header */}
-      <div className="relative overflow-hidden text-white pt-20 pb-12 md:pt-28 md:pb-16 border-b border-white/5 mb-8">
+      <div className="relative overflow-hidden text-white pt-16 pb-8 md:pt-28 md:pb-16 border-b border-white/5 mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -101,7 +101,7 @@ export default function PremiumWishlistPage() {
         </div>
       </div>
 
-      <div className="sw-container pb-16 relative">
+      <div className="sw-container pb-10 md:pb-16 relative">
 
         {/* Wishlist Items */}
         <motion.div

@@ -164,7 +164,7 @@ function ProductsContent() {
     <div className="min-h-screen bg-[#0C0F14] text-white">
 
       {/* Hero */}
-      <div className="relative overflow-hidden text-white pt-20 pb-16 md:pt-32 md:pb-24">
+      <div className="relative overflow-hidden text-white pt-16 pb-10 md:pt-32 md:pb-24">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -381,7 +381,7 @@ function ProductsContent() {
                 )}
               </>
             ) : (
-              <div className="text-center py-24">
+              <div className="text-center py-16 md:py-24">
                 <div className="w-14 h-14 rounded-2xl border border-white/10 bg-white/5 flex items-center justify-center mx-auto mb-4">
                   <Search className="w-6 h-6 text-white/60" />
                 </div>
@@ -399,7 +399,7 @@ function ProductsContent() {
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div className="sw-container py-12"><Skeleton count={8} /></div>}>
+    <Suspense fallback={<div className="sw-container py-8 md:py-12"><Skeleton count={8} /></div>}>
       <ProductsContent />
     </Suspense>
   )

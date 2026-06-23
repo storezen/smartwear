@@ -67,7 +67,7 @@ export default function TrackOrderPage() {
   return (
     <div className="min-h-screen bg-[#0C0F14] text-white">
       {/* Header */}
-      <div className="relative overflow-hidden text-white pt-20 pb-12 md:pt-28 md:pb-16 border-b border-white/5 mb-8">
+      <div className="relative overflow-hidden text-white pt-16 pb-8 md:pt-28 md:pb-16 border-b border-white/5 mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -98,7 +98,7 @@ export default function TrackOrderPage() {
           </p>
         </div>
       </div>
-      <div className="sw-container pb-16">
+      <div className="sw-container pb-10 md:pb-16">
         <div className="max-w-2xl mx-auto">
 
         {/* Search Form */}
@@ -262,7 +262,7 @@ export default function TrackOrderPage() {
             )}
 
             <div className="rounded-[24px] border border-[#B8860B]/20 bg-[#B8860B]/5 backdrop-blur-xl">
-              <div className="p-8 text-center">
+            <div className="p-6 md:p-8 text-center">
                 <p className="mb-4 text-white font-medium">Want to manage your orders?</p>
                 <Link href="/account/orders">
                   <button className="sw-btn-gold h-11 px-6 text-sm">View My Orders</button>

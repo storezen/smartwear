@@ -3,12 +3,12 @@
 import { useEffect, useState, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import {
-  ArrowRight, Shield, Truck, RefreshCw, CreditCard, ChevronRight,
+  ArrowRight, Shield, Truck, RefreshCw, CreditCard,
   Zap, Star, Heart, Watch, Smartphone, Battery, Headphones,
-  Package, Award, Clock, Activity, HeartPulse, Wifi,
-  Send, Quote, CheckCircle2, Sparkles, ChevronDown
+  Package, Award, Clock, Activity, HeartPulse,
+  Send, Quote, CheckCircle2, Sparkles
 } from "lucide-react"
 import { ProductCard } from "@/components/store/premium-product-card"
 import {
@@ -29,10 +29,6 @@ import {
   pickFromCategory,
 } from "@/lib/homepage-helpers"
 import { normalizeCategorySlug, normalizeProductList } from "@/lib/normalize-product"
-
-/* ════════════════════════════════════════════════════════
-   SHARED ANIMATION VARIANTS
-   ════════════════════════════════════════════════════════ */
 
 const fadeUp: any = {
   hidden: { opacity: 0, y: 30 },
@@ -55,8 +51,8 @@ const staggerItem: any = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
 }
 
-const SECTION_PAD = "py-8 md:py-12"
-const SECTION_HEAD_MB = "mb-8 md:mb-10"
+const SECTION_PAD = "py-6 md:py-12"
+const SECTION_HEAD_MB = "mb-6 md:mb-10"
 
 function SectionLabel({ text }: { text: string }) {
   return (
@@ -76,10 +72,6 @@ function SectionTitle({ children, className = "" }: { children: React.ReactNode;
   )
 }
 
-/* ════════════════════════════════════════════════════════
-   1. HERO BANNER — Series 11 flagship showcase
-   ════════════════════════════════════════════════════════ */
-
 type HeroFeatured = {
   name: string
   slug: string
@@ -93,10 +85,9 @@ const HERO_FALLBACK: HeroFeatured = {
   slug: "series-11-(allow-to-open-|-cash-on-delivery)",
   image: "/hero-watch-transparent.png",
   price: 5500,
-  specifications: { "Display": "2.05″ AMOLED", "Protection": "IP67 Rated", "Battery": "420mAh Cell", "Connectivity": "BT Calling" }
+  specifications: { "Display": "2.05\u2033 AMOLED", "Protection": "IP67 Rated", "Battery": "420mAh Cell", "Connectivity": "BT Calling" }
 }
 
-/** Box/packaging shots and chat exports clash with the dark cinematic hero. */
 const HERO_IMAGE_BLOCKLIST = /dee74f9feeac670bfa2db80404362205|screenshot|whatsapp/i
 
 function isHeroQualityImage(url: string): boolean {
@@ -105,42 +96,18 @@ function isHeroQualityImage(url: string): boolean {
 
 function pickHeroImage(images: string[] | undefined): string {
   if (!images?.length) return HERO_FALLBACK.image
-
   const capture = images.find((u) => /\/Capture[^/?]*\.png/i.test(u) && isHeroQualityImage(u))
   if (capture) return capture
-
   const listing = images.find((u) => /s-l1600.*\.webp/i.test(u) && isHeroQualityImage(u))
   if (listing) return listing
-
   const acceptable = images.find(isHeroQualityImage)
   return acceptable || HERO_FALLBACK.image
-}
-
-// We now generate specs and float chips dynamically inside the HeroBanner component
-
-
-function HeroWatchFace() {
-  return (
-    <div className="absolute -bottom-6 -left-4 md:-left-8 z-20 w-[88px] h-[88px] md:w-[104px] md:h-[104px] rounded-[22px] bg-[#0A0D11]/90 border border-white/10 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#B8860B]/20 via-transparent to-transparent" />
-      <div className="relative p-3 h-full flex flex-col justify-between">
-        <p className="text-[8px] uppercase tracking-[0.2em] text-[#B8860B] font-bold">Series 11</p>
-        <p className="text-white text-xl md:text-2xl font-semibold tabular-nums leading-none" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
-          10:09
-        </p>
-        <div className="flex items-center justify-between">
-          <span className="text-[9px] text-white/50">72 BPM</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
-        </div>
-      </div>
-    </div>
-  )
 }
 
 function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFeatured[] }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [settings, setSettings] = useState<any>(null)
-  
+
   useEffect(() => {
     if (!featuredList || featuredList.length <= 1) return;
     const timer = setInterval(() => {
@@ -154,241 +121,119 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
   }, [])
 
   const featured = featuredList[currentIndex] || HERO_FALLBACK
-  
-  // Clean product name for the hero display (strictly 1-2 words as requested)
+
   const shortName = featured.name
-    .replace(/\s*[\(\[].*?[\)\]]\s*/g, '') // remove brackets first
+    .replace(/\s*[\(\[].*?[\)\]]\s*/g, '')
     .trim()
     .split(/\s+/)
     .slice(0, 2)
     .join(' ')
 
-  const specsEntries = Object.entries(featured.specifications || {}).slice(0, 4)
-  const defaultSpecs = [
-    { icon: Activity, label: "AMOLED Display" },
-    { icon: Shield, label: "Water Resistant" },
-    { icon: Battery, label: "2-Day Battery" },
-    { icon: Wifi, label: "BT Calling" },
-  ]
-  const dynamicSpecs = specsEntries.length >= 2 ? specsEntries.map(([k, v]) => ({
-    icon: k.toLowerCase().includes('water') ? Shield :
-          k.toLowerCase().includes('battery') ? Battery :
-          k.toLowerCase().includes('display') ? Activity :
-          k.toLowerCase().includes('case') ? Shield : Star,
-    label: v.length > 15 ? k : v
-  })) : defaultSpecs
-
-  const hasRealSpecs = specsEntries.length >= 2
-  const dynamicFloatChips = [
-    {
-      icon: Truck,
-      label: hasRealSpecs ? specsEntries[0]?.[1]?.substring(0, 15) || "Cash on Delivery" : "Cash on Delivery",
-      className: "top-[8%] -left-2 md:left-0"
-    },
-    {
-      icon: CheckCircle2,
-      label: hasRealSpecs ? specsEntries[1]?.[1]?.substring(0, 15) || "Open Box Check" : "Open Box Check",
-      className: "top-[42%] -right-1 md:right-2"
-    },
-    { icon: Package, label: "Free Delivery", className: "bottom-[12%] left-[5%]" },
-  ]
-
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-  const springConfig = { damping: 28, stiffness: 120 }
-  const mouseXSpring = useSpring(mouseX, springConfig)
-  const mouseYSpring = useSpring(mouseY, springConfig)
-  const translateX = useTransform(mouseXSpring, [-0.5, 0.5], [-18, 18])
-  const translateY = useTransform(mouseYSpring, [-0.5, 0.5], [-18, 18])
   const productHref = `/products/${encodeURIComponent(featured.slug)}`
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    mouseX.set((e.clientX - rect.left) / rect.width - 0.5)
-    mouseY.set((e.clientY - rect.top) / rect.height - 0.5)
-  }
-
   return (
-    <section
-      className="relative min-h-[90svh] md:min-h-screen flex items-center justify-center overflow-hidden bg-[#06080A]"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => { mouseX.set(0); mouseY.set(0) }}
-    >
+    <section className="relative min-h-[90svh] md:min-h-screen flex items-center overflow-hidden bg-[#06080A]">
       <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute inset-0 opacity-[0.35]"
-          style={{
-            background:
-              "radial-gradient(ellipse 70% 55% at 72% 42%, rgba(184,134,11,0.14) 0%, transparent 65%), radial-gradient(ellipse 50% 40% at 15% 80%, rgba(184,134,11,0.06) 0%, transparent 60%)",
-          }}
-        />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-full bg-gradient-to-b from-transparent via-[#B8860B]/25 to-transparent opacity-60" />
-        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_40%,rgba(184,134,11,0.08),transparent_70%),radial-gradient(ellipse_50%_40%_at_80%_60%,rgba(184,134,11,0.04),transparent_60%)]" />
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.6) 1px,transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#B8860B]/20 to-transparent" />
       </div>
 
-      <div className="sw-container relative z-10 w-full" style={{ maxWidth: "1536px" }}>
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center py-16 md:py-24 lg:py-28 mt-14 md:mt-0">
-          <div className="order-2 lg:order-1 text-center lg:text-left relative min-h-[380px] flex items-center min-w-0">
+      <div className="sw-container relative z-10 w-full">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center py-12 md:py-20 lg:py-24 mt-12 md:mt-0 min-h-[80svh]">
+          <div className="order-2 lg:order-1 text-center lg:text-left px-4 lg:px-0">
             <AnimatePresence mode="wait">
               <motion.div
                 key={featured.slug}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.5 }}
-                className="w-full min-w-0"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
               >
-                <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="min-w-0">
-                  <motion.div variants={staggerItem} className="mb-5 min-w-0">
-                    <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/25 text-[#D4A017] text-[10px] md:text-xs font-bold uppercase tracking-[0.22em] max-w-full min-w-0">
-                      <span className="relative flex h-2 w-2 shrink-0">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-60" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]" />
-                      </span>
-                      <span className="truncate">Flagship Drop · {shortName}</span>
-                    </span>
-                  </motion.div>
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-white/50 text-[10px] font-medium uppercase tracking-[0.2em] mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80" />
+                  {shortName} · New
+                </span>
 
-                  <motion.h1
-                    variants={staggerItem}
-                    className="text-[2rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white leading-[1.05] mb-5"
-                    style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-                  >
-                    {settings?.hero_headline ? (
-                      (() => {
-                        const parts = settings.hero_headline.split('.')
-                        return (
-                          <>
-                            {parts[0] || 'Premium Quality'}{parts[0] ? '.' : ''}
-                            <br />
-                            <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                              {parts.slice(1).join('.').trim() || 'No Premium Price'}
-                            </span>
-                          </>
-                        )
-                      })()
-                    ) : (
-                      <>
-                        Premium Quality.
-                        <br />
-                        <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                          No Premium Price.
-                        </span>
-                      </>
-                    )}
-                  </motion.h1>
+                <h1 className="text-[2.2rem] sm:text-5xl md:text-6xl lg:text-[4rem] font-bold text-white leading-[1.08] mb-4" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+                  {settings?.hero_headline ? (
+                    (() => {
+                      const parts = settings.hero_headline.split('.')
+                      return (
+                        <>
+                          {parts[0] || 'Premium Quality'}{parts[0] ? '.' : ''}
+                          <br />
+                          <span className="text-[#B8860B]">
+                            {parts.slice(1).join('.').trim() || 'No Premium Price'}
+                          </span>
+                        </>
+                      )
+                    })()
+                  ) : (
+                    <>
+                      Premium Quality.
+                      <br />
+                      <span className="text-[#B8860B]">No Premium Price.</span>
+                    </>
+                  )}
+                </h1>
 
-                  <motion.p variants={staggerItem} className="text-white/55 text-sm md:text-lg max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed">
-                    <strong className="text-white font-medium">{shortName}</strong> — genuine specs, clean design, straight price. No middleman markup, no inflated MRPs. Free delivery across Pakistan with open-box verification. <strong className="text-[#D4A017]">Check first, pay later.</strong>
-                  </motion.p>
+                <p className="text-white/45 text-sm md:text-base max-w-md mx-auto lg:mx-0 mb-6 leading-relaxed">
+                  {formatPrice(featured.price)} · Free Delivery across Pakistan · 7-Day Returns
+                </p>
 
-                  <motion.div variants={staggerItem} className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/8 mb-7">
-                    <span className="text-white/40 text-xs uppercase tracking-widest">From</span>
-                    <span className="text-white text-xl md:text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
-                      {formatPrice(featured.price)}
-                    </span>
-                    <span className="text-[10px] text-emerald-400/90 font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                      In Stock
-                    </span>
-                  </motion.div>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                  <Link href={productHref} className="sw-btn-gold px-7 py-3.5 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[48px]">
+                    Buy Now <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link href="/products?category=smart-watches" className="px-7 py-3.5 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[48px] border border-white/15 text-white/70 hover:text-white hover:border-white/30 transition-all">
+                    Explore Range
+                  </Link>
+                </div>
 
-                  <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start w-full overflow-hidden min-w-0">
-                    <Link href={productHref} title={`Shop ${featured.name}`} className="w-full sm:w-auto sm:max-w-[60%] sw-btn-gold px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px] min-w-0">
-                      <span className="truncate">Shop {shortName}</span>
-                      <ArrowRight className="w-4 h-4 shrink-0" />
-                    </Link>
-                    <Link href="/products?category=smart-watches" className="w-full sm:w-auto sw-btn-ghost-white px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[44px] shrink-0">
-                      All Smart Watches
-                    </Link>
-                  </motion.div>
-
-                  <motion.div variants={staggerItem} className="mt-8 flex flex-wrap gap-2.5 justify-center lg:justify-start">
-                    {dynamicSpecs.map((spec) => (
-                      <span
-                        key={spec.label}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/8 text-white/60 text-[11px] font-medium"
-                      >
-                        <spec.icon className="w-3 h-3 text-[#B8860B]" />
-                        {spec.label}
-                      </span>
-                    ))}
-                  </motion.div>
-                </motion.div>
+                <div className="mt-8 flex items-center gap-6 justify-center lg:justify-start text-white/30 text-[10px] uppercase tracking-wider">
+                  <span className="flex items-center gap-1.5"><Truck className="w-3 h-3" /> Free Delivery</span>
+                  <span className="flex items-center gap-1.5"><RefreshCw className="w-3 h-3" /> 7-Day Return</span>
+                  <span className="flex items-center gap-1.5"><Shield className="w-3 h-3" /> 1 Yr Warranty</span>
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>
 
-          <div className="order-1 lg:order-2 flex justify-center relative px-2 sm:px-0">
-            <motion.div
-              style={{ x: translateX, y: translateY }}
-              className="relative w-[260px] h-[300px] sm:w-[340px] sm:h-[380px] md:w-[420px] md:h-[460px] lg:w-[500px] lg:h-[540px] flex items-center justify-center"
-            >
-              <div className="absolute inset-[8%] rounded-full bg-[#B8860B]/10 blur-[80px]" />
-              <div className="absolute inset-[-16px] rounded-full border border-[#B8860B]/15 animate-[spin_24s_linear_infinite]" />
-              <div className="absolute inset-[-32px] rounded-full border border-dashed border-[#B8860B]/10 animate-[spin_36s_linear_infinite_reverse]" />
-
-              <div className="relative w-[85%] aspect-square rounded-full overflow-hidden ring-2 ring-[#B8860B]/20 ring-offset-[6px] ring-offset-[#06080A] shadow-[0_0_60px_rgba(184,134,11,0.15)]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={featured.slug}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1.05 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute inset-0"
-                  >
-                    <Image
-                      src={featured.image}
-                      alt={`${featured.name} smartwatch`}
-                      fill
-                      sizes="(max-width: 640px) 260px, (max-width: 1024px) 420px, 500px"
-                      className="object-contain object-center drop-shadow-[0_20px_60px_rgba(184,134,11,0.3)] z-10 p-4 md:p-6"
-                      priority
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              <HeroWatchFace />
-
-              {dynamicFloatChips.map((chip, i) => (
-                <motion.div
-                  key={chip.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: [0, -6, 0] }}
-                  transition={{
-                    opacity: { delay: 0.4 + i * 0.15, duration: 0.5 },
-                    y: { delay: 0.8 + i * 0.2, duration: 3.5, repeat: Infinity, ease: "easeInOut" },
-                  }}
-                  className={`absolute z-20 hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0C0F14]/85 border border-white/10 backdrop-blur-md shadow-lg ${chip.className}`}
-                >
-                  <chip.icon className="w-3.5 h-3.5 text-[#B8860B]" />
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-white/80">{chip.label}</span>
-            </motion.div>
-          )
-        )}
-
+          <div className="order-1 lg:order-2 flex items-center justify-center relative h-[50vh] sm:h-[55vh] md:h-[65vh] lg:h-[75vh]">
+            <AnimatePresence mode="wait">
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+                key={featured.slug}
+                initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.6 }}
-                className="absolute top-4 right-2 md:right-6 z-20 px-3 py-1.5 rounded-full bg-[#B8860B] text-[#0C0F14] text-[10px] font-black uppercase tracking-[0.18em] shadow-[0_8px_24px_rgba(184,134,11,0.4)]"
+                exit={{ opacity: 0, scale: 1.05 }}
+                transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="relative w-full h-full flex items-center justify-center"
               >
-                {settings?.hero_badge_text || 'New 2026'}
+                <div className="absolute w-[70%] aspect-square rounded-full bg-gradient-radial from-[#B8860B]/15 via-transparent to-transparent blur-[60px]" />
+                <div className="relative w-[75%] h-full max-h-[500px] md:max-h-[600px]">
+                  <Image
+                    src={featured.image}
+                    alt={`${featured.name} smartwatch`}
+                    fill
+                    sizes="(max-width: 640px) 75vw, (max-width: 1024px) 50vw, 40vw"
+                    className="object-contain drop-shadow-[0_30px_80px_rgba(184,134,11,0.2)]"
+                    priority
+                  />
+                </div>
               </motion.div>
-            </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
-        {/* Slider Navigation Dots */}
         {featuredList && featuredList.length > 1 && (
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
             {featuredList.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  idx === currentIndex ? "bg-[#B8860B] w-8 shadow-[0_0_8px_rgba(184,134,11,0.6)]" : "bg-white/20 hover:bg-white/40"
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  idx === currentIndex ? "bg-[#B8860B] w-8" : "bg-white/15 w-1.5 hover:bg-white/30"
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />
@@ -396,15 +241,6 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
           </div>
         )}
       </div>
-
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10 opacity-60"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <span className="text-[10px] uppercase tracking-[0.3em]">Discover</span>
-        <ChevronDown className="w-4 h-4" />
-      </motion.div>
     </section>
   )
 }
@@ -417,9 +253,8 @@ function pickHeroFeaturedList(products: any[]): HeroFeatured[] {
       p.images?.length > 0
   );
 
-  // Take up to 4 top products
   const top = activeWatches.slice(0, 4);
-  
+
   if (!top.length) return [HERO_FALLBACK]
 
   return top.map(match => ({
@@ -431,14 +266,9 @@ function pickHeroFeaturedList(products: any[]): HeroFeatured[] {
   }));
 }
 
-
-/* ════════════════════════════════════════════════════════
-   2. TRUST BADGES
-   ════════════════════════════════════════════════════════ */
-
 const badgeIconMap: Record<string, React.ElementType> = {
   Truck: Truck, Shield: Shield, RefreshCw, CreditCard, CheckCircle2,
-  Star, Heart, Clock, Award, Package, Zap, Sparkles, Activity,
+  Star: Heart, Clock: Clock, Award, Package: Package, Zap: Zap, Sparkles, Activity,
 }
 
 const trustBadgesFallback = [
@@ -497,11 +327,6 @@ function TrustBadges() {
     </section>
   )
 }
-
-
-/* ════════════════════════════════════════════════════════
-   3. SHOP BY CATEGORY
-   ════════════════════════════════════════════════════════ */
 
 const categoryIcons: Record<string, typeof Watch> = {
   "smart-watches": Watch,
@@ -600,11 +425,6 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
   )
 }
 
-
-/* ════════════════════════════════════════════════════════
-   4. PRODUCT SECTION (Bestsellers / New Arrivals)
-   ════════════════════════════════════════════════════════ */
-
 function ProductSection({
   label,
   title,
@@ -660,11 +480,6 @@ function ProductSection({
   )
 }
 
-
-/* ════════════════════════════════════════════════════════
-   5. WHY CHOOSE SMARTWEAR
-   ════════════════════════════════════════════════════════ */
-
 const features = [
   { icon: Award, title: "Premium Build Quality", desc: "Handpicked watches with military-grade durability and premium materials that last." },
   { icon: HeartPulse, title: "Advanced Health Tracking", desc: "Heart rate, SpO2, sleep analysis, and 100+ sport modes to keep you at your best." },
@@ -712,11 +527,6 @@ function WhyChooseUs() {
     </section>
   )
 }
-
-
-/* ════════════════════════════════════════════════════════
-   6. COLLECTIONS BANNER
-   ════════════════════════════════════════════════════════ */
 
 const collectionMeta = [
   { name: "Pro Series", desc: "Built for athletes and adventurers", tag: "MOST POPULAR", slug: "smart-watches" as const },
@@ -777,11 +587,6 @@ function CollectionsBanner({ categoryImages }: { categoryImages: Record<string, 
     </section>
   )
 }
-
-
-/* ════════════════════════════════════════════════════════
-   7. CATEGORY SHOWCASE — balanced across all categories
-   ════════════════════════════════════════════════════════ */
 
 function CategoryShowcase({
   productsByCategory,
@@ -857,11 +662,6 @@ function CategoryShowcase({
     </section>
   )
 }
-
-
-/* ════════════════════════════════════════════════════════
-   8. CUSTOMER TESTIMONIALS
-   ════════════════════════════════════════════════════════ */
 
 const testimonials = [
   {
@@ -944,11 +744,6 @@ function CustomerTestimonials() {
   )
 }
 
-
-/* ════════════════════════════════════════════════════════
-   9. NEWSLETTER SIGNUP
-   ════════════════════════════════════════════════════════ */
-
 function NewsletterSignup() {
   const [email, setEmail] = useState("")
   const [submitted, setSubmitted] = useState(false)
@@ -1013,11 +808,6 @@ function NewsletterSignup() {
     </section>
   )
 }
-
-
-/* ════════════════════════════════════════════════════════
-   MAIN HOMEPAGE EXPORT
-   ════════════════════════════════════════════════════════ */
 
 export default function HomePage() {
   const [allProducts, setAllProducts] = useState<any[]>([])

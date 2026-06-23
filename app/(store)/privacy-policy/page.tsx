@@ -11,7 +11,7 @@ export default function PrivacyPolicyPage() {
         <h1 className="text-3xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
           Privacy Policy
         </h1>
-        <p className="text-white/50 text-sm mb-12">Last updated: June 2026</p>
+        <p className="text-white/50 text-sm mb-8 md:mb-12">Last updated: June 2026</p>
 
         <div className="space-y-8 md:space-y-10 text-white/70 leading-relaxed text-sm md:text-base">
           <section>

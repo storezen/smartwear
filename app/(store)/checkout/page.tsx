@@ -117,7 +117,7 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#0C0F14] text-white py-16">
+      <div className="min-h-screen bg-[#0C0F14] text-white py-10 md:py-16">
         <div className="max-w-sm mx-auto text-center">
           <div className="w-20 h-20 mx-auto mb-6 rounded-[24px] bg-white/5 border border-white/10 flex items-center justify-center">
             <ShoppingBag className="w-10 h-10 text-white/60" />
@@ -291,7 +291,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-[#0C0F14] text-white">
       {/* Header */}
-      <div className="relative overflow-hidden text-white pt-20 pb-12 md:pt-28 md:pb-16 border-b border-white/5 mb-8">
+      <div className="relative overflow-hidden text-white pt-16 pb-8 md:pt-28 md:pb-16 border-b border-white/5 mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{

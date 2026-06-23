@@ -50,7 +50,7 @@ function ShippingBar({ subtotal }: { subtotal: number }) {
 /* ── Empty ── */
 function EmptyCart() {
   return (
-    <div className="py-24 text-center max-w-xs mx-auto">
+    <div className="py-16 md:py-24 text-center max-w-xs mx-auto">
       <div className="w-20 h-20 rounded-[24px] border border-white/10 bg-white/5 flex items-center justify-center mx-auto mb-5">
         <ShoppingBag className="w-9 h-9 text-white/60" />
       </div>
@@ -87,7 +87,7 @@ export default function CartPage() {
     <div className="min-h-screen bg-[#0C0F14] text-white">
 
       {/* Header */}
-      <div className="relative overflow-hidden text-white pt-20 pb-12 md:pt-28 md:pb-16 border-b border-white/5">
+      <div className="relative overflow-hidden text-white pt-16 pb-8 md:pt-28 md:pb-16 border-b border-white/5">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{

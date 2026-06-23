@@ -101,7 +101,7 @@ function SuccessContent() {
   })
 
   return (
-    <div className="min-h-screen bg-[#0C0F14] flex flex-col items-center justify-center px-4 py-24 relative overflow-hidden">
+    <div className="min-h-screen bg-[#0C0F14] flex flex-col items-center justify-center px-4 py-16 md:py-24 relative overflow-hidden">
       <GoldParticles active={showParticles} />
 
       {/* Ambient glows */}

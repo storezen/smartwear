@@ -106,7 +106,7 @@ export function StoreFooter() {
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full blur-[120px] opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, #B8860B, transparent)" }} />
 
       {/* Newsletter */}
-      <div className="relative border-b border-white/5 py-12 md:py-16">
+      <div className="relative border-b border-white/5 py-8 md:py-16">
         <div className="sw-container">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 bg-white/[0.02] border border-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[24px]">
             <div>
@@ -139,7 +139,7 @@ export function StoreFooter() {
       </div>
 
       {/* Main Footer Links */}
-      <div className="relative py-16 md:py-24">
+      <div className="relative py-10 md:py-24">
         <div className="sw-container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8">
             

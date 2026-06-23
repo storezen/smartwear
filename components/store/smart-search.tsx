@@ -274,7 +274,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                   </button>
                 </div>
               ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-white/20 p-8 text-center">
+                <div className="flex-1 flex flex-col items-center justify-center text-white/20 p-6 md:p-8 text-center">
                   <Search className="w-12 h-12 mb-4 opacity-50" />
                   <p className="text-sm font-medium">Search the Collection</p>
                   <p className="text-xs mt-2 opacity-60">Discover our exclusive range of luxury timepieces.</p>

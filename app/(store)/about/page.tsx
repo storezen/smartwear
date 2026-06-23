@@ -19,7 +19,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-[#06080A]">
       <div className="sw-container max-w-5xl mx-auto px-4 py-16 md:py-24">
         {/* Hero */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-16">
           <h1 className="text-3xl md:text-6xl font-bold text-white mb-6" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
             Pakistan&apos;s Most Trusted
             <br />
@@ -34,7 +34,7 @@ export default function AboutPage() {
         </div>
 
         {/* Story */}
-        <div className="grid md:grid-cols-2 gap-12 mb-20 items-center">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-12 mb-12 md:mb-20 items-center">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
               Our Story
@@ -58,7 +58,7 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#B8860B]/10 to-transparent flex items-center justify-center">
-            <div className="text-center p-8">
+            <div className="text-center p-6 md:p-8">
               <span className="text-6xl md:text-8xl font-bold text-[#B8860B] opacity-30" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>2024</span>
               <p className="text-white/40 text-sm mt-2">Founded in Lahore, Pakistan</p>
             </div>
