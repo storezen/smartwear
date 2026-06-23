@@ -75,13 +75,15 @@ function SuccessContent() {
         const res = await fetch(`/api/orders/track?id=${orderId}`)
         if (res.ok) {
           const data = await res.json()
-          const realOrder = data.order
-          if (realOrder) {
-            setOrderDetails(realOrder)
-            TikTokEvents.purchase(realOrder)
+          if (data.order) {
+            setOrderDetails(data.order)
+            TikTokEvents.purchase(data.order)
+            return
           }
         }
       } catch (_) {}
+      // Fallback: fire with order ID only (items fetched async in background)
+      TikTokEvents.purchase({ id: orderId, total: 0, items: [] })
     }
     firePurchase()
 

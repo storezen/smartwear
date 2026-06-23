@@ -249,9 +249,6 @@ export default function CheckoutPage() {
             description: `Your order ID is ${orderId}`
           })
           
-          // Also fire TikTok Purchase
-          TikTokEvents.purchase({ id: orderId, total, items })
-          
           clearCart()
           router.push(`/checkout/success?order=${orderId}`)
         } else {
