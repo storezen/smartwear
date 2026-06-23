@@ -7,7 +7,8 @@ import Link from 'next/link'
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
 import { Minus, Plus, Star, Heart, ShoppingBag, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote } from 'lucide-react'
 import { ProductCard } from '@/components/store/premium-product-card'
-import { getProductBySlug as getProductBySlugMock, getReviewsByProduct, formatPrice, products } from '@/lib/mock-data'
+import { getProductBySlug as getProductBySlugMock, formatPrice, products } from '@/lib/mock-data'
+import { generateProductReviews } from '@/lib/reviews-data'
 import { decodeProductSlug, productApiPath, productPagePath, resolveProductSlug } from '@/lib/product-url'
 
 import { useCart } from '@/context/cart-context'
@@ -202,7 +203,17 @@ function ProductContent({ product }: { product: any }) {
     if (product) TikTokEvents.viewContent(product)
   }, [product])
 
-  const reviews = getReviewsByProduct(product.id || '')
+  const reviews = useMemo(() =>
+    generateProductReviews(
+      product.id || '',
+      product.category_slug || '',
+      product.rating || 4.5,
+      product.reviews_count || 10
+    ),
+    [product.id, product.category_slug, product.rating, product.reviews_count]
+  )
+  const [showAllReviews, setShowAllReviews] = useState(false)
+  const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 5)
   // Mock related products
   const relatedProducts = products.filter(p => p.category_id === product.category_id && p.id !== product.id).slice(0, 4)
 
@@ -331,7 +342,7 @@ function ProductContent({ product }: { product: any }) {
                   <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full border border-white/10">
                     <Star className="w-3 h-3 fill-[#B8860B] text-[#B8860B]" />
                     <span className="text-xs font-semibold text-white">{product.rating}</span>
-                    <span className="text-xs text-white/60">({product.reviews})</span>
+                    <span className="text-xs text-white/60">({product.reviews_count})</span>
                   </div>
                 </div>
                 
@@ -639,28 +650,45 @@ function ProductContent({ product }: { product: any }) {
 
               {activeTab === 'reviews' && (
                 <motion.div key="reviews" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6 max-w-3xl">
-                  {reviews.length > 0 ? (
-                    reviews.map((rev) => (
-                      <SpotlightCard key={rev.id} className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-lg">
-                              {rev.user_name.charAt(0)}
+                  {displayedReviews.length > 0 ? (
+                    <>
+                      {displayedReviews.map((rev) => (
+                        <SpotlightCard key={rev.id} className="p-5 md:p-6">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-base md:text-lg shrink-0">
+                                {rev.user_name.charAt(0)}
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <p className="font-semibold text-white text-sm">{rev.user_name}</p>
+                                  {rev.is_verified && (
+                                    <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-medium flex items-center gap-0.5">
+                                      <CheckCircle2 className="w-2.5 h-2.5" /> Verified
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-white/60">{new Date(rev.created_at).toLocaleDateString()}</p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="font-semibold text-white text-sm">{rev.user_name}</p>
-                              <p className="text-xs text-white/60">{new Date(rev.created_at).toLocaleDateString()}</p>
+                            <div className="flex gap-0.5 shrink-0">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star key={i} className={cn("w-3 h-3 md:w-3.5 md:h-3.5", i < rev.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/5 text-white/10")} />
+                              ))}
                             </div>
                           </div>
-                          <div className="flex gap-1">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <Star key={i} className={cn("w-3.5 h-3.5", i < rev.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/5 text-white/10")} />
-                            ))}
-                          </div>
-                        </div>
-                        <p className="text-white/70 text-sm leading-relaxed">{rev.comment}</p>
-                      </SpotlightCard>
-                    ))
+                          <p className="text-white/70 text-sm leading-relaxed">{rev.comment}</p>
+                        </SpotlightCard>
+                      ))}
+                      {reviews.length > 5 && !showAllReviews && (
+                        <button
+                          onClick={() => setShowAllReviews(true)}
+                          className="w-full py-3 text-sm font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
+                        >
+                          View All {reviews.length} Reviews
+                        </button>
+                      )}
+                    </>
                   ) : (
                     <p className="text-white/60">No reviews yet. Be the first to review this timepiece.</p>
                   )}
