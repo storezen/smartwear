@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -25,6 +25,16 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
     address: "",
     city: ""
   })
+
+  // Fire InitiateCheckout immediately when modal opens
+  useEffect(() => {
+    if (isOpen && product) {
+      TikTokEvents.initiateCheckout(
+        [{ id: product.id, name: product.name, price: product.price, quantity }],
+        product.price * quantity
+      )
+    }
+  }, [isOpen, product, quantity])
 
   if (!product) return null
 
@@ -85,7 +95,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-[#0F1923] border-[#B8860B]/20 text-white overflow-hidden rounded-[24px]">
+      <DialogContent className="!p-0 sm:max-w-md bg-[#0F1923] border-[#B8860B]/20 text-white overflow-hidden rounded-[24px] [animation-duration:0ms!important]" showCloseButton={true}>
         {/* Glow effect */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#B8860B] to-[#D4A017]" />
         
