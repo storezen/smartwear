@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
 import { getProducts, getSettings } from "@/lib/db"
 import { checkFaq } from "@/lib/chat-faq"
-import { detectIntent, extractPreferences, getSeasonalContext } from "@/lib/chat-utils"
+import { detectIntent, extractMemoryInsights, buildMemoryContext, detectSentiment, getSeasonalContext } from "@/lib/chat-utils"
 import { fuzzySearchProducts } from "@/lib/fuzzy-match"
 
 async function fetchContext(intent: string, keywords: string[], productSlug: string | null, orderId: string | null, phone?: string) {
@@ -91,6 +91,14 @@ function buildPersonaPrompt(): string {
 4. Lead gen: 3-5 msgs mein interest → number maango.
 5. Handoff: 3 "nahi pata" → WhatsApp.
 
+## Sales Flow (follow this sequence naturally)
+1. GREET: Warm, informal. "Ji boliye, kya chahiye?" — Zyada lengthy mat karo.
+2. DISCOVER: "Budget? Kis liye chahiye?" — Customer ki need samjho pehle recommend karne se pehle.
+3. RECOMMEND: 2 options max. Batao kaunsa kyun recommend kar rahe ho.
+4. HANDLE: Price, warranty, delivery — har objection ka ready jawab hai.
+5. CLOSE: Ready dikhe to number maango ya /cart bhejo. "Bhej doon order?"
+6. FOLLOW-UP: "Aapne jo li thi, wo kesi hai?" — Next visit pe naturally poocho.
+
 ## Scenario Rules
 - Budget → 2 options (andar + thoda upar). Agar customer ki requirement clear hai to target karo.
 - Comparison → max 3 differences, batao kaunsa kis ke liye better.
@@ -102,6 +110,12 @@ function buildPersonaPrompt(): string {
 - Gift → suggest with packaging. Occasion poocho.
 - Exchange/wapas → 7-day easy return/explain.
 - Battery puchhe → "7-8 din normal, 4-5 din heavy use."
+
+## Emotional Adaptation
+- Customer impatient hai (jaldi, jldi, hurry) → seedha jawab, extra baat nahi.
+- Confused hai → 2 simple options, "Yeh lo, easy hai."
+- Angry/gussa hai → pehle maafi maango, phir solution do. Bahanay nahi.
+- Positive/shukriya → response mein warmth do. "Shukriya bhai!"
 
 ## Bundling & Upsell Rules
 - Watch + extra strap combo suggest karo (Rs. 400-500 extra).
@@ -148,6 +162,13 @@ function buildPersonaPrompt(): string {
 function buildFAQContext(msg: string): string[] {
   const faq = checkFaq(msg)
   return faq ? [`FAQ match found — customer is asking about something we have a prepared answer for. Use this info naturally:\n${faq}`] : []
+}
+
+function buildProductKnowledge(): string {
+  return `## Product Knowledge
+Smart Watches (Rs. 2,500 - Rs. 12,000): AMOLED/TFT displays, BT calling, heart rate, SPO2, sleep tracking, step count, IP68 waterproof. Battery 5-8 days. Best for daily use, fitness, health tracking.
+Analog Watches (Rs. 2,500 - Rs. 12,000): Japanese/Chinese movements, stainless steel case, mineral glass, leather/steel straps. Best for formal wear, office, classic style.
+Accessories (Rs. 200 - Rs. 2,000): Silicone/leather/metal straps, screen guards, chargers, wireless buds, charging cables.`
 }
 
 export async function POST(req: Request) {
@@ -221,19 +242,16 @@ export async function POST(req: Request) {
       }
     }
 
-    const updatedPrefs = extractPreferences(message, preferences)
+    const updatedPrefs = extractMemoryInsights(message, preferences)
+    const sentiment = detectSentiment(message)
+    const sentimentContext = sentiment !== "neutral" ? `\nCustomer sentiment: ${sentiment}. Adapt tone accordingly.` : ""
     if (supabase && updatedPrefs && JSON.stringify(updatedPrefs) !== JSON.stringify(preferences)) {
       try { await supabase.from("chat_sessions").update({ preferences: updatedPrefs }).eq("id", sessionId) } catch {}
     }
 
     const nameContext = customerName ? `\nCustomer: ${customerName}. Address as "${customerName} bhai" or "${customerName} ji".` : "\nAsk name once naturally."
 
-    let memoryContext = ""
-    if (preferences?.budget) memoryContext += `\n- Known budget: ${preferences.budget}`
-    if (preferences?.use_case) memoryContext += `\n- Use case: ${preferences.use_case}`
-    if (preferences?.category) memoryContext += `\n- Category interest: ${preferences.category}`
-    if (preferences?.interested_product) memoryContext += `\n- Previously interested in: ${preferences.interested_product}`
-    if (memoryContext) memoryContext = `\n## Customer Memory\n${memoryContext}`
+    const memoryContext = buildMemoryContext(updatedPrefs || preferences)
 
     let followupContext = ""
     if (supabase && hasDeliveredOrder && customerName) {
@@ -246,7 +264,7 @@ export async function POST(req: Request) {
       } catch {}
     }
 
-    const systemContent = [personaPrompt, langInstruction, nameContext, memoryContext, seasonalContext, followupContext, ...faqContext, contextData ? `\n## Context\n${contextData}` : "", `\n## Knowledge\nStore: MM Alam Road, Lahore. Mon-Sat 10am-8pm. COD. 7-day return. 1yr warranty (smart), 6mo (accessories). Free delivery >Rs. 10,000. Open box delivery.`].join("\n")
+    const systemContent = [personaPrompt, langInstruction, nameContext, memoryContext, sentimentContext, seasonalContext, followupContext, ...faqContext, contextData ? `\n## Context\n${contextData}` : "", buildProductKnowledge(), `\n## Knowledge\nStore: MM Alam Road, Lahore. Mon-Sat 10am-8pm. COD. 7-day return. 1yr warranty (smart), 6mo (accessories). Free delivery >Rs. 10,000. Open box delivery.`].join("\n")
 
     const messages = [{ role: "system", content: systemContent }, ...previousMessages.slice(-20), { role: "user", content: message }]
 
