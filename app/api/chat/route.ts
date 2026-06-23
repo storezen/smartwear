@@ -199,14 +199,18 @@ export async function POST(req: Request) {
 
     if (supabase) {
       // Check session for existing customer name & order status
-      const { data: session } = await supabase
-        .from("chat_sessions")
-        .select("customer_name, has_delivered_order, followup_sent")
-        .eq("id", sessionId)
-        .single()
+      try {
+        const { data: session } = await supabase
+          .from("chat_sessions")
+          .select("customer_name, has_delivered_order, followup_sent")
+          .eq("id", sessionId)
+          .maybeSingle()
 
-      customerName = session?.customer_name || null
-      hasDeliveredOrder = session?.has_delivered_order || false
+        customerName = session?.customer_name || null
+        hasDeliveredOrder = session?.has_delivered_order || false
+      } catch {
+        // Columns may not exist yet in Supabase — proceed without
+      }
 
       // Fetch previous messages
       const { data } = await supabase
@@ -221,22 +225,24 @@ export async function POST(req: Request) {
         const nameMatch = message.match(/(?:mera naam|my name is|i am|i'm|naam|mujhe)\s+(\w+)/i)
         if (nameMatch && !["hai", "hain", "koi", "kya", "yeh", "aap"].includes(nameMatch[1].toLowerCase())) {
           customerName = nameMatch[1]
-          await supabase.from("chat_sessions").update({ customer_name: customerName }).eq("id", sessionId)
+          try { await supabase.from("chat_sessions").update({ customer_name: customerName }).eq("id", sessionId) } catch {}
         }
       }
 
-      // Check for recently delivered orders (without name requirement)
+      // Check for recently delivered orders
       if (!hasDeliveredOrder) {
-        const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-        const { data: deliveredOrders } = await supabase
-          .from("orders")
-          .select("id, customer, created_at")
-          .gte("created_at", thirtyDaysAgo)
-          .limit(1)
-        if (deliveredOrders && deliveredOrders.length > 0) {
-          hasDeliveredOrder = true
-          await supabase.from("chat_sessions").update({ has_delivered_order: true }).eq("id", sessionId)
-        }
+        try {
+          const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+          const { data: deliveredOrders } = await supabase
+            .from("orders")
+            .select("id, customer, created_at")
+            .gte("created_at", thirtyDaysAgo)
+            .limit(1)
+          if (deliveredOrders && deliveredOrders.length > 0) {
+            hasDeliveredOrder = true
+            await supabase.from("chat_sessions").update({ has_delivered_order: true }).eq("id", sessionId)
+          }
+        } catch {}
       }
     }
 
@@ -248,15 +254,17 @@ export async function POST(req: Request) {
     // Add followup context if customer has delivered order and no followup sent yet
     let followupContext = ""
     if (supabase && hasDeliveredOrder && customerName) {
-      const { data: session } = await supabase
-        .from("chat_sessions")
-        .select("followup_sent")
-        .eq("id", sessionId)
-        .single()
-      if (session && !session.followup_sent) {
-        followupContext = "\n\nIMPORTANT: This customer previously received a delivered order. Start the conversation by warmly asking about their experience: 'Aapne jo watch li thi, wo kesi hai? Sab theek hai?' If they're happy, thank them. If they had issues, help resolve. After this exchange, mark followup as done."
-        await supabase.from("chat_sessions").update({ followup_sent: true }).eq("id", sessionId)
-      }
+      try {
+        const { data: session } = await supabase
+          .from("chat_sessions")
+          .select("followup_sent")
+          .eq("id", sessionId)
+          .maybeSingle()
+        if (session && !session.followup_sent) {
+          followupContext = "\n\nIMPORTANT: This customer previously received a delivered order. Start the conversation by warmly asking about their experience: 'Aapne jo watch li thi, wo kesi hai? Sab theek hai?' If they're happy, thank them. If they had issues, help resolve. After this exchange, mark followup as done."
+          await supabase.from("chat_sessions").update({ followup_sent: true }).eq("id", sessionId)
+        }
+      } catch {}
     }
 
     const messages = [
@@ -295,23 +303,27 @@ export async function POST(req: Request) {
 
     if (supabase) {
       const timestamp = new Date().toISOString()
-      await supabase.from("chat_sessions").upsert({
-        id: sessionId,
-        customer_name: customerName,
-        updated_at: timestamp,
-      }, { onConflict: "id" })
-      await supabase.from("chat_messages").insert([
-        { session_id: sessionId, role: "user", content: message, created_at: timestamp },
-        { session_id: sessionId, role: "assistant", content: aiMessage, created_at: timestamp },
-      ])
-
-      // Track chat analytics
-      await supabase.from("analytics").insert({
-        id: `chat_msg_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-        event_name: "chat_message",
-        timestamp,
-        value: 1,
-      })
+      try {
+        await supabase.from("chat_sessions").upsert({
+          id: sessionId,
+          customer_name: customerName,
+          updated_at: timestamp,
+        }, { onConflict: "id" })
+      } catch {}
+      try {
+        await supabase.from("chat_messages").insert([
+          { session_id: sessionId, role: "user", content: message, created_at: timestamp },
+          { session_id: sessionId, role: "assistant", content: aiMessage, created_at: timestamp },
+        ])
+      } catch {}
+      try {
+        await supabase.from("analytics").insert({
+          id: `chat_msg_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+          event_name: "chat_message",
+          timestamp,
+          value: 1,
+        })
+      } catch {}
     }
 
     return NextResponse.json({ reply: aiMessage })
