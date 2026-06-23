@@ -121,6 +121,23 @@ CREATE TABLE public.settings (
 -- Insert Default Settings Row
 INSERT INTO public.settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
 
+-- 6. AI Chat Tables
+CREATE TABLE public.chat_sessions (
+  id TEXT PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE public.chat_messages (
+  id BIGSERIAL PRIMARY KEY,
+  session_id TEXT NOT NULL REFERENCES public.chat_sessions(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
+  content TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX idx_chat_messages_session ON public.chat_messages(session_id, created_at ASC);
+
 -- 5. Analytics Table
 CREATE TABLE public.analytics (
   id TEXT PRIMARY KEY,
