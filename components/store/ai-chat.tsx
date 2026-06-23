@@ -6,6 +6,7 @@ import { X, Send, MessageCircle, Minus, CheckCheck, ThumbsUp, ThumbsDown, Shoppi
 import Image from "next/image"
 import Link from "next/link"
 import { useCart } from "@/context/cart-context"
+import { useSettings } from "@/lib/use-settings"
 
 type ChatMessage = {
   id: string
@@ -223,6 +224,9 @@ export function AIChat() {
   const [failedCount, setFailedCount] = useState(0)
   const [addingToCart, setAddingToCart] = useState<string | null>(null)
   const { addToCart } = useCart()
+  const { settings } = useSettings()
+  const whatsappNumber = settings?.whatsapp_number || "923001234567"
+  const whatsappMessage = settings?.whatsapp_message || "Hi Smartwear! I need help with my order."
 
   useEffect(() => {
     setFailedCount(parseInt(sessionStorage.getItem("chat_failed_count") || "0"))
@@ -441,6 +445,8 @@ export function AIChat() {
   const formatTime = (date: Date) =>
     date.toLocaleTimeString("en-PK", { hour: "2-digit", minute: "2-digit" })
 
+  const [path, setPath] = useState("")
+  useEffect(() => { setPath(window.location.pathname) }, [])
   const quickRepliesUrdu = [
     "Best smartwatch konsa hai?",
     "COD available hai?",
@@ -455,7 +461,21 @@ export function AIChat() {
     "Return policy?",
   ]
 
-  const quickReplies = lang === "urdu" ? quickRepliesUrdu : quickRepliesEng
+  const suggestUrdu: string[] = []
+  if (path.includes("/cart")) suggestUrdu.push("Mera cart complete karo", "COD option", "JazzCash se pay")
+  else if (path.includes("/products/")) suggestUrdu.push("Price kya hai?", "Stock hai?", "Gift wrapping?")
+  else if (path.includes("/orders/")) suggestUrdu.push("Order status?", "Delivery kab aye gi?")
+
+  const suggestEng: string[] = []
+  if (path.includes("/cart")) suggestEng.push("Complete my cart", "COD option", "Pay via JazzCash")
+  else if (path.includes("/products/")) suggestEng.push("Price?", "In stock?", "Gift wrapping?")
+  else if (path.includes("/orders/")) suggestEng.push("Order status?", "Delivery ETA?")
+
+  const baseReplies = lang === "urdu" ? quickRepliesUrdu : quickRepliesEng
+  const contextReplies = lang === "urdu" ? suggestUrdu : suggestEng
+  const quickReplies = messages.length <= 1
+    ? (contextReplies.length > 0 ? contextReplies : baseReplies)
+    : []
 
   return (
     <>
@@ -592,7 +612,7 @@ export function AIChat() {
                       </p>
                       <div className="flex items-center gap-2 justify-center">
                         <a
-                          href={`https://wa.me/923001234567?text=Hi Smartwear! I need help with my order.`}
+                          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366] text-white text-xs font-semibold hover:bg-[#20BD5A] transition-colors"
