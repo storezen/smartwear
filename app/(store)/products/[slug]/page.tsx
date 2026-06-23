@@ -5,10 +5,11 @@ import { use } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
-import { Minus, Plus, Star, Heart, ShoppingBag, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote } from 'lucide-react'
+import { Minus, Plus, Star, Heart, ShoppingBag, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote, MessageSquare, Send } from 'lucide-react'
 import { ProductCard } from '@/components/store/premium-product-card'
 import { getProductBySlug as getProductBySlugMock, formatPrice, products } from '@/lib/mock-data'
-import { generateProductReviews } from '@/lib/reviews-data'
+import type { Review } from '@/types'
+import { generateProductReviews, submitReview } from '@/lib/reviews-data'
 import { decodeProductSlug, productApiPath, productPagePath, resolveProductSlug } from '@/lib/product-url'
 
 import { useCart } from '@/context/cart-context'
@@ -213,7 +214,30 @@ function ProductContent({ product }: { product: any }) {
     [product.id, product.category_slug, product.rating, product.reviews_count]
   )
   const [showAllReviews, setShowAllReviews] = useState(false)
-  const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 5)
+  const [showReviewForm, setShowReviewForm] = useState(false)
+  const [reviewForm, setReviewForm] = useState({ user_name: "", rating: 5, comment: "" })
+  const [allReviews, setAllReviews] = useState<Review[]>([])
+  useEffect(() => setAllReviews(reviews), [reviews])
+  const displayedReviews = showAllReviews ? allReviews : allReviews.slice(0, 5)
+
+  const handleSubmitReview = () => {
+    if (!reviewForm.user_name.trim() || !reviewForm.comment.trim()) {
+      toast.error("Please fill in your name and review")
+      return
+    }
+    const newReview = submitReview({
+      product_id: product.id || '',
+      user_id: '',
+      user_name: reviewForm.user_name.trim(),
+      rating: reviewForm.rating,
+      title: '',
+      comment: reviewForm.comment.trim(),
+    })
+    setAllReviews(prev => [newReview, ...prev])
+    setShowReviewForm(false)
+    setReviewForm({ user_name: "", rating: 5, comment: "" })
+    toast.success("Your review has been submitted! Thank you.")
+  }
   // Mock related products
   const relatedProducts = products.filter(p => p.category_id === product.category_id && p.id !== product.id).slice(0, 4)
 
@@ -649,49 +673,150 @@ function ProductContent({ product }: { product: any }) {
               )}
 
               {activeTab === 'reviews' && (
-                <motion.div key="reviews" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6 max-w-3xl">
-                  {displayedReviews.length > 0 ? (
-                    <>
-                      {displayedReviews.map((rev) => (
-                        <SpotlightCard key={rev.id} className="p-5 md:p-6">
-                          <div className="flex items-start justify-between mb-3">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-base md:text-lg shrink-0">
-                                {rev.user_name.charAt(0)}
-                              </div>
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <p className="font-semibold text-white text-sm">{rev.user_name}</p>
-                                  {rev.is_verified && (
-                                    <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-medium flex items-center gap-0.5">
-                                      <CheckCircle2 className="w-2.5 h-2.5" /> Verified
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="text-xs text-white/60">{new Date(rev.created_at).toLocaleDateString()}</p>
-                              </div>
+                <motion.div key="reviews" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-3xl">
+                  {/* Rating Summary */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 p-6 rounded-2xl bg-white/[0.02] border border-white/10 mb-8">
+                    <div className="text-center sm:text-left shrink-0">
+                      <p className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+                        {product.rating || 0}
+                      </p>
+                      <div className="flex gap-0.5 mt-1 justify-center sm:justify-start">
+                        {[1,2,3,4,5].map((s) => (
+                          <Star key={s} className={cn("w-3.5 h-3.5", s <= Math.round(product.rating || 0) ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10")} />
+                        ))}
+                      </div>
+                      <p className="text-white/50 text-xs mt-1">{allReviews.length} reviews</p>
+                    </div>
+                    <div className="flex-1 w-full space-y-1.5">
+                      {[5,4,3,2,1].map((star) => {
+                        const count = allReviews.filter(r => Math.round(r.rating) === star).length
+                        const pct = allReviews.length > 0 ? (count / allReviews.length) * 100 : 0
+                        return (
+                          <div key={star} className="flex items-center gap-2 text-xs">
+                            <span className="text-white/60 w-3 shrink-0">{star}</span>
+                            <Star className="w-3 h-3 fill-[#B8860B] text-[#B8860B] shrink-0" />
+                            <div className="flex-1 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                              <div className="h-full rounded-full bg-gradient-to-r from-[#B8860B] to-[#D4A017]" style={{ width: `${pct}%` }} />
                             </div>
-                            <div className="flex gap-0.5 shrink-0">
-                              {Array.from({ length: 5 }).map((_, i) => (
-                                <Star key={i} className={cn("w-3 h-3 md:w-3.5 md:h-3.5", i < rev.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/5 text-white/10")} />
+                            <span className="text-white/40 w-8 text-right">{count}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Write a Review */}
+                  <div className="mb-8">
+                    {showReviewForm ? (
+                      <div className="p-5 md:p-6 rounded-2xl bg-white/[0.02] border border-white/10">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-white font-semibold text-sm">Write a Review</h4>
+                          <button
+                            onClick={() => { setShowReviewForm(false); setReviewForm({ user_name: "", rating: 5, comment: "" }) }}
+                            className="text-white/40 hover:text-white text-xs transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="text-xs text-white/50 block mb-1.5">Your Name</label>
+                            <input
+                              type="text"
+                              value={reviewForm.user_name}
+                              onChange={(e) => setReviewForm(prev => ({ ...prev, user_name: e.target.value }))}
+                              placeholder="e.g. Ahmad Raza"
+                              className="w-full h-10 px-4 text-sm rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] focus:bg-white/[0.08] outline-none transition-all"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-white/50 block mb-1.5">Rating</label>
+                            <div className="flex gap-1.5">
+                              {[1,2,3,4,5].map((s) => (
+                                <button
+                                  key={s}
+                                  type="button"
+                                  onClick={() => setReviewForm(prev => ({ ...prev, rating: s }))}
+                                  className="transition-all sw-interactive"
+                                >
+                                  <Star className={cn("w-6 h-6", s <= reviewForm.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10 hover:fill-[#B8860B]/30 hover:text-[#B8860B]/30")} />
+                                </button>
                               ))}
                             </div>
                           </div>
-                          <p className="text-white/70 text-sm leading-relaxed">{rev.comment}</p>
-                        </SpotlightCard>
-                      ))}
-                      {reviews.length > 5 && !showAllReviews && (
-                        <button
-                          onClick={() => setShowAllReviews(true)}
-                          className="w-full py-3 text-sm font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
-                        >
-                          View All {reviews.length} Reviews
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <p className="text-white/60">No reviews yet. Be the first to review this timepiece.</p>
-                  )}
+                          <div>
+                            <label className="text-xs text-white/50 block mb-1.5">Your Review</label>
+                            <textarea
+                              value={reviewForm.comment}
+                              onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
+                              placeholder={reviewForm.rating >= 4 ? "What did you like about this product?" : "What could be improved?"}
+                              rows={3}
+                              className="w-full px-4 py-3 text-sm rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] focus:bg-white/[0.08] outline-none transition-all resize-none"
+                            />
+                          </div>
+                          <button
+                            onClick={handleSubmitReview}
+                            className="sw-btn-gold px-6 h-10 text-xs font-bold uppercase tracking-widest rounded-xl flex items-center gap-2"
+                          >
+                            <Send className="w-3.5 h-3.5" /> Submit Review
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setShowReviewForm(true)}
+                        className="w-full py-3.5 text-sm font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-dashed border-white/10 rounded-xl hover:bg-white/5 flex items-center justify-center gap-2"
+                      >
+                        <MessageSquare className="w-4 h-4" /> Write a Review
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Review Cards */}
+                  <div className="space-y-5">
+                    {displayedReviews.length > 0 ? (
+                      <>
+                        {displayedReviews.map((rev) => (
+                          <SpotlightCard key={rev.id} className="p-5 md:p-6">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-base md:text-lg shrink-0">
+                                  {rev.user_name.charAt(0)}
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <p className="font-semibold text-white text-sm">{rev.user_name}</p>
+                                    {rev.is_verified && (
+                                      <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-medium flex items-center gap-0.5">
+                                        <CheckCircle2 className="w-2.5 h-2.5" /> Verified
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-xs text-white/60">{new Date(rev.created_at).toLocaleDateString()}</p>
+                                </div>
+                              </div>
+                              <div className="flex gap-0.5 shrink-0">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <Star key={i} className={cn("w-3 h-3 md:w-3.5 md:h-3.5", i < rev.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/5 text-white/10")} />
+                                ))}
+                              </div>
+                            </div>
+                            <p className="text-white/70 text-sm leading-relaxed">{rev.comment}</p>
+                          </SpotlightCard>
+                        ))}
+                        {allReviews.length > 5 && !showAllReviews && (
+                          <button
+                            onClick={() => setShowAllReviews(true)}
+                            className="w-full py-3 text-sm font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
+                          >
+                            View All {allReviews.length} Reviews
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <p className="text-white/60 text-center py-8">No reviews yet. Be the first to review this product.</p>
+                    )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
