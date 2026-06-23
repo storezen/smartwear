@@ -38,33 +38,30 @@ export function PurchaseNotification({ productName }: { productName: string }) {
   }
 
   return (
-    <div className="fixed bottom-28 md:bottom-20 left-4 z-50 flex flex-col gap-2 max-w-[300px] pointer-events-none">
+    <div className="fixed top-20 left-4 z-[60] flex flex-col gap-2 max-w-[280px] pointer-events-none">
       <AnimatePresence>
         {items.map((item) => (
           <motion.div
             key={item.id}
-            initial={{ opacity: 0, x: -40, y: 20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, x: -20, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300, damping: 28 }}
+            initial={{ opacity: 0, y: -12, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
             onAnimationComplete={() => setTimeout(() => removeItem(item.id), 5000)}
-            className="pointer-events-auto bg-[#0C0F14]/90 backdrop-blur-xl border border-white/10 rounded-xl p-3.5 shadow-[0_12px_40px_rgba(0,0,0,0.6)] flex items-center gap-3"
+            className="pointer-events-auto bg-[#0C0F14] border border-white/8 rounded-xl p-3 shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex items-center gap-2.5"
           >
-            <div className="relative shrink-0">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center text-[11px] font-bold text-[#0C0F14]">
-                {item.name.charAt(0)}
-              </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#0C0F14] rounded-full" />
+            <div className="w-7 h-7 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[10px] font-bold text-[#B8860B] shrink-0">
+              {item.name.charAt(0)}
             </div>
             <div className="min-w-0">
-              <p className="text-white text-xs font-medium leading-tight">
-                <span className="font-bold text-[#D4A017]">{item.name}</span>{" "}
-                <span className="text-white/70 font-normal">purchased</span>
+              <p className="text-white text-xs leading-tight">
+                <span className="font-semibold text-[#D4A017]">{item.name}</span>
+                <span className="text-white/50 font-normal"> purchased</span>
               </p>
-              <p className="text-white/90 text-xs font-medium truncate leading-tight mt-0.5">
+              <p className="text-white/70 text-[11px] truncate leading-tight mt-0.5">
                 {productName}
               </p>
-              <p className="text-[10px] text-white/40 mt-0.5">{item.time} &middot; {item.city}</p>
+              <p className="text-[10px] text-white/35 mt-0.5">{item.time} &middot; {item.city}</p>
             </div>
           </motion.div>
         ))}
