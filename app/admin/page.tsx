@@ -86,15 +86,20 @@ function OrderStatusBadge({ status }: { status: string }) {
   const palette: Record<string, { bg: string; text: string }> = {
     delivered: { bg: "bg-[#4ADE80]/10 border-[#4ADE80]/20", text: "text-[#4ADE80]" },
     booked: { bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-500" },
-    "picked up": { bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-500" },
+    transferred: { bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-500" },
     pending: { bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-500" },
-    "pickup attempted": { bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-500" },
-    cancelled: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
-    "in transit": { bg: "bg-cyan-500/10 border-cyan-500/20", text: "text-cyan-500" },
-    "in transit to hub": { bg: "bg-cyan-500/10 border-cyan-500/20", text: "text-cyan-500" },
+    unbooked: { bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-500" },
+    attempted: { bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-500" },
+    cancelled: { bg: "bg-rose-500/10 border-rose-500/20", text: "text-rose-500" },
+    "postex warehouse": { bg: "bg-cyan-500/10 border-cyan-500/20", text: "text-cyan-500" },
     "out for delivery": { bg: "bg-cyan-500/10 border-cyan-500/20", text: "text-cyan-500" },
-    rto: { bg: "bg-orange-500/10 border-orange-500/20", text: "text-orange-500" },
-    "rto delivered": { bg: "bg-orange-500/10 border-orange-500/20", text: "text-orange-500" },
+    "out for return": { bg: "bg-orange-500/10 border-orange-500/20", text: "text-orange-500" },
+    returned: { bg: "bg-orange-500/10 border-orange-500/20", text: "text-orange-500" },
+    "delivery under review": { bg: "bg-pink-500/10 border-pink-500/20", text: "text-pink-500" },
+    "un-assigned by me": { bg: "bg-white/10 border-white/10", text: "text-white/40" },
+    lost: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
+    stolen: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
+    damage: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
   }
   const c = palette[s] || { bg: "bg-white/10 border-white/20", text: "text-white/70" }
   return (

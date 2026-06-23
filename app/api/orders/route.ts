@@ -19,7 +19,7 @@ const MAX_REQUESTS_PER_WINDOW = 5;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isCancelledOrReturned(status: string): boolean {
   const s = status.toLowerCase()
-  return s === 'cancelled' || s === 'returned' || s === 'rto' || s === 'rto delivered' || s.includes('return to origin')
+  return s === 'cancelled' || s === 'returned' || s === 'rto' || s === 'rto delivered' || s.includes('return to origin') || s === 'lost' || s === 'stolen' || s === 'damage'
 }
 
 // Helper to get real product prices

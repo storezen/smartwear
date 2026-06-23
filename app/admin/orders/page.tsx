@@ -16,6 +16,30 @@ const AddressMap = dynamic(() => import("@/components/ui/address-map"), { ssr: f
 
 const ALL_STATUSES = ORDER_STATUSES;
 
+const STATUS_STYLES: Record<string, string> = {
+  Pending: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  UnBooked: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  Processing: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  Booked: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+  Transferred: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+  'PostEx Warehouse': 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+  'Out For Delivery': 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+  Delivered: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  Attempted: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  'Out For Return': 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  Returned: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  'Delivery Under Review': 'bg-pink-500/10 text-pink-400 border-pink-500/20',
+  'Un-Assigned By Me': 'bg-white/10 text-white/40 border-white/10',
+  Lost: 'bg-red-500/10 text-red-400 border-red-500/20',
+  Stolen: 'bg-red-500/10 text-red-400 border-red-500/20',
+  Damage: 'bg-red-500/10 text-red-400 border-red-500/20',
+  Cancelled: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+}
+
+function statusStyle(status: string): string {
+  return STATUS_STYLES[status] || 'bg-white/10 text-white/60 border-white/20'
+}
+
 export default function AdminOrdersPage() {
   const [activeTab, setActiveTab] = useState('All')
   const [orders, setOrders] = useState<any[]>([])
@@ -358,16 +382,7 @@ export default function AdminOrdersPage() {
               <div className="flex items-center justify-between lg:justify-end gap-6 w-full lg:w-auto mt-2 lg:mt-0">
                 {/* Status */}
                 <div className="w-[100px]">
-                  <span className={`px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider border ${
-                    order.status === 'Pending' || order.status === 'Pickup Attempted' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                    order.status === 'Processing' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                    order.status === 'Booked' || order.status === 'Picked Up' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
-                    order.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                    order.status === 'Cancelled' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
-                    order.status === 'In Transit' || order.status === 'In Transit to Hub' || order.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
-                    order.status === 'RTO' || order.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
-                    'bg-white/10 text-white/60 border-white/20'
-                  }`}>
+                  <span className={`px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider border ${statusStyle(order.status)}`}>
                     {order.status}
                   </span>
                 </div>
@@ -399,16 +414,7 @@ export default function AdminOrdersPage() {
                   <div>
                     <SheetTitle className="text-2xl font-bold text-white flex items-center gap-3">
                       {selectedOrder.id}
-                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
-                        selectedOrder.status === 'Pending' || selectedOrder.status === 'Pickup Attempted' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                        selectedOrder.status === 'Processing' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                        selectedOrder.status === 'Booked' || selectedOrder.status === 'Picked Up' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
-                        selectedOrder.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                        selectedOrder.status === 'Cancelled' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
-                        selectedOrder.status === 'In Transit' || selectedOrder.status === 'In Transit to Hub' || selectedOrder.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
-                        selectedOrder.status === 'RTO' || selectedOrder.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
-                        'bg-white/10 text-white/60 border-white/20'
-                      }`}>
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusStyle(selectedOrder.status)}`}>
                         {selectedOrder.status}
                       </span>
                     </SheetTitle>

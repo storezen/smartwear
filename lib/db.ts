@@ -336,7 +336,7 @@ export async function createOrder(order: any) {
 
 function isCancelledOrReturned(status: string): boolean {
   const s = status.toLowerCase()
-  return s === 'cancelled' || s === 'returned' || s === 'rto' || s === 'rto delivered' || s.includes('return to origin')
+  return s === 'cancelled' || s === 'returned' || s === 'rto' || s === 'rto delivered' || s.includes('return to origin') || s === 'lost' || s === 'stolen' || s === 'damage'
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
