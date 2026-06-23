@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
 import { useState } from "react"
 import { Heart, ShoppingBag, Star, Zap, Truck } from "lucide-react"
 import { Product } from "@/types"
@@ -12,7 +11,10 @@ import { useWishlist } from "@/context/wishlist-context"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { QuickBuyModal } from "@/components/store/quick-buy-modal"
 
+import { useRouter } from "next/navigation"
+
 export function ProductCard({ product, className }: { product: Product; className?: string }) {
+  const router = useRouter()
   const [imgErr, setImgErr] = useState(false)
   const [isQuickBuyOpen, setIsQuickBuyOpen] = useState(false)
   
@@ -45,11 +47,14 @@ export function ProductCard({ product, className }: { product: Product; classNam
     inWishlist ? removeFromWishlist(product.id) : addToWishlist(product)
   }
 
+  const handleNavigate = () => {
+    router.push(`/products/${product.slug}`)
+  }
+
   return (
     <>
-      <div className={cn("group block", className)}>
+      <div className={cn("group block cursor-pointer", className)} onClick={handleNavigate}>
         <SpotlightCard className="h-full relative overflow-hidden bg-white/[0.02] rounded-2xl border-white/[0.06] transition-colors duration-500 hover:border-[#B8860B]/25 flex flex-col">
-          <Link href={`/products/${product.slug}`} className="absolute inset-0 z-30 focus:outline-none" aria-label={product.name} />
           <div className="absolute inset-0 bg-gradient-to-b from-[#B8860B]/0 to-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
           {/* ── IMAGE ── */}
