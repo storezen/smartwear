@@ -1,6 +1,7 @@
 import { PremiumNavbar } from '@/components/store/premium-navbar'
 import { StoreFooter } from '@/components/store/store-footer'
 import { HeartbeatProvider } from '@/components/store/heartbeat-provider'
+import { WhatsAppButton } from '@/components/store/whatsapp-button'
 
 /* Premium Store Layout
  * Clean, fast, with mobile bottom navigation
@@ -16,6 +17,7 @@ export default function StoreLayout({
         <PremiumNavbar />
         <main className="flex-1 w-full">{children}</main>
         <StoreFooter />
+        <WhatsAppButton />
       </HeartbeatProvider>
     </div>
   )

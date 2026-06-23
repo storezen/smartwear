@@ -20,6 +20,7 @@ const links = {
     { l: "Track Order", h: "/track-order" },
   ],
   support: [
+    { l: "About Us",         h: "/about" },
     { l: "Contact Us",       h: "/contact" },
     { l: "FAQs",             h: "/faqs" },
     { l: "Shipping Policy",  h: "/shipping-policy" },
@@ -29,10 +30,10 @@ const links = {
 }
 
 const social = [
-  { icon: Instagram, href: "#", label: "Instagram", color: "hover:text-pink-500" },
-  { icon: Facebook,  href: "#", label: "Facebook", color: "hover:text-blue-500" },
-  { icon: Twitter,   href: "#", label: "Twitter", color: "hover:text-sky-400" },
-  { icon: Youtube,   href: "#", label: "YouTube", color: "hover:text-red-500" },
+  { icon: Instagram, href: "https://instagram.com/smartwear.pk", label: "Instagram", color: "hover:text-pink-500" },
+  { icon: Facebook,  href: "https://facebook.com/smartwear.pk", label: "Facebook", color: "hover:text-blue-500" },
+  { icon: Twitter,   href: "https://twitter.com/smartwear_pk", label: "Twitter", color: "hover:text-sky-400" },
+  { icon: Youtube,   href: "https://youtube.com/@smartwearpk", label: "YouTube", color: "hover:text-red-500" },
 ]
 
 function Logo() {
@@ -118,7 +119,7 @@ export function StoreFooter() {
             <div className="lg:col-span-4 pr-4">
               <Logo />
               <p className="text-white/60 text-sm mt-6 mb-8 leading-relaxed max-w-xs">
-                Pakistan's premier destination for luxury timepieces. We blend timeless elegance with modern innovation, offering an unparalleled collection of smart and analog watches.
+                Pakistan's most trusted destination for premium smartwatches and accessories. We bring you genuine products at honest prices with nationwide delivery and open-box verification.
               </p>
               <div className="flex gap-4">
                 {social.map((s, i) => (
@@ -219,6 +220,30 @@ export function StoreFooter() {
         </div>
       </div>
 
+      {/* Security Badges */}
+      <div className="relative border-t border-white/5 py-4">
+        <div className="sw-container">
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            <div className="flex items-center gap-2 text-white/40">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span className="text-[11px]">SSL Secure</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/40">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12a9 9 0 11-6.219-8.56"/><path d="M21 3v6h-6"/><path d="M21 3l-7.5 7.5"/></svg>
+              <span className="text-[11px]">100% Cash on Delivery</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/40">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+              <span className="text-[11px]">Open Box Delivery</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/40">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+              <span className="text-[11px]">Nationwide Delivery</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Copyright */}
       <div className="relative border-t border-white/5 py-6">
         <div className="sw-container flex flex-col md:flex-row items-center justify-between gap-4">
@@ -226,9 +251,11 @@ export function StoreFooter() {
             © {currentYear} Smartwear Pakistan. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-xs">
-            <Link href="/privacy-policy" className="text-white/60 hover:text-white transition-colors sw-interactive">Privacy Policy</Link>
+            <Link href="/about" className="text-white/60 hover:text-white transition-colors sw-interactive">About</Link>
             <span className="text-white/10">•</span>
-            <Link href="/terms" className="text-white/60 hover:text-white transition-colors sw-interactive">Terms of Service</Link>
+            <Link href="/privacy-policy" className="text-white/60 hover:text-white transition-colors sw-interactive">Privacy</Link>
+            <span className="text-white/10">•</span>
+            <Link href="/terms" className="text-white/60 hover:text-white transition-colors sw-interactive">Terms</Link>
           </div>
         </div>
       </div>

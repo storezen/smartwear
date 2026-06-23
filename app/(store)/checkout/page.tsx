@@ -680,6 +680,29 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {/* Trust & Security Badges */}
+              <div className="mt-6 p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-3 text-center">Secure & Trusted</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex items-center gap-2 text-white/50">
+                    <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                    <span className="text-[11px]">SSL Encrypted</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-white/50">
+                    <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12a9 9 0 11-6.219-8.56"/><path d="M21 3v6h-6"/><path d="M21 3l-7.5 7.5"/></svg>
+                    <span className="text-[11px]">COD Available</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-white/50">
+                    <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                    <span className="text-[11px]">Free Delivery</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-white/50">
+                    <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span className="text-[11px]">Open Box Check</span>
+                  </div>
+                </div>
+              </div>
+
               {/* Promo Code Input */}
               <div className="mt-6">
                 <div className="flex gap-2">
