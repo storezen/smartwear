@@ -16,6 +16,8 @@ function isPublicApi(pathname: string, method: string): boolean {
   if (pathname.startsWith("/api/orders/track")) return true
   // Analytics — needed by TikTok pixel (POST) and dashboard (GET)
   if (pathname.startsWith("/api/analytics")) return true
+  // AI Chat — public, used by storefront widget
+  if (pathname.startsWith("/api/chat")) return true
   return false
 }
 
