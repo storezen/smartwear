@@ -27,6 +27,10 @@ export function ProductCard({ product, className }: { product: Product; classNam
   const inStock = product.stock > 0
   const lowStock = product.stock > 0 && product.stock <= 5
 
+  const handleCardClick = () => {
+    if (inStock) setIsQuickBuyOpen(true)
+  }
+
   const handleCart = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -47,9 +51,8 @@ export function ProductCard({ product, className }: { product: Product; classNam
 
   return (
     <>
-      <div className={cn("group block", className)}>
+      <div className={cn("group block cursor-pointer", className)} onClick={handleCardClick}>
         <SpotlightCard className="h-full relative overflow-hidden bg-white/[0.02] rounded-2xl border-white/[0.06] transition-colors duration-500 hover:border-[#B8860B]/25 flex flex-col">
-          <Link href={`/products/${product.slug}`} className="absolute inset-0 z-30 focus:outline-none" aria-label={product.name} />
           <div className="absolute inset-0 bg-gradient-to-b from-[#B8860B]/0 to-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
           {/* ── IMAGE ── */}
@@ -129,12 +132,14 @@ export function ProductCard({ product, className }: { product: Product; classNam
               </div>
             </div>
 
-            <h3 
-              className="text-white text-sm font-medium line-clamp-1 group-hover:text-[#B8860B] transition-colors duration-300 mb-3"
+            <Link
+              href={`/products/${product.slug}`}
+              className="text-white text-sm font-medium line-clamp-1 group-hover:text-[#B8860B] transition-colors duration-300 mb-3 hover:underline"
               style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}
+              onClick={(e) => e.stopPropagation()}
             >
               {product.name}
-            </h3>
+            </Link>
 
             <div className="flex items-baseline gap-2 mb-3">
               {discount > 0 && product.compare_price ? (
