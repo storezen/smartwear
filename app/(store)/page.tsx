@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import {
   ArrowRight, Shield, Truck, RefreshCw, CreditCard,
   Zap, Star, Heart, Watch, Smartphone, Battery, Headphones,
@@ -18,7 +18,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { categories as storeCategories, formatPrice } from "@/lib/mock-data"
+import { categories as storeCategories } from "@/lib/mock-data"
 import {
   buildCategoryImageMap,
   HOMEPAGE_CARDS_PER_SECTION,
@@ -72,236 +72,122 @@ function SectionTitle({ children, className = "" }: { children: React.ReactNode;
   )
 }
 
-type HeroFeatured = {
-  name: string
-  slug: string
-  image: string
-  price: number
-  specifications?: Record<string, string>
-}
-
-const HERO_FALLBACK: HeroFeatured = {
-  name: "Series 11",
-  slug: "series-11-(allow-to-open-|-cash-on-delivery)",
-  image: "/hero-watch-transparent.png",
-  price: 5500,
-  specifications: { "Display": "2.05\u2033 AMOLED", "Protection": "IP67 Rated", "Battery": "420mAh Cell", "Connectivity": "BT Calling" }
-}
-
-const HERO_IMAGE_BLOCKLIST = /dee74f9feeac670bfa2db80404362205|screenshot|whatsapp/i
-
-function isHeroQualityImage(url: string): boolean {
-  return Boolean(url) && !HERO_IMAGE_BLOCKLIST.test(url)
-}
-
-function pickHeroImage(images: string[] | undefined): string {
-  if (!images?.length) return HERO_FALLBACK.image
-  const capture = images.find((u) => /\/Capture[^/?]*\.png/i.test(u) && isHeroQualityImage(u))
-  if (capture) return capture
-  const listing = images.find((u) => /s-l1600.*\.webp/i.test(u) && isHeroQualityImage(u))
-  if (listing) return listing
-  const acceptable = images.find(isHeroQualityImage)
-  return acceptable || HERO_FALLBACK.image
-}
-
-function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFeatured[] }) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+function HeroBanner() {
   const [settings, setSettings] = useState<any>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-
-  useEffect(() => {
-    if (!featuredList || featuredList.length <= 1) return;
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % featuredList.length)
-    }, 10000)
-    return () => clearInterval(timer)
-  }, [featuredList])
 
   useEffect(() => {
     fetch('/api/public/settings').then(r => r.json()).then(setSettings).catch(() => {})
   }, [])
 
-  const featured = featuredList[currentIndex] || HERO_FALLBACK
-
-  const shortName = featured.name
-    .replace(/\s*[\(\[].*?[\)\]]\s*/g, '')
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .join(' ')
-
-  const productHref = `/products/${encodeURIComponent(featured.slug)}`
-
-  const handleMouse = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    setMousePos({
-      x: (e.clientX - rect.left) / rect.width - 0.5,
-      y: (e.clientY - rect.top) / rect.height - 0.5,
-    })
-  }
-
   return (
-    <section
-      className="relative min-h-[90svh] md:min-h-screen flex items-center justify-center overflow-hidden bg-[#06080A]"
-      onMouseMove={handleMouse}
-    >
+    <section className="relative min-h-[90svh] md:min-h-screen flex items-center overflow-hidden bg-[#06080A]">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] md:w-[800px] aspect-square rounded-full bg-[#B8860B]/8 blur-[120px]" />
-        <div className="absolute bottom-0 right-0 w-[400px] aspect-square rounded-full bg-[#B8860B]/4 blur-[100px]" />
-        <div className="absolute inset-0 opacity-[0.015]" style={{ backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.5) 1px,transparent 1px)", backgroundSize: "36px 36px" }} />
-        <div className="absolute top-[15%] left-[10%] w-[2px] h-[40%] bg-gradient-to-b from-transparent via-[#B8860B]/10 to-transparent" />
-        <div className="absolute top-[20%] right-[15%] w-[2px] h-[30%] bg-gradient-to-b from-transparent via-[#B8860B]/8 to-transparent" />
+        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[700px] md:w-[900px] aspect-square rounded-full bg-[#B8860B]/6 blur-[140px]" />
+        <div className="absolute bottom-0 right-0 w-[500px] aspect-square rounded-full bg-[#B8860B]/3 blur-[120px]" />
+        <div className="absolute inset-0 opacity-[0.012]" style={{ backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.4) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#B8860B]/15 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
       </div>
 
       <div className="sw-container relative z-10 w-full">
-        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16 py-12 md:py-16 mt-14 md:mt-0">
-          <div className="flex-1 text-center lg:text-left px-4 lg:px-0 lg:max-w-[45%]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={featured.slug}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
-                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#B8860B]/8 border border-[#B8860B]/20 mb-6">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-                  <span className="text-[#B8860B] text-xs font-semibold uppercase tracking-[0.15em]">{shortName}</span>
-                  <span className="text-white/30 text-xs">|</span>
-                  <span className="text-white/40 text-[10px] uppercase tracking-wider">Just Landed</span>
-                </div>
+        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-20 py-16 md:py-24 mt-14 md:mt-0">
+          <div className="flex-1 text-center lg:text-left lg:max-w-[48%]">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.03] border border-white/8 mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B]" />
+                <span className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-medium">Pakistan&apos;s Premium Watch Store</span>
+              </div>
 
-                <h1 className="text-[2.5rem] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[5rem] font-bold text-white leading-[1] mb-5" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
-                  {settings?.hero_headline ? (
-                    (() => {
-                      const parts = settings.hero_headline.split('.')
-                      return (
-                        <>
-                          {parts[0] || 'Premium Quality'}{parts[0] ? '.' : ''}
-                          <br />
-                          <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                            {parts.slice(1).join('.').trim() || 'No Premium Price'}
-                          </span>
-                        </>
-                      )
-                    })()
-                  ) : (
-                    <>
-                      Premium Quality.
-                      <br />
-                      <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                        No Premium Price.
-                      </span>
-                    </>
-                  )}
-                </h1>
-
-                <div className="flex items-center gap-4 justify-center lg:justify-start mb-6">
-                  <span className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
-                    {formatPrice(featured.price)}
-                  </span>
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-bold uppercase tracking-wider">
-                    In Stock
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap gap-2 justify-center lg:justify-start mb-8">
-                  {Object.entries(featured.specifications || {}).slice(0, 3).map(([k, v]) => (
-                    <span key={k} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/8 text-white/50 text-[11px]">
-                      <span className="w-1 h-1 rounded-full bg-[#B8860B]" />
-                      {v.length > 18 ? k : v}
+              <h1 className="text-[2.8rem] sm:text-[4rem] md:text-[5rem] lg:text-[5.5rem] font-bold text-white leading-[1] mb-6" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+                {settings?.hero_headline ? (
+                  (() => {
+                    const parts = settings.hero_headline.split('.')
+                    return (
+                      <>
+                        {parts[0] || 'Timeless Craftsmanship'}{parts[0] ? '.' : ''}
+                        <br />
+                        <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
+                          {parts.slice(1).join('.').trim() || 'Modern Intelligence'}
+                        </span>
+                      </>
+                    )
+                  })()
+                ) : (
+                  <>
+                    Timeless Craftsmanship.
+                    <br />
+                    <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
+                      Modern Intelligence.
                     </span>
-                  ))}
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/8 text-white/50 text-[11px]">
-                    <span className="w-1 h-1 rounded-full bg-[#B8860B]" />
-                    Free Delivery
-                  </span>
-                </div>
+                  </>
+                )}
+              </h1>
 
-                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                  <Link href={productHref} className="group sw-btn-gold px-8 py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2.5 rounded-xl min-h-[52px]">
-                    Buy Now
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <Link href="/products?category=smart-watches" className="px-8 py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[52px] border border-white/15 text-white/60 hover:text-white hover:border-white/30 transition-all">
-                    <Shield className="w-4 h-4" /> View Collection
-                  </Link>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+              <p className="text-white/45 text-sm md:text-base max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed">
+                Smart Watches · Analog Classics · Premium Accessories — curated for those who value both tradition and technology.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                <Link href="/products" className="group sw-btn-gold px-8 py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2.5 rounded-xl min-h-[52px]">
+                  Shop Collection
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link href="/products?category=analog-watches" className="px-8 py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[52px] border border-white/15 text-white/60 hover:text-white hover:border-white/30 transition-all">
+                  <Clock className="w-4 h-4" /> Analog Watches
+                </Link>
+              </div>
+
+              <div className="mt-10 flex items-center gap-8 justify-center lg:justify-start text-white/25 text-[10px] uppercase tracking-wider">
+                <span className="flex items-center gap-1.5"><Truck className="w-3 h-3" /> Free Delivery</span>
+                <span className="flex items-center gap-1.5"><RefreshCw className="w-3 h-3" /> 7-Day Returns</span>
+                <span className="flex items-center gap-1.5"><Shield className="w-3 h-3" /> 1 Yr Warranty</span>
+              </div>
+            </motion.div>
           </div>
 
-          <div className="flex-1 flex items-center justify-center relative w-full min-h-[40vh] md:min-h-[55vh] lg:min-h-[70vh]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={featured.slug}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="relative w-full h-full flex items-center justify-center"
-              >
-                <div className="relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[480px] md:h-[480px] lg:w-[560px] lg:h-[560px] flex items-center justify-center">
-                  <div className="absolute inset-[5%] rounded-full bg-[#B8860B]/10 blur-[100px]" />
-                  <div className="absolute inset-0 rounded-full border border-[#B8860B]/8" />
-                  <div className="absolute inset-[12%] rounded-full border border-dashed border-[#B8860B]/6 animate-[spin_30s_linear_infinite]" />
-                  <div className="relative w-[72%] aspect-square">
-                    <Image
-                      src="/hero-watch-transparent.png"
-                      alt="Smart Watch"
-                      fill
-                      sizes="(max-width: 640px) 216px, (max-width: 1024px) 345px, 400px"
-                      className="object-contain drop-shadow-[0_40px_100px_rgba(184,134,11,0.3)] scale-110"
-                      priority
-                    />
-                  </div>
+          <div className="flex-1 flex items-center justify-center relative w-full min-h-[40vh] md:min-h-[55vh] lg:min-h-[75vh]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="relative w-full h-full flex items-center justify-center"
+            >
+              <div className="relative w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] flex items-center justify-center">
+                <div className="absolute inset-[8%] rounded-full bg-[#B8860B]/8 blur-[80px]" />
+                <div className="absolute inset-0 rounded-full border border-[#B8860B]/6" />
+                <div className="absolute inset-[15%] rounded-full border border-dashed border-[#B8860B]/5 animate-[spin_35s_linear_infinite]" />
+                <div className="absolute inset-[30%] rounded-full border border-[#B8860B]/4" />
+
+                <div className="absolute top-[8%] right-[8%] w-8 h-8 rounded-full bg-white/[0.03] border border-white/8 flex items-center justify-center">
+                  <span className="text-white/30 text-[10px]">⚡</span>
                 </div>
-              </motion.div>
-            </AnimatePresence>
+                <div className="absolute bottom-[12%] left-[5%] w-10 h-10 rounded-full bg-white/[0.03] border border-white/8 flex items-center justify-center">
+                  <span className="text-white/30 text-xs">⌚</span>
+                </div>
+
+                <div className="relative w-[68%] aspect-square">
+                  <Image
+                    src="/hero-watch-transparent.png"
+                    alt="Smart Watch"
+                    fill
+                    sizes="(max-width: 640px) 218px, (max-width: 1024px) 340px, 408px"
+                    className="object-contain drop-shadow-[0_50px_120px_rgba(184,134,11,0.3)] scale-110"
+                    priority
+                  />
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
-
-        {featuredList && featuredList.length > 1 && (
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5">
-            {featuredList.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentIndex(idx)}
-                className={`rounded-full transition-all duration-300 ${
-                  idx === currentIndex
-                    ? "bg-[#B8860B] w-10 h-2 shadow-[0_0_12px_rgba(184,134,11,0.5)]"
-                    : "bg-white/15 w-2 h-2 hover:bg-white/30"
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </section>
   )
 }
 
-function pickHeroFeaturedList(products: any[]): HeroFeatured[] {
-  const activeWatches = products.filter(
-    (p) =>
-      p.is_active !== false &&
-      normalizeCategorySlug(p.category_slug) === "smart-watches" &&
-      p.images?.length > 0
-  );
-
-  const top = activeWatches.slice(0, 4);
-
-  if (!top.length) return [HERO_FALLBACK]
-
-  return top.map(match => ({
-    name: match.name || "Smart Watch",
-    slug: match.slug || HERO_FALLBACK.slug,
-    image: pickHeroImage(match.images),
-    price: match.price ?? HERO_FALLBACK.price,
-    specifications: match.specifications || {}
-  }));
-}
 
 const badgeIconMap: Record<string, React.ElementType> = {
   Truck: Truck, Shield: Shield, RefreshCw, CreditCard, CheckCircle2,
@@ -918,11 +804,9 @@ export default function HomePage() {
     [allProducts]
   )
 
-  const heroFeaturedList = useMemo(() => pickHeroFeaturedList(allProducts), [allProducts])
-
   return (
     <main className="min-h-screen bg-[#06080A]">
-      <HeroBanner featuredList={heroFeaturedList} />
+      <HeroBanner />
       <TrustBadges />
       <ShopByCategory items={shopCategoryCards} />
       {!loading && (
