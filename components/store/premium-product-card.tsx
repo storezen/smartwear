@@ -96,7 +96,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
 
               <button
                 onClick={handleWishlist}
-                className="pointer-events-auto w-9 h-9 rounded-full flex items-center justify-center bg-black/30 backdrop-blur-md border border-white/10 text-white hover:bg-[#B8860B]/20 hover:border-[#B8860B]/50 transition-all sw-interactive group/heart"
+                className="pointer-events-auto w-11 h-11 rounded-full flex items-center justify-center bg-black/30 backdrop-blur-md border border-white/10 text-white hover:bg-[#B8860B]/20 hover:border-[#B8860B]/50 transition-all sw-interactive group/heart"
                 aria-label="Toggle wishlist"
               >
                 <Heart
@@ -164,14 +164,14 @@ export function ProductCard({ product, className }: { product: Product; classNam
               <button
                 onClick={handleQuickBuy}
                 disabled={!inStock}
-                className="col-span-3 h-10 rounded-lg bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-[#0C0F14] font-bold text-[10px] uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50 sw-interactive flex items-center justify-center gap-1.5"
+                className="col-span-3 h-11 rounded-lg bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-[#0C0F14] font-bold text-[10px] uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50 sw-interactive flex items-center justify-center gap-1.5"
               >
                 {inStock ? <><Zap className="w-3 h-3 fill-[#0C0F14]" /> Quick Buy</> : "Out of Stock"}
               </button>
               <button
                 onClick={handleCart}
                 disabled={!inStock}
-                className="col-span-1 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors sw-interactive disabled:opacity-50"
+                className="col-span-1 h-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors sw-interactive disabled:opacity-50"
                 aria-label="Add to cart"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />

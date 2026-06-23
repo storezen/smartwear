@@ -214,7 +214,7 @@ export function PremiumNavbar() {
                 </button>
                 <button
                   onClick={() => setShowSearch(true)}
-                  className="md:hidden relative z-10 w-10 h-10 flex items-center justify-center rounded-full transition-colors sw-interactive text-white/70 hover:text-white hover:bg-white/5"
+                  className="md:hidden relative z-10 w-11 h-11 flex items-center justify-center rounded-full transition-colors sw-interactive text-white/70 hover:text-white hover:bg-white/5"
                   aria-label="Search"
                 >
                   <Search className="w-5 h-5" />
@@ -224,7 +224,7 @@ export function PremiumNavbar() {
               {/* Wishlist */}
               <Link
                 href="/wishlist"
-                className="relative w-10 h-10 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/5 transition-colors sw-interactive"
+                className="relative w-11 h-11 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/5 transition-colors sw-interactive"
               >
                 <Heart className="w-5 h-5" />
                 <NavBadge count={wCount} />
@@ -233,7 +233,7 @@ export function PremiumNavbar() {
               {/* Cart */}
               <Link
                 href="/cart"
-                className="relative w-10 h-10 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/5 transition-colors sw-interactive"
+                className="relative w-11 h-11 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/5 transition-colors sw-interactive"
               >
                 <ShoppingCart className="w-5 h-5" />
                 <NavBadge count={itemCount} />

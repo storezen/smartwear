@@ -166,7 +166,7 @@ export default function PremiumWishlistPage() {
                       {/* Quick Add on Hover */}
                       <div className="absolute inset-x-3 bottom-3 z-20 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                         <button
-                          className="w-full h-10 rounded-xl bg-white/10 hover:bg-[#B8860B] backdrop-blur-md border border-white/20 hover:border-[#B8860B] text-white text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+                          className="w-full h-11 rounded-xl bg-white/10 hover:bg-[#B8860B] backdrop-blur-md border border-white/20 hover:border-[#B8860B] text-white text-sm font-medium flex items-center justify-center gap-2 transition-colors"
                           onClick={(e) => {
                             e.preventDefault()
                             addToCart(item.product)

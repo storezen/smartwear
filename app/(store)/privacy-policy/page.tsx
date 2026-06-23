@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
         </h1>
         <p className="text-white/50 text-sm mb-12">Last updated: June 2026</p>
 
-        <div className="space-y-10 text-white/70 leading-relaxed text-sm md:text-base">
+        <div className="space-y-8 md:space-y-10 text-white/70 leading-relaxed text-sm md:text-base">
           <section>
             <h2 className="text-xl font-semibold text-white mb-3">1. Introduction</h2>
             <p>

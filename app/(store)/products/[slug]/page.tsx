@@ -576,29 +576,6 @@ function ProductContent({ product }: { product: any }) {
           </div>
         </div>
 
-      {/* Mobile Fixed Bottom Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0C0F14]/90 backdrop-blur-md border-t border-white/10 p-4 md:hidden flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
-        <button
-          onClick={handleAddToCart}
-          disabled={product.stock === 0}
-          className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-white shrink-0 disabled:opacity-50"
-        >
-          <ShoppingBag className="w-5 h-5 mb-0.5" />
-          <span className="text-[9px] uppercase tracking-widest font-bold">Add</span>
-        </button>
-        <button
-          onClick={() => setIsQuickBuyOpen(true)}
-          disabled={product.stock === 0}
-          className="flex-1 h-14 rounded-xl bg-gradient-to-r from-green-600 to-emerald-500 flex flex-col items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.2)] disabled:opacity-50 relative overflow-hidden"
-        >
-          <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          <div className="flex items-center gap-1.5 text-white font-bold text-sm uppercase tracking-widest relative z-10">
-            <Zap className="w-4 h-4 fill-white animate-pulse" /> Quick Buy
-          </div>
-          <span className="text-white/80 text-[9px] font-medium tracking-widest uppercase relative z-10 mt-0.5">Order via COD</span>
-        </button>
-      </div>
-
         {/* Product Details Tabs */}
         <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-24 lg:mt-32 pb-24 md:pb-0">
           {/* Tab Navigation */}
@@ -613,7 +590,7 @@ function ProductContent({ product }: { product: any }) {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
                   className={cn(
-                    "relative px-4 sm:px-6 py-2.5 text-xs font-semibold tracking-widest uppercase rounded-xl transition-all whitespace-nowrap sw-interactive",
+                    "relative px-4 sm:px-6 py-3 text-xs font-semibold tracking-widest uppercase rounded-xl transition-all whitespace-nowrap sw-interactive",
                     activeTab === tab.key
                       ? "text-[#0C0F14] bg-gradient-to-r from-[#B8860B] to-[#D4A017] shadow-[0_4px_16px_rgba(184,134,11,0.3)]"
                       : "text-white/50 hover:text-white hover:bg-white/5"
@@ -909,20 +886,21 @@ function ProductContent({ product }: { product: any }) {
       />
 
       {/* Mobile Sticky Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0C0F14]/90 backdrop-blur-xl border-t border-white/10 p-4 md:hidden flex gap-3 pb-8">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0C0F14]/90 backdrop-blur-xl border-t border-white/10 p-4 md:hidden flex gap-3 pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <button
           onClick={handleAddToCart}
           disabled={product.stock === 0}
-          className="flex-1 h-12 rounded-xl bg-[#0F1923] border border-white/10 text-white text-xs font-bold uppercase tracking-widest disabled:opacity-50 flex items-center justify-center sw-interactive"
+          className="flex-1 h-14 rounded-xl bg-[#0F1923] border border-white/10 text-white text-xs font-bold uppercase tracking-widest disabled:opacity-50 flex items-center justify-center sw-interactive"
         >
           <ShoppingBag className="w-4 h-4 mr-1.5" /> Cart
         </button>
         <button
           onClick={() => setIsQuickBuyOpen(true)}
           disabled={product.stock === 0}
-          className="flex-[1.5] h-12 rounded-xl bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive"
+          className="flex-[1.5] h-14 rounded-xl bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive relative overflow-hidden"
         >
-          <Zap className="w-4 h-4 mr-1.5 fill-white" /> Quick Buy
+          <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          <Zap className="w-4 h-4 mr-1.5 fill-white relative z-10" /> <span className="relative z-10">Quick Buy</span>
         </button>
       </div>
     </div>

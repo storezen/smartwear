@@ -235,7 +235,7 @@ function ProductsContent() {
             >
               <button
                 onClick={() => { const p = new URLSearchParams(params.toString()); p.delete("category"); router.push(`/products?${p.toString()}`) }}
-                className="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border"
+                className="px-3 sm:px-4 py-2.5 sm:py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border"
                 style={{
                   background: !catSlug ? "linear-gradient(135deg, #B8860B, #D4A017)" : "rgba(255,255,255,0.03)",
                   color: !catSlug ? "#000" : "rgba(255,255,255,0.6)",
@@ -257,7 +257,7 @@ function ProductsContent() {
                   key={c.id}
                   onClick={() => { const p = new URLSearchParams(params.toString()); p.set("category", c.slug); router.push(`/products?${p.toString()}`) }}
                   title={`${c.name} (${count})`}
-                  className="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border"
+                  className="px-3 sm:px-4 py-2.5 sm:py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border"
                   style={{
                     background: catSlug === c.slug ? "linear-gradient(135deg, #B8860B, #D4A017)" : "rgba(255,255,255,0.03)",
                     color: catSlug === c.slug ? "#000" : "rgba(255,255,255,0.6)",
@@ -301,7 +301,7 @@ function ProductsContent() {
             <select
               value={sort}
               onChange={e => setSort(e.target.value)}
-              className="sm:hidden h-8 px-2 rounded-xl text-xs outline-none border border-white/10 bg-[#0F1923] text-white"
+              className="sm:hidden h-11 px-3 rounded-xl text-xs outline-none border border-white/10 bg-[#0F1923] text-white"
             >
               {sortOpts.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>

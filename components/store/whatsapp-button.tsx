@@ -15,7 +15,7 @@ export function WhatsAppButton() {
       href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-50 flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-full shadow-[0_8px_32px_rgba(16,185,129,0.4)] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(16,185,129,0.5)] hover:scale-105 group"
+      className="fixed bottom-28 md:bottom-6 right-4 md:right-6 z-50 flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-full shadow-[0_8px_32px_rgba(16,185,129,0.4)] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(16,185,129,0.5)] hover:scale-105 group"
       aria-label="Chat on WhatsApp"
     >
       <MessageCircle className="w-5 h-5 fill-white text-transparent" />

@@ -302,8 +302,8 @@ export default function CartPage() {
             <h3 className="text-xl font-bold text-white mb-2">Remove Item?</h3>
             <p className="text-white/60 text-sm mb-8">Are you sure you want to remove this beautiful timepiece from your cart?</p>
             <div className="flex gap-3 justify-center">
-              <button onClick={() => setItemToDelete(null)} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white/60 hover:bg-white/5 border border-transparent transition-colors">Keep It</button>
-              <button onClick={() => { removeFromCart(itemToDelete); setItemToDelete(null); }} className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-red-500 text-white hover:bg-red-600 transition-colors">Remove</button>
+              <button onClick={() => setItemToDelete(null)} className="flex-1 py-3.5 rounded-xl text-sm font-medium text-white/60 hover:bg-white/5 border border-transparent transition-colors">Keep It</button>
+              <button onClick={() => { removeFromCart(itemToDelete); setItemToDelete(null); }} className="flex-1 py-3.5 rounded-xl text-sm font-bold bg-red-500 text-white hover:bg-red-600 transition-colors">Remove</button>
             </div>
           </motion.div>
         </div>

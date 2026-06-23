@@ -50,13 +50,13 @@ export default function ContactPage() {
       </div>
 
       <div className="sw-container pb-24">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-24 items-start">
           {/* Contact Information Cards */}
           <div className="space-y-6">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-8 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl hover:bg-white/[0.04] transition-all"
+              className="p-6 md:p-8 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl hover:bg-white/[0.04] transition-all"
             >
               <div className="w-12 h-12 bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-6 border border-[#B8860B]/20">
                 <MapPin className="w-5 h-5 text-[#B8860B]" />
@@ -73,7 +73,7 @@ export default function ContactPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="p-8 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl hover:bg-white/[0.04] transition-all"
+              className="p-6 md:p-8 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl hover:bg-white/[0.04] transition-all"
             >
               <div className="w-12 h-12 bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-6 border border-[#B8860B]/20">
                 <Phone className="w-5 h-5 text-[#B8860B]" />
@@ -87,7 +87,7 @@ export default function ContactPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="p-8 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl hover:bg-white/[0.04] transition-all"
+              className="p-6 md:p-8 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl hover:bg-white/[0.04] transition-all"
             >
               <div className="w-12 h-12 bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-6 border border-[#B8860B]/20">
                 <Mail className="w-5 h-5 text-[#B8860B]" />
@@ -101,9 +101,9 @@ export default function ContactPage() {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="p-8 md:p-10 rounded-[32px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
+            className="p-6 md:p-10 rounded-[32px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
           >
-            <h2 className="text-3xl font-bold mb-8" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Send a Message</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-8" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Send a Message</h2>
             {sent ? (
               <div className="text-center py-12">
                 <div className="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">

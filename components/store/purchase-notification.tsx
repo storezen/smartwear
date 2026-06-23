@@ -38,7 +38,7 @@ export function PurchaseNotification({ productName }: { productName: string }) {
   }
 
   return (
-    <div className="fixed top-20 right-4 z-[60] flex flex-col gap-2 max-w-[300px] pointer-events-none">
+    <div className="fixed top-24 right-4 z-[70] flex flex-col gap-2 w-[300px] pointer-events-none">
       <AnimatePresence>
         {items.map((item) => (
           <motion.div

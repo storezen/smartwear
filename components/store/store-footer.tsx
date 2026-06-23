@@ -80,7 +80,7 @@ export function StoreFooter() {
       {/* Newsletter */}
       <div className="relative border-b border-white/5 py-12 md:py-16">
         <div className="sw-container">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 bg-white/[0.02] border border-white/5 backdrop-blur-xl p-8 rounded-[24px]">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 bg-white/[0.02] border border-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[24px]">
             <div>
               <p className="text-[#B8860B] font-semibold uppercase tracking-[0.2em] text-[0.65rem] mb-2 flex items-center gap-2">
                 <span className="w-4 h-[1px] bg-[#B8860B]" />
@@ -113,7 +113,7 @@ export function StoreFooter() {
       {/* Main Footer Links */}
       <div className="relative py-16 md:py-24">
         <div className="sw-container">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8">
             
             {/* Brand Column */}
             <div className="lg:col-span-4 pr-4">
