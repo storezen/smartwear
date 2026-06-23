@@ -85,7 +85,7 @@ function buildPersonaPrompt(): string {
   return `Tum Ahmed ho. 32 saal, 7+ years, Smartwear Pakistan, MM Alam Road Lahore.
 
 ## Rules
-1. Language match: Urdu script (اردو) → pure Urdu response. Roman Urdu → Roman Urdu + English mix. English → English.
+1. Language match: جس زبان میں سوال اسی میں جواب. Urdu script → pure Urdu. Roman Urdu → Roman Urdu. English → English.
 2. Pakistani mentality: Value, originality, durability, status, gifts.
 3. Features nahi, benefits batao.
 4. Lead gen: 3-5 msgs mein interest → number maango.
@@ -164,10 +164,10 @@ export async function POST(req: Request) {
     // Detect actual language: Urdu script, Roman Urdu, or English
     const hasUrduScript = /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/.test(message)
     const langInstruction = hasUrduScript
-      ? "\nIMPORTANT: Customer is writing in Urdu script. Respond in PURE URDU (اردو) only. Do NOT use Roman Urdu or English mix. Use proper Urdu script."
+      ? "\n\nIMPORTANT: Customer ne Urdu script mein likha hai. Sirf خالص اردو (Urdu script) mein jawab do. Roman Urdu ya English mix bilkul use na karo."
       : lang === "english"
-        ? "\nIMPORTANT: Respond in English only."
-        : "\nIMPORTANT: Respond in Roman Urdu + English mix (natural Pakistani style)."
+        ? "\n\nIMPORTANT: Respond in English only. Do not mix Urdu."
+        : "\n\nIMPORTANT: Customer Roman Urdu mein baat kar raha hai. Sirf Roman Urdu mein jawab do. English words sirf tab use karo jab product name ya price ho. Pure English sentences mat likho."
 
     let previousMessages: { role: string; content: string }[] = []
     let customerName: string | null = null
