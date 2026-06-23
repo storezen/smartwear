@@ -280,6 +280,15 @@ export function generateProductReviews(
 
   const shuffledNames = [...PAKISTANI_NAMES].sort(() => nameSeed() - 0.5)
 
+  const sellerResponses = [
+    "Thank you for your feedback! We're glad you're enjoying the product. 🙏",
+    "Thank you for your honest review. We'll work on improving the quality. If you need any assistance, please reach out to our support team.",
+    "We appreciate your review! Happy to hear you're satisfied with your purchase. ❤️",
+    "Sorry to hear about your experience. Please contact our support team and we'll make it right for you.",
+    "Thank you for choosing Smartwear! Your feedback motivates us to keep improving. 🚀",
+    "We're sorry for the inconvenience. Please DM us your order details and we'll resolve this ASAP.",
+  ]
+
   const generated: Review[] = picked.map((review, index) => ({
     id: `rev-${productId}-${index}`,
     product_id: productId,
@@ -290,6 +299,12 @@ export function generateProductReviews(
     comment: review.text,
     is_verified: nameSeed() > 0.3,
     created_at: dates[index],
+    helpful_count: Math.floor(seededRandom(seed + 5 + index)() * 20),
+    seller_response: review.rating >= 4 && index % 3 === 1
+      ? sellerResponses[index % sellerResponses.length]
+      : review.rating <= 2 && index % 2 === 0
+        ? sellerResponses[(index + 2) % sellerResponses.length]
+        : undefined,
   }))
 
   const userReviews = getStoredReviews().filter(r => r.product_id === productId)

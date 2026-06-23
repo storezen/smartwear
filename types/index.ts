@@ -63,6 +63,8 @@ export interface Review {
   comment: string
   is_verified: boolean
   created_at: string
+  helpful_count?: number
+  seller_response?: string
 }
 
 // Cart Types

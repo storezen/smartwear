@@ -217,8 +217,19 @@ function ProductContent({ product }: { product: any }) {
   const [showReviewForm, setShowReviewForm] = useState(false)
   const [reviewForm, setReviewForm] = useState({ user_name: "", rating: 5, comment: "" })
   const [allReviews, setAllReviews] = useState<Review[]>([])
+  const [sortBy, setSortBy] = useState<'recent' | 'highest' | 'lowest'>('recent')
   useEffect(() => setAllReviews(reviews), [reviews])
-  const displayedReviews = showAllReviews ? allReviews : allReviews.slice(0, 5)
+  const sortedReviews = useMemo(() => {
+    const sorted = [...allReviews]
+    if (sortBy === 'highest') sorted.sort((a, b) => b.rating - a.rating)
+    else if (sortBy === 'lowest') sorted.sort((a, b) => a.rating - b.rating)
+    else sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    return sorted
+  }, [allReviews, sortBy])
+  const displayedReviews = showAllReviews ? sortedReviews : sortedReviews.slice(0, 5)
+  const recommendPct = allReviews.length > 0
+    ? Math.round((allReviews.filter(r => r.rating >= 4).length / allReviews.length) * 100)
+    : 0
 
   const handleSubmitReview = () => {
     if (!reviewForm.user_name.trim() || !reviewForm.comment.trim()) {
@@ -675,7 +686,7 @@ function ProductContent({ product }: { product: any }) {
               {activeTab === 'reviews' && (
                 <motion.div key="reviews" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-3xl">
                   {/* Rating Summary */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 p-6 rounded-2xl bg-white/[0.02] border border-white/10 mb-8">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 p-6 rounded-2xl bg-white/[0.02] border border-white/10 mb-6">
                     <div className="text-center sm:text-left shrink-0">
                       <p className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
                         {product.rating || 0}
@@ -703,81 +714,105 @@ function ProductContent({ product }: { product: any }) {
                         )
                       })}
                     </div>
+                    <div className="text-center sm:text-right shrink-0">
+                      <p className="text-2xl font-bold text-emerald-400">{recommendPct}%</p>
+                      <p className="text-white/50 text-xs">Recommend</p>
+                    </div>
                   </div>
 
-                  {/* Write a Review */}
-                  <div className="mb-8">
-                    {showReviewForm ? (
-                      <div className="p-5 md:p-6 rounded-2xl bg-white/[0.02] border border-white/10">
-                        <div className="flex items-center justify-between mb-4">
-                          <h4 className="text-white font-semibold text-sm">Write a Review</h4>
-                          <button
-                            onClick={() => { setShowReviewForm(false); setReviewForm({ user_name: "", rating: 5, comment: "" }) }}
-                            className="text-white/40 hover:text-white text-xs transition-colors"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-xs text-white/50 block mb-1.5">Your Name</label>
-                            <input
-                              type="text"
-                              value={reviewForm.user_name}
-                              onChange={(e) => setReviewForm(prev => ({ ...prev, user_name: e.target.value }))}
-                              placeholder="e.g. Ahmad Raza"
-                              className="w-full h-10 px-4 text-sm rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] focus:bg-white/[0.08] outline-none transition-all"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-xs text-white/50 block mb-1.5">Rating</label>
-                            <div className="flex gap-1.5">
-                              {[1,2,3,4,5].map((s) => (
-                                <button
-                                  key={s}
-                                  type="button"
-                                  onClick={() => setReviewForm(prev => ({ ...prev, rating: s }))}
-                                  className="transition-all sw-interactive"
-                                >
-                                  <Star className={cn("w-6 h-6", s <= reviewForm.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10 hover:fill-[#B8860B]/30 hover:text-[#B8860B]/30")} />
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                          <div>
-                            <label className="text-xs text-white/50 block mb-1.5">Your Review</label>
-                            <textarea
-                              value={reviewForm.comment}
-                              onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
-                              placeholder={reviewForm.rating >= 4 ? "What did you like about this product?" : "What could be improved?"}
-                              rows={3}
-                              className="w-full px-4 py-3 text-sm rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] focus:bg-white/[0.08] outline-none transition-all resize-none"
-                            />
-                          </div>
-                          <button
-                            onClick={handleSubmitReview}
-                            className="sw-btn-gold px-6 h-10 text-xs font-bold uppercase tracking-widest rounded-xl flex items-center gap-2"
-                          >
-                            <Send className="w-3.5 h-3.5" /> Submit Review
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => setShowReviewForm(true)}
-                        className="w-full py-3.5 text-sm font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-dashed border-white/10 rounded-xl hover:bg-white/5 flex items-center justify-center gap-2"
-                      >
-                        <MessageSquare className="w-4 h-4" /> Write a Review
-                      </button>
-                    )}
+                  {/* Sort & Write */}
+                  <div className="flex items-center justify-between gap-3 mb-6">
+                    <div className="flex items-center gap-1 bg-white/[0.02] border border-white/10 rounded-xl p-0.5">
+                      {(['recent', 'highest', 'lowest'] as const).map((s) => (
+                        <button
+                          key={s}
+                          onClick={() => setSortBy(s)}
+                          className={cn(
+                            "px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider rounded-lg transition-all",
+                            sortBy === s ? "bg-[#B8860B] text-[#0C0F14]" : "text-white/50 hover:text-white"
+                          )}
+                        >
+                          {s === 'recent' ? 'Recent' : s === 'highest' ? 'Highest' : 'Lowest'}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => setShowReviewForm(true)}
+                      className="text-[11px] font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors flex items-center gap-1.5 shrink-0"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" /> Write Review
+                    </button>
                   </div>
+
+                  {/* Write a Review Form */}
+                  {showReviewForm && (
+                    <div className="p-5 md:p-6 rounded-2xl bg-white/[0.02] border border-white/10 mb-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-white font-semibold text-sm">Write a Review</h4>
+                        <button
+                          onClick={() => { setShowReviewForm(false); setReviewForm({ user_name: "", rating: 5, comment: "" }) }}
+                          className="text-white/40 hover:text-white text-xs transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-xs text-white/50 block mb-1.5">Your Name</label>
+                          <input
+                            type="text"
+                            value={reviewForm.user_name}
+                            onChange={(e) => setReviewForm(prev => ({ ...prev, user_name: e.target.value }))}
+                            placeholder="e.g. Ahmad Raza"
+                            className="w-full h-10 px-4 text-sm rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] focus:bg-white/[0.08] outline-none transition-all"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-white/50 block mb-1.5">Rating</label>
+                          <div className="flex gap-1.5">
+                            {[1,2,3,4,5].map((s) => (
+                              <button
+                                key={s}
+                                type="button"
+                                onClick={() => setReviewForm(prev => ({ ...prev, rating: s }))}
+                                className="transition-all sw-interactive"
+                              >
+                                <Star className={cn("w-6 h-6", s <= reviewForm.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10 hover:fill-[#B8860B]/30 hover:text-[#B8860B]/30")} />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-xs text-white/50 block mb-1.5">Your Review</label>
+                          <textarea
+                            value={reviewForm.comment}
+                            onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
+                            placeholder={reviewForm.rating >= 4 ? "What did you like about this product?" : "What could be improved?"}
+                            rows={3}
+                            className="w-full px-4 py-3 text-sm rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] focus:bg-white/[0.08] outline-none transition-all resize-none"
+                          />
+                        </div>
+                        <button
+                          onClick={handleSubmitReview}
+                          className="sw-btn-gold px-6 h-10 text-xs font-bold uppercase tracking-widest rounded-xl flex items-center gap-2"
+                        >
+                          <Send className="w-3.5 h-3.5" /> Submit Review
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Review Cards */}
                   <div className="space-y-5">
                     {displayedReviews.length > 0 ? (
                       <>
-                        {displayedReviews.map((rev) => (
+                        {displayedReviews.map((rev, idx) => (
                           <SpotlightCard key={rev.id} className="p-5 md:p-6">
+                            {idx === 0 && sortBy === 'recent' && (
+                              <div className="flex items-center gap-1.5 mb-3">
+                                <span className="text-[10px] font-bold text-[#B8860B] bg-[#B8860B]/10 border border-[#B8860B]/20 px-2 py-0.5 rounded-full uppercase tracking-wider">Featured Review</span>
+                              </div>
+                            )}
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
                                 <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-base md:text-lg shrink-0">
@@ -802,6 +837,20 @@ function ProductContent({ product }: { product: any }) {
                               </div>
                             </div>
                             <p className="text-white/70 text-sm leading-relaxed">{rev.comment}</p>
+
+                            {rev.seller_response && (
+                              <div className="mt-4 pl-4 border-l-2 border-[#B8860B]/30 bg-white/[0.02] rounded-r-xl p-3">
+                                <p className="text-[11px] font-semibold text-[#B8860B] uppercase tracking-wider mb-1">Smartwear Response</p>
+                                <p className="text-white/60 text-sm">{rev.seller_response}</p>
+                              </div>
+                            )}
+
+                            {rev.helpful_count !== undefined && rev.helpful_count > 0 && (
+                              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-white/40">
+                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                                <span>{rev.helpful_count} people found this helpful</span>
+                              </div>
+                            )}
                           </SpotlightCard>
                         ))}
                         {allReviews.length > 5 && !showAllReviews && (
