@@ -385,7 +385,7 @@ export function AIChat() {
         setMessages(prev => [...prev, botMsg])
 
         // Track failed interactions (if AI seems uncertain)
-        if (data.reply && (data.reply.includes("nahi pata") || data.reply.includes("available nahi") || data.reply.includes("sorry"))) {
+        if (data.reply.includes("nahi pata") || data.reply.includes("available nahi") || data.reply.includes("sorry")) {
           const nf = failedCount + 1
           sessionStorage.setItem("chat_failed_count", String(nf))
           setFailedCount(nf)
@@ -394,9 +394,10 @@ export function AIChat() {
           setFailedCount(0)
         }
       } else {
-        throw new Error("No reply")
+        throw new Error("No reply in response")
       }
-    } catch {
+    } catch (err) {
+      console.error("Chat send error:", err)
       const errorMsg: ChatMessage = {
         id: generateId(),
         role: "assistant",
