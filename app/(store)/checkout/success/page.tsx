@@ -72,20 +72,43 @@ function SuccessContent() {
 
   useEffect(() => {
     const firePurchase = async () => {
+      let orderTotal = totalFromQuery
+      let orderItems: any[] = []
       try {
         const res = await fetch(`/api/orders/track?id=${orderId}`)
         if (res.ok) {
           const data = await res.json()
           if (data.order) {
             setOrderDetails(data.order)
+            orderTotal = data.order.total
+            orderItems = data.order.items || []
             TikTokEvents.purchase(data.order)
+            // Server-side CAPI backup (bypasses pixel SDK issues)
+            fireCapiBackup(data.order)
             return
           }
         }
       } catch (_) {}
-      // Fallback: fire with URL params (total survives redirect)
-      TikTokEvents.purchase({ id: orderId, total: totalFromQuery, items: [] })
+      TikTokEvents.purchase({ id: orderId, total: orderTotal, items: orderItems })
+      fireCapiBackup({ id: orderId, total: orderTotal, items: orderItems, phone: '' })
     }
+
+    const fireCapiBackup = async (order: any) => {
+      try {
+        await fetch('/api/tiktok/purchase', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: order.id,
+            total: order.total,
+            items: order.items || [],
+            phone: order.phone || order.customer?.phone || '',
+            eventId: order.id,
+          }),
+        })
+      } catch {}
+    }
+
     firePurchase()
 
     // Trigger confetti after short delay
