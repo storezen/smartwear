@@ -3,10 +3,10 @@ import { z } from "zod";
 export const ORDER_STATUSES = [
   "Pending",
   "Processing",
-  "Shipped",
+  "Booked",
   "In Transit",
   "Delivered",
-  "Returned",
+  "RTO",
   "Cancelled",
 ] as const
 

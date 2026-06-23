@@ -132,7 +132,7 @@ function OrderCard({ data }: { data: OrderInfoData }) {
         <p className="text-white text-xs font-semibold">Order #{data.id}</p>
         <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
           data.status === "Delivered" ? "bg-emerald-500/10 text-emerald-400" :
-          data.status === "Shipped" ? "bg-blue-500/10 text-blue-400" :
+          data.status === "Booked" ? "bg-blue-500/10 text-blue-400" :
           data.status === "Processing" ? "bg-amber-500/10 text-amber-400" :
           "bg-white/5 text-white/50"
         }`}>

@@ -85,7 +85,7 @@ function OrderStatusBadge({ status }: { status: string }) {
   const s = status.toLowerCase()
   const palette: Record<string, { bg: string; text: string }> = {
     delivered: { bg: "bg-[#4ADE80]/10 border-[#4ADE80]/20", text: "text-[#4ADE80]" },
-    shipped: { bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-500" },
+    booked: { bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-500" },
     pending: { bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-500" },
     cancelled: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
   }

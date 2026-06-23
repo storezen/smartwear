@@ -159,7 +159,7 @@ export default function AdminOrdersPage() {
     try {
       let postexTrackingId = order.postex || null
 
-      if (status === 'Shipped' && !postexTrackingId) {
+      if (status === 'Booked' && !postexTrackingId) {
         openPostexModal(order)
         return
       }
@@ -199,7 +199,7 @@ export default function AdminOrdersPage() {
     const res = await fetch('/api/orders', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: orderId, status: 'Shipped', postexId: trackingNumber }),
+      body: JSON.stringify({ id: orderId, status: 'Booked', postexId: trackingNumber }),
     })
     if (res.ok) {
       const { order: updatedOrder } = await res.json()
@@ -288,7 +288,7 @@ export default function AdminOrdersPage() {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-white/60 text-[10px] mr-1">Change to:</span>
-            {['Processing', 'Shipped', 'Delivered', 'Cancelled'].map(status => (
+            {['Processing', 'Booked', 'Delivered', 'Cancelled'].map(status => (
               <button 
                 key={status}
                 onClick={() => handleBulkStatusUpdate(status)}
@@ -361,11 +361,11 @@ export default function AdminOrdersPage() {
                   <span className={`px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider border ${
                     order.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                     order.status === 'Processing' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                    order.status === 'Shipped' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                    order.status === 'Booked' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
                     order.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                     order.status === 'Cancelled' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
                     order.status === 'In Transit' || order.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
-                    order.status === 'Returned' || order.status === 'RTO' || order.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
+                    order.status === 'RTO' || order.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                     'bg-white/10 text-white/60 border-white/20'
                   }`}>
                     {order.status}
@@ -402,11 +402,11 @@ export default function AdminOrdersPage() {
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
                         selectedOrder.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                         selectedOrder.status === 'Processing' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                        selectedOrder.status === 'Shipped' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                        selectedOrder.status === 'Booked' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
                         selectedOrder.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                         selectedOrder.status === 'Cancelled' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
                         selectedOrder.status === 'In Transit' || selectedOrder.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
-                        selectedOrder.status === 'Returned' || selectedOrder.status === 'RTO' || selectedOrder.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
+                        selectedOrder.status === 'RTO' || selectedOrder.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                         'bg-white/10 text-white/60 border-white/20'
                       }`}>
                         {selectedOrder.status}
@@ -596,7 +596,7 @@ export default function AdminOrdersPage() {
                           <div className="space-y-3">
                             <p className="text-xs text-white/50">Not yet booked on PostEx.</p>
                             <button
-                              onClick={() => updateOrderStatus(selectedOrder.id, 'Shipped')}
+                              onClick={() => updateOrderStatus(selectedOrder.id, 'Booked')}
                               className="w-full bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(184,134,11,0.3)] transition-all flex items-center justify-center gap-2"
                             >
                               <Truck className="w-3.5 h-3.5" /> Send to PostEx
