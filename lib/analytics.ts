@@ -145,7 +145,6 @@ export function calculateFunnel(events: AnalyticsEvent[]): FunnelStage[] {
       if (s) s.add(e.session_id)
     }
     if (e.base_event === "CompletePayment") stages["Purchase"]?.add(e.id)
-    if (e.base_event === "RemoveFromCart") stages["AddToCart"]?.delete(e.session_id)
   }
 
   const topCount = Math.max(stages["PageView"]?.size || 0, 1)

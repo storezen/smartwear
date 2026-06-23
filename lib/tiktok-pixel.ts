@@ -167,16 +167,6 @@ export const TikTokEvents = {
     });
   },
 
-  removeFromCart: (product: { id: string; name: string; price: number }, quantity = 1) => {
-    trackTikTokEvent('RemoveFromCart', {
-      content_id: product.id,
-      content_type: 'product',
-      content_name: product.name,
-      value: product.price * quantity,
-      contents: [{ content_id: product.id, content_type: 'product', content_name: product.name, price: product.price, quantity }]
-    });
-  },
-
   // EventID must strictly be passed here (the order ID) to match the Server CAPI call
   purchase: (orderData: { id: string, total: number, items: any[] }) => {
     trackTikTokEvent('CompletePayment', {

@@ -5,7 +5,6 @@ import { CartItem, Product } from '@/types'
 import { formatPrice } from '@/lib/mock-data'
 import { toast } from 'sonner'
 import Image from 'next/image'
-import { TikTokEvents } from '@/lib/tiktok-pixel'
 
 interface CartContextType {
   items: CartItem[]
@@ -89,7 +88,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems(prevItems => {
       const itemToRemove = prevItems.find(item => item.id === itemId)
       if (itemToRemove) {
-        TikTokEvents.removeFromCart(itemToRemove.product, itemToRemove.quantity)
         toast(
           <div className="flex items-center gap-3 w-full">
             {itemToRemove.product.images?.[0] && (
