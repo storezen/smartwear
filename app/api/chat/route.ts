@@ -273,27 +273,43 @@ export async function POST(req: Request) {
       { role: "user", content: message },
     ]
 
-    const response = await fetch(`${baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "deepseek-v4-flash-free",
-        messages,
-        max_tokens: 1500,
-        temperature: 0.7,
-      }),
-    })
-
-    if (!response.ok) {
-      const errorBody = await response.text()
-      console.error("OpenCode error:", response.status, errorBody)
-      return NextResponse.json({ error: "AI service error" }, { status: 502 })
+    async function callOpenAI(signal: AbortSignal) {
+      const res = await fetch(`${baseUrl}/chat/completions`, {
+        signal,
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "deepseek-v4-flash-free",
+          messages,
+          max_tokens: 1500,
+          temperature: 0.7,
+        }),
+      })
+      if (!res.ok) {
+        const errorBody = await res.text()
+        console.error("OpenCode error:", res.status, errorBody)
+        throw new Error(`OpenCode ${res.status}`)
+      }
+      return res.json()
     }
 
-    const data = await response.json()
+    let data
+    const c1 = new AbortController()
+    const t1 = setTimeout(() => c1.abort(), 25000)
+    try {
+      data = await callOpenAI(c1.signal)
+    } catch (firstErr) {
+      clearTimeout(t1)
+      console.error("Retrying after:", firstErr)
+      const c2 = new AbortController()
+      const t2 = setTimeout(() => c2.abort(), 25000)
+      try { data = await callOpenAI(c2.signal) } catch { clearTimeout(t2); throw firstErr }
+      clearTimeout(t2)
+    }
+    clearTimeout(t1)
     const msg = data.choices?.[0]?.message
     let aiMessage = msg?.content?.trim() || ""
     if (!aiMessage && msg?.reasoning_content) {
