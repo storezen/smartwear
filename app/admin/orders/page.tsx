@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
-import { Search, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, X, History, MessageSquare, RotateCw, Edit3 } from "lucide-react"
+import { Search, Truck, CheckCircle2, AlertCircle, ChevronRight, Phone, X, History, MessageSquare, RotateCw, Edit3, Package, MapPin, User, CreditCard } from "lucide-react"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { toast } from "sonner"
@@ -404,248 +404,259 @@ export default function AdminOrdersPage() {
         ))}
       </div>
 
-      {/* Order Detail Sheet */}
-      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="bg-[#0a0a0a] border-l border-white/10 text-white w-full sm:max-w-3xl overflow-y-auto z-[150] p-0">
-          {selectedOrder && (
-            <div className="flex flex-col h-full">
-              <SheetHeader className="p-6 border-b border-white/10 bg-[#0a0a0a] sticky top-0 z-10">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <SheetTitle className="text-2xl font-bold text-white flex items-center gap-3">
-                      {selectedOrder.id}
-                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusStyle(selectedOrder.status)}`}>
-                        {selectedOrder.status}
-                      </span>
-                    </SheetTitle>
-                    <p className="text-sm text-white/50 mt-1">{new Date(selectedOrder.created_at).toLocaleString()}</p>
-                  </div>
-                  <SheetClose className="text-white/40 hover:text-white bg-white/5 p-2 rounded-full" aria-label="Close"><X className="w-4 h-4"/></SheetClose>
+      {/* Order Detail Modal */}
+      {sheetOpen && selectedOrder && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={() => setSheetOpen(false)}>
+          <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-5xl mx-4 max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div className="sticky top-0 z-20 bg-[#0a0a0a] border-b border-white/10 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <div className="flex items-center gap-3">
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-3">
+                    {selectedOrder.id}
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusStyle(selectedOrder.status)}`}>
+                      {selectedOrder.status}
+                    </span>
+                  </h2>
+                  <p className="text-xs text-white/50 mt-0.5">{new Date(selectedOrder.created_at).toLocaleString()}</p>
                 </div>
-              </SheetHeader>
+              </div>
+              <div className="flex items-center gap-2">
+                <button onClick={() => setSheetOpen(false)} className="text-white/40 hover:text-white/70 bg-white/5 p-2 rounded-lg transition-colors">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
 
-              <div className="flex-1 p-6 overflow-y-auto bg-black">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Left Column (Main details) */}
-                  <div className="md:col-span-2 space-y-6">
-                    
-                    {/* Items Card */}
-                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
-                      <div className="p-4 border-b border-white/5 bg-[#141414]">
-                        <h3 className="font-semibold text-white/90">Order Details</h3>
-                      </div>
-                      <div className="p-4 space-y-4">
-                        {selectedOrder.items?.map((item: any, i: number) => (
-                          <div key={i} className="flex justify-between items-start">
-                            <div className="flex gap-4">
-                              <div className="w-12 h-12 bg-[#1a1a1a] rounded-md border border-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center relative">
-                                {item.image ? <Image src={item.image} alt="" fill sizes="48px" className="object-cover"/> : <div className="text-white/20 text-xs">No img</div>}
-                                <span className="absolute -top-2 -right-2 bg-white/20 backdrop-blur-md text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border border-white/10">{item.quantity}</span>
-                              </div>
-                              <div className="pt-1">
-                                <p className="text-sm font-medium text-white/90 leading-tight">{item.name}</p>
-                                {item.color && <p className="text-xs text-white/50 mt-1">Color: {item.color}</p>}
-                                <p className="text-xs text-white/50">{item.variant || 'Default Variant'}</p>
-                              </div>
-                            </div>
-                            <p className="text-sm font-medium text-white/80 pt-1">₨ {(item.price * item.quantity).toLocaleString()}</p>
+            <div className="p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                {/* ── Left Column: Items + Customer ── */}
+                <div className="lg:col-span-2 space-y-6">
+
+                  {/* Items */}
+                  <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-white/5 bg-[#141414] flex items-center gap-2">
+                      <Package className="w-4 h-4 text-white/50" />
+                      <h3 className="font-semibold text-white/90">Order Items</h3>
+                    </div>
+                    <div className="divide-y divide-white/5">
+                      {selectedOrder.items?.map((item: any, i: number) => (
+                        <div key={i} className="p-4 flex items-center gap-4">
+                          <div className="w-14 h-14 bg-[#1a1a1a] rounded-lg border border-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center relative">
+                            {item.image ? <Image src={item.image} alt="" fill sizes="56px" className="object-cover"/> : <Package className="w-5 h-5 text-white/20" />}
+                            <span className="absolute -top-2 -right-2 bg-[#B8860B] text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">{item.quantity}</span>
                           </div>
-                        ))}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-white/90 truncate">{item.name}</p>
+                            <div className="flex items-center gap-3 mt-1">
+                              {item.color && <p className="text-xs text-white/50">Color: {item.color}</p>}
+                              <p className="text-xs text-white/50">{item.variant || 'Default'}</p>
+                            </div>
+                          </div>
+                          <p className="text-sm font-semibold text-white/80 whitespace-nowrap">₨ {(item.price * item.quantity).toLocaleString()}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Payment Summary */}
+                    <div className="p-4 border-t border-white/5 bg-[#141414] space-y-2">
+                      <div className="flex justify-between text-sm text-white/60">
+                        <span>Subtotal</span>
+                        <span>₨ {selectedOrder.subtotal?.toLocaleString() || selectedOrder.total.toLocaleString()}</span>
                       </div>
-                      
-                      {/* Payment Summary */}
-                      <div className="p-4 border-t border-white/5 bg-[#141414] space-y-2">
-                        <div className="flex justify-between text-sm text-white/60">
-                          <span>Subtotal</span>
-                          <span>₨ {selectedOrder.subtotal?.toLocaleString() || selectedOrder.total.toLocaleString()}</span>
+                      <div className="flex justify-between text-sm text-white/60">
+                        <span>Shipping</span>
+                        <span>₨ {selectedOrder.shipping_fee || 0}</span>
+                      </div>
+                      {(selectedOrder.discount > 0) && (
+                        <div className="flex justify-between text-sm text-emerald-400/80">
+                          <span>Discount</span>
+                          <span>- ₨ {selectedOrder.discount.toLocaleString()}</span>
                         </div>
-                        <div className="flex justify-between text-sm text-white/60">
-                          <span>Shipping</span>
-                          <span>₨ {selectedOrder.shipping_fee || 0}</span>
+                      )}
+                      <div className="flex justify-between text-base font-medium text-white pt-2 border-t border-white/5 mt-2">
+                        <span>Total</span>
+                        <span>₨ {selectedOrder.total.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between text-xs text-white/50 pt-1">
+                        <span className="flex items-center gap-1.5"><CreditCard className="w-3 h-3" /> Payment Method</span>
+                        <span className="uppercase">{selectedOrder.payment_method || 'COD'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Customer & Address */}
+                  <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-white/5 bg-[#141414] flex items-center gap-2">
+                      <User className="w-4 h-4 text-white/50" />
+                      <h3 className="font-semibold text-white/90">Customer Details</h3>
+                    </div>
+                    <div className="p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-[#141414] p-3 rounded-lg border border-white/5">
+                          <p className="text-[10px] uppercase tracking-wider text-white/40 mb-1">Name</p>
+                          <p className="text-sm font-medium text-white/90">{selectedOrder.customer_name}</p>
                         </div>
-                        {(selectedOrder.discount > 0) && (
-                          <div className="flex justify-between text-sm text-emerald-400/80">
-                            <span>Discount</span>
-                            <span>- ₨ {selectedOrder.discount.toLocaleString()}</span>
+                        <div className="bg-[#141414] p-3 rounded-lg border border-white/5">
+                          <p className="text-[10px] uppercase tracking-wider text-white/40 mb-1">Phone</p>
+                          <p className="text-sm font-medium text-white/90">{selectedOrder.phone}</p>
+                        </div>
+                        {selectedOrder.email && (
+                          <div className="bg-[#141414] p-3 rounded-lg border border-white/5">
+                            <p className="text-[10px] uppercase tracking-wider text-white/40 mb-1">Email</p>
+                            <p className="text-sm font-medium text-white/90 truncate">{selectedOrder.email}</p>
                           </div>
                         )}
-                        <div className="flex justify-between text-base font-medium text-white pt-2 border-t border-white/5 mt-2">
-                          <span>Total</span>
-                          <span>₨ {selectedOrder.total.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between text-xs text-white/50 pt-1">
-                          <span>Payment Method</span>
-                          <span className="uppercase">{selectedOrder.payment_method || 'COD'}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Timeline Card */}
-                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
-                      <div className="p-4 border-b border-white/5 bg-[#141414]">
-                        <h3 className="font-semibold text-white/90 flex items-center gap-2"><History className="w-4 h-4 text-white/50"/> Timeline</h3>
-                      </div>
-                      <div className="p-5">
-                        <div className="space-y-5 pl-2 border-l-2 border-white/10 ml-2">
-                          {selectedOrder.history?.map((event: any, i: number) => (
-                            <div key={i} className="relative pl-6">
-                              <div className="absolute -left-[25px] top-1 w-3 h-3 rounded-full bg-[#141414] border-2 border-white/40" />
-                              <p className="text-sm font-medium text-white/90">{event.status}</p>
-                              {event.note && <p className="text-sm text-white/60 mt-0.5">{event.note}</p>}
-                              <p className="text-xs text-white/40 mt-1">{new Date(event.timestamp).toLocaleString()}</p>
-                            </div>
-                          ))}
-                          {(!selectedOrder.history || selectedOrder.history.length === 0) && (
-                            <p className="text-sm text-white/50 pl-4">No history recorded.</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {/* Right Column (Customer & Actions) */}
-                  <div className="space-y-6">
-                    
-                    {/* Status Update Actions */}
-                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
-                      <div className="p-4 border-b border-white/5 bg-[#141414]">
-                        <h3 className="font-semibold text-white/90">Update Status</h3>
-                      </div>
-                      <div className="p-4 flex flex-wrap gap-2">
-                        {ALL_STATUSES.map(status => (
-                          <button
-                            key={status}
-                            onClick={() => updateOrderStatus(selectedOrder.id, status)}
-                            disabled={selectedOrder.status === status}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors w-full text-left ${
-                              selectedOrder.status === status 
-                                ? 'bg-[#1a1a1a] border-white/20 text-white cursor-default' 
-                                : 'bg-transparent border-transparent text-white/60 hover:bg-white/5 hover:text-white'
-                            }`}
-                          >
-                            {selectedOrder.status === status ? <span className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> {status}</span> : status}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Customer & Shipping */}
-                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
-                      <div className="p-4 border-b border-white/5 bg-[#141414]">
-                        <h3 className="font-semibold text-white/90">Customer</h3>
-                      </div>
-                      <div className="p-4 space-y-4">
-                        <div>
-                          <p className="text-sm text-white/90 font-medium">{selectedOrder.customer_name}</p>
-                          <p className="text-sm text-white/60">{selectedOrder.phone}</p>
-                          {selectedOrder.email && <p className="text-sm text-white/60">{selectedOrder.email}</p>}
-                        </div>
-                        <div className="h-px bg-white/5" />
-                        <div>
-                          <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">Shipping Address</h4>
-                          <p className="text-sm text-white/80">{selectedOrder.shipping_address?.address_line1}</p>
+                        <div className="md:col-span-2 bg-[#141414] p-3 rounded-lg border border-white/5">
+                          <p className="text-[10px] uppercase tracking-wider text-white/40 mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" /> Shipping Address</p>
+                          <p className="text-sm text-white/90">{selectedOrder.shipping_address?.address_line1}</p>
                           {selectedOrder.shipping_address?.city && (
-                            <p className="text-sm text-white/80">{selectedOrder.shipping_address.city}{selectedOrder.shipping_address.country ? `, ${selectedOrder.shipping_address.country}` : ''}</p>
+                            <p className="text-sm text-white/70">{selectedOrder.shipping_address.city}{selectedOrder.shipping_address.country ? `, ${selectedOrder.shipping_address.country}` : ''}</p>
                           )}
                         </div>
                         {selectedOrder.shipping_address?.city && (
-                          <AddressMap onSelect={(result) => {
-                            toast.success(`Location: ${result.city || result.formattedAddress.slice(0, 50)}`)
-                          }} />
+                          <div className="md:col-span-2">
+                            <AddressMap onSelect={(result) => {
+                              toast.success(`Location: ${result.city || result.formattedAddress.slice(0, 50)}`)
+                            }} />
+                          </div>
                         )}
                       </div>
                     </div>
+                  </div>
 
-                    {/* PostEx Actions */}
-                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
-                      <div className="p-4 border-b border-white/5 bg-[#141414] flex items-center justify-between">
-                        <h3 className="font-semibold text-white/90 flex items-center gap-2"><Truck className="w-4 h-4 text-white/50"/> PostEx Shipping</h3>
-                        <button onClick={refreshOrderStatus} className="text-white/40 hover:text-white transition-colors" title="Refresh status">
-                          <RotateCw className="w-3.5 h-3.5" />
+                </div>
+
+                {/* ── Right Column: Status + Timeline + PostEx + Notes ── */}
+                <div className="space-y-6">
+
+                  {/* Status Update */}
+                  <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-white/5 bg-[#141414]">
+                      <h3 className="font-semibold text-white/90">Update Status</h3>
+                    </div>
+                    <div className="p-4 max-h-[280px] overflow-y-auto space-y-1">
+                      {ALL_STATUSES.map(status => (
+                        <button
+                          key={status}
+                          onClick={() => updateOrderStatus(selectedOrder.id, status)}
+                          disabled={selectedOrder.status === status}
+                          className={`w-full px-3 py-2 rounded-lg text-xs font-medium border transition-colors text-left ${
+                            selectedOrder.status === status 
+                              ? 'bg-[#1a1a1a] border-white/20 text-white cursor-default' 
+                              : 'bg-transparent border-transparent text-white/60 hover:bg-white/5 hover:text-white'
+                          }`}
+                        >
+                          {selectedOrder.status === status ? (
+                            <span className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-[#B8860B]"/> {status}</span>
+                          ) : status}
                         </button>
-                      </div>
-                      <div className="p-4">
-                        {selectedOrder.postex ? (
-                          <div className="space-y-3">
-                            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
-                              <p className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-1">Tracking ID</p>
-                              <p className="font-mono text-sm text-white/90">{selectedOrder.postex}</p>
-                            </div>
-
-                            {selectedOrder.postex_charges && (
-                              <div className="grid grid-cols-2 gap-2">
-                                {[
-                                  { label: "Shipping Fee", key: "transactionFee", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
-                                  { label: "Tax", key: "transactionTax", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
-                                  { label: "Upfront Payment", key: "upfrontPayment", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
-                                  { label: "Balance Payment", key: "balancePayment", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
-                                ].filter(({ key }) => selectedOrder.postex_charges[key] != null).map(({ label, key, format }) => (
-                                  <div key={key} className="bg-white/5 rounded-lg p-2.5">
-                                    <p className="text-[10px] text-white/40 uppercase tracking-wider mb-0.5">{label}</p>
-                                    <p className="text-sm font-mono text-white/80">{format(selectedOrder.postex_charges[key])}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-
-                            <a
-                              href={`https://postex.pk/track?tracking=${selectedOrder.postex}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="block w-full text-center bg-white/5 hover:bg-white/10 border border-white/10 text-white py-2 rounded-lg text-xs font-medium transition-colors"
-                            >
-                              Track on PostEx →
-                            </a>
-                          </div>
-                        ) : (
-                          <div className="space-y-3">
-                            <p className="text-xs text-white/50">Not yet booked on PostEx.</p>
-                            <button
-                              onClick={() => updateOrderStatus(selectedOrder.id, 'Booked')}
-                              className="w-full bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(184,134,11,0.3)] transition-all flex items-center justify-center gap-2"
-                            >
-                              <Truck className="w-3.5 h-3.5" /> Send to PostEx
-                            </button>
-                          </div>
-                        )}
-                      </div>
+                      ))}
                     </div>
+                  </div>
 
-                    {/* Internal Notes */}
-                    <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
-                      <div className="p-4 border-b border-white/5 bg-[#141414]">
-                        <h3 className="font-semibold text-white/90 flex items-center gap-2"><MessageSquare className="w-4 h-4 text-white/50"/> Internal Notes</h3>
-                      </div>
-                      <div className="p-4">
-                        {selectedOrder.notes ? (
-                          <div className="bg-[#141414] p-3 rounded-lg text-sm text-white/80 whitespace-pre-wrap mb-3 border border-white/5">
-                            {selectedOrder.notes}
+                  {/* PostEx Tracking */}
+                  <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-white/5 bg-[#141414] flex items-center justify-between">
+                      <h3 className="font-semibold text-white/90 flex items-center gap-2"><Truck className="w-4 h-4 text-white/50"/> PostEx</h3>
+                      <button onClick={refreshOrderStatus} className="text-white/40 hover:text-white transition-colors" title="Refresh status">
+                        <RotateCw className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <div className="p-4">
+                      {selectedOrder.postex ? (
+                        <div className="space-y-3">
+                          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+                            <p className="text-[10px] text-emerald-400 font-medium uppercase tracking-wider mb-1">Tracking ID</p>
+                            <p className="font-mono text-sm text-white/90 break-all">{selectedOrder.postex}</p>
                           </div>
-                        ) : (
-                          <p className="text-xs text-white/40 mb-3">No notes yet.</p>
-                        )}
-                        <div className="flex flex-col gap-2">
-                          <textarea 
-                            value={newNote}
-                            onChange={e => setNewNote(e.target.value)}
-                            placeholder="Add a note..."
-                            className="w-full bg-[#141414] border border-white/10 rounded-lg p-3 text-sm focus:outline-none focus:border-white/30 resize-none min-h-[80px]"
-                          />
-                          <button onClick={handleAddNote} className="bg-white/10 hover:bg-white/20 py-2 px-4 rounded-lg text-white text-sm font-medium transition-colors">
-                            Save Note
+                          {selectedOrder.postex_charges && (
+                            <div className="grid grid-cols-2 gap-2">
+                              {[
+                                { label: "Shipping Fee", key: "transactionFee", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
+                                { label: "Tax", key: "transactionTax", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
+                                { label: "Upfront Payment", key: "upfrontPayment", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
+                                { label: "Balance Payment", key: "balancePayment", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
+                              ].filter(({ key }) => selectedOrder.postex_charges[key] != null).map(({ label, key, format }) => (
+                                <div key={key} className="bg-white/5 rounded-lg p-2.5">
+                                  <p className="text-[9px] text-white/40 uppercase tracking-wider mb-0.5">{label}</p>
+                                  <p className="text-sm font-mono text-white/80">{format(selectedOrder.postex_charges[key])}</p>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <a href={`https://postex.pk/track?tracking=${selectedOrder.postex}`} target="_blank" rel="noopener noreferrer" className="block w-full text-center bg-white/5 hover:bg-white/10 border border-white/10 text-white py-2 rounded-lg text-xs font-medium transition-colors">
+                            Track on PostEx →
+                          </a>
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          <p className="text-xs text-white/50">Not yet booked on PostEx.</p>
+                          <button onClick={() => { updateOrderStatus(selectedOrder.id, 'Booked') }} className="w-full bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(184,134,11,0.3)] transition-all flex items-center justify-center gap-2">
+                            <Truck className="w-3.5 h-3.5" /> Send to PostEx
                           </button>
                         </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Timeline */}
+                  <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-white/5 bg-[#141414]">
+                      <h3 className="font-semibold text-white/90 flex items-center gap-2"><History className="w-4 h-4 text-white/50"/> Timeline</h3>
+                    </div>
+                    <div className="p-4 max-h-[300px] overflow-y-auto">
+                      <div className="space-y-4 pl-2 border-l-2 border-white/10 ml-2">
+                        {selectedOrder.history?.map((event: any, i: number) => (
+                          <div key={i} className="relative pl-5">
+                            <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-[#B8860B] border-2 border-[#D4A017]" />
+                            <p className="text-sm font-medium text-white/90">{event.status}</p>
+                            {event.note && <p className="text-xs text-white/60 mt-0.5">{event.note}</p>}
+                            <p className="text-[10px] text-white/40 mt-0.5">{new Date(event.timestamp).toLocaleString()}</p>
+                          </div>
+                        ))}
+                        {(!selectedOrder.history || selectedOrder.history.length === 0) && (
+                          <p className="text-sm text-white/50 pl-4">No history recorded.</p>
+                        )}
                       </div>
                     </div>
-
                   </div>
+
+                  {/* Internal Notes */}
+                  <div className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-white/5 bg-[#141414]">
+                      <h3 className="font-semibold text-white/90 flex items-center gap-2"><MessageSquare className="w-4 h-4 text-white/50"/> Internal Notes</h3>
+                    </div>
+                    <div className="p-4">
+                      {selectedOrder.notes ? (
+                        <div className="bg-[#141414] p-3 rounded-lg text-sm text-white/80 whitespace-pre-wrap mb-3 border border-white/5 max-h-[150px] overflow-y-auto">
+                          {selectedOrder.notes}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-white/40 mb-3">No notes yet.</p>
+                      )}
+                      <div className="flex flex-col gap-2">
+                        <textarea 
+                          value={newNote}
+                          onChange={e => setNewNote(e.target.value)}
+                          placeholder="Add a note..."
+                          className="w-full bg-[#141414] border border-white/10 rounded-lg p-3 text-sm focus:outline-none focus:border-white/30 resize-none min-h-[60px]"
+                        />
+                        <button onClick={handleAddNote} className="bg-white/10 hover:bg-white/20 py-2 px-4 rounded-lg text-white text-sm font-medium transition-colors">
+                          Save Note
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
-          )}
-        </SheetContent>
-      </Sheet>
+          </div>
+        </div>,
+        document.body
+      )}
 
       {/* PostEx Confirmation Modal */}
       {showPostexModal && selectedOrder && typeof document !== 'undefined' && createPortal(
