@@ -5,6 +5,7 @@ import { CartItem, Product } from '@/types'
 import { formatPrice } from '@/lib/mock-data'
 import { toast } from 'sonner'
 import Image from 'next/image'
+import { TikTokEvents } from '@/lib/tiktok-pixel'
 
 interface CartContextType {
   items: CartItem[]
@@ -45,6 +46,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       })
       return
     }
+
+    TikTokEvents.addToCart(product, quantity)
 
     setItems(prevItems => {
       const itemId = selectedColor ? `${product.id}-${selectedColor}` : product.id
