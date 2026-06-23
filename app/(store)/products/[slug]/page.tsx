@@ -291,7 +291,7 @@ function ProductContent({ product }: { product: any }) {
       </div>
 
       <div className="sw-container pb-12 md:pb-24 relative z-10" ref={heroRef}>
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-16">
           
           {/* LEFT: Cinematic Image Gallery */}
           <motion.div
@@ -577,7 +577,7 @@ function ProductContent({ product }: { product: any }) {
         </div>
 
         {/* Product Details Tabs */}
-        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-16 lg:mt-32 pb-16 md:pb-0">
+        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-10 lg:mt-32 pb-16 md:pb-0">
           {/* Tab Navigation */}
           <div className="p-1 rounded-2xl bg-white/[0.02] border border-white/10 w-fit mb-4 md:mb-8 overflow-x-auto hide-scrollbar">
             <div className="flex items-center gap-1">
@@ -606,7 +606,7 @@ function ProductContent({ product }: { product: any }) {
             <AnimatePresence mode="wait">
               {activeTab === 'description' && (
                 <motion.div key="description" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
                     <div className={cn("order-2 lg:order-1", descriptionImages.length > 0 ? "lg:col-span-7 xl:col-span-8" : "lg:col-span-12")}>
                       {/* Key Highlights Strip */}
                       {specs.slice(0, 3).length > 0 && (
@@ -860,7 +860,7 @@ function ProductContent({ product }: { product: any }) {
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-16 md:mt-32">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-10 md:mt-32">
             <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-white/5 pb-4">
               <h3 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Complete Your Collection</h3>
               <Link href={`/products?category=${product.category_slug}`} className="text-sm text-[#B8860B] hover:text-[#D4A017] transition-colors sw-interactive font-medium flex items-center gap-1">
