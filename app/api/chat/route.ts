@@ -2,24 +2,75 @@ import { NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
 import { getProducts, getSettings } from "@/lib/db"
 
-type Intent = "order_check" | "price_query" | "product_search" | "policy" | "category" | "general"
+type Intent = "order_check" | "price_query" | "product_search" | "policy" | "category" | "cart_check" | "phone_order" | "payment" | "general"
 
-function detectIntent(msg: string): { intent: Intent; keywords: string[] } {
+function detectIntent(msg: string): { intent: Intent; keywords: string[]; phone?: string } {
   const low = msg.toLowerCase()
-  if (/ORD-|order id|order number|order status|mera order/i.test(low)) return { intent: "order_check", keywords: ["order"] }
-  if (/kitna|price|cost|rate|kay|price|costs?|how much|cost|rates/i.test(low)) return { intent: "price_query", keywords: msg.match(/\w+/g)?.slice(1, 5) || [] }
-  if (/dikh|show|recommend|suggest|option|chahe|lau|prefer|dekhna|looking|search|find|have.*watch|want.*watch|need|want|best/i.test(low)) return { intent: "product_search", keywords: msg.match(/\w+/g)?.slice(1, 5) || [] }
-  if (/return|warranty|delivery|shipping|payment|pay|policy|exchange|refund|delivery|policy|return|ship/i.test(low)) return { intent: "policy", keywords: [] }
+
+  const phoneMatch = msg.match(/(?:\+92|03|92|0)?[-\s]?3[0-9]{2}[-\s]?[0-9]{7}/)
+  const phone = phoneMatch?.[0]?.replace(/[-\s]/g, "") || undefined
+
+  if (/MERA\s*(?:NUMBER|NAMBER|PHONE)|APNA\s*NUMBER|03\d{9}|ORDER.*PHONE|PHONE.*ORDER/i.test(low) && phone) {
+    return { intent: "phone_order", keywords: [], phone }
+  }
+
+  if (/ORD-|order id|order number|order status|mera order|track|truck/i.test(low)) {
+    const idMatch = msg.match(/ORD-[A-Z0-9]+/i)
+    return { intent: "order_check", keywords: [idMatch?.[0] || "order"] }
+  }
+
+  if (/cart|mere cart|shopping cart|basket|cart mein|cart me/i.test(low)) return { intent: "cart_check", keywords: [] }
+
+  if (/pay|payment|pay kar|link|jazzcash|easypaisa|bank transfer|pay kar|payment link/i.test(low)) return { intent: "payment", keywords: [] }
+
+  if (/kitna|price|cost|rate|kay|how much|costs?|rates|budget|range/i.test(low)) return { intent: "price_query", keywords: msg.match(/\w+/g)?.slice(1, 5) || [] }
+  if (/dikh|show|recommend|suggest|option|chahe|lau|prefer|dekhna|looking|search|find|have.*watch|want.*watch|need|want|best|chahiye|chiye|sport|formal|waterproof|digital|analog/i.test(low)) return { intent: "product_search", keywords: msg.match(/\w+/g)?.slice(1, 6) || [] }
+
+  if (/return|warranty|delivery|shipping|policy|exchange|refund|ship/i.test(low)) return { intent: "policy", keywords: [] }
   if (/smart.?watch|analog.?watch|accessor|band|strap|buds|earphone|charge/i.test(low)) return { intent: "category", keywords: [] }
+
   return { intent: "general", keywords: [] }
 }
 
-async function fetchContext(intent: Intent, keywords: string[], productSlug: string | null, orderId: string | null) {
+function extractPreferences(msg: string, prev: any): any {
+  const prefs = { ...(prev || {}), updated_at: new Date().toISOString() }
+  const low = msg.toLowerCase()
+
+  const budgetMatch = msg.match(/(\d+[,]?\d*)\s*(?:k|hazar|hazaar)?/i)
+  if (budgetMatch) prefs.budget = budgetMatch[0]
+
+  if (/sport/i.test(low)) prefs.use_case = "sports"
+  else if (/formal|office|business|professional/i.test(low)) prefs.use_case = "formal"
+  else if (/gift|gift|sale|birthday|wedding|eid|shadi/i.test(low)) prefs.use_case = "gift"
+  else if (/daily|everyday|regular|roz/i.test(low)) prefs.use_case = "daily"
+
+  if (/smart/i.test(low)) prefs.category = "smart-watches"
+  else if (/analog/i.test(low)) prefs.category = "analog-watches"
+  else if (/accessor|band|strap/i.test(low)) prefs.category = "accessories"
+
+  const productNames = msg.match(/\b(Ultra Sync Pro|Smart Band \d|Midnight Elite|Series \d+|ROLEX|Submariner|Datejust|Versace|Rolx)\b/i)
+  if (productNames) prefs.interested_product = productNames[0]
+
+  return prefs
+}
+
+async function fetchContext(intent: Intent, keywords: string[], productSlug: string | null, orderId: string | null, phone?: string, message?: string) {
   const ctx: string[] = []
 
   if (intent === "order_check" && orderId) {
     const { data: order } = await supabase?.from("orders").select("*").eq("id", orderId).maybeSingle() || {}
     if (order) ctx.push(`Order: ${order.id}, Status: ${order.status}, Total: Rs. ${order.total}, Items: ${(order.items || []).length}`)
+  }
+
+  if (intent === "phone_order" && phone) {
+    const cleanPhone = phone.replace(/^92/, "0").replace(/^0/, "")
+    const { data: orders } = await supabase?.from("orders").select("id, status, total, created_at, items").or(`phone.ilike.%${cleanPhone}%,customer->>'phone'.ilike.%${cleanPhone}%`).order("created_at", { ascending: false }).limit(3) || {}
+    if (orders && orders.length > 0) {
+      ctx.push(`Orders found for this phone:`)
+      orders.forEach((o: any) => ctx.push(`- ${o.id}: ${o.status}, Rs. ${o.total} (${new Date(o.created_at).toLocaleDateString()})`))
+    } else {
+      ctx.push("No orders found for this phone number.")
+    }
   }
 
   if (intent === "price_query" || intent === "product_search" || intent === "category") {
@@ -29,31 +80,55 @@ async function fetchContext(intent: Intent, keywords: string[], productSlug: str
     if (/analog/i.test(keywords.join(" "))) catSlugs.push("analog-watches")
     if (/accessor|band|strap|buds|earphone/i.test(keywords.join(" "))) catSlugs.push("accessories")
 
-    let filtered = products
+    let filtered: any[] = []
     if (catSlugs.length > 0) filtered = products.filter((p: any) => catSlugs.includes(p?.category_slug))
-    if (intent === "price_query" && !catSlugs.length) filtered = products
 
-    // Search by name keywords
-    if (keywords.length > 1 || (intent === "product_search" && !catSlugs.length)) {
-      const nameHits = products.filter((p: any) => keywords.some(k => k.length > 2 && p?.name?.toLowerCase().includes(k.toLowerCase()))).slice(0, 5)
-      if (nameHits.length > 0) filtered = nameHits
+    // Smart search: name + description + specs + brand
+    const searchTerms = keywords.filter(k => k.length > 2)
+    if (searchTerms.length > 0) {
+      const hits = products.filter((p: any) => {
+        const searchText = [p.name, p.description, p.brand, p.category_slug, p?.specifications ? Object.values(p.specifications).join(" ") : ""].filter(Boolean).join(" ").toLowerCase()
+        return searchTerms.some(t => searchText.includes(t.toLowerCase()))
+      }).slice(0, 5)
+      if (hits.length > 0) { filtered = hits }
+    }
+
+    // Price range detection from message
+    const prices = message?.match(/(\d+[,]?\d*)/g)?.map(Number) || []
+    const priceRange = prices.filter((n: number) => n > 500)
+    if (priceRange.length > 0 && filtered.length > 0) {
+      const maxPrice = Math.max(...priceRange)
+      const minPrice = Math.min(...priceRange)
+      filtered = filtered.filter((p: any) => p.price >= minPrice * 0.7 && p.price <= maxPrice * 1.3)
     }
 
     const top = filtered.slice(0, 5)
     if (top.length > 0) {
       ctx.push("Products:")
-      top.forEach((p: any) => ctx.push(`[PRODUCT:${p.slug}] ${p.name} — Rs. ${p.price?.toLocaleString()} | ★${p.rating || "—"} (${p.reviews_count || 0} reviews) | Stock: ${p.stock || 0}`))
-    } else if (catSlugs.length > 0) {
-      const counts = { "smart-watches": "Rs. 3,500 - 15,000", "analog-watches": "Rs. 2,500 - 12,000", accessories: "Rs. 500 - 5,000" }
-      ctx.push(`Current inventory has products across categories. Ask me about specific categories or products.`)
+      top.forEach((p: any) => {
+        const badges = []
+        if (p.reviews_count > 10) badges.push("🔥 Popular")
+        if (p.stock < 5) badges.push(`⚡ Only ${p.stock} left`)
+        ctx.push(`[PRODUCT:${p.slug}] ${p.name} — Rs. ${p.price?.toLocaleString()}${p.compare_price ? ` (was Rs. ${p.compare_price?.toLocaleString()})` : ""} | ★${p.rating || "—"} (${p.reviews_count || 0} reviews) | Stock: ${p.stock || 0} | ${p.category_slug}${badges.length ? " | " + badges.join(", ") : ""}`)
+      })
+    } else if (intent !== "product_search") {
+      ctx.push("Products available across categories. Ask about smart watches, analog watches, or accessories.")
     } else {
-      ctx.push("No exact product match found. Ask about categories: smart watches, analog watches, or accessories.")
+      ctx.push("No exact match found. Try different keywords or browse categories: smart watches, analog watches, accessories.")
     }
   }
 
   if (intent === "policy") {
     const settings = await getSettings().catch(() => ({}))
     ctx.push(`Policy: Returns — 7-day easy return full money back. Warranty — 1 year smart watches, 6 months accessories. Shipping — Free over Rs. ${(settings?.free_delivery_threshold || 10000).toLocaleString()}, standard Rs. ${settings?.shipping_standard_rate || 200} (2-5 days), express Rs. ${settings?.shipping_express_rate || 500}. Payment — ${(() => { try { return JSON.parse(settings?.payment_methods || '[]').join(", ") } catch { return "COD, JazzCash, Easypaisa, Bank Transfer" } })()}. Open box delivery — check before paying.`)
+  }
+
+  if (intent === "cart_check") {
+    ctx.push("The customer is asking about their cart. Guide them to check their cart and offer help completing the purchase.")
+  }
+
+  if (intent === "payment") {
+    ctx.push("The customer is asking about payment. Available: COD, JazzCash, Easypaisa, Bank Transfer. Offer to create a payment link or guide them through checkout.")
   }
 
   return ctx.join("\n")
@@ -65,8 +140,7 @@ function buildPersonaPrompt(settings: any): string {
   const email = settings?.support_email || "concierge@smartwear.pk"
   const address = `${settings?.store_address_line1 || "MM Alam Road"}, ${settings?.store_address_line2 || "Gulberg III"}, ${settings?.store_city || "Lahore, Pakistan"}`
   const hours = settings?.business_hours || "Mon-Sat: 10am - 8pm PKT"
-  const whatsappNumber = settings?.whatsapp_number || "923001234567"
-  const whatsappLink = `https://wa.me/${whatsappNumber}`
+  const whatsappLink = `https://wa.me/${settings?.whatsapp_number || "923001234567"}`
 
   return `Tum Ahmed ho. 32 saal, 7+ years experience, ${storeName}, MM Alam Road Lahore. Premium watches & accessories.
 
@@ -76,6 +150,7 @@ function buildPersonaPrompt(settings: any): string {
 3. Behavior: Features nahi, benefits batao. Zarurat samjho. Objection handle karo.
 4. Lead gen: 3-5 msgs mein interest → number maango.
 5. Handoff: Technical sawaal ya 3 "nahi pata" → WhatsApp de do: ${whatsappLink}
+6. Remember: Customer ke past preferences track karo (budget, product interest, use case).
 
 ## Store
 - ${address} | ${hours} | ${phone} | ${email} | WhatsApp: ${whatsappLink}
@@ -84,6 +159,9 @@ function buildPersonaPrompt(settings: any): string {
 - Budget → 2 options (budget + thoda upar)
 - Comparison → max 3 differences
 - Order → confirm product/address/phone
+- Phone order → find orders by phone number
+- Cart → guide to /cart page for checkout
+- Payment → offer COD, JazzCash, Easypaisa link
 - Confused → clarify
 - Not available → alternate suggest
 - Price objection → features justify + COD/return reassure
@@ -93,17 +171,10 @@ function buildPersonaPrompt(settings: any): string {
 ## Style
 - 1-2 lines per para. Max 1 emoji. Product names bold.
 - Direct, confident, zero corporate speak.
-- End with ONE action.
-
-## Golden Rules
-- ONLY real inventory products. NEVER invent.
-- Use [PRODUCT:slug] when recommending.
-- Stock < 5 → "sirf X bache hain."
-- Match user language EXACTLY.`
+- End with ONE action.`
 }
 
-function buildFewShot(lang: string): string {
-  if (lang === "english") return ``
+function buildFewShot(): string {
   return `
 ## Examples
 User: Price thodi zyada lag rahi hai bhai
@@ -112,14 +183,17 @@ Answer: Samajh sakta hoon bhai. Yeh normal use mein 2-3 saal easily chal jati ha
 User: Original hai na? Duplicate to nahi hoga?
 Answer: Haan bhai, 100% original. Authorized dealer se aati hai. Bill aur 1 saal warranty card dono milenge.
 
-User: Yeh gift ke liye theek rahegi?
-Answer: Bilkul bhai. Packaging premium hoti hai. Kisi occasion ke liye hai?
-
 User: Battery kitne din chalti hai?
 Answer: 7-8 din normal use, 4-5 din agar smart features zyada use karo.
 
-User: Mera budget 15000 tak hai
-Answer: 15000 mein bohot achi options hain. Smart watch chahiye ya analog? Daily use ya occasion?`
+User: 03XX-XXXXXXX se order check karo
+Answer: Order search karta hoon aapke number se. Ek minute.
+
+User: Cart mein kya hai?
+Answer: Cart page check karein ya main kuch suggest karun?
+
+User: JazzCash payment link bhejo
+Answer: Checkout complete karein to payment link generate ho jata hai. Aap kya order karna chahte hain?`
 }
 
 export async function POST(req: Request) {
@@ -154,7 +228,7 @@ export async function POST(req: Request) {
         if (elapsed < hour && rateData.message_count >= 30) {
           return NextResponse.json({
             reply: lang === "english"
-              ? "⚠️ You've reached the message limit for this hour. Please try again later or contact us on WhatsApp."
+              ? "⚠️ Message limit reached for this hour. Try later or WhatsApp."
               : "⚠️ Aapne is hour ke liye message limit poochi kar li hai. Thodi der baad try karein ya WhatsApp par contact karein.",
           })
         }
@@ -170,10 +244,8 @@ export async function POST(req: Request) {
 
     const settings = await getSettings().catch(() => ({}))
     const personaPrompt = buildPersonaPrompt(settings)
-
-    // Intent detection + dynamic data fetch
-    const { intent } = detectIntent(message)
-    const contextData = await fetchContext(intent, detectIntent(message).keywords, productSlug, orderId)
+    const { intent, phone } = detectIntent(message)
+    const contextData = await fetchContext(intent, detectIntent(message).keywords, productSlug, orderId, phone, message)
 
     const langInstruction = lang === "english"
       ? "\n\nIMPORTANT: Respond in English only."
@@ -186,16 +258,18 @@ export async function POST(req: Request) {
     let previousMessages: { role: string; content: string }[] = []
     let customerName: string | null = null
     let hasDeliveredOrder = false
+    let preferences: any = null
 
     if (supabase) {
       try {
         const { data: session } = await supabase
           .from("chat_sessions")
-          .select("customer_name, has_delivered_order, followup_sent")
+          .select("customer_name, has_delivered_order, followup_sent, preferences")
           .eq("id", sessionId)
           .maybeSingle()
         customerName = session?.customer_name || null
         hasDeliveredOrder = session?.has_delivered_order || false
+        preferences = session?.preferences || null
       } catch {}
 
       const { data: msgs } = await supabase
@@ -229,9 +303,23 @@ export async function POST(req: Request) {
       }
     }
 
+    // Session memory — save preferences
+    const updatedPrefs = extractPreferences(message, preferences)
+    if (supabase && updatedPrefs && JSON.stringify(updatedPrefs) !== JSON.stringify(preferences)) {
+      try { await supabase.from("chat_sessions").update({ preferences: updatedPrefs }).eq("id", sessionId) } catch {}
+    }
+
     const nameContext = customerName
       ? `\n\nThe customer's name is ${customerName}. Address them warmly as "${customerName} bhai" or "${customerName} ji".`
       : "\n\nAsk their name once naturally — 'Aapka naam kya hai?' — don't insist."
+
+    // Session memory context
+    let memoryContext = ""
+    if (preferences?.budget) memoryContext += `\n- Known budget: ${preferences.budget}`
+    if (preferences?.use_case) memoryContext += `\n- Interested in: ${preferences.use_case} use`
+    if (preferences?.category) memoryContext += `\n- Category interest: ${preferences.category}`
+    if (preferences?.interested_product) memoryContext += `\n- Previously interested in: ${preferences.interested_product}`
+    if (memoryContext) memoryContext = `\n\n## Customer Memory (from past conversations)\n${memoryContext}`
 
     let followupContext = ""
     if (supabase && hasDeliveredOrder && customerName) {
@@ -248,13 +336,14 @@ export async function POST(req: Request) {
       } catch {}
     }
 
-    const fewShot = buildFewShot(lang)
+    const fewShot = buildFewShot()
 
     const systemContent = [
       personaPrompt,
       langInstruction,
       productContext,
       nameContext,
+      memoryContext,
       followupContext,
       fewShot,
       contextData ? `\n\n## Current Context (use this data)\n${contextData}` : "",
