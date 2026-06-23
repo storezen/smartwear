@@ -359,12 +359,12 @@ export default function AdminOrdersPage() {
                 {/* Status */}
                 <div className="w-[100px]">
                   <span className={`px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider border ${
-                    order.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                    order.status === 'Pending' || order.status === 'Pickup Attempted' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                     order.status === 'Processing' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                    order.status === 'Booked' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                    order.status === 'Booked' || order.status === 'Picked Up' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
                     order.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                     order.status === 'Cancelled' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
-                    order.status === 'In Transit' || order.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
+                    order.status === 'In Transit' || order.status === 'In Transit to Hub' || order.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
                     order.status === 'RTO' || order.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                     'bg-white/10 text-white/60 border-white/20'
                   }`}>
@@ -400,12 +400,12 @@ export default function AdminOrdersPage() {
                     <SheetTitle className="text-2xl font-bold text-white flex items-center gap-3">
                       {selectedOrder.id}
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
-                        selectedOrder.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                        selectedOrder.status === 'Pending' || selectedOrder.status === 'Pickup Attempted' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                         selectedOrder.status === 'Processing' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                        selectedOrder.status === 'Booked' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                        selectedOrder.status === 'Booked' || selectedOrder.status === 'Picked Up' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
                         selectedOrder.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                         selectedOrder.status === 'Cancelled' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
-                        selectedOrder.status === 'In Transit' || selectedOrder.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
+                        selectedOrder.status === 'In Transit' || selectedOrder.status === 'In Transit to Hub' || selectedOrder.status === 'Out for Delivery' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
                         selectedOrder.status === 'RTO' || selectedOrder.status === 'RTO Delivered' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                         'bg-white/10 text-white/60 border-white/20'
                       }`}>

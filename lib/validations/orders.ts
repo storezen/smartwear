@@ -4,9 +4,14 @@ export const ORDER_STATUSES = [
   "Pending",
   "Processing",
   "Booked",
+  "Pickup Attempted",
+  "Picked Up",
+  "In Transit to Hub",
   "In Transit",
+  "Out for Delivery",
   "Delivered",
   "RTO",
+  "RTO Delivered",
   "Cancelled",
 ] as const
 
