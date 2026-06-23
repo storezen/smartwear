@@ -64,6 +64,38 @@ interface TrackOptions {
   content_name?: string;
 }
 
+function getSessionContext() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const campaign = urlParams.get('utm_campaign') || urlParams.get('ttclid') ? 'TikTok Ad' : (sessionStorage.getItem('utm_campaign') || 'Direct / Organic');
+  if (urlParams.get('utm_campaign')) sessionStorage.setItem('utm_campaign', urlParams.get('utm_campaign')!);
+  if (urlParams.get('ttclid')) sessionStorage.setItem('utm_campaign', 'TikTok Ad');
+
+  let city = 'PK';
+  try {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    city = timeZone.split('/')[1]?.replace('_', ' ') || 'PK';
+  } catch(err) {}
+
+  let sessionId = sessionStorage.getItem('live_session_id');
+  if (!sessionId) {
+    sessionId = `sess_${Date.now()}_${Math.random().toString(36).substring(2,9)}`;
+    sessionStorage.setItem('live_session_id', sessionId);
+  }
+
+  return { campaign, city, sessionId }
+}
+
+function sendToAnalytics(event: string, itemName: string, value: number) {
+  try {
+    const { campaign, city, sessionId } = getSessionContext()
+    const body = JSON.stringify({
+      event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
+      value
+    })
+    navigator.sendBeacon('/api/analytics', new Blob([body], { type: 'application/json' }))
+  } catch (e) {}
+}
+
 export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
   if (typeof window === 'undefined') return;
 
@@ -86,35 +118,8 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
     console.log(`%c[TikTok Event] ${event}`, 'color:#00f2fe; font-weight:bold', payload);
   }
 
-  // Admin Dashboard Live View Sync — use sendBeacon for purchase
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const campaign = urlParams.get('utm_campaign') || urlParams.get('ttclid') ? 'TikTok Ad' : (sessionStorage.getItem('utm_campaign') || 'Direct / Organic');
-    if (urlParams.get('utm_campaign')) sessionStorage.setItem('utm_campaign', urlParams.get('utm_campaign')!);
-    if (urlParams.get('ttclid')) sessionStorage.setItem('utm_campaign', 'TikTok Ad');
-    
-    let city = 'PK';
-    try {
-      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      city = timeZone.split('/')[1]?.replace('_', ' ') || 'PK';
-    } catch(err) {}
-
-    const itemName = options.content_name || options.contents?.[0]?.content_name || 'Store Visit';
-
-    let sessionId = sessionStorage.getItem('live_session_id');
-    if (!sessionId) {
-      sessionId = `sess_${Date.now()}_${Math.random().toString(36).substring(2,9)}`;
-      sessionStorage.setItem('live_session_id', sessionId);
-    }
-
-    const body = JSON.stringify({
-      event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
-      value: options.value || 0
-    })
-
-    // sendBeacon survives page navigation
-    navigator.sendBeacon('/api/analytics', new Blob([body], { type: 'application/json' }))
-  } catch (e) {}
+  const itemName = options.content_name || options.contents?.[0]?.content_name || 'Store Visit'
+  sendToAnalytics(event, itemName, options.value || 0)
 }
 
 export const TikTokEvents = {
@@ -126,13 +131,7 @@ export const TikTokEvents = {
         window.ttq.push(['page'])
       }
     }
-    // Analytics only (not ttq.track — ttq.page() already handles TikTok)
-    try {
-      navigator.sendBeacon('/api/analytics', new Blob([JSON.stringify({
-        event_name: `PageView::Store Visit::PK::Direct / Organic`,
-        value: 0
-      })], { type: 'application/json' }))
-    } catch {}
+    sendToAnalytics('PageView', 'Store Visit', 0)
   },
 
   viewContent: (product: { id: string; name: string; price: number }) => {
