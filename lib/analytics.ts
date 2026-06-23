@@ -138,9 +138,13 @@ export function calculateFunnel(events: AnalyticsEvent[]): FunnelStage[] {
   for (const { key } of FUNNEL_DEF) stages[key] = new Set()
 
   for (const e of events) {
-    const s = stages[e.base_event]
-    if (s) s.add(e.session_id)
-    if (e.base_event === "CompletePayment") stages["Purchase"]?.add(e.session_id)
+    if (e.base_event === "InitiateCheckout" || e.base_event === "Purchase" || e.base_event === "CompletePayment") {
+      stages[e.base_event]?.add(e.id)
+    } else {
+      const s = stages[e.base_event]
+      if (s) s.add(e.session_id)
+    }
+    if (e.base_event === "CompletePayment") stages["Purchase"]?.add(e.id)
   }
 
   const topCount = Math.max(stages["PageView"]?.size || 0, 1)
@@ -260,7 +264,7 @@ export function computeSummary(events: AnalyticsEvent[]): LiveSummary {
   const purchaseEvents = events.filter(
     (e) => e.base_event === "Purchase" || e.base_event === "CompletePayment"
   )
-  const totalOrders = new Set(purchaseEvents.map((e) => e.session_id)).size
+  const totalOrders = new Set(purchaseEvents.map((e) => e.id)).size
   const totalRevenue = purchaseEvents.reduce((s, e) => s + (e.value || 0), 0)
   const funnel = calculateFunnel(events)
   const abandonmentRate = getAbandonmentRate(funnel)
