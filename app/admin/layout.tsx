@@ -16,7 +16,8 @@ import {
   Bell,
   ChevronRight,
   Activity,
-  Megaphone
+  Megaphone,
+  MessageCircle,
 } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
@@ -28,6 +29,7 @@ const adminNav = [
   { href: "/admin/live", label: "Live (TikTok)", icon: Activity },
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin/chat", label: "Chat", icon: MessageCircle },
   { href: "/admin/marketing", label: "Marketing", icon: Megaphone },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/settings", label: "Settings", icon: Settings },

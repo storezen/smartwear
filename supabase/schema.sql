@@ -124,6 +124,9 @@ INSERT INTO public.settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
 -- 6. AI Chat Tables
 CREATE TABLE public.chat_sessions (
   id TEXT PRIMARY KEY,
+  customer_name TEXT,
+  has_delivered_order BOOLEAN DEFAULT FALSE,
+  followup_sent BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -138,10 +141,25 @@ CREATE TABLE public.chat_messages (
 
 CREATE INDEX idx_chat_messages_session ON public.chat_messages(session_id, created_at ASC);
 
--- 5. Analytics Table
+-- 5. Analytics Table (also stores chat analytics)
 CREATE TABLE public.analytics (
   id TEXT PRIMARY KEY,
   timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   event_name TEXT NOT NULL,
   value NUMERIC DEFAULT 0
+);
+
+-- 7. Chat Feedback & Rate Limiting
+CREATE TABLE public.chat_feedback (
+  id BIGSERIAL PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  message_id TEXT NOT NULL,
+  rating INTEGER NOT NULL CHECK (rating IN (1, -1)),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE public.chat_rate_limits (
+  session_id TEXT PRIMARY KEY,
+  message_count INTEGER DEFAULT 1,
+  window_start TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
