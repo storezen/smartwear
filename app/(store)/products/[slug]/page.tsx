@@ -600,49 +600,50 @@ function ProductContent({ product }: { product: any }) {
 
         {/* Product Details Tabs */}
         <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-24 lg:mt-32 pb-24 md:pb-0">
-          <div className="flex items-center gap-6 sm:gap-8 border-b border-white/10 mb-8 overflow-x-auto hide-scrollbar">
-            <button
-              onClick={() => setActiveTab('description')}
-              className={cn(
-                "pb-4 text-sm font-semibold tracking-widest uppercase transition-all relative sw-interactive shrink-0",
-                activeTab === 'description' ? "text-[#B8860B]" : "text-white/60 hover:text-white"
-              )}
-            >
-              Description
-              {activeTab === 'description' && <motion.div layoutId="tabLine" className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-[#B8860B]" />}
-            </button>
-            <button
-              onClick={() => setActiveTab('specs')}
-              className={cn(
-                "pb-4 text-sm font-semibold tracking-widest uppercase transition-all relative sw-interactive shrink-0",
-                activeTab === 'specs' ? "text-[#B8860B]" : "text-white/60 hover:text-white"
-              )}
-            >
-              Specifications
-              {activeTab === 'specs' && <motion.div layoutId="tabLine" className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-[#B8860B]" />}
-            </button>
-            <button
-              onClick={() => setActiveTab('reviews')}
-              className={cn(
-                "pb-4 text-sm font-semibold tracking-widest uppercase transition-all relative sw-interactive shrink-0",
-                activeTab === 'reviews' ? "text-[#B8860B]" : "text-white/60 hover:text-white"
-              )}
-            >
-              Reviews ({reviews.length})
-              {activeTab === 'reviews' && <motion.div layoutId="tabLine" className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-[#B8860B]" />}
-            </button>
+          {/* Tab Navigation */}
+          <div className="p-1 rounded-2xl bg-white/[0.02] border border-white/10 w-fit mb-8 overflow-x-auto hide-scrollbar">
+            <div className="flex items-center gap-1">
+              {[
+                { key: 'description' as const, label: 'Description' },
+                { key: 'specs' as const, label: 'Specifications' },
+                { key: 'reviews' as const, label: `Reviews` },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={cn(
+                    "relative px-4 sm:px-6 py-2.5 text-xs font-semibold tracking-widest uppercase rounded-xl transition-all whitespace-nowrap sw-interactive",
+                    activeTab === tab.key
+                      ? "text-[#0C0F14] bg-gradient-to-r from-[#B8860B] to-[#D4A017] shadow-[0_4px_16px_rgba(184,134,11,0.3)]"
+                      : "text-white/50 hover:text-white hover:bg-white/5"
+                  )}
+                >
+                  {tab.key === 'reviews' ? `Reviews (${reviews.length})` : tab.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="min-h-[300px]">
             <AnimatePresence mode="wait">
               {activeTab === 'description' && (
-                <motion.div key="description" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+                <motion.div key="description" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                    {/* Left Column: Text (Editorial Style) */}
                     <div className={cn("order-2 lg:order-1", descriptionImages.length > 0 ? "lg:col-span-7 xl:col-span-8" : "lg:col-span-12")}>
+                      {/* Key Highlights Strip */}
+                      {specs.slice(0, 3).length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {specs.slice(0, 3).map(([k, v]) => (
+                            <span key={k} className="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-white/70 text-xs font-medium">
+                              <span className="text-white/40 capitalize">{k.replace('_', ' ')}: </span>
+                              {String(v)}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                       <div 
-                        className="text-white/80 leading-relaxed text-sm md:text-base prose prose-invert max-w-none
-                        [&_span]:!text-white/80 [&_p]:!text-white/80 [&_div]:!text-white/80 [&_li]:!text-white/80
+                        className="text-white/75 leading-relaxed text-sm md:text-base prose prose-invert max-w-none
+                        [&_span]:!text-white/75 [&_p]:!text-white/75 [&_div]:!text-white/75 [&_li]:!text-white/75
                         [&_h1]:!text-white [&_h2]:!text-white [&_h3]:!text-white [&_h4]:!text-white [&_strong]:!text-white
                         prose-a:!text-[#B8860B] hover:prose-a:!text-[#D4A017]
                         prose-ul:list-disc prose-ol:list-decimal prose-li:my-1
@@ -651,7 +652,6 @@ function ProductContent({ product }: { product: any }) {
                         dangerouslySetInnerHTML={{ __html: textOnlyHtml }}
                       />
                     </div>
-                    {/* Right Column: Masonry Gallery */}
                     {descriptionImages.length > 0 && (
                       <div className="lg:col-span-5 xl:col-span-4 order-1 lg:order-2">
                         <div className="columns-2 gap-4 space-y-4">
@@ -667,18 +667,26 @@ function ProductContent({ product }: { product: any }) {
                 </motion.div>
               )}
               {activeTab === 'specs' && (
-                <motion.div key="specs" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+                <motion.div key="specs" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
                   {specs.length > 0 ? (
-                    <div className="grid md:grid-cols-2 gap-x-12 gap-y-4 max-w-4xl">
-                      {specs.map(([k, v]) => (
-                        <div key={k} className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-white/5">
-                          <span className="text-white/60 text-sm capitalize">{k.replace('_', ' ')}</span>
-                          <span className="text-white font-medium text-sm mt-1 sm:mt-0">{String(v)}</span>
+                    <div className="max-w-3xl rounded-2xl border border-white/10 overflow-hidden divide-y divide-white/5">
+                      {specs.map(([k, v], i) => (
+                        <div
+                          key={k}
+                          className={cn(
+                            "flex items-center justify-between px-5 py-4 md:px-6 md:py-4",
+                            i % 2 === 0 ? "bg-white/[0.02]" : "bg-transparent"
+                          )}
+                        >
+                          <span className="text-white/50 text-sm capitalize">{k.replace(/_/g, ' ')}</span>
+                          <span className="text-white font-medium text-sm text-right ml-4">{String(v)}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-white/60">No specifications available for this product.</p>
+                    <div className="max-w-3xl p-10 rounded-2xl border border-white/10 bg-white/[0.02] text-center">
+                      <p className="text-white/50 text-sm">No specifications available for this product.</p>
+                    </div>
                   )}
                 </motion.div>
               )}
