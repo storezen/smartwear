@@ -46,8 +46,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    TikTokEvents.addToCart(product, quantity)
-
     setItems(prevItems => {
       const itemId = selectedColor ? `${product.id}-${selectedColor}` : product.id
       const existingItem = prevItems.find(item => item.id === itemId)

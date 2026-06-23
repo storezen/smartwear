@@ -263,6 +263,7 @@ function ProductContent({ product }: { product: any }) {
       return
     }
     addToCart(product, quantity, selectedColor || undefined)
+    TikTokEvents.addToCart(product, quantity)
     setAddedToCart(true)
     setTimeout(() => setAddedToCart(false), 2200)
   }
