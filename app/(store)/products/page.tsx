@@ -324,11 +324,19 @@ function ProductsContent() {
           <div className="flex-1 min-w-0">
             {loading ? (
               <Skeleton count={8} />
-            ) : paginatedProducts.length > 0 ? (
+            ) : products.length > 0 ? (
               <>
-                <ProductCardGrid products={paginatedProducts as any} />
+                {/* Mobile: all products in 2-col scroll (no pagination) */}
+                <div className="md:hidden">
+                  <ProductCardGrid products={products as any} />
+                </div>
+
+                {/* Desktop: paginated grid */}
+                <div className="hidden md:block">
+                  <ProductCardGrid products={paginatedProducts as any} />
+                </div>
                 
-                {/* Pagination — desktop only, mobile scrolls naturally */}
+                {/* Pagination — desktop only */}
                 {totalPages > 1 && (
                   <div className="hidden md:flex mt-12 justify-center items-center gap-2">
                     <button
