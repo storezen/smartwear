@@ -17,6 +17,7 @@ import { TikTokEvents } from '@/lib/tiktok-pixel'
 import { cn } from '@/lib/utils'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { QuickBuyModal } from '@/components/store/quick-buy-modal'
+import { PurchaseNotification } from '@/components/store/purchase-notification'
 import { toast } from 'sonner'
 
 interface ProductPageProps {
@@ -897,6 +898,8 @@ function ProductContent({ product }: { product: any }) {
           </motion.div>
         )}
       </div>
+
+      <PurchaseNotification productName={product.name} />
 
       <QuickBuyModal 
         product={product} 
