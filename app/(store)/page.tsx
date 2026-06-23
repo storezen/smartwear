@@ -131,6 +131,8 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
 
   const productHref = `/products/${encodeURIComponent(featured.slug)}`
 
+  const heroImage = "/hero-watch-transparent.png"
+
   return (
     <section className="relative min-h-[90svh] md:min-h-screen flex items-center overflow-hidden bg-[#06080A]">
       <div className="absolute inset-0 pointer-events-none">
@@ -200,29 +202,21 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
             </AnimatePresence>
           </div>
 
-          <div className="order-1 lg:order-2 flex items-center justify-center relative h-[50vh] sm:h-[55vh] md:h-[65vh] lg:h-[75vh]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={featured.slug}
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="relative w-full h-full flex items-center justify-center"
-              >
-                <div className="absolute w-[70%] aspect-square rounded-full bg-gradient-radial from-[#B8860B]/15 via-transparent to-transparent blur-[60px]" />
-                <div className="relative w-[75%] h-full max-h-[500px] md:max-h-[600px]">
-                  <Image
-                    src={featured.image}
-                    alt={`${featured.name} smartwatch`}
-                    fill
-                    sizes="(max-width: 640px) 75vw, (max-width: 1024px) 50vw, 40vw"
-                    className="object-contain drop-shadow-[0_30px_80px_rgba(184,134,11,0.2)]"
-                    priority
-                  />
-                </div>
-              </motion.div>
-            </AnimatePresence>
+          <div className="order-1 lg:order-2 flex items-center justify-center relative">
+            <div className="relative w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px] flex items-center justify-center">
+              <div className="absolute inset-[10%] rounded-full bg-[#B8860B]/15 blur-[80px]" />
+              <div className="absolute inset-0 rounded-full border border-[#B8860B]/10" />
+              <div className="relative w-[75%] aspect-square">
+                <Image
+                  src={heroImage}
+                  alt="Smart Watch"
+                  fill
+                  sizes="(max-width: 640px) 210px, (max-width: 1024px) 315px, 360px"
+                  className="object-contain drop-shadow-[0_20px_60px_rgba(184,134,11,0.25)]"
+                  priority
+                />
+              </div>
+            </div>
           </div>
         </div>
 
