@@ -1,11 +1,10 @@
-import { Metadata } from "next"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | Smartwear Pakistan",
-  description: "How Smartwear collects, uses, and protects your personal information.",
-}
+import { useState, useEffect } from "react"
 
 export default function PrivacyPolicyPage() {
+  const [s, setS] = useState<any>(null)
+  useEffect(() => { fetch('/api/public/settings').then(r => r.json()).then(setS).catch(() => {}) }, [])
   return (
     <div className="min-h-screen bg-[#06080A]">
       <div className="sw-container max-w-4xl mx-auto px-4 py-16 md:py-24">
@@ -100,9 +99,9 @@ export default function PrivacyPolicyPage() {
               For privacy-related inquiries, please contact us:
             </p>
             <ul className="list-none pl-0 mt-2 space-y-1">
-              <li>Email: privacy@smartwear.pk</li>
-              <li>Phone: +92 300 1234567</li>
-              <li>Address: MM Alam Road, Gulberg III, Lahore, Pakistan</li>
+              <li>Email: {s?.privacy_email || 'privacy@smartwear.pk'}</li>
+              <li>Phone: {s?.support_phone || '+92 300 1234567'}</li>
+              <li>Address: {s?.store_address_line1 || 'MM Alam Road'}{s?.store_address_line2 ? `, ${s.store_address_line2}` : ''}{s?.store_city ? `, ${s.store_city}` : ', Lahore, Pakistan'}</li>
             </ul>
           </section>
         </div>

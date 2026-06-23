@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import Image from "next/image"
 import Link from "next/link"
@@ -11,9 +11,12 @@ import { formatPrice } from "@/lib/mock-data"
 
 /* ── Free shipping progress ── */
 function ShippingBar({ subtotal }: { subtotal: number }) {
-  const FREE_AT = 15000
-  const pct = Math.min((subtotal / FREE_AT) * 100, 100)
-  const remaining = FREE_AT - subtotal
+  const [threshold, setThreshold] = useState<number>(10000)
+  useEffect(() => {
+    fetch('/api/public/settings').then(r => r.json()).then(d => { if (d?.free_delivery_threshold) setThreshold(Number(d.free_delivery_threshold)) }).catch(() => {})
+  }, [])
+  const pct = Math.min((subtotal / threshold) * 100, 100)
+  const remaining = threshold - subtotal
   return (
     <div
       className="rounded-2xl p-4"
@@ -22,7 +25,7 @@ function ShippingBar({ subtotal }: { subtotal: number }) {
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <Truck className="w-4 h-4" style={{ color: "#4ADE80" }} />
-          {subtotal >= FREE_AT ? (
+          {subtotal >= threshold ? (
             <p className="text-sm font-semibold" style={{ color: "#4ADE80" }}>
               🎉 You've unlocked free delivery!
             </p>
@@ -73,8 +76,11 @@ function EmptyCart() {
 export default function CartPage() {
   const { items, itemCount, subtotal, updateQuantity, removeFromCart } = useCart()
   const [itemToDelete, setItemToDelete] = useState<string | null>(null)
-  const FREE_AT = 15000
-  const shipping = subtotal >= FREE_AT ? 0 : 200
+  const [freeThreshold, setFreeThreshold] = useState<number>(10000)
+  useEffect(() => {
+    fetch('/api/public/settings').then(r => r.json()).then(d => { if (d?.free_delivery_threshold) setFreeThreshold(Number(d.free_delivery_threshold)) }).catch(() => {})
+  }, [])
+  const shipping = subtotal >= freeThreshold ? 0 : 200
   const total = subtotal + shipping
 
   return (

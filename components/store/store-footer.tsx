@@ -2,9 +2,13 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { MapPin, Phone, Mail, Instagram, Facebook, Youtube, Twitter, ArrowRight } from "lucide-react"
+import {
+  MapPin, Phone, Mail, Instagram, Facebook,
+  Youtube, Twitter, ArrowRight, Lock, Banknote,
+  PackageOpen, Truck, ShieldCheck, RefreshCw,
+} from "lucide-react"
+import { useSettings } from "@/lib/use-settings"
 
-/** Top 4 collection lines for footer — full catalog via View All */
 const collectionLinks = [
   { l: "Smart Watches",        h: "/products?category=smart-watches" },
   { l: "Analog Watches",       h: "/products?category=analog-watches" },
@@ -29,12 +33,13 @@ const links = {
   ],
 }
 
-const social = [
-  { icon: Instagram, href: "https://instagram.com/smartwear.pk", label: "Instagram", color: "hover:text-pink-500" },
-  { icon: Facebook,  href: "https://facebook.com/smartwear.pk", label: "Facebook", color: "hover:text-blue-500" },
-  { icon: Twitter,   href: "https://twitter.com/smartwear_pk", label: "Twitter", color: "hover:text-sky-400" },
-  { icon: Youtube,   href: "https://youtube.com/@smartwearpk", label: "YouTube", color: "hover:text-red-500" },
-]
+const socialIcons: Record<string, React.ElementType> = {
+  Instagram, Facebook, Twitter, Youtube,
+}
+
+const iconMap: Record<string, React.ElementType> = {
+  Lock: Lock, Banknote, Truck, ShieldCheck, RefreshCw, PackageOpen, MapPin, Phone, Mail,
+}
 
 function Logo() {
   return (
@@ -68,13 +73,36 @@ function Logo() {
 
 export function StoreFooter() {
   const currentYear = new Date().getFullYear()
+  const { settings, loading } = useSettings()
+
+  const s = settings || {} as any
+
+  const buildSocial = () => {
+    const map: Record<string, { icon: string; color: string }> = {
+      social_instagram: { icon: "Instagram", color: "hover:text-pink-500" },
+      social_facebook: { icon: "Facebook", color: "hover:text-blue-500" },
+      social_twitter: { icon: "Twitter", color: "hover:text-sky-400" },
+      social_youtube: { icon: "Youtube", color: "hover:text-red-500" },
+    }
+    return Object.entries(map)
+      .filter(([key]) => s[key])
+      .map(([key, cfg]) => ({
+        href: s[key],
+        label: key.replace("social_", "").replace("_", " ").replace(/\b\w/g, c => c.toUpperCase()),
+        icon: cfg.icon,
+        color: cfg.color,
+      }))
+  }
+
+  const parseJsonArray = (val: string) => {
+    try { return JSON.parse(val || "[]") } catch { return [] }
+  }
+
+  const badges = parseJsonArray(s.security_badges)
 
   return (
     <footer className="relative overflow-hidden" style={{ background: "linear-gradient(to bottom, #0C0F14 0%, #06080A 100%)", color: "white" }}>
-      {/* Animated Top Border */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#B8860B] to-transparent opacity-50" />
-      
-      {/* Subtle background glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full blur-[120px] opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, #B8860B, transparent)" }} />
 
       {/* Newsletter */}
@@ -119,28 +147,33 @@ export function StoreFooter() {
             <div className="lg:col-span-4 pr-4">
               <Logo />
               <p className="text-white/60 text-sm mt-6 mb-8 leading-relaxed max-w-xs">
-                Pakistan's most trusted destination for premium smartwatches and accessories. We bring you genuine products at honest prices with nationwide delivery and open-box verification.
+                {s.store_tagline 
+                  ? `${s.store_name || 'Smartwear'} — ${s.store_tagline}. Genuine products at honest prices with nationwide delivery.`
+                  : `Pakistan's most trusted destination for premium smartwatches and accessories.`}
               </p>
               <div className="flex gap-4">
-                {social.map((s, i) => (
-                  <motion.a
-                    key={s.label}
-                    href={s.href}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    className={`w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 transition-colors sw-interactive hover:bg-white/10 hover:border-white/20 ${s.color}`}
-                    title={s.label}
-                  >
-                    <s.icon className="w-4 h-4" />
-                  </motion.a>
-                ))}
+                {buildSocial().map((soc) => {
+                  const Icon = socialIcons[soc.icon as keyof typeof socialIcons]
+                  if (!Icon) return null
+                  return (
+                    <motion.a
+                      key={soc.label}
+                      href={soc.href}
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      className={`w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 transition-colors sw-interactive hover:bg-white/10 hover:border-white/20 ${soc.color}`}
+                      title={soc.label}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </motion.a>
+                  )
+                })}
               </div>
             </div>
 
-            {/* Quick Links */}
             <div className="lg:col-span-2">
               <h4 className="text-white font-semibold mb-6 uppercase tracking-widest text-xs">The Collection</h4>
               <ul className="space-y-4">
-                {collectionLinks.map((link) => (
+                {collectionLinks.map(link => (
                   <li key={link.l}>
                     <Link href={link.h} className="text-white/60 hover:text-[#B8860B] text-sm transition-colors sw-interactive inline-block">
                       {link.l}
@@ -148,10 +181,7 @@ export function StoreFooter() {
                   </li>
                 ))}
                 <li>
-                  <Link
-                    href="/products"
-                    className="text-[#B8860B] hover:text-[#D4A017] text-sm font-semibold transition-colors sw-interactive inline-flex items-center gap-1.5"
-                  >
+                  <Link href="/products" className="text-[#B8860B] hover:text-[#D4A017] text-sm font-semibold transition-colors sw-interactive inline-flex items-center gap-1.5">
                     View All <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </li>
@@ -188,31 +218,37 @@ export function StoreFooter() {
             <div className="lg:col-span-2">
               <h4 className="text-white font-semibold mb-6 uppercase tracking-widest text-xs">Contact</h4>
               <ul className="space-y-4">
-                <li>
-                  <a href="mailto:concierge@smartwear.pk" className="flex items-center gap-3 text-white/60 hover:text-white text-sm transition-colors group sw-interactive">
-                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#B8860B]/20 group-hover:text-[#B8860B] transition-colors">
-                      <Mail className="w-3.5 h-3.5" />
+                {s.support_email && (
+                  <li>
+                    <a href={`mailto:${s.support_email}`} className="flex items-center gap-3 text-white/60 hover:text-white text-sm transition-colors group sw-interactive">
+                      <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#B8860B]/20 group-hover:text-[#B8860B] transition-colors">
+                        <Mail className="w-3.5 h-3.5" />
+                      </div>
+                      {s.support_email}
+                    </a>
+                  </li>
+                )}
+                {s.support_phone && (
+                  <li>
+                    <a href={`tel:${s.support_phone.replace(/\s/g, '')}`} className="flex items-center gap-3 text-white/60 hover:text-white text-sm transition-colors group sw-interactive">
+                      <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#B8860B]/20 group-hover:text-[#B8860B] transition-colors">
+                        <Phone className="w-3.5 h-3.5" />
+                      </div>
+                      {s.support_phone}
+                    </a>
+                  </li>
+                )}
+                {(s.store_address_line1 || s.store_city) && (
+                  <li className="flex items-start gap-3 text-white/60 text-sm">
+                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                      <MapPin className="w-3.5 h-3.5" />
                     </div>
-                    concierge@smartwear.pk
-                  </a>
-                </li>
-                <li>
-                  <a href="tel:+923001234567" className="flex items-center gap-3 text-white/60 hover:text-white text-sm transition-colors group sw-interactive">
-                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#B8860B]/20 group-hover:text-[#B8860B] transition-colors">
-                      <Phone className="w-3.5 h-3.5" />
-                    </div>
-                    +92 300 1234567
-                  </a>
-                </li>
-                <li className="flex items-start gap-3 text-white/60 text-sm">
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0">
-                    <MapPin className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="leading-relaxed mt-1">
-                    Level 3, Dolmen Mall Clifton<br/>
-                    Karachi, Pakistan
-                  </span>
-                </li>
+                    <span className="leading-relaxed mt-1">
+                      {s.store_address_line1}{s.store_address_line2 ? <br/> : null}{s.store_address_line2}{s.store_address_line2 || s.store_address_line1 ? <br/> : null}
+                      {s.store_city}
+                    </span>
+                  </li>
+                )}
               </ul>
             </div>
 
@@ -221,34 +257,29 @@ export function StoreFooter() {
       </div>
 
       {/* Security Badges */}
-      <div className="relative border-t border-white/5 py-4">
-        <div className="sw-container">
-          <div className="flex flex-wrap items-center justify-center gap-6">
-            <div className="flex items-center gap-2 text-white/40">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span className="text-[11px]">SSL Secure</span>
-            </div>
-            <div className="flex items-center gap-2 text-white/40">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12a9 9 0 11-6.219-8.56"/><path d="M21 3v6h-6"/><path d="M21 3l-7.5 7.5"/></svg>
-              <span className="text-[11px]">100% Cash on Delivery</span>
-            </div>
-            <div className="flex items-center gap-2 text-white/40">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-              <span className="text-[11px]">Open Box Delivery</span>
-            </div>
-            <div className="flex items-center gap-2 text-white/40">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-              <span className="text-[11px]">Nationwide Delivery</span>
+      {badges.length > 0 && (
+        <div className="relative border-t border-white/5 py-4">
+          <div className="sw-container">
+            <div className="flex flex-wrap items-center justify-center gap-6">
+              {badges.map((badge: { label: string; icon: string }, idx: number) => {
+                const BadgeIcon = iconMap[badge.icon as keyof typeof iconMap]
+                return (
+                  <div key={idx} className="flex items-center gap-2 text-white/40">
+                    {BadgeIcon ? <BadgeIcon className="w-5 h-5" /> : null}
+                    <span className="text-[11px]">{badge.label}</span>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Copyright */}
       <div className="relative border-t border-white/5 py-6">
         <div className="sw-container flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/60 text-xs">
-            © {currentYear} Smartwear Pakistan. All rights reserved.
+            © {currentYear} {s.store_name || 'Smartwear Pakistan'}. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-xs">
             <Link href="/about" className="text-white/60 hover:text-white transition-colors sw-interactive">About</Link>

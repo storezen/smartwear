@@ -1,12 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { MapPin, Phone, Mail, Clock, Send, ChevronRight } from "lucide-react"
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
+  const [s, setSettings] = useState<any>(null)
+
+  useEffect(() => {
+    fetch('/api/public/settings').then(r => r.json()).then(setSettings)
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,9 +68,9 @@ export default function ContactPage() {
               </div>
               <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Visit Our Boutique</h3>
               <p className="text-white/60 leading-relaxed">
-                Smartwear Flagship Store<br/>
-                MM Alam Road, Gulberg III<br/>
-                Lahore, Pakistan
+                {s?.store_name || 'Smartwear'} Flagship Store<br/>
+                {s?.store_address_line1 || 'MM Alam Road'}{s?.store_address_line2 ? `, ${s.store_address_line2}` : ''}<br/>
+                {s?.store_city || 'Lahore, Pakistan'}
               </p>
             </motion.div>
 
@@ -79,8 +84,8 @@ export default function ContactPage() {
                 <Phone className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Call Us</h3>
-              <p className="text-white/60 leading-relaxed mb-1">+92 300 1234567</p>
-              <p className="text-white/60 text-sm">Mon-Sat: 10am - 8pm PKT</p>
+              <p className="text-white/60 leading-relaxed mb-1">{s?.support_phone || '+92 300 1234567'}</p>
+              <p className="text-white/60 text-sm">{s?.business_hours || 'Mon-Sat: 10am - 8pm PKT'}</p>
             </motion.div>
 
             <motion.div 
@@ -93,7 +98,7 @@ export default function ContactPage() {
                 <Mail className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Email Us</h3>
-              <p className="text-[#B8860B] leading-relaxed">concierge@smartwear.pk</p>
+              <p className="text-[#B8860B] leading-relaxed">{s?.support_email || 'concierge@smartwear.pk'}</p>
             </motion.div>
           </div>
 

@@ -139,6 +139,7 @@ function HeroWatchFace() {
 
 function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFeatured[] }) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [settings, setSettings] = useState<any>(null)
   
   useEffect(() => {
     if (!featuredList || featuredList.length <= 1) return;
@@ -147,6 +148,10 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
     }, 10000)
     return () => clearInterval(timer)
   }, [featuredList])
+
+  useEffect(() => {
+    fetch('/api/public/settings').then(r => r.json()).then(setSettings).catch(() => {})
+  }, [])
 
   const featured = featuredList[currentIndex] || HERO_FALLBACK
   
@@ -249,11 +254,28 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                     className="text-[2rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white leading-[1.05] mb-5"
                     style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                   >
-                    Premium Quality.
-                    <br />
-                    <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
-                      No Premium Price.
-                    </span>
+                    {settings?.hero_headline ? (
+                      (() => {
+                        const parts = settings.hero_headline.split('.')
+                        return (
+                          <>
+                            {parts[0] || 'Premium Quality'}{parts[0] ? '.' : ''}
+                            <br />
+                            <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
+                              {parts.slice(1).join('.').trim() || 'No Premium Price'}
+                            </span>
+                          </>
+                        )
+                      })()
+                    ) : (
+                      <>
+                        Premium Quality.
+                        <br />
+                        <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
+                          No Premium Price.
+                        </span>
+                      </>
+                    )}
                   </motion.h1>
 
                   <motion.p variants={staggerItem} className="text-white/55 text-sm md:text-lg max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed">
@@ -342,8 +364,9 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                 >
                   <chip.icon className="w-3.5 h-3.5 text-[#B8860B]" />
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-white/80">{chip.label}</span>
-                </motion.div>
-              ))}
+            </motion.div>
+          )
+        )}
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -351,7 +374,7 @@ function HeroBanner({ featuredList = [HERO_FALLBACK] }: { featuredList?: HeroFea
                 transition={{ delay: 0.6 }}
                 className="absolute top-4 right-2 md:right-6 z-20 px-3 py-1.5 rounded-full bg-[#B8860B] text-[#0C0F14] text-[10px] font-black uppercase tracking-[0.18em] shadow-[0_8px_24px_rgba(184,134,11,0.4)]"
               >
-                New 2026
+                {settings?.hero_badge_text || 'New 2026'}
               </motion.div>
             </motion.div>
           </div>
@@ -413,37 +436,62 @@ function pickHeroFeaturedList(products: any[]): HeroFeatured[] {
    2. TRUST BADGES
    ════════════════════════════════════════════════════════ */
 
-const trustBadges = [
-  { icon: Truck, label: "Fast Delivery", desc: "Across Pakistan" },
-  { icon: Shield, label: "1 Year Warranty", desc: "Local Support" },
-  { icon: RefreshCw, label: "7-Day Returns", desc: "Easy & Hassle-Free" },
-  { icon: CreditCard, label: "Cash on Delivery", desc: "Pay When You Receive" },
-  { icon: CheckCircle2, label: "Secure Checkout", desc: "100% Safe Payment" },
+const badgeIconMap: Record<string, React.ElementType> = {
+  Truck: Truck, Shield: Shield, RefreshCw, CreditCard, CheckCircle2,
+  Star, Heart, Clock, Award, Package, Zap, Sparkles, Activity,
+}
+
+const trustBadgesFallback = [
+  { icon: "Truck", label: "Fast Delivery", desc: "Across Pakistan" },
+  { icon: "Shield", label: "1 Year Warranty", desc: "Local Support" },
+  { icon: "RefreshCw", label: "7-Day Returns", desc: "Easy & Hassle-Free" },
+  { icon: "CreditCard", label: "Cash on Delivery", desc: "Pay When You Receive" },
+  { icon: "CheckCircle2", label: "Secure Checkout", desc: "100% Safe Payment" },
 ]
 
 function TrustBadges() {
+  const [badges, setBadges] = useState<any[] | null>(null)
+
+  useEffect(() => {
+    fetch('/api/public/settings')
+      .then(r => r.json())
+      .then(data => {
+        try {
+          const parsed = JSON.parse(data.trust_badges || '[]')
+          setBadges(parsed)
+        } catch { setBadges(null) }
+      })
+      .catch(() => setBadges(null))
+  }, [])
+
+  const items: any[] = badges || trustBadgesFallback
+
   return (
     <section className="py-6 sm:py-8 bg-[#0A0D11] border-y border-white/5 overflow-hidden">
       <div className="sw-container">
         <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 sm:gap-x-8 sm:gap-y-6 md:gap-x-12 lg:gap-x-16 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0 md:flex-wrap md:justify-center">
-          {trustBadges.map((b, i) => (
-            <motion.div
-              key={b.label}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="flex items-center gap-3 snap-start shrink-0"
-            >
-              <div className="w-10 h-10 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center text-[#B8860B] shrink-0">
-                <b.icon className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-white text-xs font-bold">{b.label}</p>
-                <p className="text-white/40 text-[10px]">{b.desc}</p>
-              </div>
+          {items.map((b: any, i: number) => {
+            const Icon = badgeIconMap[b.icon as keyof typeof badgeIconMap]
+            return (
+              <motion.div
+                key={b.label}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="flex items-center gap-3 snap-start shrink-0"
+              >
+                <div className="w-10 h-10 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center text-[#B8860B] shrink-0">
+                  {Icon ? <Icon className="w-4 h-4" /> : <Shield className="w-4 h-4" />}
+                </div>
+                <div>
+                  <p className="text-white text-xs font-bold">{b.label}</p>
+                  <p className="text-white/40 text-[10px]">{b.desc}</p>
+                </div>
             </motion.div>
-          ))}
+          )
+        })
+        }
         </div>
       </div>
     </section>

@@ -92,6 +92,21 @@ function NavBadge({ count }: { count: number }) {
   )
 }
 
+/* ── Announcement Text (dynamic from settings) ── */
+function AnnouncementText() {
+  const [text, setText] = useState("")
+  useEffect(() => {
+    fetch('/api/public/settings')
+      .then(r => r.json())
+      .then(data => {
+        const parts = [data.announcement_line1, data.announcement_line2, data.announcement_line3].filter(Boolean)
+        setText(parts.join(" · "))
+      })
+      .catch(() => setText("Free Delivery · Open Box · 100% COD"))
+  }, [])
+  return <>{text}</>
+}
+
 /* ══════════════════════════════
    NAVBAR
    ══════════════════════════════ */
@@ -148,9 +163,7 @@ export function PremiumNavbar() {
         <div className="sw-container">
           <div className="flex items-center justify-center h-9 md:h-10 px-4">
             <p className="text-[11px] md:text-xs text-white/70 font-medium tracking-wide">
-              <span className="hidden sm:inline">Free Delivery on Orders Over Rs. 5,000 &middot; </span>
-              Open Box Delivery Available &middot;{" "}
-              <span className="text-[#D4A017] font-semibold">100% Cash on Delivery</span>
+              <AnnouncementText />{/* */}
             </p>
           </div>
         </div>

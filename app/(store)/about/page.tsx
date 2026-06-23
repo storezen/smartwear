@@ -1,10 +1,7 @@
-import { Metadata } from "next"
-import { Shield, Users, Award, Truck, Heart, Store } from "lucide-react"
+"use client"
 
-export const metadata: Metadata = {
-  title: "About Us | Smartwear Pakistan",
-  description: "Smartwear is Pakistan's trusted destination for premium smartwatches and accessories.",
-}
+import { useState, useEffect } from "react"
+import { Shield, Users, Award, Truck, Heart, Store } from "lucide-react"
 
 const values = [
   { icon: Shield, label: "100% Authentic", desc: "Every product we sell is verified genuine with manufacturer warranty." },
@@ -16,6 +13,8 @@ const values = [
 ]
 
 export default function AboutPage() {
+  const [s, setS] = useState<any>(null)
+  useEffect(() => { fetch('/api/public/settings').then(r => r.json()).then(setS).catch(() => {}) }, [])
   return (
     <div className="min-h-screen bg-[#06080A]">
       <div className="sw-container max-w-5xl mx-auto px-4 py-16 md:py-24">
@@ -102,11 +101,11 @@ export default function AboutPage() {
             Visit Our Store
           </h2>
           <p className="text-white/60 max-w-lg mx-auto leading-relaxed">
-            Not ready to order online? Visit our Lahore boutique to see and try our products in person.
+            Not ready to order online? Visit our boutique to see and try our products in person.
             <br />
-            <span className="text-white/80 font-medium">MM Alam Road, Gulberg III, Lahore</span>
+            <span className="text-white/80 font-medium">{s?.store_address_line1 ? `${s.store_address_line1}${s.store_address_line2 ? `, ${s.store_address_line2}` : ''}` : 'MM Alam Road, Gulberg III'}{s?.store_city ? `, ${s.store_city}` : ', Lahore'}</span>
             <br />
-            Mon — Sat: 11 AM — 9 PM
+            {s?.business_hours || 'Mon — Sat: 11 AM — 9 PM'}
           </p>
         </div>
       </div>

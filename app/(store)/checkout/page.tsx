@@ -55,7 +55,38 @@ export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart()
   const { isAuthenticated, addresses } = useAuth()
 
+  const [settings, setSettings] = useState<any>(null)
   const [currentStep, setCurrentStep] = useState(1)
+
+  useEffect(() => {
+    fetch('/api/public/settings').then(r => r.json()).then(setSettings).catch(() => {})
+  }, [])
+
+  const freeThreshold = settings?.free_delivery_threshold ? Number(settings.free_delivery_threshold) : 10000
+  const standardRate = settings?.shipping_standard_rate ? Number(settings.shipping_standard_rate) : 200
+  const expressRate = settings?.shipping_express_rate ? Number(settings.shipping_express_rate) : 500
+
+  let pmList: { id: string; name: string; description: string }[] = []
+  try { pmList = JSON.parse(settings?.payment_methods || '[]') } catch {}
+
+  const shippingMethods = [
+    { id: 'standard', name: 'Standard Delivery', description: '3-5 business days', price: standardRate },
+    { id: 'express', name: 'Express Delivery', description: '1-2 business days', price: expressRate },
+  ]
+
+  const paymentMethods = pmList.length > 0
+    ? pmList.map((pm: any) => ({
+        id: pm.id || (pm.name || '').toLowerCase().replace(/\s+/g, ''),
+        name: pm.name || pm.id || 'Payment',
+        description: pm.description || '',
+      }))
+    : [
+        { id: 'cod', name: 'Cash on Delivery', description: 'Pay when you receive' },
+        { id: 'jazzcash', name: 'JazzCash', description: 'Mobile wallet payment' },
+        { id: 'easypaisa', name: 'Easypaisa', description: 'Mobile wallet payment' },
+        { id: 'bank', name: 'Bank Transfer', description: 'Direct bank transfer' },
+      ]
+
   const [guestAddress, setGuestAddress] = useState({
     name: '',
     phone: '',
@@ -74,7 +105,7 @@ export default function CheckoutPage() {
   const [appliedPromo, setAppliedPromo] = useState<{code: string, discount: number} | null>(null)
   const [promoError, setPromoError] = useState('')
 
-  const shippingCost = subtotal >= 10000 ? 0 : selectedShipping.price
+  const shippingCost = subtotal >= freeThreshold ? 0 : selectedShipping.price
   const total = subtotal + shippingCost - (appliedPromo?.discount || 0)
 
   // Fire InitiateCheckout once when user reaches checkout

@@ -1,11 +1,10 @@
-import { Metadata } from "next"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Terms of Service | Smartwear Pakistan",
-  description: "Terms and conditions for using Smartwear.pk.",
-}
+import { useState, useEffect } from "react"
 
 export default function TermsPage() {
+  const [s, setS] = useState<any>(null)
+  useEffect(() => { fetch('/api/public/settings').then(r => r.json()).then(setS).catch(() => {}) }, [])
   return (
     <div className="min-h-screen bg-[#06080A]">
       <div className="sw-container max-w-4xl mx-auto px-4 py-16 md:py-24">
@@ -104,9 +103,9 @@ export default function TermsPage() {
               For questions about these terms, reach us at:
             </p>
             <ul className="list-none pl-0 mt-2 space-y-1">
-              <li>Email: legal@smartwear.pk</li>
-              <li>Phone: +92 300 1234567</li>
-              <li>Address: MM Alam Road, Gulberg III, Lahore, Pakistan</li>
+              <li>Email: {s?.legal_email || 'legal@smartwear.pk'}</li>
+              <li>Phone: {s?.support_phone || '+92 300 1234567'}</li>
+              <li>Address: {s?.store_address_line1 || 'MM Alam Road'}{s?.store_address_line2 ? `, ${s.store_address_line2}` : ''}{s?.store_city ? `, ${s.store_city}` : ', Lahore, Pakistan'}</li>
             </ul>
           </section>
         </div>
