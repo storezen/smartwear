@@ -46,7 +46,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const settings = await getSettings()
-  const pixelId = settings.tiktok_pixel_id || null
+  const pixelId = settings.tiktok_pixel_id || process.env.TIKTOK_PIXEL_ID || null
 
   return (
     <html
