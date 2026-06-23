@@ -71,22 +71,17 @@ function SuccessContent() {
 
   useEffect(() => {
     const firePurchase = async () => {
-      let total = 85000
       try {
-        const res = await fetch('/api/orders')
+        const res = await fetch(`/api/orders/track?id=${orderId}`)
         if (res.ok) {
-          const orders = await res.json()
-          const realOrder = orders.find((o: any) => o.id === orderId)
+          const data = await res.json()
+          const realOrder = data.order
           if (realOrder) {
-            total = realOrder.total
             setOrderDetails(realOrder)
             TikTokEvents.purchase(realOrder)
-            return
           }
         }
       } catch (_) {}
-      
-      TikTokEvents.purchase({ id: orderId, total, items: [] })
     }
     firePurchase()
 

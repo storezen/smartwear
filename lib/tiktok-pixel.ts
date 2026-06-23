@@ -74,14 +74,22 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
   };
 
   if (window.ttq) {
-    window.ttq.track(event, payload);
+    // Use sendBeacon for purchase events to survive page navigation
+    if (event === 'CompletePayment') {
+      try {
+        const ttq = window.ttq
+        ttq.track(event, payload)
+      } catch(e) {}
+    } else {
+      window.ttq.track(event, payload);
+    }
   }
 
   if (TIKTOK_DEBUG_MODE) {
     console.log(`%c[TikTok Event] ${event}`, 'color:#00f2fe; font-weight:bold', payload);
   }
 
-  // Admin Dashboard Live View Sync
+  // Admin Dashboard Live View Sync — use sendBeacon for purchase
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const campaign = urlParams.get('utm_campaign') || urlParams.get('ttclid') ? 'TikTok Ad' : (sessionStorage.getItem('utm_campaign') || 'Direct / Organic');
@@ -102,14 +110,13 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
       sessionStorage.setItem('live_session_id', sessionId);
     }
 
-    fetch('/api/analytics', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
-        value: options.value || 0
-      })
-    }).catch(() => {})
+    const body = JSON.stringify({
+      event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
+      value: options.value || 0
+    })
+
+    // sendBeacon survives page navigation
+    navigator.sendBeacon('/api/analytics', new Blob([body], { type: 'application/json' }))
   } catch (e) {}
 }
 

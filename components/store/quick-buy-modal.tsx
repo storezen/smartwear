@@ -70,13 +70,16 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
         body: JSON.stringify(orderPayload)
       })
       if (!res.ok) throw new Error('Order creation failed')
+      
+      const data = await res.json()
+      const serverOrderId = data.order?.id || orderId
 
       TikTokEvents.purchase({ 
-        id: orderId, 
+        id: serverOrderId, 
         total, 
         items: [{ id: product.id, name: product.name, price: product.price, quantity }] 
       })
-      router.push(`/checkout/success?order=${orderId}`)
+      router.push(`/checkout/success?order=${serverOrderId}`)
     } catch (error) {
       console.error("Quick buy failed:", error)
       alert("Error: Order creation failed. Please check your details and try again.")
