@@ -126,7 +126,13 @@ export const TikTokEvents = {
         window.ttq.push(['page'])
       }
     }
-    trackTikTokEvent('PageView', { content_name: 'Store Visit' });
+    // Analytics only (not ttq.track — ttq.page() already handles TikTok)
+    try {
+      navigator.sendBeacon('/api/analytics', new Blob([JSON.stringify({
+        event_name: `PageView::Store Visit::PK::Direct / Organic`,
+        value: 0
+      })], { type: 'application/json' }))
+    } catch {}
   },
 
   viewContent: (product: { id: string; name: string; price: number }) => {
