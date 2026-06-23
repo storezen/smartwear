@@ -138,7 +138,9 @@ export async function POST(req: Request) {
     const apiKey = process.env.OPENCODE_API_KEY
     const baseUrl = process.env.OPENCODE_BASE_URL || "https://opencode.ai/zen/v1"
     if (!apiKey) {
-      return NextResponse.json({ error: "API key not configured" }, { status: 500 })
+      return NextResponse.json({
+        reply: "Maaf karein, AI assistant abhi available nahi hai. 😓 Aap humein WhatsApp par contact kar sakte hain ya thodi der baad dobara koshish karein. Shukriya! 🙏"
+      })
     }
 
     // Rate limiting
