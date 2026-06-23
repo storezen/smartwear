@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -26,16 +26,6 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
     city: ""
   })
 
-  // Fire InitiateCheckout immediately when modal opens
-  useEffect(() => {
-    if (isOpen && product) {
-      TikTokEvents.initiateCheckout(
-        [{ id: product.id, name: product.name, price: product.price, quantity }],
-        product.price * quantity
-      )
-    }
-  }, [isOpen, product, quantity])
-
   if (!product) return null
 
   const subtotal = product.price * quantity
@@ -47,6 +37,10 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
     setIsProcessing(true)
 
     try {
+      TikTokEvents.initiateCheckout(
+        [{ id: product.id, name: product.name, price: product.price, quantity }],
+        product.price * quantity
+      )
       const orderId = `ORD-${Date.now().toString().slice(-8)}`
 
       const orderPayload = {
