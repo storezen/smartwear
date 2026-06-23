@@ -43,6 +43,7 @@ export function initTikTokPixel(pixelId: string) {
   script.async = true;
   document.head.appendChild(script);
 
+  // Official TikTok init — sets up proxy methods so .track() works even before script loads
   window.ttq = window.ttq || [];
   window.ttq.push(['init', pixelId]);
 
@@ -74,14 +75,10 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
   };
 
   if (window.ttq) {
-    // Use sendBeacon for purchase events to survive page navigation
-    if (event === 'CompletePayment') {
-      try {
-        const ttq = window.ttq
-        ttq.track(event, payload)
-      } catch(e) {}
+    if (typeof window.ttq.track === 'function') {
+      window.ttq.track(event, payload)
     } else {
-      window.ttq.track(event, payload);
+      window.ttq.push(['track', event, payload])
     }
   }
 
@@ -123,7 +120,11 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
 export const TikTokEvents = {
   pageView: () => {
     if (typeof window !== 'undefined' && window.ttq) {
-      window.ttq.page();
+      if (typeof window.ttq.page === 'function') {
+        window.ttq.page()
+      } else {
+        window.ttq.push(['page'])
+      }
     }
     trackTikTokEvent('PageView', { content_name: 'Store Visit' });
   },
