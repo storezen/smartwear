@@ -269,7 +269,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         model: "deepseek-v4-flash-free",
         messages,
-        max_tokens: 800,
+        max_tokens: 1500,
         temperature: 0.7,
       }),
     })
@@ -281,7 +281,12 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json()
-    const aiMessage = data.choices?.[0]?.message?.content || "Sorry, kuch issue aa gaya. Dobara koshish karein."
+    const msg = data.choices?.[0]?.message
+    let aiMessage = msg?.content?.trim() || ""
+    if (!aiMessage && msg?.reasoning_content) {
+      aiMessage = msg.reasoning_content.replace(/^Thinking\.?\s*\d*\.?\s*\*{0,2}Analyze/i, "").trim().slice(0, 800)
+    }
+    if (!aiMessage) aiMessage = "Sorry, kuch issue aa gaya. Dobara koshish karein."
 
     if (supabase) {
       const timestamp = new Date().toISOString()

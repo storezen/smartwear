@@ -385,13 +385,12 @@ export function AIChat() {
         setMessages(prev => [...prev, botMsg])
 
         // Track failed interactions (if AI seems uncertain)
-        if (data.reply.includes("nahi pata") || data.reply.includes("available nahi") || data.reply.includes("sorry")) {
+        if (data.reply && (data.reply.includes("nahi pata") || data.reply.includes("available nahi") || data.reply.includes("sorry"))) {
           const nf = failedCount + 1
           sessionStorage.setItem("chat_failed_count", String(nf))
           setFailedCount(nf)
         } else {
-    sessionStorage.setItem("chat_failed_count", "0")
-    setFailedCount(0)
+          sessionStorage.setItem("chat_failed_count", "0")
           setFailedCount(0)
         }
       } else {
