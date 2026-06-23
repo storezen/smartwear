@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, Send, MessageCircle, Minus, CheckCheck, ThumbsUp, ThumbsDown, ShoppingCart, ExternalLink, Clock, Plus } from "lucide-react"
+import { X, Send, MessageCircle, Minus, CheckCheck, ThumbsUp, ThumbsDown, ShoppingCart, ExternalLink, Clock, Plus, Mic } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useCart } from "@/context/cart-context"
@@ -227,6 +227,33 @@ export function AIChat() {
   const { settings } = useSettings()
   const whatsappNumber = settings?.whatsapp_number || "923001234567"
   const whatsappMessage = settings?.whatsapp_message || "Hi Smartwear! I need help with my order."
+  const [isListening, setIsListening] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(1)
+  const recognitionRef = useRef<any>(null)
+
+  const toggleVoice = useCallback(() => {
+    if (isListening) {
+      recognitionRef.current?.stop()
+      setIsListening(false)
+      return
+    }
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechRecognition) { alert("Voice input sirf Chrome mein available hai."); return }
+    const recognition = new SpeechRecognition()
+    recognition.lang = lang === "urdu" ? "ur-PK" : "en-US"
+    recognition.continuous = false
+    recognition.interimResults = false
+    recognition.onresult = (e: any) => {
+      const text = e.results[0][0].transcript
+      setInput(text)
+      setIsListening(false)
+    }
+    recognition.onerror = () => setIsListening(false)
+    recognition.onend = () => setIsListening(false)
+    recognitionRef.current = recognition
+    recognition.start()
+    setIsListening(true)
+  }, [lang, isListening])
 
   useEffect(() => {
     setFailedCount(parseInt(sessionStorage.getItem("chat_failed_count") || "0"))
@@ -274,7 +301,7 @@ export function AIChat() {
               timestamp: new Date(),
             }
             setMessages(prev => [...prev, msg])
-            if (!isOpen && !isMinimized) setIsOpen(true)
+            if (!isOpen && !isMinimized) { setIsOpen(true); setUnreadCount(0) }
             sessionStorage.setItem("chat_proactive_" + productSlug, "1")
           }
         }).catch(() => {})
@@ -299,7 +326,7 @@ export function AIChat() {
           timestamp: new Date(),
         }
         setMessages(prev => [...prev, msg])
-        setIsOpen(true)
+        setIsOpen(true); setUnreadCount(0)
         sessionStorage.setItem("chat_proactive_home", "1")
       }
     }, 15000)
@@ -484,10 +511,15 @@ export function AIChat() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           whileHover={{ scale: 1.05 }}
-          onClick={() => setIsOpen(true)}
+          onClick={() => { setIsOpen(true); setUnreadCount(0) }}
           className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] shadow-[0_8px_32px_rgba(37,211,102,0.35)] flex items-center justify-center text-white hover:bg-[#20BD5A] transition-colors"
         >
           <MessageCircle className="w-6 h-6" />
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center shadow-lg">
+              {unreadCount}
+            </span>
+          )}
         </motion.button>
       )}
 
@@ -659,6 +691,14 @@ export function AIChat() {
                     placeholder={lang === "urdu" ? "Yahan likhein..." : "Type a message..."}
                     className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#25D366]/40 transition-all"
                   />
+                  <button
+                    type="button"
+                    onClick={toggleVoice}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${isListening ? "bg-red-500 animate-pulse text-white" : "bg-white/5 border border-white/10 text-white/50 hover:text-white/80 hover:bg-white/10"}`}
+                    title={lang === "urdu" ? "Bolein" : "Voice input"}
+                  >
+                    <Mic className="w-4 h-4" />
+                  </button>
                   <button
                     type="submit"
                     disabled={!input.trim() || isTyping}
