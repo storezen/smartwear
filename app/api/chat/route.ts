@@ -2,7 +2,8 @@ import { NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
 import { getProducts, getSettings } from "@/lib/db"
 import { checkFaq } from "@/lib/chat-faq"
-import { detectIntent, extractPreferences, getSeasonalContext, buildCustomerProfile } from "@/lib/chat-utils"
+import { detectIntent, extractPreferences, getSeasonalContext } from "@/lib/chat-utils"
+import { fuzzySearchProducts } from "@/lib/fuzzy-match"
 
 async function fetchContext(intent: string, keywords: string[], productSlug: string | null, orderId: string | null, phone?: string) {
   const ctx: string[] = []
@@ -47,6 +48,12 @@ async function fetchContext(intent: string, keywords: string[], productSlug: str
         const searchText = [p.name, p.description, p.brand, p.category_slug, p?.specifications ? Object.values(p.specifications).join(" ") : ""].filter(Boolean).join(" ").toLowerCase()
         return searchTerms.some(t => searchText.includes(t.toLowerCase()))
       }).slice(0, 5)
+    }
+
+    // Fuzzy match for misspelled/approximate names
+    if (searchTerms.length > 0 && filtered.length === 0) {
+      const fuzzy = fuzzySearchProducts(searchTerms.join(" "), products, 3)
+      if (fuzzy.length > 0) filtered = fuzzy
     }
 
     if (filtered.length > 5) filtered = filtered.slice(0, 5)
