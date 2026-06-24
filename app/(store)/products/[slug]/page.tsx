@@ -475,8 +475,8 @@ function ProductContent({ product }: { product: any }) {
               {/* Inline Reviews */}
               {displayedReviews.length > 0 && (
                 <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3.5} className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between flex-wrap gap-1">
+                    <div className="flex items-center gap-1.5 flex-wrap">
                       <div className="flex gap-0.5">
                         {[1,2,3,4,5].map((s) => (
                           <Star key={s} className={cn("w-3 h-3", s <= Math.round(product.rating || 0) ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10")} />
@@ -769,7 +769,14 @@ function ProductContent({ product }: { product: any }) {
           className="group relative w-full h-14 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_20px_rgba(184,134,11,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive"
         >
           <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          <div className="relative z-10 flex items-center justify-center gap-3 text-[#0C0F14] font-bold text-xs uppercase tracking-widest">
+          <div className="relative z-10 flex flex-col items-center gap-0.5 sm:hidden text-[#0C0F14] font-bold uppercase tracking-widest">
+            <span className="flex items-center gap-2 text-xs">
+              <Truck className="w-4 h-4" />
+              <span>Quick Buy — Pay on Delivery</span>
+            </span>
+            <span className="text-sm font-black">{formatPrice(product.price * quantity)}</span>
+          </div>
+          <div className="relative z-10 hidden sm:flex items-center justify-center gap-3 text-[#0C0F14] font-bold text-xs uppercase tracking-widest">
             <Truck className="w-4 h-4" />
             <span>Quick Buy — Pay on Delivery</span>
             <span className="text-sm font-black">{formatPrice(product.price * quantity)}</span>

@@ -366,11 +366,13 @@ export default function CheckoutPage() {
                     Processing...
                   </span>
                 ) : (
-                  <>
-                    <Truck className="w-5 h-5" />
-                    <span>Place Order — Pay on Delivery</span>
-                    <span className="text-lg font-black">{formatPrice(total)}</span>
-                  </>
+                  <span className="flex flex-col items-center gap-0.5 sm:flex-row sm:gap-3">
+                    <span className="flex items-center gap-2">
+                      <Truck className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                      <span className="text-xs sm:text-base">Place Order — Pay on Delivery</span>
+                    </span>
+                    <span className="text-sm sm:text-lg font-black">{formatPrice(total)}</span>
+                  </span>
                 )}
               </button>
               <p className="text-center text-[11px] text-white/40 mt-3">
