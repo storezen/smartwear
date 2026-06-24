@@ -12,7 +12,7 @@ export async function GET() {
     delete safe.tiktok_access_token;
 
     return NextResponse.json(safe, {
-      headers: { 'Cache-Control': 'public, max-age=60, s-maxage=120' },
+      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0' },
     });
   } catch (error) {
     console.error('Error fetching public settings:', error);

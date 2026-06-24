@@ -10,11 +10,7 @@ import { useCart } from "@/context/cart-context"
 import { formatPrice } from "@/lib/mock-data"
 
 /* ── Free shipping progress ── */
-function ShippingBar({ subtotal }: { subtotal: number }) {
-  const [threshold, setThreshold] = useState<number>(10000)
-  useEffect(() => {
-    fetch('/api/public/settings').then(r => r.json()).then(d => { if (d?.free_delivery_threshold) setThreshold(Number(d.free_delivery_threshold)) }).catch(() => {})
-  }, [])
+function ShippingBar({ subtotal, threshold }: { subtotal: number; threshold: number }) {
   const pct = Math.min((subtotal / threshold) * 100, 100)
   const remaining = threshold - subtotal
   return (
@@ -77,10 +73,23 @@ export default function CartPage() {
   const { items, itemCount, subtotal, updateQuantity, removeFromCart } = useCart()
   const [itemToDelete, setItemToDelete] = useState<string | null>(null)
   const [freeThreshold, setFreeThreshold] = useState<number>(10000)
+  const [shippingRate, setShippingRate] = useState(200)
+  const [codAvailable, setCodAvailable] = useState(true)
+  const [paymentMethods, setPaymentMethods] = useState(["COD", "JazzCash", "Easypaisa", "Bank Transfer"])
   useEffect(() => {
-    fetch('/api/public/settings').then(r => r.json()).then(d => { if (d?.free_delivery_threshold) setFreeThreshold(Number(d.free_delivery_threshold)) }).catch(() => {})
+    fetch('/api/public/settings').then(r => r.json()).then(d => {
+      if (d?.free_delivery_threshold) setFreeThreshold(Number(d.free_delivery_threshold))
+      if (d?.shipping_standard_rate) setShippingRate(Number(d.shipping_standard_rate))
+      if (typeof d?.cod_available === 'boolean') setCodAvailable(d.cod_available)
+      if (d?.payment_methods) {
+        try {
+          const parsed = JSON.parse(d.payment_methods)
+          if (Array.isArray(parsed)) setPaymentMethods(parsed)
+        } catch {}
+      }
+    }).catch(() => {})
   }, [])
-  const shipping = subtotal >= freeThreshold ? 0 : 200
+  const shipping = subtotal >= freeThreshold ? 0 : shippingRate
   const total = subtotal + shipping
 
   return (
@@ -129,7 +138,7 @@ export default function CartPage() {
 
             {/* Items */}
             <div className="lg:col-span-2 space-y-3.5 min-w-0">
-              <ShippingBar subtotal={subtotal} />
+              <ShippingBar subtotal={subtotal} threshold={freeThreshold} />
 
               {items.map((item, index) => (
                 <motion.div
@@ -264,21 +273,24 @@ export default function CartPage() {
                 <div className="flex items-center justify-center gap-3 mt-3.5 text-xs text-muted-foreground">
                   <span>🔒 Secure</span>
                   <span>•</span>
-                  <span>💳 COD Available</span>
+                  <span>{codAvailable ? '💳 COD Available' : '💳 Pay Online'}</span>
                   <span>•</span>
                   <span>🚚 Nationwide</span>
                 </div>
 
                 {/* Payment */}
+                {paymentMethods.length > 0 && (
                 <div className="mt-4 pt-4 border-t border-white/5">
+                  {codAvailable && (
                   <div className="bg-gradient-to-r from-green-500/10 to-emerald-600/10 border border-green-500/20 rounded-xl p-3 mb-4 text-center shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                     <p className="text-green-400 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2">
                       <Truck className="w-4 h-4" /> 100% Cash on Delivery
                     </p>
                   </div>
-                  <p className="text-[10px] sm:text-[9px] text-white/60 uppercase tracking-widest text-center mb-2.5 font-semibold">Other Payment Methods</p>
+                  )}
+                  <p className="text-[10px] sm:text-[9px] text-white/60 uppercase tracking-widest text-center mb-2.5 font-semibold">Accepted Payments</p>
                   <div className="flex flex-wrap gap-1.5 justify-center">
-                    {["JazzCash", "Easypaisa", "Bank Transfer"].map(m => (
+                    {paymentMethods.filter(m => m !== 'COD').map(m => (
                       <span
                         key={m}
                         className="text-[11px] sm:text-[10px] font-medium text-white/60 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10"
@@ -288,6 +300,7 @@ export default function CartPage() {
                     ))}
                   </div>
                 </div>
+                )}
               </div>
             </motion.div>
           </div>

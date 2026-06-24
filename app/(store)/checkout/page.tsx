@@ -38,6 +38,9 @@ export default function CheckoutPage() {
   const { items, subtotal, clearCart, addToCart } = useCart()
 
   const [freeThreshold, setFreeThreshold] = useState(10000)
+  const [shippingRate, setShippingRate] = useState(200)
+  const [codAvailable, setCodAvailable] = useState(true)
+  const [paymentMethods, setPaymentMethods] = useState(["COD"])
   const [guestAddress, setGuestAddress] = useState({
     name: '',
     phone: '',
@@ -57,6 +60,14 @@ export default function CheckoutPage() {
       .then(r => r.json())
       .then(data => {
         if (data?.free_delivery_threshold) setFreeThreshold(Number(data.free_delivery_threshold))
+        if (data?.shipping_standard_rate) setShippingRate(Number(data.shipping_standard_rate))
+        if (typeof data?.cod_available === 'boolean') setCodAvailable(data.cod_available)
+        if (data?.payment_methods) {
+          try {
+            const parsed = JSON.parse(data.payment_methods)
+            if (Array.isArray(parsed)) setPaymentMethods(parsed)
+          } catch {}
+        }
       })
       .catch(() => {})
   }, [])
@@ -78,7 +89,7 @@ export default function CheckoutPage() {
     if (items.length > 0) TikTokEvents.initiateCheckout(items, subtotal)
   }, [])
 
-  const shippingCost = subtotal >= freeThreshold ? 0 : 200
+  const shippingCost = subtotal >= freeThreshold ? 0 : shippingRate
   const total = subtotal + shippingCost - (appliedPromo?.discount || 0)
 
   const handleApplyPromo = async () => {
