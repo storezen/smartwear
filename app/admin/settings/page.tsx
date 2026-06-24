@@ -451,25 +451,30 @@ export default function AdminSettingsPage() {
                 {activeTab === "badges" && (
                   <div className="space-y-5">
                     {renderSectionHeader(<ShieldCheck className="w-4 h-4" />, "Trust & Security Badges", "Badges shown on homepage, footer, and checkout")}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {renderTextarea('security_badges', 'Security Badges (Footer, Checkout) — JSON', '[{"label":"SSL Secure","icon":"Lock"},{"label":"100% COD","icon":"Banknote"}]')}
-                      {renderTextarea('trust_badges', 'Trust Badges (Homepage) — JSON', '[{"label":"Fast Delivery","icon":"Truck"},{"label":"1 Year Warranty","icon":"ShieldCheck"}]')}
-                    </div>
-                    <div className="p-3 bg-[#B8860B]/10 border border-[#B8860B]/20 rounded-lg space-y-2">
-                      <div className="flex items-start gap-2.5">
-                        <AlertCircle className="w-4 h-4 text-[#B8860B] shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-[12px] text-[#B8860B] font-medium">JSON Format Required</p>
-                          <p className="text-[11px] text-white/60 mt-0.5">Each item needs: <code className="text-[10px] bg-black/30 px-1 rounded">label</code> (display text), <code className="text-[10px] bg-black/30 px-1 rounded">icon</code> (Lucide icon name).</p>
-                        </div>
-                      </div>
-                      <div className="pl-7 space-y-1.5">
-                        <p className="text-[11px] text-white/50 font-medium">Available Icons:</p>
-                        <p className="text-[10px] text-white/40 leading-relaxed">
-                          Lock, ShieldCheck, Shield, Banknote, Truck, PackageOpen, RefreshCw, CheckCircle2, BadgePercent, Heart, Star, Award, Sparkles, Zap, Clock, MapPin, Phone, Mail, MessageCircle, Globe, CreditCard, Wallet, Search, Eye, ShoppingCart, Package, Box, Leaf, Gem, Crown
-                        </p>
-                        <p className="text-[11px] text-white/50 font-medium mt-1.5">Common Badge Labels:</p>
-                        <p className="text-[10px] text-white/40">SSL Secure, 100% COD, Open Box Delivery, Nationwide Delivery, Fast Delivery, 1 Year Warranty, 7-Day Returns, Cash on Delivery, Secure Checkout, Free Shipping, 100% Original, Money Back Guarantee</p>
+
+                    <h3 className="text-xs font-semibold text-white/80">Security Badges (Footer, Checkout) — JSON</h3>
+                    <textarea
+                      value={formData.security_badges as string || ''}
+                      onChange={(e) => update('security_badges', e.target.value)}
+                      rows={3}
+                      className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/20 focus:border-[#B8860B] focus:bg-white/[0.05] outline-none transition-all text-[12px] resize-none font-mono"
+                      placeholder='[{"label":"SSL Secure","icon":"Lock"},{"label":"100% COD","icon":"Banknote"}]'
+                    />
+
+                    <h3 className="text-xs font-semibold text-white/80">Trust Badges (Homepage) — JSON</h3>
+                    <textarea
+                      value={formData.trust_badges as string || ''}
+                      onChange={(e) => update('trust_badges', e.target.value)}
+                      rows={3}
+                      className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/20 focus:border-[#B8860B] focus:bg-white/[0.05] outline-none transition-all text-[12px] resize-none font-mono"
+                      placeholder='[{"label":"Fast Delivery","icon":"Truck"},{"label":"1 Year Warranty","icon":"ShieldCheck"}]'
+                    />
+
+                    <div className="p-3 bg-[#B8860B]/10 border border-[#B8860B]/20 rounded-lg flex items-start gap-2.5">
+                      <AlertCircle className="w-4 h-4 text-[#B8860B] shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-[12px] text-[#B8860B] font-medium">JSON Format Required</p>
+                        <p className="text-[11px] text-white/60 mt-0.5">Each item needs: <code className="text-[10px] bg-black/30 px-1 rounded">label</code> (display text), <code className="text-[10px] bg-black/30 px-1 rounded">icon</code> (Lucide icon name). Icons are mapped on the frontend.</p>
                       </div>
                     </div>
                   </div>
