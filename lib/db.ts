@@ -22,7 +22,7 @@ const INITIAL_DATA = {
       category_slug: "smartwatches",
       brand: "Apple",
       stock: 45,
-      rating: 4.2,
+      rating: 4.3,
       reviews_count: 86,
       specifications: { "Case": "49mm Titanium", "Display": "Always-On Retina", "Water Resistance": "100m" },
       is_featured: true,

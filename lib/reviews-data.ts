@@ -205,15 +205,12 @@ export function generateProductReviews(
   const maxReviews = Math.min(reviewsCount || 15, 50)
   const actualCount = Math.max(maxReviews, 6)
 
-  // Ensure even low-rated products have at least 25-30% positive reviews
-  // to avoid 0% recommend display
-  const dist = productRating >= 4.8 ? [0.75, 0.15, 0.06, 0.03, 0.01]
-    : productRating >= 4.5 ? [0.60, 0.22, 0.10, 0.05, 0.03]
-    : productRating >= 4.0 ? [0.35, 0.30, 0.20, 0.10, 0.05]
-    : productRating >= 3.5 ? [0.22, 0.28, 0.28, 0.15, 0.07]
-    : productRating >= 3.0 ? [0.18, 0.22, 0.28, 0.20, 0.12]
-    : [0.15, 0.20, 0.25, 0.22, 0.18]
-  // ^ Even for 1-star products: 35% are 4+ star reviews, so recommend% stays >=30%
+  // All products are 4.0+ rated, so distribution stays positive
+  const dist = productRating >= 4.8 ? [0.78, 0.14, 0.06, 0.02, 0]
+    : productRating >= 4.5 ? [0.60, 0.25, 0.10, 0.04, 0.01]
+    : productRating >= 4.3 ? [0.42, 0.30, 0.18, 0.07, 0.03]
+    : productRating >= 4.1 ? [0.30, 0.32, 0.22, 0.11, 0.05]
+    : [0.25, 0.30, 0.25, 0.13, 0.07]
 
   const dates = generateDates(actualCount, baseSeed + 999)
   const allReviews = [...R5, ...R4, ...R3, ...R2, ...R1]
