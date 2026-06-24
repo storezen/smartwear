@@ -22,8 +22,15 @@ function isPublicApi(pathname: string, method: string): boolean {
   if (pathname.startsWith("/api/tiktok")) return true
   // Product feed — needed by TikTok/Google crawlers
   if (pathname.startsWith("/api/feed")) return true
+  // Newsletter — public subscription endpoint
+  // Newsletter — public subscription endpoint
+  if (pathname === "/api/newsletter" && method === "POST") return true
+  // Health check — Vercel monitoring
+  if (pathname === "/api/health") return true
   // Public settings — needed by storefront
   if (pathname.startsWith("/api/public")) return true
+  // PostEx tracking — customer order tracking
+  if (pathname.startsWith("/api/postex/track")) return true
   return false
 }
 

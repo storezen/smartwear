@@ -30891,13 +30891,6 @@
   ],
   "settings": {
     "store_name": "Smartwear Pakistan",
-    "store_phone": "",
-    "store_email": "",
-    "shipping_flat_rate": "250",
-    "postex_api_token": "",
-    "tiktok_pixel_id": "D6S4BBBC77UDAPA3MD20",
-    "tiktok_access_token": "7861f86cf0ead2b9a913efe7740e08d5:bd0da78bd3e46c4fc84b37a73bb15ffc:950a56f4c933fc9ca61eb1d147915381d2b37d6e8658331f9e777c7764834f021a5c0730b8c0af5e",
-    "free_delivery_threshold": 2000,
     "store_tagline": "Premium Watches & Accessories",
     "whatsapp_number": "923001234567",
     "whatsapp_message": "Hi Smartwear! I need help with my order.",
@@ -30913,6 +30906,8 @@
     "social_facebook": "https://facebook.com/smartwear.pk",
     "social_twitter": "https://twitter.com/smartwear_pk",
     "social_youtube": "https://youtube.com/@smartwearpk",
+    "shipping_flat_rate": "250",
+    "free_delivery_threshold": 2000,
     "shipping_standard_rate": 200,
     "shipping_express_rate": 500,
     "cod_available": true,
@@ -30928,7 +30923,12 @@
     "seo_keywords": "smart watches pakistan, analog watches, luxury watches, smartwear, watch store pakistan, premium watches",
     "security_badges": "[{\"label\":\"SSL Secure\",\"icon\":\"Lock\"},{\"label\":\"100% COD\",\"icon\":\"Banknote\"},{\"label\":\"Open Box Delivery\",\"icon\":\"PackageOpen\"},{\"label\":\"Nationwide Delivery\",\"icon\":\"Truck\"}]",
     "trust_badges": "[{\"label\":\"Fast Delivery\",\"icon\":\"Truck\"},{\"label\":\"1 Year Warranty\",\"icon\":\"ShieldCheck\"},{\"label\":\"7-Day Returns\",\"icon\":\"RefreshCw\"},{\"label\":\"Cash on Delivery\",\"icon\":\"Banknote\"},{\"label\":\"Secure Checkout\",\"icon\":\"Lock\"}]",
-    "postex_webhook_secret": ""
+    "postex_api_token": "",
+    "postex_webhook_secret": "",
+    "tiktok_pixel_id": "D6S4BBBC77UDAPA3MD20",
+    "tiktok_access_token": "7861f86cf0ead2b9a913efe7740e08d5:bd0da78bd3e46c4fc84b37a73bb15ffc:950a56f4c933fc9ca61eb1d147915381d2b37d6e8658331f9e777c7764834f021a5c0730b8c0af5e",
+    "store_phone": "",
+    "store_email": ""
   },
   "orders": [
     {
@@ -31190,5 +31190,11 @@
       "usage_count": 0
     }
   ],
-  "analytics": []
+  "analytics": [],
+  "subscribers": [
+    {
+      "email": "test@example.com",
+      "subscribed_at": "2026-06-24T22:51:23.127Z"
+    }
+  ]
 }
