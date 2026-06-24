@@ -125,10 +125,10 @@ export default function CartPage() {
         {items.length === 0 ? (
           <EmptyCart />
         ) : (
-          <div className="grid lg:grid-cols-3 gap-6 md:gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-start">
 
             {/* Items */}
-            <div className="lg:col-span-2 space-y-3.5">
+            <div className="lg:col-span-2 space-y-3.5 min-w-0">
               <ShippingBar subtotal={subtotal} />
 
               {items.map((item, index) => (
@@ -220,7 +220,7 @@ export default function CartPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="lg:col-span-1"
+              className="lg:col-span-1 min-w-0"
             >
               <div
                 className="rounded-2xl p-4 sm:p-6 sticky top-[calc(60px+16px)] backdrop-blur-xl"

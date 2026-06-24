@@ -245,10 +245,10 @@ export default function CheckoutPage() {
       </div>
 
       <div className="sw-container pb-12 md:pb-16">
-        <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
           {/* Left: Delivery Form */}
-          <div className="lg:col-span-2">
-            <div className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 sm:p-8">
+          <div className="lg:col-span-2 min-w-0">
+            <div className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 sm:p-8 w-full">
               <h2 className="text-lg sm:text-xl font-bold text-white mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>
                 <MapPin className="w-5 h-5 text-[#B8860B]" />
                 Delivery Details
@@ -382,8 +382,8 @@ export default function CheckoutPage() {
           </div>
 
           {/* Right: Order Summary */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl">
+          <div className="lg:col-span-1 min-w-0">
+            <div className="sticky top-24 rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl w-full">
               <div className="p-5 sm:p-8">
                 <h3 className="font-bold text-base sm:text-lg text-white mb-5 sm:mb-6" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>
                   Order Summary
