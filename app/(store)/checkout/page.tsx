@@ -194,8 +194,8 @@ export default function CheckoutPage() {
         toast.success('Order placed successfully!', {
           description: `Your order ID is ${orderId}`,
         })
-        clearCart()
         setSuccessModal({ orderId, total })
+        clearCart()
       } else {
         const errorData = await response.json()
         toast.error(errorData.error || 'Order processing failed', {
@@ -212,18 +212,29 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#0C0F14] text-white py-10 md:py-16">
-        <div className="max-w-sm mx-auto text-center px-5">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-5 sm:mb-6 rounded-[24px] bg-white/5 border border-white/10 flex items-center justify-center">
-            <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 text-white/60" />
+      <>
+        <div className="min-h-screen bg-[#0C0F14] text-white py-10 md:py-16">
+          <div className="max-w-sm mx-auto text-center px-5">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-5 sm:mb-6 rounded-[24px] bg-white/5 border border-white/10 flex items-center justify-center">
+              <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 text-white/60" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>Your cart is empty</h1>
+            <p className="text-sm text-white/60 mb-6">Add some products before checkout</p>
+            <Link href="/products">
+              <button className="sw-btn-gold w-full h-12">Continue Shopping</button>
+            </Link>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>Your cart is empty</h1>
-          <p className="text-sm text-white/60 mb-6">Add some products before checkout</p>
-          <Link href="/products">
-            <button className="sw-btn-gold w-full h-12">Continue Shopping</button>
-          </Link>
         </div>
-      </div>
+        <AnimatePresence>
+          {successModal && (
+            <SuccessModal
+              orderId={successModal.orderId}
+              total={successModal.total}
+              onClose={() => setSuccessModal(null)}
+            />
+          )}
+        </AnimatePresence>
+      </>
     )
   }
 
