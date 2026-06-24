@@ -118,6 +118,16 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
 }
 
 export const TikTokEvents = {
+  addToWishlist: (product: { id: string; name: string; price: number }) => {
+    trackTikTokEvent('AddToWishlist', {
+      content_id: product.id,
+      content_type: 'product',
+      content_name: product.name,
+      value: product.price,
+      contents: [{ content_id: product.id, content_type: 'product', content_name: product.name, price: product.price, quantity: 1 }]
+    });
+  },
+
   pageView: () => {
     if (typeof window !== 'undefined' && window.ttq) {
       if (typeof window.ttq.page === 'function') {

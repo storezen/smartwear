@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { Product, WishlistItem } from '@/types'
 import { toast } from 'sonner'
 import Image from 'next/image'
+import { TikTokEvents } from '@/lib/tiktok-pixel'
 
 interface WishlistContextType {
   items: WishlistItem[]
@@ -51,6 +52,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
         </div>,
         { duration: 3000 }
       )
+      try { TikTokEvents.addToWishlist(product) } catch {}
       return [...prevItems, {
         id: Date.now().toString(),
         user_id: '',
