@@ -52,7 +52,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
         </div>,
         { duration: 3000 }
       )
-      try { TikTokEvents.addToWishlist(product) } catch {}
+      try { TikTokEvents.addToWishlist(product, product.category?.name || '') } catch {}
       return [...prevItems, {
         id: Date.now().toString(),
         user_id: '',

@@ -198,7 +198,7 @@ function ProductContent({ product }: { product: any }) {
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
 
   useEffect(() => {
-    if (product) TikTokEvents.viewContent(product)
+    if (product) TikTokEvents.viewContent(product, product.category?.name || '')
   }, [product])
 
   const reviews = useMemo(() =>

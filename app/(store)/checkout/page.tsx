@@ -11,7 +11,7 @@ import { useCart } from '@/context/cart-context'
 import { formatPrice } from '@/lib/mock-data'
 import { detectProvince } from '@/lib/address-validator'
 import { CitySelect } from '@/components/ui/city-select'
-import { TikTokEvents } from '@/lib/tiktok-pixel'
+import { TikTokEvents, identifyUser, storeUserData } from '@/lib/tiktok-pixel'
 import { cn } from '@/lib/utils'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 
@@ -87,10 +87,30 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (items.length > 0) TikTokEvents.initiateCheckout(
-      items.map(item => ({ id: item.product.id, name: item.product.name, price: item.product.price, quantity: item.quantity })),
+      items.map(item => ({
+        id: item.product.id,
+        name: item.product.name,
+        price: item.product.price,
+        quantity: item.quantity,
+        category: item.product.category?.name || '',
+      })),
       subtotal
     )
   }, [])
+
+  // Store PII for TikTok Advanced Matching when user fills form
+  useEffect(() => {
+    if (guestAddress.phone || guestAddress.name) {
+      storeUserData({ phone: guestAddress.phone, name: guestAddress.name })
+    }
+  }, [guestAddress.phone, guestAddress.name])
+
+  // Identify user on order placement for purchase event matching
+  const handleIdentifyUser = () => {
+    if (guestAddress.phone || guestAddress.name) {
+      identifyUser(undefined, guestAddress.phone, guestAddress.name)
+    }
+  }
 
   const shippingCost = subtotal >= freeThreshold ? 0 : shippingRate
   const total = subtotal + shippingCost - (appliedPromo?.discount || 0)
@@ -142,6 +162,7 @@ export default function CheckoutPage() {
   }
 
   const handlePlaceOrder = async () => {
+    handleIdentifyUser()
     if (guestAddress.name.length < 3) {
       toast.error('Please enter your full name')
       return
@@ -598,29 +619,11 @@ function SuccessModal({ orderId, total, onClose }: { orderId: string; total: num
             orderTotal = data.order.total
             orderItems = data.order.items || []
             TikTokEvents.purchase(data.order)
-            fireCapiBackup(data.order)
             return
           }
         }
       } catch {}
       TikTokEvents.purchase({ id: orderId, total: orderTotal, items: orderItems })
-      fireCapiBackup({ id: orderId, total: orderTotal, items: orderItems, phone: '' })
-    }
-
-    const fireCapiBackup = async (order: any) => {
-      try {
-        await fetch('/api/tiktok/purchase', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId: order.id,
-            total: order.total,
-            items: order.items || [],
-            phone: order.phone || order.customer?.phone || '',
-            eventId: order.id,
-          }),
-        })
-      } catch {}
     }
 
     firePurchase()

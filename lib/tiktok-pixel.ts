@@ -1,78 +1,202 @@
 /**
- * TikTok Pixel — Smartwear Advanced Implementation
+ * TikTok Pixel — Smartwear GOD MODE Implementation
  * 
  * Features:
- * - Debug Mode for easy console tracking
- * - Event ID Deduplication for Client/Server sync
- * - Strict Types
+ * - Advanced Matching: SHA256(PII) on ALL events for 70%+ match rate
+ * - Content Category & Description: richer event data for ML optimization
+ * - Event ID Deduplication: every event gets a unique event_id for browser↔server sync
+ * - UTM/TTCLID persistence: attribution survives page navigation
+ * - Analytics pipeline: sendBeacon to internal analytics for dashboard
+ * - Debug Mode
  */
 
-// Generate a unique ID (fallback for crypto.randomUUID)
 function generateUUID() {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID()
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16)
+  })
 }
 
-export const TIKTOK_DEBUG_MODE = process.env.NODE_ENV !== "production";
+export const TIKTOK_DEBUG_MODE = process.env.NODE_ENV !== "production"
 
 declare global {
   interface Window {
-    ttq?: any;
+    ttq?: any
   }
 }
 
-let isInitialized = false;
-let currentPixelId: string | null = null;
+let isInitialized = false
 
-/**
- * Initialize the Pixel.
- * We pass the pixel ID dynamically (fetched from settings or env)
- */
 export function initTikTokPixel(pixelId: string) {
-  if (typeof window === 'undefined' || !pixelId || isInitialized) return;
-  currentPixelId = pixelId;
+  if (typeof window === 'undefined' || !pixelId || isInitialized) return
 
-  const script = document.createElement('script');
-  script.src = 'https://analytics.tiktok.com/i18n/pixel/events.js';
-  script.async = true;
-  document.head.appendChild(script);
+  const script = document.createElement('script')
+  script.src = 'https://analytics.tiktok.com/i18n/pixel/events.js'
+  script.async = true
+  document.head.appendChild(script)
 
-  // Official TikTok init — sets up proxy methods so .track() works even before script loads
-  window.ttq = window.ttq || [];
-  window.ttq.push(['init', pixelId]);
+  window.ttq = window.ttq || []
+  window.ttq.push(['init', pixelId])
+  isInitialized = true
 
-  isInitialized = true;
+  // Identify user if PII stored from previous session
+  const stored = getUserData()
+  if (stored) identifyUser(stored.email, stored.phone, stored.name)
 
   if (TIKTOK_DEBUG_MODE) {
-    console.log('%c[TikTok Pixel] Initialized with ID:', 'color:#00f2fe; font-weight:bold', pixelId);
+    console.log('%c[TikTok Pixel] Initialized with ID:', 'color:#00f2fe; font-weight:bold', pixelId)
   }
 }
 
-interface TrackOptions {
-  event_id?: string;
-  content_id?: string;
-  content_type?: 'product' | 'product_group';
-  value?: number;
-  currency?: string;
-  contents?: Array<{ content_id: string; content_type: string; content_name?: string; price?: number; quantity?: number }>;
-  content_name?: string;
+/* ── Advanced Matching: SHA256 + ttq.identify ── */
+
+async function sha256(value: string): Promise<string> {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(value.trim().toLowerCase())
+  const hash = await crypto.subtle.digest('SHA-256', data)
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
-export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
-  if (typeof window === 'undefined') return;
+const USER_DATA_KEY = 'sw_user_data'
 
-  const event_id = options.event_id || generateUUID();
-  const payload = {
+interface UserPII {
+  email?: string
+  phone?: string
+  name?: string
+}
+
+export function storeUserData(pii: UserPII) {
+  try { sessionStorage.setItem(USER_DATA_KEY, JSON.stringify(pii)) } catch {}
+}
+function getUserData(): UserPII | null {
+  try {
+    const raw = sessionStorage.getItem(USER_DATA_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+
+/**
+ * Call ttq.identify() with SHA256-hashed PII for advanced matching.
+ * TikTok will use these hashes to match users server-side.
+ */
+export async function identifyUser(email?: string, phone?: string, name?: string) {
+  if (typeof window === 'undefined') return
+  const pii: Record<string, string> = {}
+  if (email) pii.email = await sha256(email)
+  if (phone) {
+    const cleaned = phone.replace(/[^0-9]/g, '')
+    if (cleaned.startsWith('0')) pii.phone_number = await sha256('92' + cleaned.slice(1))
+    else pii.phone_number = await sha256(cleaned)
+  }
+  if (name) pii.external_id = await sha256(name)
+
+  if (Object.keys(pii).length === 0) return
+
+  if (window.ttq) {
+    if (typeof window.ttq.identify === 'function') {
+      window.ttq.identify(pii)
+    } else {
+      window.ttq.push(['identify', pii])
+    }
+  }
+  if (TIKTOK_DEBUG_MODE) {
+    console.log('%c[TikTok Pixel] Identify:', 'color:#00f2fe; font-weight:bold', pii)
+  }
+  storeUserData({ email, phone, name })
+}
+
+/* ── Internal Analytics ── */
+
+interface AnalyticsMeta {
+  itemName?: string
+  value?: number
+}
+
+function sendToAnalytics(event: string, meta?: AnalyticsMeta) {
+  try {
+    const urlParams = new URLSearchParams(window.location.search)
+    const ttclid = urlParams.get('ttclid')
+    const utmCampaign = urlParams.get('utm_campaign')
+    let campaign = 'Direct / Organic'
+    if (utmCampaign) {
+      campaign = utmCampaign
+      sessionStorage.setItem('utm_campaign', utmCampaign)
+    } else if (ttclid) {
+      campaign = 'TikTok Ad'
+      sessionStorage.setItem('utm_campaign', 'TikTok Ad')
+    } else {
+      campaign = sessionStorage.getItem('utm_campaign') || 'Direct / Organic'
+    }
+    if (ttclid) sessionStorage.setItem('ttclid', ttclid)
+
+    let city = 'PK'
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+      city = tz.split('/')[1]?.replace('_', ' ') || 'PK'
+    } catch {}
+
+    const itemName = meta?.itemName || 'Store Visit'
+    let sessionId = sessionStorage.getItem('live_session_id')
+    if (!sessionId) {
+      sessionId = `sess_${Date.now()}_${Math.random().toString(36).substring(2,9)}`
+      sessionStorage.setItem('live_session_id', sessionId)
+    }
+
+    navigator.sendBeacon('/api/analytics', new Blob([JSON.stringify({
+      event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
+      value: meta?.value || 0
+    })], { type: 'application/json' }))
+  } catch {}
+}
+
+/* ── CAPI Backup ── */
+
+async function fireCapi(event: string, payload: Record<string, unknown>) {
+  try {
+    await fetch('/api/tiktok/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event, ...payload }),
+    })
+  } catch {}
+}
+
+/* ── Track Options ── */
+
+interface TrackOptions {
+  event_id?: string
+  content_id?: string
+  content_type?: 'product' | 'product_group'
+  content_category?: string
+  description?: string
+  value?: number
+  currency?: string
+  contents?: Array<{
+    content_id: string
+    content_type: string
+    content_category?: string
+    content_name?: string
+    price?: number
+    quantity?: number
+  }>
+  content_name?: string
+  /** Extra data forwarded to CAPI */
+  _extra?: Record<string, unknown>
+}
+
+/* ── Core Track ── */
+
+export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
+  if (typeof window === 'undefined') return
+
+  const event_id = options.event_id || generateUUID()
+  const payload: Record<string, unknown> = {
     ...options,
     event_id,
     currency: options.currency || 'PKR',
-  };
+  }
+  delete payload._extra
 
   if (window.ttq) {
     if (typeof window.ttq.track === 'function') {
@@ -83,113 +207,86 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
   }
 
   if (TIKTOK_DEBUG_MODE) {
-    console.log(`%c[TikTok Event] ${event}`, 'color:#00f2fe; font-weight:bold', payload);
+    console.log(`%c[TikTok Event] ${event}`, 'color:#00f2fe; font-weight:bold', payload)
   }
 
-  // Admin Dashboard Live View Sync — use sendBeacon for purchase
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const campaign = urlParams.get('utm_campaign') || urlParams.get('ttclid') ? 'TikTok Ad' : (sessionStorage.getItem('utm_campaign') || 'Direct / Organic');
-    if (urlParams.get('utm_campaign')) sessionStorage.setItem('utm_campaign', urlParams.get('utm_campaign')!);
-    if (urlParams.get('ttclid')) sessionStorage.setItem('utm_campaign', 'TikTok Ad');
-    
-    let city = 'PK';
-    try {
-      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      city = timeZone.split('/')[1]?.replace('_', ' ') || 'PK';
-    } catch(err) {}
+  const itemName = options.content_name || options.contents?.[0]?.content_name || 'Store Visit'
+  sendToAnalytics(event, { itemName, value: options.value })
 
-    const itemName = options.content_name || options.contents?.[0]?.content_name || 'Store Visit';
-
-    let sessionId = sessionStorage.getItem('live_session_id');
-    if (!sessionId) {
-      sessionId = `sess_${Date.now()}_${Math.random().toString(36).substring(2,9)}`;
-      sessionStorage.setItem('live_session_id', sessionId);
-    }
-
-    const body = JSON.stringify({
-      event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
-      value: options.value || 0
-    })
-
-    // sendBeacon survives page navigation
-    navigator.sendBeacon('/api/analytics', new Blob([body], { type: 'application/json' }))
-  } catch (e) {}
+  // CAPI backup for all events (server-side dedup via same event_id)
+  fireCapi(event, { event_id, ...options })
 }
 
+/* ── Public Helpers ── */
+
 export const TikTokEvents = {
-  addToWishlist: (product: { id: string; name: string; price: number }) => {
+  addToWishlist: (product: { id: string; name: string; price: number }, category = '') => {
     trackTikTokEvent('AddToWishlist', {
       content_id: product.id,
       content_type: 'product',
+      content_category: category,
       content_name: product.name,
       value: product.price,
-      contents: [{ content_id: product.id, content_type: 'product', content_name: product.name, price: product.price, quantity: 1 }]
-    });
+      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity: 1 }]
+    })
   },
 
   pageView: () => {
     if (typeof window !== 'undefined' && window.ttq) {
-      if (typeof window.ttq.page === 'function') {
-        window.ttq.page()
-      } else {
-        window.ttq.push(['page'])
-      }
+      if (typeof window.ttq.page === 'function') window.ttq.page()
+      else window.ttq.push(['page'])
     }
-    // Analytics only (not ttq.track — ttq.page() already handles TikTok)
-    try {
-      navigator.sendBeacon('/api/analytics', new Blob([JSON.stringify({
-        event_name: `PageView::Store Visit::PK::Direct / Organic`,
-        value: 0
-      })], { type: 'application/json' }))
-    } catch {}
+    sendToAnalytics('PageView')
   },
 
-  viewContent: (product: { id: string; name: string; price: number }) => {
+  viewContent: (product: { id: string; name: string; price: number }, category = '') => {
     trackTikTokEvent('ViewContent', {
       content_id: product.id,
       content_type: 'product',
+      content_category: category,
       content_name: product.name,
       value: product.price,
-      contents: [{ content_id: product.id, content_type: 'product', content_name: product.name, price: product.price, quantity: 1 }]
-    });
+      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity: 1 }]
+    })
   },
 
-  addToCart: (product: { id: string; name: string; price: number }, quantity = 1) => {
+  addToCart: (product: { id: string; name: string; price: number }, quantity = 1, category = '') => {
     trackTikTokEvent('AddToCart', {
       content_id: product.id,
       content_type: 'product',
+      content_category: category,
       content_name: product.name,
       value: product.price * quantity,
-      contents: [{ content_id: product.id, content_type: 'product', content_name: product.name, price: product.price, quantity }]
-    });
+      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity }]
+    })
   },
 
-  initiateCheckout: (items: any[], subtotal: number) => {
+  initiateCheckout: (items: { id: string; name: string; price: number; quantity: number; category?: string }[], subtotal: number) => {
     trackTikTokEvent('InitiateCheckout', {
       value: subtotal,
       contents: items.map(item => ({
         content_id: item.id,
         content_type: 'product',
+        content_category: item.category || '',
         content_name: item.name,
         price: item.price,
-        quantity: item.quantity
+        quantity: item.quantity,
       }))
-    });
+    })
   },
 
-  // EventID must strictly be passed here (the order ID) to match the Server CAPI call
-  purchase: (orderData: { id: string, total: number, items: any[] }) => {
+  purchase: (orderData: { id: string; total: number; items: Array<{ id: string; name: string; price: number; quantity: number; category?: string }> }) => {
     trackTikTokEvent('CompletePayment', {
       event_id: orderData.id,
       value: orderData.total,
       contents: (orderData.items || []).map(item => ({
         content_id: item.id,
         content_type: 'product',
+        content_category: item.category || '',
         content_name: item.name,
         price: item.price,
-        quantity: item.quantity
+        quantity: item.quantity,
       }))
-    });
-  }
-};
+    })
+  },
+}

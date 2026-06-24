@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle, Package, ArrowRight, MapPin, Truck, Star, Home, Calendar } from 'lucide-react'
-import { TikTokEvents } from '@/lib/tiktok-pixel'
+import { TikTokEvents, identifyUser } from '@/lib/tiktok-pixel'
 import { formatPrice } from '@/lib/mock-data'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 
@@ -80,33 +80,12 @@ function SuccessContent() {
           const data = await res.json()
           if (data.order) {
             setOrderDetails(data.order)
-            orderTotal = data.order.total
-            orderItems = data.order.items || []
             TikTokEvents.purchase(data.order)
-            // Server-side CAPI backup (bypasses pixel SDK issues)
-            fireCapiBackup(data.order)
             return
           }
         }
       } catch (_) {}
       TikTokEvents.purchase({ id: orderId, total: orderTotal, items: orderItems })
-      fireCapiBackup({ id: orderId, total: orderTotal, items: orderItems, phone: '' })
-    }
-
-    const fireCapiBackup = async (order: any) => {
-      try {
-        await fetch('/api/tiktok/purchase', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId: order.id,
-            total: order.total,
-            items: order.items || [],
-            phone: order.phone || order.customer?.phone || '',
-            eventId: order.id,
-          }),
-        })
-      } catch {}
     }
 
     firePurchase()

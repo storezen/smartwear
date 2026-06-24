@@ -30,7 +30,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
   useEffect(() => {
     if (isOpen && product) {
       TikTokEvents.initiateCheckout(
-        [{ id: product.id, name: product.name, price: product.price, quantity }],
+        [{ id: product.id, name: product.name, price: product.price, quantity, category: product.category?.name || '' }],
         product.price * quantity
       )
     }
