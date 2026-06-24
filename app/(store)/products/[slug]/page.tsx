@@ -4,8 +4,9 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { use } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
-import { Minus, Plus, Star, Heart, ShoppingBag, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote, MessageSquare, Send } from 'lucide-react'
+import { Minus, Plus, Star, Heart, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote } from 'lucide-react'
 import { ProductCard } from '@/components/store/premium-product-card'
 import { getProductBySlug as getProductBySlugMock, formatPrice, products } from '@/lib/mock-data'
 import type { Review } from '@/types'
@@ -16,7 +17,6 @@ import { useCart } from '@/context/cart-context'
 import { TikTokEvents } from '@/lib/tiktok-pixel'
 import { cn } from '@/lib/utils'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
-import { QuickBuyModal } from '@/components/store/quick-buy-modal'
 import { PurchaseNotification } from '@/components/store/purchase-notification'
 import { toast } from 'sonner'
 
@@ -176,20 +176,16 @@ export default function ProductPage({ params }: ProductPageProps) {
 }
 
 function ProductContent({ product }: { product: any }) {
+  const router = useRouter()
   const [quantity, setQuantity] = useState(1)
   const [selectedImage, setSelectedImage] = useState(0)
   const [isWishlisted, setIsWishlisted] = useState(false)
-  const [addedToCart, setAddedToCart] = useState(false)
-  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description')
-  const [isQuickBuyOpen, setIsQuickBuyOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<'description' | 'specs'>('description')
   
   // Psychological Triggers (FOMO & Urgency)
   const [viewers] = useState(() => Math.floor(Math.random() * 25) + 12)
-  const [stockLeft] = useState(() => (product.stock > 10 ? Math.floor(Math.random() * 6) + 3 : product.stock))
+  const stockLeft = product.stock
   
-
-
-  // Innovation: Lume Mode State (Glow in the dark)
   const [lumeMode, setLumeMode] = useState(false)
   const [selectedColor, setSelectedColor] = useState<string | null>(product?.colors?.[0] || null)
   
@@ -256,16 +252,6 @@ function ProductContent({ product }: { product: any }) {
   const discount = product.compare_price
     ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
     : 0
-
-  const handleAddToCart = () => {
-    if (product.colors && product.colors.length > 0 && !selectedColor) {
-      toast.error('Please select a color')
-      return
-    }
-    addToCart(product, quantity, selectedColor || undefined)
-    setAddedToCart(true)
-    setTimeout(() => setAddedToCart(false), 2200)
-  }
 
   const specs = Object.entries(product.specifications || {})
 
@@ -412,7 +398,7 @@ function ProductContent({ product }: { product: any }) {
                   </div>
                   
                   {/* Urgency / Scarcity (Stock Left) */}
-                  {product.stock > 0 && (
+                  {stockLeft > 0 && stockLeft <= 5 && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-4 bg-red-500/10 border border-red-500/20 rounded-xl p-3">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                         <span className="text-[10px] md:text-xs font-semibold text-red-400 uppercase tracking-wider flex items-center gap-1">
@@ -453,6 +439,134 @@ function ProductContent({ product }: { product: any }) {
                   </div>
                 </div>
               </motion.div>
+
+              {/* Trust & Guarantees */}
+              <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3} className="grid grid-cols-2 gap-y-5 gap-x-2 bg-white/[0.03] border border-white/5 rounded-2xl p-5">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2 text-white">
+                    <CheckCircle2 className="w-4 h-4 text-[#B8860B]" />
+                    <span className="text-xs font-bold uppercase tracking-wider">100% Original</span>
+                  </div>
+                  <span className="text-[10px] text-white/50 pl-6 leading-tight">Guaranteed Authentic</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2 text-white">
+                    <Banknote className="w-4 h-4 text-[#B8860B]" />
+                    <span className="text-xs font-bold uppercase tracking-wider">Cash on Delivery</span>
+                  </div>
+                  <span className="text-[10px] text-white/50 pl-6 leading-tight">Pay when you receive</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2 text-white">
+                    <Shield className="w-4 h-4 text-[#B8860B]" />
+                    <span className="text-xs font-bold uppercase tracking-wider">1 Year Warranty</span>
+                  </div>
+                  <span className="text-[10px] text-white/50 pl-6 leading-tight">International Coverage</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2 text-white">
+                    <RotateCcw className="w-4 h-4 text-[#B8860B]" />
+                    <span className="text-xs font-bold uppercase tracking-wider">7 Days Return</span>
+                  </div>
+                  <span className="text-[10px] text-white/50 pl-6 leading-tight">Money Back Guarantee</span>
+                </div>
+              </motion.div>
+
+              {/* Inline Reviews */}
+              {displayedReviews.length > 0 && (
+                <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3.5} className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex gap-0.5">
+                        {[1,2,3,4,5].map((s) => (
+                          <Star key={s} className={cn("w-3 h-3", s <= Math.round(product.rating || 0) ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10")} />
+                        ))}
+                      </div>
+                      <span className="text-xs font-semibold text-white">{product.rating}</span>
+                      <span className="text-[10px] text-white/50">({allReviews.length})</span>
+                      <span className="text-[10px] text-emerald-400 font-medium bg-emerald-500/10 px-1.5 py-0.5 rounded-full">{recommendPct}% recommend</span>
+                    </div>
+                    <button
+                      onClick={() => setShowReviewForm(true)}
+                      className="text-[10px] text-[#B8860B] hover:text-[#D4A017] font-semibold transition-colors"
+                    >
+                      + Write
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {displayedReviews.slice(0, 3).map((rev) => (
+                      <div key={rev.id} className="flex items-start gap-2.5 bg-white/[0.02] border border-white/5 rounded-xl p-3">
+                        <div className="w-7 h-7 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-xs shrink-0">
+                          {rev.user_name.charAt(0)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs font-medium text-white truncate">{rev.user_name}</p>
+                            <div className="flex gap-0.5">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star key={i} className={cn("w-2.5 h-2.5", i < rev.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/5 text-white/10")} />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-[11px] text-white/60 mt-0.5 line-clamp-2 leading-relaxed">{rev.comment}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {allReviews.length > 3 && (
+                    <button
+                      onClick={() => setShowAllReviews(true)}
+                      className="w-full py-2 text-[10px] font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
+                    >
+                      View All {allReviews.length} Reviews
+                    </button>
+                  )}
+
+                  {/* Write Review Form */}
+                  {showReviewForm && (
+                    <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-semibold text-white">Write a Review</p>
+                        <button
+                          onClick={() => { setShowReviewForm(false); setReviewForm({ user_name: "", rating: 5, comment: "" }) }}
+                          className="text-[10px] text-white/40 hover:text-white"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        value={reviewForm.user_name}
+                        onChange={(e) => setReviewForm(prev => ({ ...prev, user_name: e.target.value }))}
+                        placeholder="Your name"
+                        className="w-full h-9 px-3 text-sm rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] outline-none transition-all"
+                      />
+                      <div className="flex gap-1">
+                        {[1,2,3,4,5].map((s) => (
+                          <button key={s} type="button" onClick={() => setReviewForm(prev => ({ ...prev, rating: s }))}>
+                            <Star className={cn("w-5 h-5", s <= reviewForm.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10")} />
+                          </button>
+                        ))}
+                      </div>
+                      <textarea
+                        value={reviewForm.comment}
+                        onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
+                        placeholder={reviewForm.rating >= 4 ? "What did you like?" : "What could be improved?"}
+                        rows={2}
+                        className="w-full px-3 py-2 text-sm rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] outline-none transition-all resize-none"
+                      />
+                      <button
+                        onClick={handleSubmitReview}
+                        className="sw-btn-gold px-4 h-8 text-[10px] font-bold uppercase tracking-widest rounded-lg"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  )}
+                </motion.div>
+              )}
 
               {/* Color Selection */}
               {product.colors && product.colors.length > 0 && (
@@ -504,72 +618,24 @@ function ProductContent({ product }: { product: any }) {
                   </button>
                 </div>
 
-                <div className="flex flex-col space-y-3 mt-4 md:mt-0">
-                  <button
-                    onClick={() => setIsQuickBuyOpen(true)}
-                    disabled={product.stock === 0}
-                    className="group relative w-full h-16 rounded-xl bg-gradient-to-r from-green-600 to-emerald-500 overflow-hidden shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:shadow-[0_0_40px_rgba(16,185,129,0.5)] transition-all sw-interactive disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {/* Shimmer Effect */}
-                    <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                    
-                    <div className="relative flex flex-col items-center justify-center h-full">
-                      <div className="flex items-center gap-2 text-white font-bold text-base uppercase tracking-widest">
-                        <Zap className="w-5 h-5 fill-white animate-pulse" /> Quick Buy (COD)
-                      </div>
-                      <span className="text-white/80 text-[10px] font-medium tracking-widest uppercase mt-0.5">Order in 30 seconds</span>
+                <button
+                  onClick={() => {
+                    addToCart(product, quantity, selectedColor || undefined)
+                    router.push('/checkout')
+                  }}
+                  disabled={product.stock === 0}
+                  className="group relative w-full h-16 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_30px_rgba(184,134,11,0.3)] hover:shadow-[0_0_40px_rgba(184,134,11,0.5)] transition-all sw-interactive disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  <div className="relative flex flex-col items-center justify-center h-full">
+                    <div className="flex items-center gap-3 text-[#0C0F14] font-bold text-base uppercase tracking-widest">
+                      <Truck className="w-5 h-5" /> Quick Buy — Pay on Delivery
                     </div>
-                  </button>
-                  <button
-                    onClick={handleAddToCart}
-                    disabled={product.stock === 0}
-                    className="relative w-full h-14 rounded-xl bg-[#0F1923] border border-white/10 text-white text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/5 hover:border-[#B8860B]/50 transition-colors flex items-center justify-center sw-interactive"
-                  >
-                    <AnimatePresence mode="wait">
-                      {addedToCart ? (
-                        <motion.div key="success" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} className="flex items-center gap-2 text-[#B8860B]">
-                          <CheckCircle2 className="w-4 h-4" /> Added to Cart
-                        </motion.div>
-                      ) : (
-                        <motion.div key="add" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} className="flex items-center gap-2">
-                          <ShoppingBag className="w-4 h-4" /> Add to Cart
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </button>
-                </div>
-              </motion.div>
-
-              {/* Trust & Guarantees */}
-              <motion.div initial="hidden" animate="show" variants={fadeUp} custom={5} className="pt-6 border-t border-white/5 grid grid-cols-2 gap-y-5 gap-x-2">
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2 text-white">
-                    <CheckCircle2 className="w-4 h-4 text-[#B8860B]" />
-                    <span className="text-xs font-bold uppercase tracking-wider">100% Original</span>
+                    <span className="text-[#0C0F14]/70 text-[10px] font-medium tracking-widest uppercase mt-0.5">
+                      {formatPrice(product.price * quantity)}
+                    </span>
                   </div>
-                  <span className="text-[10px] text-white/50 pl-6 leading-tight">Guaranteed Authentic</span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2 text-white">
-                    <Banknote className="w-4 h-4 text-[#B8860B]" />
-                    <span className="text-xs font-bold uppercase tracking-wider">Cash on Delivery</span>
-                  </div>
-                  <span className="text-[10px] text-white/50 pl-6 leading-tight">Pay when you receive</span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2 text-white">
-                    <Shield className="w-4 h-4 text-[#B8860B]" />
-                    <span className="text-xs font-bold uppercase tracking-wider">1 Year Warranty</span>
-                  </div>
-                  <span className="text-[10px] text-white/50 pl-6 leading-tight">International Coverage</span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2 text-white">
-                    <RotateCcw className="w-4 h-4 text-[#B8860B]" />
-                    <span className="text-xs font-bold uppercase tracking-wider">7 Days Return</span>
-                  </div>
-                  <span className="text-[10px] text-white/50 pl-6 leading-tight">Money Back Guarantee</span>
-                </div>
+                </button>
               </motion.div>
             </div>
           </div>
@@ -583,7 +649,6 @@ function ProductContent({ product }: { product: any }) {
               {[
                 { key: 'description' as const, label: 'Description' },
                 { key: 'specs' as const, label: 'Specifications' },
-                { key: 'reviews' as const, label: `Reviews` },
               ].map((tab) => (
                 <button
                   key={tab.key}
@@ -595,7 +660,7 @@ function ProductContent({ product }: { product: any }) {
                       : "text-white/50 hover:text-white hover:bg-white/5"
                   )}
                 >
-                  {tab.key === 'reviews' ? `Reviews (${reviews.length})` : tab.label}
+                  {tab.label}
                 </button>
               ))}
             </div>
@@ -668,191 +733,7 @@ function ProductContent({ product }: { product: any }) {
                 </motion.div>
               )}
 
-              {activeTab === 'reviews' && (
-                <motion.div key="reviews" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-3xl">
-                  {/* Rating Summary */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 p-6 rounded-2xl bg-white/[0.02] border border-white/10 mb-6">
-                    <div className="text-center sm:text-left shrink-0">
-                      <p className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
-                        {product.rating || 0}
-                      </p>
-                      <div className="flex gap-0.5 mt-1 justify-center sm:justify-start">
-                        {[1,2,3,4,5].map((s) => (
-                          <Star key={s} className={cn("w-3.5 h-3.5", s <= Math.round(product.rating || 0) ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10")} />
-                        ))}
-                      </div>
-                      <p className="text-white/50 text-xs mt-1">{allReviews.length} reviews</p>
-                    </div>
-                    <div className="flex-1 w-full space-y-1.5">
-                      {[5,4,3,2,1].map((star) => {
-                        const count = allReviews.filter(r => Math.round(r.rating) === star).length
-                        const pct = allReviews.length > 0 ? (count / allReviews.length) * 100 : 0
-                        return (
-                          <div key={star} className="flex items-center gap-2 text-xs">
-                            <span className="text-white/60 w-3 shrink-0">{star}</span>
-                            <Star className="w-3 h-3 fill-[#B8860B] text-[#B8860B] shrink-0" />
-                            <div className="flex-1 h-1.5 rounded-full bg-white/5 overflow-hidden">
-                              <div className="h-full rounded-full bg-gradient-to-r from-[#B8860B] to-[#D4A017]" style={{ width: `${pct}%` }} />
-                            </div>
-                            <span className="text-white/40 w-8 text-right">{count}</span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                    <div className="text-center sm:text-right shrink-0">
-                      <p className="text-2xl font-bold text-emerald-400">{recommendPct}%</p>
-                      <p className="text-white/50 text-xs">Recommend</p>
-                    </div>
-                  </div>
 
-                  {/* Sort & Write */}
-                  <div className="flex items-center justify-between gap-3 mb-6">
-                    <div className="flex items-center gap-1 bg-white/[0.02] border border-white/10 rounded-xl p-0.5">
-                      {(['recent', 'highest', 'lowest'] as const).map((s) => (
-                        <button
-                          key={s}
-                          onClick={() => setSortBy(s)}
-                          className={cn(
-                            "px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider rounded-lg transition-all",
-                            sortBy === s ? "bg-[#B8860B] text-[#0C0F14]" : "text-white/50 hover:text-white"
-                          )}
-                        >
-                          {s === 'recent' ? 'Recent' : s === 'highest' ? 'Highest' : 'Lowest'}
-                        </button>
-                      ))}
-                    </div>
-                    <button
-                      onClick={() => setShowReviewForm(true)}
-                      className="text-[11px] font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors flex items-center gap-1.5 shrink-0"
-                    >
-                      <MessageSquare className="w-3.5 h-3.5" /> Write Review
-                    </button>
-                  </div>
-
-                  {/* Write a Review Form */}
-                  {showReviewForm && (
-                    <div className="p-5 md:p-6 rounded-2xl bg-white/[0.02] border border-white/10 mb-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-white font-semibold text-sm">Write a Review</h4>
-                        <button
-                          onClick={() => { setShowReviewForm(false); setReviewForm({ user_name: "", rating: 5, comment: "" }) }}
-                          className="text-white/40 hover:text-white text-xs transition-colors"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="text-xs text-white/50 block mb-1.5">Your Name</label>
-                          <input
-                            type="text"
-                            value={reviewForm.user_name}
-                            onChange={(e) => setReviewForm(prev => ({ ...prev, user_name: e.target.value }))}
-                            placeholder="e.g. Ahmad Raza"
-                            className="w-full h-10 px-4 text-sm rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] focus:bg-white/[0.08] outline-none transition-all"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-xs text-white/50 block mb-1.5">Rating</label>
-                          <div className="flex gap-1.5">
-                            {[1,2,3,4,5].map((s) => (
-                              <button
-                                key={s}
-                                type="button"
-                                onClick={() => setReviewForm(prev => ({ ...prev, rating: s }))}
-                                className="transition-all sw-interactive"
-                              >
-                                <Star className={cn("w-6 h-6", s <= reviewForm.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10 hover:fill-[#B8860B]/30 hover:text-[#B8860B]/30")} />
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <label className="text-xs text-white/50 block mb-1.5">Your Review</label>
-                          <textarea
-                            value={reviewForm.comment}
-                            onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
-                            placeholder={reviewForm.rating >= 4 ? "What did you like about this product?" : "What could be improved?"}
-                            rows={3}
-                            className="w-full px-4 py-3 text-sm rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] focus:bg-white/[0.08] outline-none transition-all resize-none"
-                          />
-                        </div>
-                        <button
-                          onClick={handleSubmitReview}
-                          className="sw-btn-gold px-6 h-10 text-xs font-bold uppercase tracking-widest rounded-xl flex items-center gap-2"
-                        >
-                          <Send className="w-3.5 h-3.5" /> Submit Review
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Review Cards */}
-                  <div className="space-y-5">
-                    {displayedReviews.length > 0 ? (
-                      <>
-                        {displayedReviews.map((rev, idx) => (
-                          <SpotlightCard key={rev.id} className="p-5 md:p-6">
-                            {idx === 0 && sortBy === 'recent' && (
-                              <div className="flex items-center gap-1.5 mb-3">
-                                <span className="text-[10px] font-bold text-[#B8860B] bg-[#B8860B]/10 border border-[#B8860B]/20 px-2 py-0.5 rounded-full uppercase tracking-wider">Featured Review</span>
-                              </div>
-                            )}
-                            <div className="flex items-start justify-between mb-3">
-                              <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-base md:text-lg shrink-0">
-                                  {rev.user_name.charAt(0)}
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <p className="font-semibold text-white text-sm">{rev.user_name}</p>
-                                    {rev.is_verified && (
-                                      <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-medium flex items-center gap-0.5">
-                                        <CheckCircle2 className="w-2.5 h-2.5" /> Verified
-                                      </span>
-                                    )}
-                                  </div>
-                                  <p className="text-xs text-white/60">{new Date(rev.created_at).toLocaleDateString()}</p>
-                                </div>
-                              </div>
-                              <div className="flex gap-0.5 shrink-0">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                  <Star key={i} className={cn("w-3 h-3 md:w-3.5 md:h-3.5", i < rev.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/5 text-white/10")} />
-                                ))}
-                              </div>
-                            </div>
-                            <p className="text-white/70 text-sm leading-relaxed">{rev.comment}</p>
-
-                            {rev.seller_response && (
-                              <div className="mt-4 pl-4 border-l-2 border-[#B8860B]/30 bg-white/[0.02] rounded-r-xl p-3">
-                                <p className="text-[11px] font-semibold text-[#B8860B] uppercase tracking-wider mb-1">Smartwear Response</p>
-                                <p className="text-white/60 text-sm">{rev.seller_response}</p>
-                              </div>
-                            )}
-
-                            {rev.helpful_count !== undefined && rev.helpful_count > 0 && (
-                              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-white/40">
-                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                                <span>{rev.helpful_count} people found this helpful</span>
-                              </div>
-                            )}
-                          </SpotlightCard>
-                        ))}
-                        {allReviews.length > 5 && !showAllReviews && (
-                          <button
-                            onClick={() => setShowAllReviews(true)}
-                            className="w-full py-3 text-sm font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
-                          >
-                            View All {allReviews.length} Reviews
-                          </button>
-                        )}
-                      </>
-                    ) : (
-                      <p className="text-white/60 text-center py-8">No reviews yet. Be the first to review this product.</p>
-                    )}
-                  </div>
-                </motion.div>
-              )}
             </AnimatePresence>
           </div>
         </motion.div>
@@ -877,29 +758,22 @@ function ProductContent({ product }: { product: any }) {
 
       <PurchaseNotification productName={product.name} />
 
-      <QuickBuyModal 
-        product={product} 
-        quantity={quantity}
-        isOpen={isQuickBuyOpen} 
-        onClose={() => setIsQuickBuyOpen(false)} 
-      />
-
       {/* Mobile Sticky Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0C0F14]/90 backdrop-blur-xl border-t border-white/10 p-4 md:hidden flex gap-3 pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0C0F14]/90 backdrop-blur-xl border-t border-white/10 p-4 md:hidden pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <button
-          onClick={handleAddToCart}
+          onClick={() => {
+            addToCart(product, quantity, selectedColor || undefined)
+            router.push('/checkout')
+          }}
           disabled={product.stock === 0}
-          className="flex-1 h-14 rounded-xl bg-[#0F1923] border border-white/10 text-white text-xs font-bold uppercase tracking-widest disabled:opacity-50 flex items-center justify-center sw-interactive"
-        >
-          <ShoppingBag className="w-4 h-4 mr-1.5" /> Cart
-        </button>
-        <button
-          onClick={() => setIsQuickBuyOpen(true)}
-          disabled={product.stock === 0}
-          className="flex-[1.5] h-14 rounded-xl bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive relative overflow-hidden"
+          className="group relative w-full h-14 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_20px_rgba(184,134,11,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive"
         >
           <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          <Zap className="w-4 h-4 mr-1.5 fill-white relative z-10" /> <span className="relative z-10">Quick Buy</span>
+          <div className="relative z-10 flex items-center justify-center gap-3 text-[#0C0F14] font-bold text-xs uppercase tracking-widest">
+            <Truck className="w-4 h-4" />
+            <span>Quick Buy — Pay on Delivery</span>
+            <span className="text-sm font-black">{formatPrice(product.price * quantity)}</span>
+          </div>
         </button>
       </div>
     </div>

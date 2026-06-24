@@ -9,14 +9,12 @@ import { cn } from "@/lib/utils"
 import { useCart } from "@/context/cart-context"
 import { useWishlist } from "@/context/wishlist-context"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
-import { QuickBuyModal } from "@/components/store/quick-buy-modal"
 
 import { useRouter } from "next/navigation"
 
 export function ProductCard({ product, className }: { product: Product; className?: string }) {
   const router = useRouter()
   const [imgErr, setImgErr] = useState(false)
-  const [isQuickBuyOpen, setIsQuickBuyOpen] = useState(false)
   
   const { addToCart } = useCart()
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
@@ -38,7 +36,10 @@ export function ProductCard({ product, className }: { product: Product; classNam
   const handleQuickBuy = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (inStock) setIsQuickBuyOpen(true)
+    if (inStock) {
+      addToCart(product, 1)
+      router.push('/checkout')
+    }
   }
 
   const handleWishlist = (e: React.MouseEvent) => {
@@ -186,11 +187,6 @@ export function ProductCard({ product, className }: { product: Product; classNam
         </SpotlightCard>
       </div>
 
-      <QuickBuyModal 
-        product={product} 
-        isOpen={isQuickBuyOpen} 
-        onClose={() => setIsQuickBuyOpen(false)} 
-      />
     </>
   )
 }
