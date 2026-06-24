@@ -500,21 +500,22 @@ export async function getSettings() {
     const { data, error } = await supabase.from('settings').select('*').single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getSettings error:', error)
 
+    let fromSupabase: Record<string, unknown> = {}
     if (data) {
       // Strip null values so they don't override defaults
-      const clean: Record<string, unknown> = {}
       for (const [k, v] of Object.entries(data)) {
-        if (v !== null) clean[k] = v
+        if (v !== null) fromSupabase[k] = v
       }
-      return { ...SETTINGS_DEFAULTS, ...clean }
     }
 
-    // Fallback: try local file (works in /tmp on Vercel)
+    // Merge with local file backup (fills in any keys missing from Supabase table)
     try {
       const db = await getDb()
-      return { ...SETTINGS_DEFAULTS, ...db.settings }
+      const fromFile = db.settings || {}
+      return { ...SETTINGS_DEFAULTS, ...fromFile, ...fromSupabase }
     } catch {}
-    return { ...SETTINGS_DEFAULTS }
+
+    return { ...SETTINGS_DEFAULTS, ...fromSupabase }
   }
 
   const db = await getDb()
@@ -530,20 +531,29 @@ export async function updateSettings(updates: any) {
     const current = await getSettings()
     const merged = { ...current, ...updates }
 
-    // Try upsert with ALL keys first (works when all columns exist in Supabase)
-    const { data, error } = await supabase.from('settings').upsert({ id: 1, ...merged }).select().single()
-    if (!error && data) {
-      // Also write to local fallback (works on Vercel /tmp, harmless if read-only)
-      try {
-        const db = await getDb()
-        db.settings = merged
-        await saveDb(db)
-      } catch {}
-      return data
-    }
+    // Always save to local file as backup (Vercel /tmp fallback)
+    try {
+      const db = await getDb()
+      db.settings = merged
+      await saveDb(db)
+    } catch {}
 
-    console.error("Supabase updateSettings (all keys) failed:", error?.message)
-    return { ...current, ...updates }
+    // Try ALL keys first (works when all Supabase columns exist)
+    const { data, error } = await supabase.from('settings').upsert({ id: 1, ...merged }).select().single()
+    if (!error && data) return data
+
+    console.warn("Supabase upsert (all keys) failed, retrying with known columns:", error?.message)
+
+    // Fallback: only known columns (some might be missing from table)
+    const filtered: Record<string, unknown> = { id: 1 }
+    for (const [key, value] of Object.entries(merged)) {
+      if (KNOWN_SETTINGS_COLUMNS.has(key)) filtered[key] = value
+    }
+    const { data: data2, error: error2 } = await supabase.from('settings').upsert(filtered).select().single()
+    if (!error2 && data2) return data2
+
+    console.error("Supabase upsert (filtered) also failed:", error2?.message)
+    return merged
   }
   const db = await getDb()
   db.settings = { ...db.settings, ...updates }
