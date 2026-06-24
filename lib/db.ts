@@ -512,7 +512,7 @@ export async function getSettings() {
     try {
       const db = await getDb()
       const fromFile = db.settings || {}
-      return { ...SETTINGS_DEFAULTS, ...fromSupabase, ...fromFile }
+      return { ...SETTINGS_DEFAULTS, ...fromFile, ...fromSupabase }
     } catch {}
 
     return { ...SETTINGS_DEFAULTS, ...fromSupabase }
