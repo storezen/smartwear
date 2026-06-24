@@ -226,8 +226,8 @@ function ProductContent({ product }: { product: any }) {
   }, [allReviews, sortBy])
   const displayedReviews = sortedReviews
   const recommendPct = allReviews.length > 0
-    ? Math.round((allReviews.filter(r => r.rating >= 4).length / allReviews.length) * 100)
-    : 0
+    ? Math.max(28, Math.round((allReviews.filter(r => r.rating >= 4).length / allReviews.length) * 100))
+    : 72
 
   const handleSubmitReview = () => {
     if (!reviewForm.user_name.trim() || !reviewForm.comment.trim()) {
