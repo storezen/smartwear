@@ -195,18 +195,52 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
 
   useEffect(() => { if (open && inputRef.current) setTimeout(() => inputRef.current?.focus(), 100) }, [open])
 
+  const reverseGeocodeRef = useRef<typeof reverseGeocode>(null!)
+
   useEffect(() => {
-    if (open && initialCity) {
-      const coords = getCityCoordinates(initialCity)
-      if (coords) {
-        setCenter([coords.lat, coords.lng])
-        setZoom(CITY_ZOOM)
-        setSelectedCity(initialCity)
-        setAddressDetail(prev => ({ ...prev, city: initialCity, province: detectProvince(initialCity) }))
-        setSearchQuery(initialCity)
+    if (!open) return
+    const rg = reverseGeocodeRef.current
+    if (!rg) return
+    const initAddress = async () => {
+      const addr = initialAddress && initialAddress.length > 5 ? initialAddress : null
+      if (addr) {
+        const cacheKey = `geo:${addr.toLowerCase().trim()}`
+        const cached = SEARCH_CACHE.get(cacheKey)
+        if (cached && cached.length > 0) {
+          const best = cached[0]
+          setMarkerPos([best.lat, best.lng]); setCenter([best.lat, best.lng]); setZoom(STREET_ZOOM)
+          setSelectedCity(best.city); setSearchQuery(best.shortName)
+          rg(best.lat, best.lng)
+          return
+        }
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}&limit=3&addressdetails=1&countrycodes=pk&accept-language=en`,
+            { headers: { "User-Agent": "SmartwearApp/1.0" } }
+          )
+          const data = await res.json()
+          if (data && data.length > 0) {
+            const r = data[0]; const a = r.address || {}
+            const c = a.city || a.town || a.village || a.county || a.state || initialCity || ""
+            const items: SearchItem[] = [{
+              lat: Number(r.lat), lng: Number(r.lon), displayName: r.display_name, city: c,
+              type: "street", shortName: r.display_name.split(",")[0]?.trim() || r.display_name,
+            }]
+            SEARCH_CACHE.set(cacheKey, items)
+            setMarkerPos([Number(r.lat), Number(r.lon)]); setCenter([Number(r.lat), Number(r.lon)]); setZoom(STREET_ZOOM)
+            setSelectedCity(c); setSearchQuery(addr)
+            rg(Number(r.lat), Number(r.lon))
+            return
+          }
+        } catch {}
+      }
+      if (initialCity) {
+        const coords = getCityCoordinates(initialCity)
+        if (coords) { setCenter([coords.lat, coords.lng]); setZoom(CITY_ZOOM); setSelectedCity(initialCity); setAddressDetail(prev => ({ ...prev, city: initialCity, province: detectProvince(initialCity) })); setSearchQuery(initialCity) }
       }
     }
-  }, [open, initialCity])
+    initAddress()
+  }, [open])
 
   useEffect(() => {
     if (markerPos && addressDetail.city) {
@@ -325,6 +359,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
     setShowDetailPanel(true)
     fetchNearbyLandmarks(lat, lng)
   }, [fetchNearbyLandmarks])
+  reverseGeocodeRef.current = reverseGeocode
 
   const placePin = useCallback((lat: number, lng: number, city?: string) => {
     setMarkerPos([lat, lng]); setCenter([lat, lng]); setZoom(STREET_ZOOM); setShowSaved(false)
