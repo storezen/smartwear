@@ -78,7 +78,7 @@ export function useRealtimeAnalytics(
       setError("Network error — check your connection")
       return false
     }
-  }, [])
+  }, [from, to])
 
   const subscribe = useCallback(() => {
     if (!isSupabaseConfigured()) {
@@ -211,7 +211,7 @@ export function useRealtimeAnalytics(
       mountedRef.current = false
       stopPolling()
     }
-  }, [])
+  }, [fetchData, subscribe, startPolling, stopPolling])
 
   const retry = useCallback(async () => {
     setReconnecting(true)

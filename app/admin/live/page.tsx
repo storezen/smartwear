@@ -130,9 +130,9 @@ export default function LiveAnalyticsPage() {
   const [isClearing, setIsClearing] = useState(false)
   const now = useClock()
 
-  const handleDateChange = (range: DateRange) => {
+  const handleDateChange = (key: string, range: DateRange) => {
     setDateRange(range)
-    setDateRangeKey(range.label)
+    setDateRangeKey(key)
   }
 
   const handleClear = async () => {
