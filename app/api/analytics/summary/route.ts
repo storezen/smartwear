@@ -8,18 +8,24 @@ import { parseEvent, computeSummary } from "@/lib/analytics"
 const globalAny: any = global
 globalAny.liveAnalytics = globalAny.liveAnalytics || []
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url)
+    const from = searchParams.get("from")
+    const to = searchParams.get("to")
+    const fromDate = from ? new Date(from).toISOString() : new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+    const toDate = to ? new Date(to).toISOString() : new Date().toISOString()
+
     let events: any[] = []
 
     if (env.NODE_ENV === "production" && supabase) {
-      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
       const { data, error } = await supabase
         .from("analytics")
         .select("*")
-        .gte("timestamp", twoHoursAgo)
+        .gte("timestamp", fromDate)
+        .lte("timestamp", toDate)
         .order("timestamp", { ascending: false })
-        .limit(200)
+        .limit(5000)
 
       if (!error && data) {
         events = data.map(parseEvent)
@@ -29,9 +35,13 @@ export async function GET() {
     }
 
     if (events.length === 0) {
-      const cutoff = Date.now() - 2 * 60 * 60 * 1000
+      const fromTs = new Date(fromDate).getTime()
+      const toTs = new Date(toDate).getTime()
       events = (globalAny.liveAnalytics || [])
-        .filter((e: any) => new Date(e.timestamp).getTime() >= cutoff)
+        .filter((e: any) => {
+          const t = new Date(e.timestamp).getTime()
+          return t >= fromTs && t <= toTs
+        })
         .map(parseEvent)
     }
 

@@ -8,25 +8,35 @@ import { parseEvent } from "@/lib/analytics"
 const globalAny: any = global
 globalAny.liveAnalytics = globalAny.liveAnalytics || []
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url)
+    const from = searchParams.get("from")
+    const to = searchParams.get("to")
+    const fromDate = from ? new Date(from).toISOString() : new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+    const toDate = to ? new Date(to).toISOString() : new Date().toISOString()
+
     if (env.NODE_ENV === "production" && supabase) {
-      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
       const { data, error } = await supabase
         .from("analytics")
         .select("*")
-        .gte("timestamp", twoHoursAgo)
+        .gte("timestamp", fromDate)
+        .lte("timestamp", toDate)
         .order("timestamp", { ascending: false })
-        .limit(200)
+        .limit(5000)
 
       if (!error && data) {
         return NextResponse.json(data.map(parseEvent))
       }
       console.warn("Supabase Analytics GET Error (falling back to memory):", error?.message)
     }
-    const cutoff = Date.now() - 2 * 60 * 60 * 1000
+    const fromTs = new Date(fromDate).getTime()
+    const toTs = new Date(toDate).getTime()
     const filtered = globalAny.liveAnalytics.filter(
-      (e: any) => new Date(e.timestamp).getTime() >= cutoff
+      (e: any) => {
+        const t = new Date(e.timestamp).getTime()
+        return t >= fromTs && t <= toTs
+      }
     )
     return NextResponse.json(filtered.map(parseEvent))
   } catch (error) {
@@ -50,8 +60,8 @@ export async function POST(req: Request) {
     }
 
     globalAny.liveAnalytics.unshift(newEvent)
-    if (globalAny.liveAnalytics.length > 500) {
-      globalAny.liveAnalytics.length = 500
+    if (globalAny.liveAnalytics.length > 10000) {
+      globalAny.liveAnalytics.length = 10000
     }
 
     if (env.NODE_ENV === "production" && supabase) {

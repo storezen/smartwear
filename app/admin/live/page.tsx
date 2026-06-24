@@ -14,6 +14,8 @@ import { HotProducts } from "@/components/ui/hot-products"
 import { PakistanMap } from "@/components/ui/pakistan-map"
 import { HealthCheckPanel } from "@/components/ui/health-check-panel"
 import { LiveEventsFeed } from "@/components/ui/live-events-feed"
+import { DateRangeSelector } from "@/components/ui/date-range-selector"
+import type { DateRange } from "@/components/ui/date-range-selector"
 
 const LiveGlobe = dynamic(() => import("@/components/ui/live-globe"), { ssr: false })
 const PremiumGlobe = dynamic(() => import("@/components/ui/premium-globe").then((m) => ({ default: m.PremiumGlobe })), { ssr: false })
@@ -101,6 +103,13 @@ function StatusBadge({ status, reconnecting, error, retry }: { status: Connectio
 }
 
 export default function LiveAnalyticsPage() {
+  const [dateRange, setDateRange] = useState<DateRange>({
+    label: "Live (2h)",
+    from: new Date(Date.now() - 2 * 60 * 60 * 1000),
+    to: new Date(),
+  })
+  const [dateRangeKey, setDateRangeKey] = useState("live")
+
   const {
     events,
     summary,
@@ -110,12 +119,21 @@ export default function LiveAnalyticsPage() {
     retry,
     reconnecting,
     lastUpdated,
-  } = useRealtimeAnalytics({ pollInterval: 1500 })
+  } = useRealtimeAnalytics({
+    pollInterval: 1500,
+    from: dateRange.from.toISOString(),
+    to: dateRange.to.toISOString(),
+  })
 
   const [viewMode, setViewMode] = useState<"globe" | "map">("globe")
   const [globeEngine, setGlobeEngine] = useState<"premium" | "classic">("premium")
   const [isClearing, setIsClearing] = useState(false)
   const now = useClock()
+
+  const handleDateChange = (range: DateRange) => {
+    setDateRange(range)
+    setDateRangeKey(range.label)
+  }
 
   const handleClear = async () => {
     if (!confirm("Are you sure you want to clear all live analytics data?")) return
@@ -141,7 +159,7 @@ export default function LiveAnalyticsPage() {
   return (
     <div>
       {/* ── Toolbar (globe toggle + health + clear) ── */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <StatusBadge status={status} reconnecting={reconnecting} error={error} retry={retry} />
           {lastUpdated && (
@@ -153,6 +171,7 @@ export default function LiveAnalyticsPage() {
               </span>
             </>
           )}
+          <DateRangeSelector value={dateRangeKey} onChange={handleDateChange} />
         </div>
 
         <div className="flex items-center gap-1.5">

@@ -6,6 +6,8 @@ export type ConnectionStatus = "connecting" | "connected" | "degraded" | "discon
 
 interface UseRealtimeAnalyticsOptions {
   pollInterval?: number
+  from?: string
+  to?: string
 }
 
 interface UseRealtimeAnalyticsResult {
@@ -17,10 +19,11 @@ interface UseRealtimeAnalyticsResult {
   retry: () => void
   reconnecting: boolean
   lastUpdated: Date | null
+  dateRange: { from?: string; to?: string }
 }
 
 export function useRealtimeAnalytics(
-  { pollInterval = 3000 }: UseRealtimeAnalyticsOptions = {}
+  { pollInterval = 3000, from, to }: UseRealtimeAnalyticsOptions = {}
 ): UseRealtimeAnalyticsResult {
   const [events, setEvents] = useState<AnalyticsEvent[]>([])
   const [summary, setSummary] = useState<LiveSummary | null>(null)
@@ -47,9 +50,12 @@ export function useRealtimeAnalytics(
 
   const fetchData = useCallback(async () => {
     try {
+      const params = new URLSearchParams({ t: String(Date.now()) })
+      if (from) params.set("from", from)
+      if (to) params.set("to", to)
       const [eventsRes, summaryRes] = await Promise.all([
-        fetch(`/api/analytics?t=${Date.now()}`, { cache: "no-store" }),
-        fetch(`/api/analytics/summary?t=${Date.now()}`, { cache: "no-store" }),
+        fetch(`/api/analytics?${params}`, { cache: "no-store" }),
+        fetch(`/api/analytics/summary?${params}`, { cache: "no-store" }),
       ])
       if (!eventsRes.ok || !summaryRes.ok) {
         setError("API returned an error")
@@ -254,5 +260,6 @@ export function useRealtimeAnalytics(
     retry,
     reconnecting,
     lastUpdated,
+    dateRange: { from, to },
   }
 }
