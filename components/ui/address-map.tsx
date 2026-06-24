@@ -6,7 +6,7 @@ import L from "leaflet"
 import { MapPin, Search, X, Star, Map as MapIcon, Building2, Route, Navigation, Clock, ShieldCheck, AlertTriangle, Layers, Home, Briefcase, MapPinned, CheckCircle2, Landmark, Sparkles, Truck, Hash, CircleHelp } from "lucide-react"
 import { toast } from "sonner"
 import "leaflet/dist/leaflet.css"
-import { getAllCities, isPostexServiceable, detectProvince } from "@/lib/address-validator"
+import { getAllCities, isPostexServiceable, detectProvince, getCityCoordinates } from "@/lib/address-validator"
 
 const iconUrl = "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png"
 const iconRetinaUrl = "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png"
@@ -139,9 +139,11 @@ function normalizeCity(input: string): string {
 
 interface AddressMapProps {
   onSelect: (result: AddressMapResult) => void
+  initialAddress?: string
+  initialCity?: string
 }
 
-export default function AddressMap({ onSelect }: AddressMapProps) {
+export default function AddressMap({ onSelect, initialAddress, initialCity }: AddressMapProps) {
   const [open, setOpen] = useState(false)
   const [center, setCenter] = useState<[number, number]>(PAKISTAN_CENTER)
   const [zoom, setZoom] = useState(DEFAULT_ZOOM)
@@ -192,6 +194,19 @@ export default function AddressMap({ onSelect }: AddressMapProps) {
   }, [showSaved])
 
   useEffect(() => { if (open && inputRef.current) setTimeout(() => inputRef.current?.focus(), 100) }, [open])
+
+  useEffect(() => {
+    if (open && initialCity) {
+      const coords = getCityCoordinates(initialCity)
+      if (coords) {
+        setCenter([coords.lat, coords.lng])
+        setZoom(CITY_ZOOM)
+        setSelectedCity(initialCity)
+        setAddressDetail(prev => ({ ...prev, city: initialCity, province: detectProvince(initialCity) }))
+        setSearchQuery(initialCity)
+      }
+    }
+  }, [open, initialCity])
 
   useEffect(() => {
     if (markerPos && addressDetail.city) {

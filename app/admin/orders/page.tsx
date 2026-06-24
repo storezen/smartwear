@@ -668,91 +668,199 @@ export default function AdminOrdersPage() {
 
       {/* PostEx Confirmation Modal */}
       {showPostexModal && selectedOrder && typeof document !== 'undefined' && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto shadow-2xl">
-            <div className="sticky top-0 z-10 bg-[#0a0a0a] border-b border-white/5 px-6 py-4 flex items-center justify-between">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4">
+          <div className="bg-[#0a0a0a] border border-white/10 rounded-none sm:rounded-2xl w-full max-w-4xl mx-0 sm:mx-4 overflow-hidden shadow-2xl flex flex-col max-h-screen sm:max-h-[90vh]">
+            <div className="sticky top-0 z-10 bg-[#0a0a0a] border-b border-white/5 px-4 sm:px-6 py-4 flex items-center justify-between shrink-0">
               <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                <Edit3 className="w-4 h-4 text-[#B8860B]" /> Review PostEx Booking
+                <Package className="w-4 h-4 text-[#B8860B]" /> Review & Verify — PostEx Booking
               </h2>
               <button onClick={() => setShowPostexModal(false)} className="text-white/40 hover:text-white/70 transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 space-y-5">
-              <div className="space-y-4">
-                <div>
-                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Customer Name</label>
-                  <input type="text" value={postexForm.customerName} onChange={e => setPostexForm(p => ({ ...p, customerName: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
-                </div>
-                <div>
-                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Phone</label>
-                  <input type="text" value={postexForm.phone} onChange={e => setPostexForm(p => ({ ...p, phone: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
-                </div>
-                <div>
-                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Delivery Address</label>
-                  <textarea value={postexForm.address} onChange={e => setPostexForm(p => ({ ...p, address: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 resize-none min-h-[60px]" />
-                </div>
-                <AddressMap onSelect={(result) => {
-                  setPostexForm(p => ({
-                    ...p,
-                    address: result.formattedAddress,
-                    city: result.city || p.city,
-                  }))
-                }} />
-                <div>
-                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5">City</label>
-                  <CitySelect
-                    value={postexForm.city}
-                    onChange={(city) => setPostexForm(p => ({ ...p, city, province: detectProvince(city) }))}
-                    className="bg-[#141414]"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Order Type</label>
-                  <select value={postexForm.orderType} onChange={e => setPostexForm(p => ({ ...p, orderType: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30">
-                    {POSTEX_ORDER_TYPES.map(type => (
-                      <option key={type} value={type} className="bg-[#141414]">{type}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
+
+            <div className="flex flex-col lg:flex-row flex-1 min-h-0">
+              {/* ===== LEFT: Order Summary (read-only reference) ===== */}
+              <div className="lg:w-[280px] shrink-0 border-b lg:border-b-0 lg:border-r border-white/5 overflow-y-auto bg-black/20">
+                <div className="p-4 sm:p-5 space-y-4">
+
+                  {/* Customer */}
                   <div>
-                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Order Total (Rs.)</label>
-                    <input type="number" value={postexForm.amount} onChange={e => setPostexForm(p => ({ ...p, amount: Number(e.target.value) }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                    <h4 className="text-[10px] uppercase tracking-wider text-white/30 mb-2 flex items-center gap-1">
+                      <User className="w-3 h-3" /> Customer
+                    </h4>
+                    <p className="text-sm text-white font-medium">{selectedOrder.customer_name || 'Guest'}</p>
+                    <p className="text-xs text-white/50 mt-0.5">{selectedOrder.phone}</p>
                   </div>
+
+                  {/* Shipping Address (original) */}
+                  {selectedOrder.shipping_address && (
+                    <div>
+                      <h4 className="text-[10px] uppercase tracking-wider text-white/30 mb-2 flex items-center gap-1">
+                        <MapPin className="w-3 h-3" /> Original Address
+                      </h4>
+                      <p className="text-xs text-white/70 leading-relaxed">{selectedOrder.shipping_address.address_line1}</p>
+                      <p className="text-xs text-white/50 mt-0.5">
+                        {selectedOrder.shipping_address.city}
+                        {selectedOrder.shipping_address.country ? `, ${selectedOrder.shipping_address.country}` : ''}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Order Items */}
                   <div>
-                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Booking Weight (kg)</label>
-                    <input type="number" step="0.1" value={postexForm.bookingWeight} onChange={e => setPostexForm(p => ({ ...p, bookingWeight: Number(e.target.value) }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+                    <h4 className="text-[10px] uppercase tracking-wider text-white/30 mb-2 flex items-center gap-1">
+                      <Package className="w-3 h-3" /> Items ({selectedOrder.items?.length || 0})
+                    </h4>
+                    <div className="space-y-2">
+                      {selectedOrder.items?.map((item: any, i: number) => (
+                        <div key={i} className="flex items-center gap-2.5 bg-white/5 rounded-lg px-2.5 py-2">
+                          <span className="text-[9px] font-bold text-[#B8860B] bg-[#B8860B]/10 w-4 h-4 flex items-center justify-center rounded shrink-0">
+                            {item.quantity}
+                          </span>
+                          <span className="text-[11px] text-white/80 truncate flex-1">{item.name}</span>
+                          {item.price && (
+                            <span className="text-[10px] text-white/50 shrink-0">Rs. {Number(item.price).toLocaleString()}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Province</label>
-                    <input type="text" value={postexForm.province} onChange={e => setPostexForm(p => ({ ...p, province: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white/70 focus:outline-none focus:border-white/30" />
+
+                  {/* Order Totals */}
+                  <div className="bg-white/5 rounded-lg px-3 py-2.5 space-y-1">
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-white/50">Subtotal</span>
+                      <span className="text-white/80">Rs. {Number(selectedOrder.subtotal || selectedOrder.total || 0).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-white/50">Shipping</span>
+                      <span className="text-white/80">Rs. {Number(selectedOrder.shipping || 0).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-[11px] font-medium border-t border-white/5 pt-1 mt-1">
+                      <span className="text-white/70">Total</span>
+                      <span className="text-[#B8860B]">Rs. {Number(selectedOrder.total || 0).toLocaleString()}</span>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Pickup Address Code</label>
-                    <input type="text" value={postexForm.pickupAddressCode} onChange={e => setPostexForm(p => ({ ...p, pickupAddressCode: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Order #</label>
-                    <div className="w-full bg-[#141414] border border-white/5 rounded-lg px-3.5 py-2.5 text-sm text-white/60 font-mono">{selectedOrder.id}</div>
-                  </div>
-                </div>
-                <div>
-                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Order Detail</label>
-                  <input type="text" value={postexForm.orderDetail} onChange={e => setPostexForm(p => ({ ...p, orderDetail: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30" />
+
+                  {/* Order ID */}
+                  <div className="text-[9px] text-white/20 font-mono">Order #{selectedOrder.id}</div>
                 </div>
               </div>
-              <div className="flex gap-3 pt-2">
-                <button onClick={() => setShowPostexModal(false)} className="flex-1 border border-white/10 hover:bg-white/5 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">Cancel</button>
-                <button onClick={handlePostexConfirm} disabled={postexBooking} className="flex-1 bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(184,134,11,0.3)] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+
+              {/* ===== RIGHT: Editable Form ===== */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="p-4 sm:p-5 space-y-4">
+                  <h4 className="text-[10px] uppercase tracking-wider text-white/30 flex items-center gap-1">
+                    <Edit3 className="w-3 h-3 text-[#B8860B]" /> Editable Booking Details
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 block">Customer Name</label>
+                      <input type="text" value={postexForm.customerName} onChange={e => setPostexForm(p => ({ ...p, customerName: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B8860B] transition-colors" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 block">Phone</label>
+                      <input type="text" value={postexForm.phone} onChange={e => setPostexForm(p => ({ ...p, phone: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B8860B] transition-colors" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 flex items-center gap-1">
+                      <MapPin className="w-3 h-3" /> Delivery Address <span className="text-white/20">(edit or verify with map)</span>
+                    </label>
+                    <textarea value={postexForm.address} onChange={e => setPostexForm(p => ({ ...p, address: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B8860B] transition-colors resize-none min-h-[60px]" />
+                  </div>
+
+                  <AddressMap
+                    onSelect={(result) => {
+                      setPostexForm(p => ({
+                        ...p,
+                        address: result.formattedAddress,
+                        city: result.city || p.city,
+                      }))
+                    }}
+                    initialAddress={selectedOrder.shipping_address?.address_line1}
+                    initialCity={selectedOrder.shipping_address?.city}
+                  />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 block">City</label>
+                      <CitySelect
+                        value={postexForm.city}
+                        onChange={(city) => setPostexForm(p => ({ ...p, city, province: detectProvince(city) }))}
+                        className="bg-[#141414]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 block">Province</label>
+                      <input type="text" value={postexForm.province} onChange={e => setPostexForm(p => ({ ...p, province: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white/70 focus:outline-none focus:border-[#B8860B] transition-colors" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 block">Order Type</label>
+                      <select value={postexForm.orderType} onChange={e => setPostexForm(p => ({ ...p, orderType: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B8860B] transition-colors">
+                        {POSTEX_ORDER_TYPES.map(type => (
+                          <option key={type} value={type} className="bg-[#141414]">{type}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 block">Order Total (Rs.)</label>
+                      <input type="number" value={postexForm.amount} onChange={e => setPostexForm(p => ({ ...p, amount: Number(e.target.value) }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B8860B] transition-colors" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 block">Weight (kg)</label>
+                      <input type="number" step="0.1" value={postexForm.bookingWeight} onChange={e => setPostexForm(p => ({ ...p, bookingWeight: Number(e.target.value) }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B8860B] transition-colors" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 block">Pickup Address Code</label>
+                      <input type="text" value={postexForm.pickupAddressCode} onChange={e => setPostexForm(p => ({ ...p, pickupAddressCode: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B8860B] transition-colors" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-white/40 mb-1 block">Order Detail</label>
+                      <input type="text" value={postexForm.orderDetail} onChange={e => setPostexForm(p => ({ ...p, orderDetail: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B8860B] transition-colors" />
+                    </div>
+                  </div>
+
+                  {/* PostEx address verification help */}
+                  {postexForm.city && (
+                    <div className="flex items-start gap-2.5 bg-[#B8860B]/5 border border-[#B8860B]/10 rounded-lg px-3.5 py-3">
+                      <MapPin className="w-4 h-4 text-[#B8860B] shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-[11px] text-white/70 font-medium">Address Verification</p>
+                        <p className="text-[10px] text-white/40 mt-0.5 leading-relaxed">
+                          Use the map above to verify the customer's location. You can also edit any field if the customer provided incorrect details.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-t border-white/5 shrink-0 bg-black/30">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-white/30">
+                  Verify details before booking
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button onClick={() => setShowPostexModal(false)} className="px-4 py-2 text-xs text-white/60 hover:text-white transition-colors">
+                  Cancel
+                </button>
+                <button onClick={handlePostexConfirm} disabled={postexBooking} className="px-6 py-2 bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black text-xs font-bold rounded-lg hover:shadow-[0_0_20px_rgba(184,134,11,0.3)] transition-all disabled:opacity-40 flex items-center gap-2">
                   {postexBooking ? (
-                    <>Booking...</>
+                    <><RotateCw className="w-3.5 h-3.5 animate-spin" /> Booking...</>
                   ) : (
-                    <><Truck className="w-3.5 h-3.5" /> Confirm & Ship</>
+                    <><Truck className="w-3.5 h-3.5" /> Confirm & Ship to PostEx</>
                   )}
                 </button>
               </div>
