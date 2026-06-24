@@ -15,6 +15,7 @@ import { decodeProductSlug, productApiPath, productPagePath, resolveProductSlug 
 
 import { useCart } from '@/context/cart-context'
 import { TikTokEvents } from '@/lib/tiktok-pixel'
+import { ProductSchema } from '@/components/store/product-schema'
 import { cn } from '@/lib/utils'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { PurchaseNotification } from '@/components/store/purchase-notification'
@@ -257,6 +258,7 @@ function ProductContent({ product }: { product: any }) {
 
   return (
     <div className={cn("min-h-screen text-white overflow-x-hidden w-full max-w-full transition-colors duration-1000", lumeMode ? "bg-[#000000]" : "bg-[#0C0F14]")}>
+      <ProductSchema product={product} />
       {/* Background glow elements */}
       <div className={cn("fixed top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full blur-[150px] pointer-events-none transition-all duration-1000", lumeMode ? "opacity-[0.1] bg-emerald-500" : "opacity-[0.15] bg-[#B8860B]")} />
       <div className={cn("fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[150px] pointer-events-none transition-all duration-1000", lumeMode ? "opacity-[0.05] bg-green-400" : "opacity-[0.1] bg-[#D4A017]")} />
