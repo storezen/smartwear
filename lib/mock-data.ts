@@ -91,7 +91,7 @@ export const products: Product[] = [
     category: categories[0],
     brand: 'Apple',
     stock: 18,
-    rating: 4.9,
+    rating: 4.7,
     reviews_count: 87,
     specifications: {
       'Case': '49mm Titanium',
@@ -119,7 +119,7 @@ export const products: Product[] = [
     category: categories[0],
     brand: 'Samsung',
     stock: 31,
-    rating: 4.7,
+    rating: 4.3,
     reviews_count: 64,
     specifications: {
       'Display': '1.5" Super AMOLED',
@@ -146,7 +146,7 @@ export const products: Product[] = [
     category: categories[0],
     brand: 'Google',
     stock: 24,
-    rating: 4.6,
+    rating: 4.0,
     reviews_count: 41,
     specifications: {
       'Display': '1.4" AMOLED',
@@ -174,7 +174,7 @@ export const products: Product[] = [
     category: categories[1],
     brand: 'Seiko',
     stock: 29,
-    rating: 4.8,
+    rating: 4.6,
     reviews_count: 112,
     specifications: {
       'Movement': 'Automatic 4R36',
@@ -200,7 +200,7 @@ export const products: Product[] = [
     category: categories[1],
     brand: 'Citizen',
     stock: 37,
-    rating: 4.5,
+    rating: 3.9,
     reviews_count: 58,
     specifications: {
       'Movement': 'Eco-Drive (Solar)',
@@ -226,7 +226,7 @@ export const products: Product[] = [
     category: categories[1],
     brand: 'Orient',
     stock: 52,
-    rating: 4.7,
+    rating: 4.5,
     reviews_count: 93,
     specifications: {
       'Movement': 'Automatic F6724',
@@ -254,7 +254,7 @@ export const products: Product[] = [
     category: categories[2],
     brand: 'Lumina',
     stock: 87,
-    rating: 4.8,
+    rating: 4.2,
     reviews_count: 134,
     specifications: {
       'Material': 'Surgical Stainless Steel',
@@ -280,7 +280,7 @@ export const products: Product[] = [
     category: categories[2],
     brand: 'Lumina',
     stock: 64,
-    rating: 4.6,
+    rating: 3.5,
     reviews_count: 76,
     specifications: {
       'Material': 'Premium Cotton Canvas',
@@ -305,7 +305,7 @@ export const products: Product[] = [
     category: categories[2],
     brand: 'Lumina',
     stock: 41,
-    rating: 4.9,
+    rating: 4.4,
     reviews_count: 29,
     specifications: {
       'Capacity': '2 Watches',
