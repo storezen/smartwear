@@ -6,6 +6,7 @@ import { resolveProductSlug } from './product-url'
 import { supabase } from './supabase'
 
 const DB_PATH = path.join(process.cwd(), 'database.json')
+const TMP_DB_PATH = '/tmp/database.json'
 
 // Initial Structure
 const INITIAL_DATA = {
@@ -100,9 +101,20 @@ export async function getDb(retries = 3): Promise<any> {
   }
 
   try {
-    // Attempt to read from the static database.json file first!
-    const data = await fs.readFile(DB_PATH, 'utf-8')
-    const parsed = JSON.parse(data)
+    // In production, try /tmp first (writable on Vercel), then project root
+    const readPaths = env.NODE_ENV === 'production' ? [TMP_DB_PATH, DB_PATH] : [DB_PATH]
+    let rawData: string | null = null
+    for (const p of readPaths) {
+      try {
+        rawData = await fs.readFile(p, 'utf-8')
+        break
+      } catch {
+        continue
+      }
+    }
+    if (!rawData) throw Object.assign(new Error('No database file found'), { code: 'ENOENT' })
+
+    const parsed = JSON.parse(rawData)
     parsed.products = parsed.products || []
     parsed.orders = parsed.orders || []
     parsed.marketing = parsed.marketing || []
@@ -114,9 +126,15 @@ export async function getDb(retries = 3): Promise<any> {
     return parsed
   } catch (error: any) {
     if (error.code === 'ENOENT') {
-      // If file doesn't exist, fallback to INITIAL_DATA
-      if (env.NODE_ENV !== 'production') {
-        await fs.writeFile(DB_PATH, JSON.stringify(INITIAL_DATA, null, 2))
+      // If file doesn't exist, create it
+      const writePaths = env.NODE_ENV === 'production' ? [TMP_DB_PATH, DB_PATH] : [DB_PATH]
+      for (const p of writePaths) {
+        try {
+          await fs.writeFile(p, JSON.stringify(INITIAL_DATA, null, 2))
+          break
+        } catch {
+          continue
+        }
       }
       globalAny.memoryDb = JSON.parse(JSON.stringify(INITIAL_DATA))
       return globalAny.memoryDb
@@ -133,11 +151,20 @@ export async function getDb(retries = 3): Promise<any> {
   }
 }
 
-export async function saveDb(data: any) {
+export async function saveDb(data: any, targetPath = DB_PATH) {
   globalAny.memoryDb = data
-  const tempPath = `${DB_PATH}.tmp.${Date.now()}`
-  await fs.writeFile(tempPath, JSON.stringify(data, null, 2))
-  await fs.rename(tempPath, DB_PATH)
+  // On Vercel, project root is read-only — try /tmp fallback
+  const paths = env.NODE_ENV === 'production' ? [DB_PATH, TMP_DB_PATH] : [targetPath]
+  for (const p of paths) {
+    try {
+      const tempPath = `${p}.tmp.${Date.now()}`
+      await fs.writeFile(tempPath, JSON.stringify(data, null, 2))
+      await fs.rename(tempPath, p)
+      return // success — stop
+    } catch {
+      continue // try next path
+    }
+  }
 }
 
 // --- Helper Functions ---
@@ -472,8 +499,22 @@ export async function getSettings() {
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('settings').select('*').single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getSettings error:', error)
-    // Merge so all fields are present even if column is missing in Supabase
-    return { ...SETTINGS_DEFAULTS, ...data }
+
+    if (data) {
+      // Strip null values so they don't override defaults
+      const clean: Record<string, unknown> = {}
+      for (const [k, v] of Object.entries(data)) {
+        if (v !== null) clean[k] = v
+      }
+      return { ...SETTINGS_DEFAULTS, ...clean }
+    }
+
+    // Fallback: try local file (works in /tmp on Vercel)
+    try {
+      const db = await getDb()
+      return { ...SETTINGS_DEFAULTS, ...db.settings }
+    } catch {}
+    return { ...SETTINGS_DEFAULTS }
   }
 
   const db = await getDb()
@@ -487,17 +528,21 @@ export async function getSettings() {
 export async function updateSettings(updates: any) {
   if (env.NODE_ENV === 'production' && supabase) {
     const current = await getSettings()
-    // Only upsert columns that actually exist in Supabase (skip unknown ones)
-    const payload: Record<string, unknown> = { id: 1 }
-    for (const [key, value] of Object.entries({ ...current, ...updates })) {
-      if (KNOWN_SETTINGS_COLUMNS.has(key)) {
-        payload[key] = value
-      }
+    const merged = { ...current, ...updates }
+
+    // Try upsert with ALL keys first (works when all columns exist in Supabase)
+    const { data, error } = await supabase.from('settings').upsert({ id: 1, ...merged }).select().single()
+    if (!error && data) {
+      // Also write to local fallback (works on Vercel /tmp, harmless if read-only)
+      try {
+        const db = await getDb()
+        db.settings = merged
+        await saveDb(db)
+      } catch {}
+      return data
     }
-    const { data, error } = await supabase.from('settings').upsert(payload).select().single()
-    if (!error && data) return data
-    console.error("Supabase updateSettings failed:", error?.message)
-    // If column doesn't exist yet, Supabase will error — return merged result anyway
+
+    console.error("Supabase updateSettings (all keys) failed:", error?.message)
     return { ...current, ...updates }
   }
   const db = await getDb()
