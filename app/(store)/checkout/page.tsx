@@ -86,7 +86,10 @@ export default function CheckoutPage() {
   }, [])
 
   useEffect(() => {
-    if (items.length > 0) TikTokEvents.initiateCheckout(items, subtotal)
+    if (items.length > 0) TikTokEvents.initiateCheckout(
+      items.map(item => ({ id: item.product.id, name: item.product.name, price: item.product.price, quantity: item.quantity })),
+      subtotal
+    )
   }, [])
 
   const shippingCost = subtotal >= freeThreshold ? 0 : shippingRate
