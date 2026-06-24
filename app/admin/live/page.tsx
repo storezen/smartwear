@@ -110,6 +110,8 @@ export default function LiveAnalyticsPage() {
   })
   const [dateRangeKey, setDateRangeKey] = useState("live")
 
+  const isLive = dateRangeKey === "live"
+
   const {
     events,
     summary,
@@ -120,7 +122,7 @@ export default function LiveAnalyticsPage() {
     reconnecting,
     lastUpdated,
   } = useRealtimeAnalytics({
-    pollInterval: 1500,
+    pollInterval: isLive ? 1500 : 0,
     from: dateRange.from.toISOString(),
     to: dateRange.to.toISOString(),
   })

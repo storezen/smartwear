@@ -143,6 +143,7 @@ export function useRealtimeAnalytics(
 
   const startPolling = useCallback(() => {
     if (pollRef.current) clearInterval(pollRef.current)
+    if (pollInterval <= 0) return
     pollRef.current = setInterval(fetchData, pollInterval)
   }, [fetchData, pollInterval])
 
