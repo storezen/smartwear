@@ -11,7 +11,7 @@ export function WhatsAppButton() {
 
   if (!number) return null
 
-  const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+  const url = `https://api.whatsapp.com/send/?phone=${number}&text=${encodeURIComponent(message)}&type=phone_number&app_absent=0`
 
   return (
     <motion.div
