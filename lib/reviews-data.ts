@@ -157,28 +157,28 @@ const SHORT_4: RawReview[] = [
 ]
 
 const SHORT_3: RawReview[] = [
-  { rating: 3, text: "Average product hai. Umeed se thora km mila." },
-  { rating: 3, text: "Theek thaak hai. Kuch khaas nhi." },
-  { rating: 3, text: "Kaam to kr rha hai lakin utna smooth nhi." },
-  { rating: 3, text: "Price k hisaab se theek hai. Warna nhi leta." },
-  { rating: 3, text: "Mixed feelings. Kuch acha hai kuch nhi." },
-  { rating: 3, text: "Product acha hai lakin jaldi kharab ho gya." },
-  { rating: 3, text: "Middle of the road product. Theek hai." },
-  { rating: 3, text: "Ziyada acha nhi lakin kaam chl jata hai." },
+  { rating: 3, text: "Design acha hai or features b theek hain lakin battery timing average hai. Overall theek hai." },
+  { rating: 3, text: "Build quality achi hai lakin kuch features utne smooth nhi chlte. Price k hisaab se theek." },
+  { rating: 3, text: "Product to acha hai lakin jesa socha tha utna aala nhi nikla. Kaam chl jata hai." },
+  { rating: 3, text: "Looks achy hain or delivery b time pr aai lakin performance mein thora gap hai." },
+  { rating: 3, text: "Quality theek hai. Kuch cheezein achi hain kuch average. Overall koi masla nhi." },
+  { rating: 3, text: "Seller bohat acha hai lakin product mein improvement ki gunnjaish hai. 3 star." },
+  { rating: 3, text: "Display bright hai lakin battery zyada der nhi chlti. Baqi sab theek hai." },
+  { rating: 3, text: "Achi product hai lakin expected se thora km hai. COD par liya to risk nhi tha." },
 ]
 
 const SHORT_2: RawReview[] = [
-  { rating: 2, text: "Expected better quality. Thora disappointment hai." },
-  { rating: 2, text: "Product utna acha nhi hai jitna dikhaya gya." },
-  { rating: 2, text: "Quality theek nhi hai. Paisa waste ho gya." },
-  { rating: 2, text: "Kuch din mein hi problem start ho gai." },
-  { rating: 2, text: "Jesi quality expect ki thi wesi nhi mili." },
+  { rating: 2, text: "Design acha hai lakin quality utni achi nhi jitni expect ki thi. Improvement chahiye." },
+  { rating: 2, text: "Jo dikhaya gya us se thora farq tha. Kaam to kr rha hai lakin aisa nhi jesa socha tha." },
+  { rating: 2, text: "Looks achy hain lakin material quality theek nhi. Thora time use k bad hi issues aane lage." },
+  { rating: 2, text: "Product kaam krta hai lakin jaldi kharab ho gya. Seller ne help ki lakin der hui." },
+  { rating: 2, text: "Product theek hai lakin jitni ummeed thi utna acha nhi nikla. Price k mutabiq theek thaak." },
 ]
 
 const SHORT_1: RawReview[] = [
-  { rating: 1, text: "Product ne 1 hafte mein kaam krna band kr dia." },
-  { rating: 1, text: "Bohat buri quality hai. Na lo." },
-  { rating: 1, text: "Waste of money. Koi b purchase na kre." },
+  { rating: 1, text: "Product ne 1 hafte mein kaam krna band kr dia. Pehle to acha laga lakin phir issues aane lage." },
+  { rating: 1, text: "Design acha tha lakin quality bohat buri hai. Seller ne warranty ka kaha lakin process slow hai." },
+  { rating: 1, text: "Shuru mein to acha laga lakin jaldi kharab ho gya. Same product kisi aur brand ka lo." },
 ]
 
 // ─── MEDIUM REVIEWS (3-4 sentences) ──────────────────────────────────
@@ -220,22 +220,22 @@ const MEDIUM_4: RawReview[] = [
 ]
 
 const MEDIUM_3: RawReview[] = [
-  { rating: 3, text: "Average hai. Kuch features theek hain kuch nhi. Battery timing average hai. Price k hisaab se theek hai. Zyada expectations na rakho." },
-  { rating: 3, text: "Product to acha hai lakin warranty process thora mushkil hai. Seller ne respond kia lakin time lga. Product itself 3 star worthy hai." },
-  { rating: 3, text: "Theek thaak hai yaar. Kuch khaas feature nhi hai lakin basic use k liye kaam chl jata hai. Price kam hota to acha hota." },
-  { rating: 3, text: "Mene 2 hafte use kia hai. Kuch issues hain lakin overall theek hai. Is price mein is se acha kuch aur available hai to wo lo." },
-  { rating: 3, text: "Not bad but not great either. Quality achi hai lakin expected performance se thora km hai. Seller bohat acha hai lakin product average hai." },
+  { rating: 3, text: "Product ka design bohat acha hai or features bhi kaam kr rahe hain. Lekin battery timing average hai or kuch features mein inconsistency hai. Price k hisaab se theek hai. COD option acha hai." },
+  { rating: 3, text: "Build quality achi hai lakin warranty process thora mushkil hai. Seller ne respond kia lakin time lga. Product itself 3 star worthy hai. Agar price thora kam hota to acha hota." },
+  { rating: 3, text: "Theek thaak hai yaar. Display achi hai lakin battery timing km hai. Basic use k liye kaam chl jata hai. Price k hisaab se theek hai. Seller ne achi packing ki thi." },
+  { rating: 3, text: "Mene 2 hafte use kia hai. Kuch features achy hain kuch average lage. Overall theek hai lakin improvements ki zaroorat hai. COD par liya to check kr k lena." },
+  { rating: 3, text: "Not bad but not great either. Quality achi hai lakin expected performance se thora km hai. Seller bohat acha hai or delivery b time pr aai. Product mein thora aur improvement chahiye." },
 ]
 
 const MEDIUM_2: RawReview[] = [
-  { rating: 2, text: "Product theek nhi aya. Jo order kia tha us mein variation tha. Exchange krwana chahta tha lakin process lamba hai. Not satisfied." },
-  { rating: 2, text: "Muje thora issue hai. Battery theek nhi chal rhi. Pairing mein b masla aa rha hai. Seller se baat ki lakin time lge ga." },
-  { rating: 2, text: "Product ne 1 mahine mein kaam krna band kr dia. Quality expected se bht km thi. Warranty hai lakin process bohat slow hai." },
+  { rating: 2, text: "Design bohat acha hai lakin quality utni achi nhi. Jo order kia tha us mein variation tha. Exchange krwana chahta tha lakin process lamba hai. Seller ne offer kia lakin time lgta." },
+  { rating: 2, text: "Looks achy hain or features b hain lakin battery theek nhi chal rhi. Pairing mein b issue aa rha hai. Seller se baat ki lakin time lge ga resolve honey mein." },
+  { rating: 2, text: "Product ne 1 mahine mein kaam krna band kr dia. Pehle to acha chl rha tha lakin phir problem start hui. Warranty hai lakin process bohat slow hai. Umeed hai theek ho jaye." },
 ]
 
 const MEDIUM_1: RawReview[] = [
-  { rating: 1, text: "Bht issue hai. Product ne 1 hafte mein kaam krna band kr dia. Seller ne kaha warranty hai lakin return process bohat lamba hai. Waste of money." },
-  { rating: 1, text: "Quality bohat buri hai. Jo dikhaya gya tha wo nhi mila. Seller se contact kia to response acha tha lakin resolution time laga. Not recommended." },
+  { rating: 1, text: "Shuru mein to bohat acha laga lakin 1 hafte mein kaam krna band kr dia. Seller ne kaha warranty hai lakin return process bohat lamba hai. Paisay waste ho gaye." },
+  { rating: 1, text: "Design or looks to achy hain lakin quality bohat buri hai. Jo dikhaya gya wo nhi mila. Seller se contact kia to response acha tha lakin resolution time laga. Recommend nhi kr skta." },
 ]
 
 // ─── LONG REVIEWS (5+ sentences, detailed experience) ─────────────────
@@ -257,8 +257,8 @@ const LONG_4: RawReview[] = [
 ]
 
 const LONG_3: RawReview[] = [
-  { rating: 3, text: "Product theek hai lakin mujhe expected se thora km mila. Display quality achi hai lakin battery timing average hai. Kuch features hain jo theek se kaam nhi krte. Health tracking mein inconsistency hai. Seller bohat acha hai lakin product mein improvement ki zaroorat hai. Price k hisaab se theek hai." },
-  { rating: 3, text: "Mene do hafte use kia hai. Kuch achi cheezein hain kuch nhi. Build quality achi hai lakin screen thora kamzor lagta hai. Tempered glass lgana pare ga. Features mein se kuch bohat achy hain kuch average. Overall mixed experience. COD par liya to risk nhi tha." },
+  { rating: 3, text: "Product theek hai lakin mujhe expected se thora km mila. Display quality achi hai lakin battery timing average hai. Kuch features hain jo theek se kaam nhi krte lakin basic features achy hain. Health tracking mein inconsistency hai lakin design acha hai. Seller bohat acha hai or delivery b time pr aai. Product mein improvement ki zaroorat hai lakin price k hisaab se theek hai." },
+  { rating: 3, text: "Mene do hafte use kia hai. Kuch achi cheezein hain kuch nhi. Build quality achi hai lakin screen thora kamzor lagta hai — tempered glass lgana pare ga. Features mein se kuch bohat achy hain jaise display or design, kuch average hain jaise battery. Overall mixed experience. COD par liya to risk nhi tha. Seller recommend kr skte hain." },
 ]
 
 // ─── CATEGORY-SPECIFIC REVIEWS ────────────────────────────────────────
@@ -309,22 +309,22 @@ const SMARTWATCH_4: RawReview[] = [
 ]
 
 const SMARTWATCH_3: RawReview[] = [
-  { rating: 3, text: "Watch to achi hai lakin expected se thora km mila. Battery timing average hai. Price k hisab se theek hai." },
-  { rating: 3, text: "Theek hai but utna khaas nhi. Features hain but sab perfectly kaam nhi krte. Health tracking mein inconsistency hai." },
-  { rating: 3, text: "Average product hai. Kuch features kaam nhi krte. Price k mutabiq theek hai. COD available hai to check kr lena." },
-  { rating: 3, text: "Middle of the road watch. Kuch features hain jo zaroori hain kuch missing. Screen thora kamzor lagta hai. Tempered glass lgana pare ga." },
-  { rating: 3, text: "Theek hai but kuch issues hain. Display achi hai lakin battery timing ka masla hai. Overall kaam chl jata hai." },
+  { rating: 3, text: "Watch ka design bohat acha hai lakin expected se thora km mila. Battery timing average hai. Display achi hai. Price k hisab se theek hai." },
+  { rating: 3, text: "Theek hai but utna khaas nhi. Features hain lakin sab perfectly kaam nhi krte. Health tracking mein inconsistency hai lakin overall kaam chl jata hai." },
+  { rating: 3, text: "Average product hai. Kuch features kaam nhi krte lakin basic features achy hain. Price k mutabiq theek hai. COD available tha to check kr k lena." },
+  { rating: 3, text: "Middle of the road watch. Kuch features hain jo zaroori hain kuch missing. Screen thora kamzor lagta hai is liye tempered glass lgana pare ga. Baqi design acha hai." },
+  { rating: 3, text: "Theek hai but kuch issues hain. Display achi hai lakin battery timing ka masla hai. Overall kaam chl jata hai. Delivery bohat fast thi." },
 ]
 
 const SMARTWATCH_2: RawReview[] = [
-  { rating: 2, text: "Mje thora issue hai. Battery theek ni chal rhi. Pairing mein b problem aa rhi hai. Exchange krwana pare ga." },
-  { rating: 2, text: "Product received but box slightly damaged. Watch works fine but expected better packaging. Manual Urdu mein ho to better tha." },
-  { rating: 2, text: "Bht issue hai. 3 din mein screen scratch ho gai. Battery expected se km chl rhi. Return krne mein b time lge ga." },
+  { rating: 2, text: "Design bohat achi hai lakin battery theek ni chal rhi. Pairing mein b problem aa rhi hai. Exchange krwana pare ga. Product achi lgti hai lakin performance mein masla hai." },
+  { rating: 2, text: "Product received but box slightly damaged. Watch works fine lakin expected better packaging. Manual Urdu mein ho to better hota. Quality theek hai lakin presentation improve krni chahiye." },
+  { rating: 2, text: "Looks achi hai lakin 3 din mein screen scratch ho gai. Battery expected se km chl rhi. Return krne mein b time lge ga. Umeed thi k zyada achi hogi." },
 ]
 
 const SMARTWATCH_1: RawReview[] = [
-  { rating: 1, text: "Bht issue hai watch mein. 1 hafte mein screen freeze ho gai. Seller ne kaha warranty hai lakin return process bohat lamba hai." },
-  { rating: 1, text: "Bakwas product hai. Quality bohat buri hai. Na lo kisi ko b recommend nhi krunga. Paisay waste ho gaye." },
+  { rating: 1, text: "Bohat issue hai watch mein. Pehle 2 din to achi chli lakin phir 1 hafte mein screen freeze ho gai. Seller ne kaha warranty hai lakin return process bohat lamba hai. Paisay waste ho gaye." },
+  { rating: 1, text: "Design bohat achi hai lakin quality bohat buri hai. Jo dikhaya gya wo nhi mila. Seller ne kuch help ki lakin kafi time lga. Kisi ko recommend nhi kr skta." },
 ]
 
 const HEADPHONE_5: RawReview[] = [
@@ -354,13 +354,13 @@ const HEADPHONE_4: RawReview[] = [
 ]
 
 const HEADPHONE_3: RawReview[] = [
-  { rating: 3, text: "Theek hain lakin utna aala nhi jitna socha tha. Average sound quality. Price k hisab se theek hain." },
-  { rating: 3, text: "Average hain. Bass theek hai lakin clarity utni achi nhi. Price k hisaab se theek hai." },
+  { rating: 3, text: "Sound quality theek hai lakin utna aala nhi jitna socha tha. Average sound hai. Comfort acha hai. Price k hisab se theek hain." },
+  { rating: 3, text: "Average hain. Bass theek hai lakin clarity utni achi nhi. Build quality achi hai. Price k hisaab se theek hai overall." },
 ]
 
 const HEADPHONE_2: RawReview[] = [
-  { rating: 2, text: "After a month one side stopped working. Support offered replacement but process slow. Sound quality was good while it lasted." },
-  { rating: 2, text: "Wired earphones expected the lakin ye thoda heavy hain. Sound quality average. Ghar walo ne kaha vapas kr do." },
+  { rating: 2, text: "After a month one side stopped working. Sound quality was good while it lasted lakin durability ka concern hai. Support offered replacement but process slow." },
+  { rating: 2, text: "Comfortable hain or design acha hai lakin sound quality average hai. Thoda heavy b hain. Ghar walo ne kaha vapas kr do lakin process pata nhi." },
 ]
 
 const CHARGER_5: RawReview[] = [
@@ -384,8 +384,8 @@ const CHARGER_4: RawReview[] = [
 ]
 
 const CHARGER_3: RawReview[] = [
-  { rating: 3, text: "Theek hai lakin utna fast charging support nhi hai jitna bataya tha. Average product hai." },
-  { rating: 3, text: "Kaam kr rha hai lakin build quality thora average hai. Price k hisaab se theek hai." },
+  { rating: 3, text: "Build quality achi hai lakin utna fast charging support nhi hai jitna bataya tha. Kaam to kr rha hai. Average product hai." },
+  { rating: 3, text: "Charging speed theek hai lakin build quality thora average hai. Cable bhi achi hai. Price k hisaab se theek hai." },
 ]
 
 const CASE_5: RawReview[] = [
@@ -409,8 +409,8 @@ const CASE_4: RawReview[] = [
 ]
 
 const CASE_3: RawReview[] = [
-  { rating: 3, text: "Theek hai. Protection to achi hai lakin design utna acha nhi. Expected se thora km hai." },
-  { rating: 3, text: "Average case hai. Kaam chl jata hai lakin premium feel nhi hai. Price k hisaab se theek hai." },
+  { rating: 3, text: "Theek hai. Protection to achi hai lakin design utna acha nhi jitna pictures mein lgra tha. Expected se thora km hai lakin kaam chl jata hai." },
+  { rating: 3, text: "Average case hai. Material theek hai lakin premium feel nhi hai. Drop protection achi hai. Price k hisaab se theek hai." },
 ]
 
 // ─── POOL ASSEMBLY ────────────────────────────────────────────────────
