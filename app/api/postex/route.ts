@@ -26,7 +26,7 @@ async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3)
 export async function POST(req: Request) {
   try {
     const data = await req.json()
-    const { orderId, customerName, phone, address, city, amount, orderDetail, pickupAddressCode, bookingWeight } = data
+    const { orderId, customerName, phone, address, city, amount, orderDetail, pickupAddressCode, bookingWeight, orderType } = data
 
     // Required fields for PostEx
     if (!orderId || !customerName || !phone || !address || !city) {
@@ -54,9 +54,9 @@ export async function POST(req: Request) {
       cityName: city,
       invoicePayment: amount,
       orderDetail: orderDetail || "",
-      orderType: "Normal",
+      orderType: orderType || "Normal",
       pickupAddressCode: pickupAddressCode || "001",
-      bookingWeight: bookingWeight || 1,
+      bookingWeight: bookingWeight || 0.3,
       transactionNotes: "",
     }
 

@@ -58,8 +58,21 @@ export default function AdminOrdersPage() {
     amount: 0,
     orderDetail: "",
     pickupAddressCode: "001",
-    bookingWeight: 1,
+    bookingWeight: 0.3,
+    orderType: "Normal",
   })
+
+  const POSTEX_ORDER_TYPES = [
+    "Normal",
+    "Express",
+    "Fragile",
+    "Liquid",
+    "Electronics",
+    "Food",
+    "Clothing",
+    "Documents",
+    "Others",
+  ]
   const [postexBooking, setPostexBooking] = useState(false)
 
   const openPostexModal = (order: any) => {
@@ -74,7 +87,8 @@ export default function AdminOrdersPage() {
     amount: order.total || 0,
     orderDetail: orderDetail ? `[${orderDetail}]` : "",
     pickupAddressCode: "001",
-    bookingWeight: 1,
+    bookingWeight: 0.3,
+    orderType: "Normal",
     })
     setShowPostexModal(true)
   }
@@ -698,6 +712,14 @@ export default function AdminOrdersPage() {
                     onChange={(city) => setPostexForm(p => ({ ...p, city, province: detectProvince(city) }))}
                     className="bg-[#141414]"
                   />
+                </div>
+                <div>
+                  <label className="text-[11px] uppercase tracking-wider text-white/40 mb-1.5 block">Order Type</label>
+                  <select value={postexForm.orderType} onChange={e => setPostexForm(p => ({ ...p, orderType: e.target.value }))} className="w-full bg-[#141414] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30">
+                    {POSTEX_ORDER_TYPES.map(type => (
+                      <option key={type} value={type} className="bg-[#141414]">{type}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
