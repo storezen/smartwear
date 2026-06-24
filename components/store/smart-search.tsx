@@ -6,6 +6,7 @@ import { Search, X, Command, ArrowRight, ArrowUpRight, Clock, Star, Zap } from '
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { TikTokEvents } from '@/lib/tiktok-pixel'
 import { cn } from '@/lib/utils'
 
 interface SmartSearchProps {
@@ -55,6 +56,15 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
   // Global hotkey listener is handled in Navbar usually, but we can also bind it here if needed.
   // Actually, let's keep the global hotkey in the Navbar to open it.
   
+  // Fire Search event to TikTok after user stops typing (500ms debounce)
+  useEffect(() => {
+    if (!isOpen || !query.trim()) return
+    const t = setTimeout(() => {
+      TikTokEvents.search(query.trim())
+    }, 500)
+    return () => clearTimeout(t)
+  }, [query, isOpen])
+
   // Search logic
   const filteredProducts = query.trim() === '' 
     ? products.filter(p => p.is_featured).slice(0, 5) // Trending/Featured when empty

@@ -105,6 +105,31 @@ export default function CheckoutPage() {
     }
   }, [guestAddress.phone, guestAddress.name])
 
+  // Fire AddPaymentInfo when user fills name + phone (strong purchase intent signal)
+  useEffect(() => {
+    if (guestAddress.name.length > 2 && guestAddress.phone.length > 10) {
+      TikTokEvents.addPaymentInfo('COD')
+    }
+  }, [guestAddress.name, guestAddress.phone])
+
+  // Cart abandonment timer — fires after 30 min of idle cart
+  useEffect(() => {
+    if (items.length === 0) return
+    const abandonTimer = setTimeout(() => {
+      TikTokEvents.cartAbandonment(
+        items.map(item => ({
+          id: item.product.id,
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          category: item.product.category?.name || '',
+        })),
+        subtotal
+      )
+    }, 30 * 60 * 1000) // 30 minutes
+    return () => clearTimeout(abandonTimer)
+  }, [items.length])
+
   // Identify user on order placement for purchase event matching
   const handleIdentifyUser = () => {
     if (guestAddress.phone || guestAddress.name) {

@@ -289,4 +289,45 @@ export const TikTokEvents = {
       }))
     })
   },
+
+  /* ── Audience Maturity Events ── */
+
+  search: (query: string) => {
+    trackTikTokEvent('Search', {
+      content_id: 'search',
+      content_type: 'product_group',
+      content_name: query,
+    })
+  },
+
+  addPaymentInfo: (method: string) => {
+    trackTikTokEvent('AddPaymentInfo', {
+      content_id: 'payment_info',
+      content_type: 'product_group',
+      content_name: method || 'COD',
+    })
+  },
+
+  subscribe: (email: string) => {
+    trackTikTokEvent('Subscribe', {
+      content_id: 'newsletter',
+      content_type: 'product_group',
+      content_name: email,
+    })
+  },
+
+  /* ── Custom: Cart Abandonment (fires after inactivity) ── */
+  cartAbandonment: (items: Array<{ id: string; name: string; price: number; quantity: number; category?: string }>, total: number) => {
+    trackTikTokEvent('CartAbandonment', {
+      value: total,
+      contents: items.map(item => ({
+        content_id: item.id,
+        content_type: 'product',
+        content_category: item.category || '',
+        content_name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      }))
+    })
+  },
 }

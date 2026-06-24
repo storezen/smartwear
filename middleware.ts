@@ -20,6 +20,8 @@ function isPublicApi(pathname: string, method: string): boolean {
   if (pathname.startsWith("/api/chat")) return true
   // TikTok CAPI — called from client-side on success page
   if (pathname.startsWith("/api/tiktok")) return true
+  // Product feed — needed by TikTok/Google crawlers
+  if (pathname.startsWith("/api/feed")) return true
   // Public settings — needed by storefront
   if (pathname.startsWith("/api/public")) return true
   return false

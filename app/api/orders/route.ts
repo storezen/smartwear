@@ -37,6 +37,50 @@ function hashSHA256(value: string | undefined | null): string | undefined {
   return crypto.createHash('sha256').update(normalized).digest('hex');
 }
 
+// Helper for TikTok Offline Conversion — fires when COD is marked Delivered
+async function fireTikTokOfflineConversion(orderData: any) {
+  const settings = await getSettings();
+  const accessToken = decrypt(settings.tiktok_access_token) || process.env.TIKTOK_ACCESS_TOKEN
+  const pixelId = settings.tiktok_pixel_id || process.env.TIKTOK_PIXEL_ID
+  if (!accessToken || !pixelId) return
+
+  try {
+    const payload = {
+      pixel_code: pixelId,
+      event: 'CompletePayment',
+      event_id: `${orderData.id}_delivered`,
+      timestamp: new Date().toISOString(),
+      event_source: 'physical_store', // Marks as offline conversion
+      context: {
+        user: {
+          phone_number: hashSHA256(orderData.phone),
+          external_id: hashSHA256(orderData.customer_name),
+        }
+      },
+      properties: {
+        contents: (orderData.items || []).map((i: any) => ({
+          content_id: i.id,
+          content_type: 'product',
+          content_name: i.name,
+          price: i.price,
+          quantity: i.quantity,
+        })),
+        currency: 'PKR',
+        value: orderData.total,
+      },
+    }
+
+    await fetch('https://business-api.tiktok.com/open_api/v1.3/pixel/track/', {
+      method: 'POST',
+      headers: { 'Access-Token': accessToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+    console.log('[TikTok Offline] Delivered conversion fired for order', orderData.id)
+  } catch (err) {
+    console.error('[TikTok Offline] Error:', err)
+  }
+}
+
 // Helper for TikTok Server-Side Tracking (CAPI)
 async function fireTikTokCAPI(orderData: any, req: Request) {
   if (orderData.tiktok_capi_fired) return // Deduplication check
@@ -282,6 +326,10 @@ export async function PUT(req: Request) {
 
     const updatedLocalOrder = await updateOrderStatus(id, status, postexId || undefined, auditNote)
     if (updatedLocalOrder) {
+      // Fire TikTok offline conversion when COD order is delivered
+      if (status === 'Delivered' && updatedLocalOrder.total > 0) {
+        fireTikTokOfflineConversion(updatedLocalOrder)
+      }
       return NextResponse.json({ success: true, order: updatedLocalOrder })
     }
     

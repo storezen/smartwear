@@ -119,6 +119,7 @@ export async function getDb(retries = 3): Promise<any> {
     parsed.orders = parsed.orders || []
     parsed.marketing = parsed.marketing || []
     parsed.analytics = parsed.analytics || []
+    parsed.subscribers = parsed.subscribers || []
     parsed.settings = { ...INITIAL_DATA.settings, ...parsed.settings }
     
     // Cache it in memory so future reads/writes persist across hot-reloads and Vercel serverless requests
