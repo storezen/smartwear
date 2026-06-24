@@ -199,12 +199,12 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-[#0C0F14] text-white py-10 md:py-16">
-        <div className="max-w-sm mx-auto text-center">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-[24px] bg-white/5 border border-white/10 flex items-center justify-center">
-            <ShoppingBag className="w-10 h-10 text-white/60" />
+        <div className="max-w-sm mx-auto text-center px-5">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-5 sm:mb-6 rounded-[24px] bg-white/5 border border-white/10 flex items-center justify-center">
+            <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 text-white/60" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>Your cart is empty</h1>
-          <p className="text-white/60 mb-6">Add some products before checkout</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>Your cart is empty</h1>
+          <p className="text-sm text-white/60 mb-6">Add some products before checkout</p>
           <Link href="/products">
             <button className="sw-btn-gold w-full h-12">Continue Shopping</button>
           </Link>
@@ -215,7 +215,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-[#0C0F14] text-white">
-      <div className="relative overflow-hidden text-white pt-16 pb-8 md:pt-28 md:pb-16 border-b border-white/5 mb-6">
+      <div className="relative overflow-hidden text-white pt-14 pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -227,7 +227,7 @@ export default function CheckoutPage() {
           style={{ background: 'radial-gradient(circle, #B8860B, transparent)' }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 text-xs text-white/70 mb-4 justify-center uppercase tracking-widest flex-wrap">
+          <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-white/70 mb-3 sm:mb-4 justify-center uppercase tracking-wide sm:tracking-widest flex-wrap">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B] shrink-0" />
             <span>Cart</span>
@@ -235,22 +235,22 @@ export default function CheckoutPage() {
             <span className="text-[#B8860B]">Secure Checkout</span>
           </div>
           <h1
-            className="font-bold text-white leading-tight mb-2"
-            style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(2.5rem, 5vw, 4.5rem)' }}
+            className="font-bold text-white leading-tight mb-1.5 sm:mb-2"
+            style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(1.75rem, 5vw, 4.5rem)' }}
           >
             Secure Checkout
           </h1>
-          <p className="text-white/50 text-sm">Pay only when your parcel arrives. No online payment needed.</p>
+          <p className="text-white/50 text-xs sm:text-sm">Pay only when your parcel arrives. No online payment needed.</p>
         </div>
       </div>
 
-      <div className="sw-container pb-12 md:pb-16">
+      <div className="sw-container pb-10 md:pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
           {/* Left: Delivery Form */}
           <div className="lg:col-span-2 min-w-0">
             <div className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 sm:p-8 w-full">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>
-                <MapPin className="w-5 h-5 text-[#B8860B]" />
+              <h2 className="text-base sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                 Delivery Details
               </h2>
 
@@ -275,7 +275,7 @@ export default function CheckoutPage() {
                     placeholder="0300 1234567"
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
                   />
-                  <p className="text-[10px] text-white/40 mt-1.5 flex items-start gap-1.5">
+                  <p className="text-[11px] sm:text-[10px] text-white/40 mt-1.5 flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
                     Courier will call this number before delivery
                   </p>
@@ -290,9 +290,9 @@ export default function CheckoutPage() {
                     rows={3}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px] resize-none"
                   />
-                  <p className="text-[10px] text-white/40 mt-1.5 flex items-start gap-1.5">
+                  <p className="text-[11px] sm:text-[10px] text-white/40 mt-1.5 flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
-                    Makaan number, Street, aur Area laazmi likhein taake rider asani se parcel pohncha sakay
+                    Makaan number, Street, aur Area laazmi likhein
                   </p>
                 </div>
 
@@ -310,42 +310,42 @@ export default function CheckoutPage() {
               </div>
 
               {/* Trust Strip */}
-              <div className="mt-6 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
-                <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+              <div className="mt-6 p-3 sm:p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-y-3 sm:gap-x-4">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                      <Truck className="w-3.5 h-3.5 text-emerald-400" />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                      <Truck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-white">Cash on Delivery</p>
-                      <p className="text-[10px] text-white/50">Pay when parcel arrives</p>
+                      <p className="text-[11px] sm:text-xs font-semibold text-white">Cash on Delivery</p>
+                      <p className="text-[10px] text-white/50 hidden sm:block">Pay when parcel arrives</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                      <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-white">Open Box Check</p>
-                      <p className="text-[10px] text-white/50">Inspect before paying</p>
+                      <p className="text-[11px] sm:text-xs font-semibold text-white">Open Box Check</p>
+                      <p className="text-[10px] text-white/50 hidden sm:block">Inspect before paying</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                      <Truck className="w-3.5 h-3.5 text-emerald-400" />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                      <Truck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-white">Free Shipping</p>
-                      <p className="text-[10px] text-white/50">On orders above {formatPrice(freeThreshold)}</p>
+                      <p className="text-[11px] sm:text-xs font-semibold text-white">Free Shipping</p>
+                      <p className="text-[10px] text-white/50 hidden sm:block">On orders above {formatPrice(freeThreshold)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                      <ArrowRight className="w-3.5 h-3.5 rotate-180 text-emerald-400" />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                      <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 rotate-180 text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-white">7 Days Return</p>
-                      <p className="text-[10px] text-white/50">Money back guarantee</p>
+                      <p className="text-[11px] sm:text-xs font-semibold text-white">7 Days Return</p>
+                      <p className="text-[10px] text-white/50 hidden sm:block">Money back guarantee</p>
                     </div>
                   </div>
                 </div>
@@ -366,17 +366,15 @@ export default function CheckoutPage() {
                     Processing...
                   </span>
                 ) : (
-                  <span className="flex flex-col items-center gap-0.5 sm:flex-row sm:gap-3">
-                    <span className="flex items-center gap-2">
-                      <Truck className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-                      <span className="text-xs sm:text-base">Place Order — Pay on Delivery</span>
-                    </span>
-                    <span className="text-sm sm:text-lg font-black">{formatPrice(total)}</span>
+                  <span className="flex items-center justify-center gap-2 sm:gap-3">
+                    <Truck className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                    <span className="text-[13px] sm:text-base">Place Order — COD</span>
+                    <span className="text-sm sm:text-lg font-black ml-auto sm:ml-0">{formatPrice(total)}</span>
                   </span>
                 )}
               </button>
-              <p className="text-center text-[11px] text-white/40 mt-3">
-                Free delivery on orders above {formatPrice(freeThreshold)}. Returns within 7 days.
+              <p className="text-center text-[11px] text-white/40 mt-3 px-2">
+                Free delivery above {formatPrice(freeThreshold)} &bull; 7 days return
               </p>
             </div>
           </div>
@@ -385,11 +383,11 @@ export default function CheckoutPage() {
           <div className="lg:col-span-1 min-w-0">
             <div className="sticky top-24 rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl w-full">
               <div className="p-5 sm:p-8">
-                <h3 className="font-bold text-base sm:text-lg text-white mb-5 sm:mb-6" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>
+                <h3 className="font-bold text-sm sm:text-lg text-white mb-4 sm:mb-6" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>
                   Order Summary
                 </h3>
 
-                <div className="space-y-4 mb-6">
+                <div className="space-y-3 sm:space-y-4 mb-5 sm:mb-6">
                   {items.map((item) => (
                     <div key={item.id} className="flex items-center gap-3">
                       <div className="relative w-12 h-12 sm:w-14 sm:h-14 bg-[#0F1923] border border-white/5 rounded-xl overflow-hidden shrink-0">
@@ -399,22 +397,22 @@ export default function CheckoutPage() {
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm truncate font-medium text-white">{item.product.name}</p>
+                        <p className="text-[13px] sm:text-sm truncate font-medium text-white">{item.product.name}</p>
                         {item.selectedColor && (
-                          <p className="text-xs text-white/50 mt-0.5">{item.selectedColor}</p>
+                          <p className="text-[11px] sm:text-xs text-white/50 mt-0.5">{item.selectedColor}</p>
                         )}
                       </div>
-                      <p className="text-sm font-bold text-white">{formatPrice(item.product.price * item.quantity)}</p>
+                      <p className="text-[13px] sm:text-sm font-bold text-white shrink-0 ml-2">{formatPrice(item.product.price * item.quantity)}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="border-t border-white/10 pt-4 space-y-3">
-                  <div className="flex justify-between text-sm">
+                <div className="border-t border-white/10 pt-3 sm:pt-4 space-y-2.5 sm:space-y-3">
+                  <div className="flex justify-between text-[13px] sm:text-sm">
                     <span className="text-white/70">Subtotal</span>
                     <span className="text-white font-medium">{formatPrice(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-[13px] sm:text-sm">
                     <span className="text-white/70">Shipping</span>
                     <span className={shippingCost === 0 ? 'text-emerald-400 font-medium' : 'text-white font-medium'}>
                       {shippingCost === 0 ? 'Free' : formatPrice(shippingCost)}
@@ -426,87 +424,87 @@ export default function CheckoutPage() {
                       <span className="text-emerald-400 font-medium">-{formatPrice(appliedPromo.discount)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between items-end pt-3 border-t border-white/5">
-                    <span className="text-white/70 text-sm">Total</span>
-                    <span className="font-bold text-2xl text-[#B8860B]">{formatPrice(total)}</span>
+                  <div className="flex justify-between items-end pt-2.5 sm:pt-3 border-t border-white/5">
+                    <span className="text-white/70 text-[13px] sm:text-sm">Total</span>
+                    <span className="font-bold text-xl sm:text-2xl text-[#B8860B]">{formatPrice(total)}</span>
                   </div>
                 </div>
 
                 {/* Trust & Security */}
-                <div className="mt-6 p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                  <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-3 text-center">Secure & Trusted</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="flex items-center gap-2 text-white/50">
-                      <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                      <span className="text-[11px]">SSL Encrypted</span>
+                <div className="mt-6 p-3 sm:p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                  <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-2.5 text-center">Secure & Trusted</p>
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-white/50">
+                      <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                      <span className="text-[10px] sm:text-[11px]">SSL Encrypted</span>
                     </div>
-                    <div className="flex items-center gap-2 text-white/50">
-                      <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12a9 9 0 11-6.219-8.56"/><path d="M21 3v6h-6"/><path d="M21 3l-7.5 7.5"/></svg>
-                      <span className="text-[11px]">COD Available</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-white/50">
+                      <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12a9 9 0 11-6.219-8.56"/><path d="M21 3v6h-6"/><path d="M21 3l-7.5 7.5"/></svg>
+                      <span className="text-[10px] sm:text-[11px]">COD Available</span>
                     </div>
-                    <div className="flex items-center gap-2 text-white/50">
-                      <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-                      <span className="text-[11px]">Free Delivery</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-white/50">
+                      <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                      <span className="text-[10px] sm:text-[11px]">Free Delivery</span>
                     </div>
-                    <div className="flex items-center gap-2 text-white/50">
-                      <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                      <span className="text-[11px]">Open Box Check</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-white/50">
+                      <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                      <span className="text-[10px] sm:text-[11px]">Open Box Check</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Promo Code (Collapsible) */}
-                <div className="mt-6">
+                <div className="mt-5 sm:mt-6">
                   <button
                     onClick={() => setPromoOpen(!promoOpen)}
-                    className="flex items-center gap-2 text-xs text-white/50 hover:text-white transition-colors w-full"
+                    className="flex items-center gap-2 text-[11px] sm:text-xs text-white/50 hover:text-white transition-colors w-full"
                   >
-                    <ChevronDown className={cn('w-3.5 h-3.5 transition-transform', promoOpen && 'rotate-180')} />
+                    <ChevronDown className={cn('w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform', promoOpen && 'rotate-180')} />
                     Have a promo code?
                   </button>
                   {promoOpen && (
-                    <div className="mt-3 flex gap-2">
+                    <div className="mt-2.5 sm:mt-3 flex gap-2">
                       <input
                         value={promoCodeInput}
                         onChange={(e) => setPromoCodeInput(e.target.value)}
                         placeholder="Enter code"
-                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder-white/40 focus:outline-none focus:border-[#B8860B] transition-colors"
+                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-[13px] sm:text-sm placeholder-white/40 focus:outline-none focus:border-[#B8860B] transition-colors"
                       />
                       <button
                         onClick={handleApplyPromo}
-                        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors"
+                        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs font-semibold transition-colors"
                       >
                         Apply
                       </button>
                     </div>
                   )}
-                  {promoError && <p className="text-rose-400 text-xs mt-2">{promoError}</p>}
+                  {promoError && <p className="text-rose-400 text-[11px] sm:text-xs mt-1.5">{promoError}</p>}
                   {appliedPromo && (
-                    <p className="text-emerald-400 text-xs mt-2">Code {appliedPromo.code} applied!</p>
+                    <p className="text-emerald-400 text-[11px] sm:text-xs mt-1.5">Code {appliedPromo.code} applied!</p>
                   )}
                 </div>
 
                 {/* Upsell */}
-                <div className="mt-8 pt-6 border-t border-white/10">
-                  <p className="text-xs font-bold text-[#B8860B] uppercase tracking-wider mb-3">Complete Your Look</p>
-                  <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 sm:p-4 flex gap-3 sm:gap-4 items-center">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#0F1923] rounded-lg overflow-hidden shrink-0">
-                      <Image src="https://images.unsplash.com/photo-1546868871-7041f2a55e12" alt="Premium Watch Box" width={48} height={48} className="object-cover sm:w-16 sm:h-16" />
+                <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-white/10">
+                  <p className="text-[11px] sm:text-xs font-bold text-[#B8860B] uppercase tracking-wider mb-2.5 sm:mb-3">Complete Your Look</p>
+                  <div className="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 sm:p-4 flex gap-2.5 sm:gap-4 items-center">
+                    <div className="w-10 h-10 sm:w-16 sm:h-16 bg-[#0F1923] rounded-lg overflow-hidden shrink-0">
+                      <Image src="https://images.unsplash.com/photo-1546868871-7041f2a55e12" alt="Premium Watch Box" width={40} height={40} className="object-cover sm:w-16 sm:h-16" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">Premium Leather Box</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <p className="text-sm font-bold text-[#D4A017]">{formatPrice(2500)}</p>
-                        <p className="text-xs text-white/40 line-through">{formatPrice(4000)}</p>
+                      <p className="text-[13px] sm:text-sm font-medium text-white truncate">Premium Leather Box</p>
+                      <div className="flex items-center gap-2 mt-0.5 sm:mt-1">
+                        <p className="text-[13px] sm:text-sm font-bold text-[#D4A017]">{formatPrice(2500)}</p>
+                        <p className="text-[11px] sm:text-xs text-white/40 line-through">{formatPrice(4000)}</p>
                       </div>
                     </div>
                     <button
                       type="button"
                       onClick={handleAddUpsell}
-                      className="w-8 h-8 rounded-full bg-[#B8860B] text-black flex items-center justify-center hover:bg-[#D4A017] transition-colors shrink-0"
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#B8860B] text-black flex items-center justify-center hover:bg-[#D4A017] transition-colors shrink-0"
                       aria-label="Add premium leather box"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </button>
                   </div>
                 </div>
