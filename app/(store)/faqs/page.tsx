@@ -32,7 +32,7 @@ export default function FAQsPage() {
   return (
     <div className="min-h-screen bg-[#0C0F14] text-white">
       {/* Header */}
-      <div className="relative overflow-hidden text-white pt-16 pb-8 md:pt-28 md:pb-16 border-b border-white/5 mb-6">
+      <div className="relative overflow-hidden text-white pt-14 pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -44,14 +44,14 @@ export default function FAQsPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 text-xs text-white/70 mb-6 justify-center uppercase tracking-widest">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B]" />
             <span className="text-[#B8860B]">FAQs</span>
           </div>
           <h1
-            className="font-bold text-white leading-tight mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}
+            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Frequently Asked Questions
           </h1>

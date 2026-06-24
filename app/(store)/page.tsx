@@ -90,7 +90,7 @@ function HeroBanner() {
       </div>
 
       <div className="sw-container relative z-10 w-full">
-        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-20 py-16 md:py-24 mt-14 md:mt-0">
+        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-20 py-10 md:py-24 mt-14 md:mt-0">
           <div className="flex-1 text-center lg:text-left lg:max-w-[48%]">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -99,10 +99,10 @@ function HeroBanner() {
             >
               <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.03] border border-white/8 mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B]" />
-                <span className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-medium">Pakistan&apos;s Premium Watch Store</span>
+                <span className="text-white/40 text-[11px] sm:text-[10px] uppercase tracking-[0.2em] font-medium">Pakistan&apos;s Premium Watch Store</span>
               </div>
 
-              <h1 className="text-[2.8rem] sm:text-[4rem] md:text-[5rem] lg:text-[5.5rem] font-bold text-white leading-[1] mb-6" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+              <h1 className="text-[2.2rem] sm:text-[4rem] md:text-[5rem] lg:text-[5.5rem] font-bold text-white leading-[1.1] sm:leading-[1] mb-4 sm:mb-6" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
                 {settings?.hero_headline ? (
                   (() => {
                     const parts = settings.hero_headline.split('.')
@@ -141,7 +141,7 @@ function HeroBanner() {
                 </Link>
               </div>
 
-              <div className="mt-10 flex items-center gap-8 justify-center lg:justify-start text-white/25 text-[10px] uppercase tracking-wider">
+              <div className="mt-8 sm:mt-10 flex items-center gap-6 sm:gap-8 justify-center lg:justify-start text-white/25 text-[11px] sm:text-[10px] uppercase tracking-wider">
                 <span className="flex items-center gap-1.5"><Truck className="w-3 h-3" /> Free Delivery</span>
                 <span className="flex items-center gap-1.5"><RefreshCw className="w-3 h-3" /> 7-Day Returns</span>
                 <span className="flex items-center gap-1.5"><Shield className="w-3 h-3" /> 1 Yr Warranty</span>
@@ -239,7 +239,7 @@ function TrustBadges() {
                 </div>
                 <div>
                   <p className="text-white text-xs font-bold">{b.label}</p>
-                  <p className="text-white/40 text-[10px]">{b.desc}</p>
+                  <p className="text-white/40 text-[11px]">{b.desc}</p>
                 </div>
             </motion.div>
           )
@@ -490,7 +490,7 @@ function CollectionsBanner({ categoryImages }: { categoryImages: Record<string, 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
                 <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 rounded-full bg-[#B8860B]/20 border border-[#B8860B]/30 text-[#B8860B] text-[9px] font-bold uppercase tracking-widest">
+                  <span className="px-3 py-1 rounded-full bg-[#B8860B]/20 border border-[#B8860B]/30 text-[#B8860B] text-[10px] sm:text-[9px] font-bold uppercase tracking-widest">
                     {col.tag}
                   </span>
                 </div>

@@ -262,10 +262,10 @@ function ProductContent({ product }: { product: any }) {
       <div className={cn("fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[150px] pointer-events-none transition-all duration-1000", lumeMode ? "opacity-[0.05] bg-green-400" : "opacity-[0.1] bg-[#D4A017]")} />
 
       {/* Breadcrumb */}
-      <div className="sw-container pt-20 md:pt-28 pb-4 relative z-10">
+      <div className="sw-container pt-16 md:pt-28 pb-3 md:pb-4 relative z-10">
         <motion.div
           initial="hidden" animate="show" variants={fadeUp} custom={0}
-          className="flex flex-wrap items-center gap-2 text-[10px] text-white/70 uppercase tracking-[0.2em] w-full"
+          className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-[10px] text-white/70 uppercase tracking-[0.15em] sm:tracking-[0.2em] w-full"
         >
           <Link href="/" className="hover:text-[#B8860B] transition-colors shrink-0">Home</Link>
           <ChevronRight className="w-3 h-3 text-[#B8860B] shrink-0" />
@@ -401,10 +401,10 @@ function ProductContent({ product }: { product: any }) {
                   {stockLeft > 0 && stockLeft <= 5 && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-4 bg-red-500/10 border border-red-500/20 rounded-xl p-3">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                        <span className="text-[10px] md:text-xs font-semibold text-red-400 uppercase tracking-wider flex items-center gap-1">
+                        <span className="text-[11px] md:text-xs font-semibold text-red-400 uppercase tracking-wider flex items-center gap-1">
                           <Zap className="w-3 h-3 fill-red-400 shrink-0" /> High Demand
                         </span>
-                        <span className="text-[10px] md:text-xs text-white/80">Only <strong className="text-white">{stockLeft} left</strong>!</span>
+                        <span className="text-[11px] md:text-xs text-white/80">Only <strong className="text-white">{stockLeft} left</strong>!</span>
                       </div>
                       <div className="w-full bg-[#0F1923] h-1.5 rounded-full overflow-hidden">
                         <motion.div 
@@ -447,28 +447,28 @@ function ProductContent({ product }: { product: any }) {
                     <CheckCircle2 className="w-4 h-4 text-[#B8860B]" />
                     <span className="text-xs font-bold uppercase tracking-wider">100% Original</span>
                   </div>
-                  <span className="text-[10px] text-white/50 pl-6 leading-tight">Guaranteed Authentic</span>
+                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">Guaranteed Authentic</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-white">
                     <Banknote className="w-4 h-4 text-[#B8860B]" />
                     <span className="text-xs font-bold uppercase tracking-wider">Cash on Delivery</span>
                   </div>
-                  <span className="text-[10px] text-white/50 pl-6 leading-tight">Pay when you receive</span>
+                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">Pay when you receive</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-white">
                     <Shield className="w-4 h-4 text-[#B8860B]" />
                     <span className="text-xs font-bold uppercase tracking-wider">1 Year Warranty</span>
                   </div>
-                  <span className="text-[10px] text-white/50 pl-6 leading-tight">International Coverage</span>
+                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">International Coverage</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-white">
                     <RotateCcw className="w-4 h-4 text-[#B8860B]" />
                     <span className="text-xs font-bold uppercase tracking-wider">7 Days Return</span>
                   </div>
-                  <span className="text-[10px] text-white/50 pl-6 leading-tight">Money Back Guarantee</span>
+                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">Money Back Guarantee</span>
                 </div>
               </motion.div>
 
@@ -483,12 +483,12 @@ function ProductContent({ product }: { product: any }) {
                         ))}
                       </div>
                       <span className="text-xs font-semibold text-white">{product.rating}</span>
-                      <span className="text-[10px] text-white/50">({allReviews.length})</span>
-                      <span className="text-[10px] text-emerald-400 font-medium bg-emerald-500/10 px-1.5 py-0.5 rounded-full">{recommendPct}% recommend</span>
+                      <span className="text-[11px] sm:text-[10px] text-white/50">({allReviews.length})</span>
+                      <span className="text-[11px] sm:text-[10px] text-emerald-400 font-medium bg-emerald-500/10 px-1.5 py-0.5 rounded-full">{recommendPct}% recommend</span>
                     </div>
                     <button
                       onClick={() => setShowReviewForm(true)}
-                      className="text-[10px] text-[#B8860B] hover:text-[#D4A017] font-semibold transition-colors"
+                      className="text-[11px] sm:text-[10px] text-[#B8860B] hover:text-[#D4A017] font-semibold transition-colors py-1"
                     >
                       + Write
                     </button>
@@ -518,7 +518,7 @@ function ProductContent({ product }: { product: any }) {
                   {allReviews.length > 3 && (
                     <button
                       onClick={() => setShowAllReviews(true)}
-                      className="w-full py-2 text-[10px] font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
+                      className="w-full py-2.5 text-[11px] sm:text-[10px] font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
                     >
                       View All {allReviews.length} Reviews
                     </button>
@@ -747,7 +747,7 @@ function ProductContent({ product }: { product: any }) {
                 View All <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {relatedProducts.map((p) => (
                 <ProductCard key={p.id} product={p as any} />
               ))}
@@ -769,12 +769,10 @@ function ProductContent({ product }: { product: any }) {
           className="group relative w-full h-14 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_20px_rgba(184,134,11,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive"
         >
           <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          <div className="relative z-10 flex flex-col items-center gap-0.5 sm:hidden text-[#0C0F14] font-bold uppercase tracking-widest">
-            <span className="flex items-center gap-2 text-xs">
-              <Truck className="w-4 h-4" />
-              <span>Quick Buy — Pay on Delivery</span>
-            </span>
-            <span className="text-sm font-black">{formatPrice(product.price * quantity)}</span>
+          <div className="relative z-10 flex items-center justify-center gap-2 sm:hidden text-[#0C0F14] font-bold uppercase tracking-widest">
+            <Truck className="w-4 h-4 shrink-0" />
+            <span className="text-[13px]">Quick Buy — COD</span>
+            <span className="text-sm font-black ml-auto">{formatPrice(product.price * quantity)}</span>
           </div>
           <div className="relative z-10 hidden sm:flex items-center justify-center gap-3 text-[#0C0F14] font-bold text-xs uppercase tracking-widest">
             <Truck className="w-4 h-4" />

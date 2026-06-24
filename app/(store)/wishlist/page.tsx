@@ -71,7 +71,7 @@ export default function PremiumWishlistPage() {
       <div className="fixed inset-0 bg-[#0C0F14] opacity-30 pointer-events-none" />
 
       {/* Header */}
-      <div className="relative overflow-hidden text-white pt-16 pb-8 md:pt-28 md:pb-16 border-b border-white/5 mb-6">
+      <div className="relative overflow-hidden text-white pt-14 pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -83,14 +83,14 @@ export default function PremiumWishlistPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 text-xs text-white/70 mb-6 justify-center uppercase tracking-widest">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B]" />
             <span className="text-[#B8860B]">Wishlist</span>
           </div>
           <h1
-            className="font-bold text-white leading-tight mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}
+            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             My Wishlist
           </h1>
@@ -154,7 +154,7 @@ export default function PremiumWishlistPage() {
 
                       {/* Remove Button */}
                       <button
-                        className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/10 hover:bg-red-500/80 hover:border-red-500 text-white/70 hover:text-white transition-all"
+                        className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/10 hover:bg-red-500/80 hover:border-red-500 text-white/70 hover:text-white transition-all"
                         onClick={(e) => {
                           e.preventDefault()
                           removeFromWishlist(item.product.id)
@@ -180,7 +180,7 @@ export default function PremiumWishlistPage() {
 
                     <div className="flex-1 flex flex-col px-1">
                       <Link href={`/products/${item.product.slug}`}>
-                        <p className="text-[10px] text-white/60 uppercase tracking-widest mb-1.5">
+                        <p className="text-[11px] sm:text-[10px] text-white/60 uppercase tracking-widest mb-1.5">
                           {item.product.brand}
                         </p>
                         <h3 className="font-medium text-white line-clamp-2 group-hover:text-[#B8860B] transition-colors leading-snug">

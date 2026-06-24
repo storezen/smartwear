@@ -87,7 +87,7 @@ export default function CartPage() {
     <div className="min-h-screen bg-[#0C0F14] text-white">
 
       {/* Header */}
-      <div className="relative overflow-hidden text-white pt-16 pb-8 md:pt-28 md:pb-16 border-b border-white/5">
+      <div className="relative overflow-hidden text-white pt-14 pb-6 md:pt-28 md:pb-16 border-b border-white/5">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -99,7 +99,7 @@ export default function CartPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 text-xs text-white/70 mb-6 justify-center uppercase tracking-widest flex-wrap">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest flex-wrap">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B] shrink-0" />
             <span className="text-[#B8860B]">Shopping Cart</span>
@@ -108,8 +108,8 @@ export default function CartPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="font-bold text-white leading-tight mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}
+            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Your Cart
           </motion.h1>
@@ -158,7 +158,7 @@ export default function CartPage() {
 
                   {/* Details */}
                   <div className="flex-1 min-w-0">
-                    <p style={{ fontSize: "0.65rem", letterSpacing: "0.15em", color: "#B8860B", fontWeight: 600, textTransform: "uppercase" }}>
+                    <p className="text-[11px] sm:text-[10px] uppercase tracking-wider font-semibold" style={{ color: "#B8860B" }}>
                       {item.product.brand}
                     </p>
                     <Link href={`/products/${item.product.slug}`}>
@@ -276,12 +276,12 @@ export default function CartPage() {
                       <Truck className="w-4 h-4" /> 100% Cash on Delivery
                     </p>
                   </div>
-                  <p className="text-[9px] text-white/60 uppercase tracking-widest text-center mb-2.5 font-semibold">Other Payment Methods</p>
+                  <p className="text-[10px] sm:text-[9px] text-white/60 uppercase tracking-widest text-center mb-2.5 font-semibold">Other Payment Methods</p>
                   <div className="flex flex-wrap gap-1.5 justify-center">
                     {["JazzCash", "Easypaisa", "Bank Transfer"].map(m => (
                       <span
                         key={m}
-                        className="text-[10px] font-medium text-white/60 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10"
+                        className="text-[11px] sm:text-[10px] font-medium text-white/60 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10"
                       >
                         {m}
                       </span>

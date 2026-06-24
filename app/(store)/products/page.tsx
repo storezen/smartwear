@@ -33,7 +33,7 @@ const categoryTabLabels: Record<string, string> = {
 
 function Skeleton({ count = 8 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
       {[...Array(count)].map((_, i) => (
         <div key={i} className="rounded-[18px] overflow-hidden">
           <div className="aspect-square skeleton" />
@@ -164,7 +164,7 @@ function ProductsContent() {
     <div className="min-h-screen bg-[#0C0F14] text-white">
 
       {/* Hero */}
-      <div className="relative overflow-hidden text-white pt-16 pb-10 md:pt-32 md:pb-24">
+      <div className="relative overflow-hidden text-white pt-14 pb-8 md:pt-32 md:pb-24">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -176,7 +176,7 @@ function ProductsContent() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 text-xs text-white/70 mb-6 justify-center uppercase tracking-widest">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B]" />
             <span>Products</span>
@@ -188,8 +188,8 @@ function ProductsContent() {
             )}
           </div>
           <h1
-            className="font-bold text-white leading-tight mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}
+            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             {pageTitle}
           </h1>
@@ -208,11 +208,11 @@ function ProductsContent() {
             {/* Mobile filter */}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="flex items-center lg:hidden h-8 px-3 rounded-xl gap-1.5 text-xs font-medium border border-white/10 bg-white/5 text-white">
+                <button className="flex items-center lg:hidden h-11 px-3 rounded-xl gap-1.5 text-xs font-medium border border-white/10 bg-white/5 text-white">
                   <SlidersHorizontal className="w-3.5 h-3.5" />
                   Filter
                   {selected.length > 0 && (
-                    <span className="w-4 h-4 rounded-full bg-[#B8860B] text-black text-[9px] font-bold flex items-center justify-center">
+                    <span className="w-5 h-5 rounded-full bg-[#B8860B] text-black text-[10px] font-bold flex items-center justify-center">
                       {selected.length}
                     </span>
                   )}
