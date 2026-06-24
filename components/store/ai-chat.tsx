@@ -225,7 +225,8 @@ export function AIChat() {
   const [addingToCart, setAddingToCart] = useState<string | null>(null)
   const { addToCart } = useCart()
   const { settings } = useSettings()
-  const whatsappNumber = settings?.whatsapp_number || "923001234567"
+  let whatsappNumber = (settings?.whatsapp_number || "923001234567").replace(/[^0-9]/g, "")
+  if (whatsappNumber.startsWith('0')) whatsappNumber = '92' + whatsappNumber.slice(1)
   const whatsappMessage = settings?.whatsapp_message || "Hi Smartwear! I need help with my order."
   const [isListening, setIsListening] = useState(false)
   const [unreadCount, setUnreadCount] = useState(1)
@@ -643,14 +644,18 @@ export function AIChat() {
                           : "Would you like to talk to a human?"}
                       </p>
                       <div className="flex items-center gap-2 justify-center">
-                        <a
-                          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button
+                          onClick={() => {
+                            const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
+                            const w = window.open(waUrl, '_blank', 'noopener,noreferrer')
+                            if (!w || w.closed || typeof w.closed === 'undefined') {
+                              window.location.href = waUrl
+                            }
+                          }}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366] text-white text-xs font-semibold hover:bg-[#20BD5A] transition-colors"
                         >
                           <ExternalLink className="w-3 h-3" /> WhatsApp
-                        </a>
+                        </button>
                         <button
                           onClick={() => { sessionStorage.setItem("chat_failed_count", "0"); setFailedCount(0) }}
                           className="px-3 py-1.5 rounded-lg border border-white/10 text-white/50 text-xs hover:text-white/80 transition-colors"
