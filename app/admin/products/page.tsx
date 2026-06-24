@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { Search, Plus, Eye, Edit2, Package as PackageIcon, Trash2, Tag, DollarSign, Image as ImageIcon, Box, CheckSquare } from "lucide-react"
+import { Search, Plus, Eye, Edit2, Package as PackageIcon, Trash2, Tag, DollarSign, Image as ImageIcon, Box, CheckSquare, Globe, Loader2, Sparkles } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { toast } from "sonner"
@@ -39,6 +39,8 @@ export default function AdminProductsPage() {
     images: ['https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80'],
     colors: ''
   })
+  const [importUrl, setImportUrl] = useState("")
+  const [importingUrl, setImportingUrl] = useState(false)
 
   const load = () => {
     fetch('/api/products')
@@ -99,6 +101,29 @@ export default function AdminProductsPage() {
     }
   }
 
+  const handleImportUrl = async () => {
+    if (!importUrl.trim()) { toast.error("Paste a product URL first"); return }
+    setImportingUrl(true)
+    try {
+      const res = await fetch('/api/products/import-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: importUrl.trim() })
+      })
+      const data = await res.json()
+      if (!res.ok) { toast.error(data.error || "Failed to import"); setImportingUrl(false); return }
+      setFormData(prev => ({
+        ...prev,
+        name: data.title || prev.name,
+        price: data.price || prev.price,
+        images: data.image ? [data.image, ...prev.images.slice(1)] : prev.images,
+      }))
+      toast.success(`Imported: ${data.title || 'product'} from ${data.site_name || 'website'}`)
+      setImportUrl("")
+    } catch { toast.error("Failed to fetch URL") }
+    setImportingUrl(false)
+  }
+
   const handleDeleteProduct = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
@@ -150,7 +175,7 @@ export default function AdminProductsPage() {
       images: ['https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80'],
       colors: ''
     })
-    setEditingId(null)
+    setEditingId(null); setImportUrl("")
     setShowAddModal(true)
   }
 
@@ -467,6 +492,27 @@ export default function AdminProductsPage() {
           </div>
           
           <div className="p-6 md:p-8 space-y-8">
+            {/* Import from URL */}
+            {!editingId && (
+              <div className="bg-gradient-to-r from-[#B8860B]/5 to-transparent border border-[#B8860B]/10 rounded-2xl p-5">
+                <h4 className="text-sm font-medium text-white flex items-center gap-2 mb-3">
+                  <Globe className="w-4 h-4 text-[#B8860B]" /> Import from URL
+                </h4>
+                <p className="text-[11px] text-white/40 mb-3">Paste any product URL — title, image, and price will auto-fetch via Open Graph tags.</p>
+                <div className="flex gap-2">
+                  <input type="text" value={importUrl} onChange={e => setImportUrl(e.target.value)}
+                    placeholder="https://example.com/product/123"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#B8860B] transition-all"
+                    onKeyDown={e => e.key === 'Enter' && handleImportUrl()}
+                  />
+                  <button onClick={handleImportUrl} disabled={importingUrl}
+                    className="bg-[#B8860B] hover:bg-[#D4A017] text-black px-4 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-50 flex items-center gap-2 shrink-0">
+                    {importingUrl ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                    {importingUrl ? "Fetching..." : "Import"}
+                  </button>
+                </div>
+              </div>
+            )}
             {/* General Info */}
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-white flex items-center gap-2"><Tag className="w-4 h-4 text-[#B8860B]" /> General Information</h3>
