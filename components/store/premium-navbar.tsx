@@ -99,7 +99,14 @@ function AnnouncementText() {
     fetch('/api/public/settings')
       .then(r => r.json())
       .then(data => {
-        const parts = [data.announcement_line1, data.announcement_line2, data.announcement_line3].filter(Boolean)
+        const threshold = data.free_delivery_threshold ? Number(data.free_delivery_threshold).toLocaleString() : null
+        const line1 = data.announcement_line1 || ""
+        const freeMsg = threshold ? `Free Delivery on Orders Over Rs. ${threshold}` : ""
+        const parts = [
+          data.announcement_line1?.includes("Free Delivery") ? freeMsg : data.announcement_line1,
+          data.announcement_line2,
+          data.announcement_line3,
+        ].filter(Boolean)
         setText(parts.join(" · "))
       })
       .catch(() => setText("Free Delivery · Open Box · 100% COD"))
