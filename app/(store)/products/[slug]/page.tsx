@@ -224,7 +224,7 @@ function ProductContent({ product }: { product: any }) {
     else sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     return sorted
   }, [allReviews, sortBy])
-  const displayedReviews = showAllReviews ? sortedReviews : sortedReviews.slice(0, 5)
+  const displayedReviews = sortedReviews
   const recommendPct = allReviews.length > 0
     ? Math.round((allReviews.filter(r => r.rating >= 4).length / allReviews.length) * 100)
     : 0
@@ -474,102 +474,6 @@ function ProductContent({ product }: { product: any }) {
                 </div>
               </motion.div>
 
-              {/* Inline Reviews */}
-              {displayedReviews.length > 0 && (
-                <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3.5} className="space-y-3">
-                  <div className="flex items-center justify-between flex-wrap gap-1">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <div className="flex gap-0.5">
-                        {[1,2,3,4,5].map((s) => (
-                          <Star key={s} className={cn("w-3 h-3", s <= Math.round(product.rating || 0) ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10")} />
-                        ))}
-                      </div>
-                      <span className="text-xs font-semibold text-white">{product.rating}</span>
-                      <span className="text-[11px] sm:text-[10px] text-white/50">({allReviews.length})</span>
-                      <span className="text-[11px] sm:text-[10px] text-emerald-400 font-medium bg-emerald-500/10 px-1.5 py-0.5 rounded-full">{recommendPct}% recommend</span>
-                    </div>
-                    <button
-                      onClick={() => setShowReviewForm(true)}
-                      className="text-[11px] sm:text-[10px] text-[#B8860B] hover:text-[#D4A017] font-semibold transition-colors py-1"
-                    >
-                      + Write
-                    </button>
-                  </div>
-
-                  <div className="space-y-2">
-                    {displayedReviews.slice(0, 3).map((rev) => (
-                      <div key={rev.id} className="flex items-start gap-2.5 bg-white/[0.02] border border-white/5 rounded-xl p-3">
-                        <div className="w-7 h-7 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-xs shrink-0">
-                          {rev.user_name.charAt(0)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="text-xs font-medium text-white truncate">{rev.user_name}</p>
-                            <div className="flex gap-0.5">
-                              {Array.from({ length: 5 }).map((_, i) => (
-                                <Star key={i} className={cn("w-2.5 h-2.5", i < rev.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/5 text-white/10")} />
-                              ))}
-                            </div>
-                          </div>
-                          <p className="text-[11px] text-white/60 mt-0.5 line-clamp-2 leading-relaxed">{rev.comment}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {allReviews.length > 3 && (
-                    <button
-                      onClick={() => setShowAllReviews(true)}
-                      className="w-full py-2.5 text-[11px] sm:text-[10px] font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
-                    >
-                      View All {allReviews.length} Reviews
-                    </button>
-                  )}
-
-                  {/* Write Review Form */}
-                  {showReviewForm && (
-                    <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-semibold text-white">Write a Review</p>
-                        <button
-                          onClick={() => { setShowReviewForm(false); setReviewForm({ user_name: "", rating: 5, comment: "" }) }}
-                          className="text-[10px] text-white/40 hover:text-white"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        value={reviewForm.user_name}
-                        onChange={(e) => setReviewForm(prev => ({ ...prev, user_name: e.target.value }))}
-                        placeholder="Your name"
-                        className="w-full h-9 px-3 text-sm rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] outline-none transition-all"
-                      />
-                      <div className="flex gap-1">
-                        {[1,2,3,4,5].map((s) => (
-                          <button key={s} type="button" onClick={() => setReviewForm(prev => ({ ...prev, rating: s }))}>
-                            <Star className={cn("w-5 h-5", s <= reviewForm.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10")} />
-                          </button>
-                        ))}
-                      </div>
-                      <textarea
-                        value={reviewForm.comment}
-                        onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
-                        placeholder={reviewForm.rating >= 4 ? "What did you like?" : "What could be improved?"}
-                        rows={2}
-                        className="w-full px-3 py-2 text-sm rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] outline-none transition-all resize-none"
-                      />
-                      <button
-                        onClick={handleSubmitReview}
-                        className="sw-btn-gold px-4 h-8 text-[10px] font-bold uppercase tracking-widest rounded-lg"
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-
               {/* Color Selection */}
               {product.colors && product.colors.length > 0 && (
                 <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3.5} className="space-y-3">
@@ -638,6 +542,117 @@ function ProductContent({ product }: { product: any }) {
                     </span>
                   </div>
                 </button>
+              </motion.div>
+
+              {/* Customer Reviews — Pakistanis speak! */}
+              <motion.div initial="hidden" animate="show" variants={fadeUp} custom={4.5} className="space-y-3">
+                <div className="flex items-center justify-between flex-wrap gap-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <div className="flex gap-0.5">
+                      {[1,2,3,4,5].map((s) => (
+                        <Star key={s} className={cn("w-3 h-3", s <= Math.round(product.rating || 0) ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10")} />
+                      ))}
+                    </div>
+                    <span className="text-xs font-semibold text-white">{product.rating}</span>
+                    <span className="text-[11px] sm:text-[10px] text-white/50">({allReviews.length})</span>
+                    <span className="text-[11px] sm:text-[10px] text-emerald-400 font-medium bg-emerald-500/10 px-1.5 py-0.5 rounded-full">{recommendPct}% recommend</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                      className="bg-white/5 border border-white/10 text-[10px] text-white/70 rounded-lg px-2 h-7 outline-none focus:border-[#B8860B] transition-colors"
+                    >
+                      <option value="recent" className="bg-[#0C0F14]">Recent</option>
+                      <option value="highest" className="bg-[#0C0F14]">Highest</option>
+                      <option value="lowest" className="bg-[#0C0F14]">Lowest</option>
+                    </select>
+                    <button
+                      onClick={() => setShowReviewForm(true)}
+                      className="text-[11px] sm:text-[10px] text-[#B8860B] hover:text-[#D4A017] font-semibold transition-colors py-1 whitespace-nowrap"
+                    >
+                      + Write Review
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  {displayedReviews.slice(0, showAllReviews ? 50 : 5).map((rev) => (
+                    <div key={rev.id} className="flex items-start gap-2.5 bg-white/[0.02] border border-white/5 rounded-xl p-3 hover:border-white/10 transition-all">
+                      <div className="w-7 h-7 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-xs shrink-0">
+                        {rev.user_name.charAt(0)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="text-xs font-medium text-white truncate max-w-[120px]">{rev.user_name}</p>
+                          <div className="flex gap-0.5">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star key={i} className={cn("w-2.5 h-2.5", i < rev.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/5 text-white/10")} />
+                            ))}
+                          </div>
+                          {rev.is_verified && (
+                            <span className="text-[9px] text-emerald-400/80 bg-emerald-500/10 px-1.5 py-0.5 rounded-full font-medium">Verified</span>
+                          )}
+                          {rev.helpful_count != null && rev.helpful_count > 0 && (
+                            <span className="text-[9px] text-white/40">👍 {rev.helpful_count}</span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-white/60 mt-0.5 line-clamp-3 leading-relaxed">{rev.comment}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {allReviews.length > 5 && (
+                  <button
+                    onClick={() => setShowAllReviews(!showAllReviews)}
+                    className="w-full py-2.5 text-[11px] sm:text-[10px] font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
+                  >
+                    {showAllReviews ? "Show Less" : `View All ${allReviews.length} Reviews`}
+                  </button>
+                )}
+
+                {/* Write Review Form */}
+                {showReviewForm && (
+                  <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-semibold text-white">Write a Review</p>
+                      <button
+                        onClick={() => { setShowReviewForm(false); setReviewForm({ user_name: "", rating: 5, comment: "" }) }}
+                        className="text-[10px] text-white/40 hover:text-white"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      value={reviewForm.user_name}
+                      onChange={(e) => setReviewForm(prev => ({ ...prev, user_name: e.target.value }))}
+                      placeholder="Your name"
+                      className="w-full h-9 px-3 text-sm rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] outline-none transition-all"
+                    />
+                    <div className="flex gap-1">
+                      {[1,2,3,4,5].map((s) => (
+                        <button key={s} type="button" onClick={() => setReviewForm(prev => ({ ...prev, rating: s }))}>
+                          <Star className={cn("w-5 h-5", s <= reviewForm.rating ? "fill-[#B8860B] text-[#B8860B]" : "fill-white/10 text-white/10")} />
+                        </button>
+                      ))}
+                    </div>
+                    <textarea
+                      value={reviewForm.comment}
+                      onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
+                      placeholder={reviewForm.rating >= 4 ? "Apna experience share karein..." : "Kya improve kar sakte hain?"}
+                      rows={2}
+                      className="w-full px-3 py-2 text-sm rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#B8860B] outline-none transition-all resize-none"
+                    />
+                    <button
+                      onClick={handleSubmitReview}
+                      className="sw-btn-gold px-4 h-8 text-[10px] font-bold uppercase tracking-widest rounded-lg"
+                    >
+                      Submit Review
+                    </button>
+                  </div>
+                )}
               </motion.div>
             </div>
           </div>
