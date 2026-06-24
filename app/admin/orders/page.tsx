@@ -64,14 +64,8 @@ export default function AdminOrdersPage() {
 
   const POSTEX_ORDER_TYPES = [
     "Normal",
-    "Express",
-    "Fragile",
-    "Liquid",
-    "Electronics",
-    "Food",
-    "Clothing",
-    "Documents",
-    "Others",
+    "Reverse",
+    "Replacement",
   ]
   const [postexBooking, setPostexBooking] = useState(false)
 
