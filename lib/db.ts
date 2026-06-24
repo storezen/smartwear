@@ -512,10 +512,14 @@ export async function getSettings() {
     try {
       const db = await getDb()
       const fromFile = db.settings || {}
-      return { ...SETTINGS_DEFAULTS, ...fromFile, ...fromSupabase }
+      const result = { ...SETTINGS_DEFAULTS, ...fromFile, ...fromSupabase }
+      console.log('[settings] getSettings - supabase keys:', Object.keys(fromSupabase).length, 'file keys:', Object.keys(fromFile).length)
+      return result
     } catch {}
 
-    return { ...SETTINGS_DEFAULTS, ...fromSupabase }
+    const fallback = { ...SETTINGS_DEFAULTS, ...fromSupabase }
+    console.log('[settings] getSettings - no file, supabase keys:', Object.keys(fromSupabase).length)
+    return fallback
   }
 
   const db = await getDb()
@@ -539,20 +543,28 @@ export async function updateSettings(updates: any) {
     } catch {}
 
     // Try ALL keys first (works when all Supabase columns exist)
+    console.log('[settings] upserting with all keys, count:', Object.keys(merged).length)
     const { data, error } = await supabase.from('settings').upsert({ id: 1, ...merged }).select().single()
-    if (!error && data) return data
+    if (!error && data) {
+      console.log('[settings] upsert (all keys) succeeded')
+      return data
+    }
 
-    console.warn("Supabase upsert (all keys) failed, retrying with known columns:", error?.message)
+    console.warn('[settings] upsert (all keys) failed:', error?.message, JSON.stringify(error))
 
     // Fallback: only known columns (some might be missing from table)
     const filtered: Record<string, unknown> = { id: 1 }
     for (const [key, value] of Object.entries(merged)) {
       if (KNOWN_SETTINGS_COLUMNS.has(key)) filtered[key] = value
     }
+    console.log('[settings] upserting with filtered keys, count:', Object.keys(filtered).length)
     const { data: data2, error: error2 } = await supabase.from('settings').upsert(filtered).select().single()
-    if (!error2 && data2) return data2
+    if (!error2 && data2) {
+      console.log('[settings] upsert (filtered) succeeded')
+      return data2
+    }
 
-    console.error("Supabase upsert (filtered) also failed:", error2?.message)
+    console.error('[settings] upsert (filtered) also failed:', error2?.message, JSON.stringify(error2))
     return merged
   }
   const db = await getDb()

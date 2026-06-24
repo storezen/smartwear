@@ -19,7 +19,9 @@ export async function GET() {
       maskedSettings.tiktok_access_token = "********";
     }
 
-    return NextResponse.json(maskedSettings);
+    return NextResponse.json(maskedSettings, {
+      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0' },
+    });
   } catch (error) {
     console.error('Error fetching settings:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
