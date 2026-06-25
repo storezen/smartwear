@@ -296,14 +296,16 @@ export const TikTokEvents = {
 
   search: (query: string) => {
     trackTikTokEvent('Search', {
+      value: 1,
       content_id: 'search',
       content_type: 'product_group',
       content_name: query,
     })
   },
 
-  addPaymentInfo: (method: string) => {
+  addPaymentInfo: (method: string, value = 1) => {
     trackTikTokEvent('AddPaymentInfo', {
+      value,
       content_id: 'payment_info',
       content_type: 'product_group',
       content_name: method || 'COD',
