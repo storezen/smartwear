@@ -1,0 +1,66 @@
+═══════════════════════════════════════════════════
+  PRODUCT IMAGE BRAND RISK REPORT
+  Generated: June 25, 2026
+═══════════════════════════════════════════════════
+
+TOTAL IMAGES SCANNED: 7107
+🔴 HIGH RISK:  16  (brand name in filename)
+🟡 MEDIUM RISK: 42  (model/brand reference)
+🟢 LOW RISK:   7049 (clean)
+
+═══════════════════════════════════════════════════
+🔴 HIGH RISK — Verify with Google Lens
+═══════════════════════════════════════════════════
+
+Product: watch S9 Matte with Magnetic Chain
+  Image 2/4 — Apple-Watch-Series-9-45mm-1.webp
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/Apple-Watch-Series-9-45mm-1.webp?v=1773597593
+
+Product: JS Watch 7
+  Image 3/4 — HDMINIwatch_1.webp  
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/HDMINIwatch_1.webp?v=1773597824
+
+Product: JS Galaxy Watch 6 Classic Edition  ⚠️ ALL 5 IMAGES BRANDED
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/samsung-galaxy-watch-6-classic-47mm-pakistan-priceoye-4bn4z-.webp
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/samsung-galaxy-watch-6-classic-47mm-pakistan-priceoye-g776e-.webp
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/samsung-galaxy-watch-6-classic-47mm-pakistan-priceoye-48fd1-.webp
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/samsung-galaxy-watch-6-classic-47mm-pakistan-priceoye-hdiqq-.webp
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/samsung-galaxy-watch-6-classic-47mm-pakistan-priceoye-fue6i-.webp
+
+Product: watch S9 Matte Silver
+  Image 3/7 — iphones-accessories.py-20241203-0023.jpg
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/iphones-accessories.py-20241203-0023.jpg
+  Image 5/7 — iphones-accessories.py-20241203-0023_b41b0a65-54c3-4e3f-86dd.jpg
+  Image 6/7 — iphones-accessories.py-20241203-0022.jpg
+  Image 7/7 — iphones-accessories.py-20241203-0021.jpg
+
+Product: TWS Earbuds Pro  ⚠️ ALL 5 IMAGES BRANDED (Apple Store)
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/sahil-dubai_apple_store-20241123-0012.jpg
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/sahil-dubai_apple_store-20241123-0008.jpg
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/sahil-dubai_apple_store-20241123-0009.jpg
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/sahil-dubai_apple_store-20241123-0010.jpg
+  https://cdn.shopify.com/s/files/1/0669/1189/5650/files/sahil-dubai_apple_store-20241123-0007.jpg
+
+═══════════════════════════════════════════════════
+🟡 MEDIUM RISK — Check manually
+═══════════════════════════════════════════════════
+- WS-Z9 Max Series Smart Watch (series-9 ref)
+- WATCH 9 MAX (5 images)
+- Watch 10 Max S10 Latest Edition (3 images)
+- Elite Smart Watch With 10 Straps (ultra prefix)
+- Elite 7in1 Straps Smart Watch (ultra prefix)
+- Galaxy Buds 2 Pro (2 images)
+- Rolex Yacht Master (3 images - model names)
+- Rolex Submariner (model name)
+- Rolex Daytona (model name)
+- Various Rolex models (20+ images)
+
+═══════════════════════════════════════════════════
+PROTECTION STATUS
+═══════════════════════════════════════════════════
+✅ 10% gradient overlay active on ALL product images
+✅ Title names cleaned (S11, Elite, Premium, etc.)
+✅ Descriptions cleaned (Apple-style, no brand names)
+✅ TikTok captions added (brand-safe)
+
+RECOMMENDED: Verify top 5 high-risk images with Google Lens
