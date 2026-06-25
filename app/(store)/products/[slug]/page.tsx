@@ -370,12 +370,13 @@ function ProductContent({ product }: { product: any }) {
                 </div>
                 
                 {/* Social Proof (Viewers) */}
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-2 text-white/80 bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-full text-xs font-medium">
-                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="font-bold text-white">{viewers}</span> people are viewing this right now
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-2 text-white/80 bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-full text-xs font-medium tracking-wide">
+                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
+                  <span className="font-bold text-white mr-0.5">{viewers}</span>
+                  <span className="whitespace-nowrap">people are viewing this right now</span>
                 </motion.div>
                 
-                <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
+                <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
                   {product.name}
                 </h1>
                 
