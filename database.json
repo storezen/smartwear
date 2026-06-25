@@ -31953,8 +31953,8 @@
     "trust_badges": "[{\"label\":\"Fast Delivery\",\"icon\":\"Truck\"},{\"label\":\"1 Year Warranty\",\"icon\":\"ShieldCheck\"},{\"label\":\"7-Day Returns\",\"icon\":\"RefreshCw\"},{\"label\":\"Cash on Delivery\",\"icon\":\"Banknote\"},{\"label\":\"Secure Checkout\",\"icon\":\"Lock\"}]",
     "postex_api_token": "",
     "postex_webhook_secret": "",
-    "tiktok_pixel_id": "D8UNBNBC77UDLC6D5TH0",
-    "tiktok_access_token": "79eddd29def5a59f74f4aeb0d22fcf450097e01d",
+    "tiktok_pixel_id": "",
+    "tiktok_access_token": "",
     "store_phone": "",
     "store_email": ""
   },
