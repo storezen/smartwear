@@ -308,6 +308,7 @@ function ProductContent({ product }: { product: any }) {
                     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute inset-0"
                   >
+                    <div className="absolute inset-0 z-10 bg-gradient-to-br from-transparent via-transparent to-[#0C0F14]/5 pointer-events-none" />
                     <Image
                       src={product.images[selectedImage]}
                       alt={product.name}

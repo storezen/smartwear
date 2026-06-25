@@ -63,14 +63,17 @@ export function ProductCard({ product, className }: { product: Product; classNam
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] rounded-full bg-[#B8860B]/10 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
 
             {!imgErr ? (
-              <Image
-                src={product.images[0]}
-                alt={product.name}
-                fill
-                className="object-cover z-10 transition-all duration-700 ease-[0.25,0.46,0.45,0.94] group-hover:scale-105"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                onError={() => setImgErr(true)}
-              />
+              <div className="absolute inset-0 z-10">
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-[#0C0F14]/5 pointer-events-none z-20" />
+                <Image
+                  src={product.images[0]}
+                  alt={product.name}
+                  fill
+                  className="object-cover transition-all duration-700 ease-[0.25,0.46,0.45,0.94] group-hover:scale-105"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  onError={() => setImgErr(true)}
+                />
+              </div>
             ) : (
               <div className="absolute inset-0 z-10 flex items-center justify-center">
                 <svg viewBox="0 0 64 64" className="w-16 h-16 opacity-15" fill="none">
