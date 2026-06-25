@@ -108,7 +108,7 @@ export default function CheckoutPage() {
   // Fire AddPaymentInfo when user fills name + phone (strong purchase intent signal)
   useEffect(() => {
     if (guestAddress.name.length > 2 && guestAddress.phone.length > 10) {
-      TikTokEvents.addPaymentInfo('COD')
+      TikTokEvents.addPaymentInfo('COD', subtotal)
     }
   }, [guestAddress.name, guestAddress.phone])
 
