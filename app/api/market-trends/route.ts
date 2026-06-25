@@ -71,6 +71,8 @@ async function fetchTrendingPakistan() {
   }
 }
 
+let darazBlocked = false
+
 async function fetchDarazPage(query: string, page: number): Promise<any[]> {
   try {
     const url = `https://www.daraz.pk/catalog/?q=${encodeURIComponent(query)}&ajax=true&page=${page}&sort=orderdesc`
@@ -82,7 +84,13 @@ async function fetchDarazPage(query: string, page: number): Promise<any[]> {
         'x-requested-with': 'XMLHttpRequest',
       },
     })
-    const data = await res.json()
+    const text = await res.text()
+    // Detect Daraz anti-scraping block (returns HTML/script instead of JSON)
+    if (text.trim().startsWith('<') || text.includes('punish') || text.includes('x5sec')) {
+      darazBlocked = true
+      return []
+    }
+    const data = JSON.parse(text)
     return data?.mods?.listItems || []
   } catch {
     return []
@@ -179,7 +187,8 @@ export async function GET() {
       if (range) range.count++
     })
 
-    const localTotalValue = localProducts.reduce((s: number, p: any) => s + ((p.price || 0) * (p.stock || 0)), 0)
+    const localTotalValue = Math.round(localProducts.reduce((s: number, p: any) => s + ((p.price || 0) * (p.stock || 0)), 0))
+    const localTotalStock = localProducts.reduce((s: number, p: any) => s + (p.stock || 0), 0)
 
     // --- Market Data ---
     const categories = CATEGORIES.map((cat, i) => {
@@ -303,7 +312,6 @@ export async function GET() {
           marketAvgPrice: m.avgPrice,
           youHave: local ? local.count : 0,
           marketAvgPerProduct: m.avgSoldPerProduct,
-          gap: local ? m.avgSoldPerProduct - 0 : m.avgSoldPerProduct,
           status: !local ? 'missing' : local.count < 5 ? 'low' : local.count < 15 ? 'medium' : 'strong',
         }
       }).sort((a, b) => b.marketDemand - a.marketDemand)
@@ -318,13 +326,15 @@ export async function GET() {
       categorySummary,
       bestPricePerCategory,
       opportunityScore,
+      darazBlocked,
       // Local store data
       local: {
         totalProducts: localProducts.length,
         totalValue: localTotalValue,
+        totalStock: localTotalStock,
         categories: localSummary,
         priceRanges: localPriceRanges,
-        products: localProducts.slice(0, 30).map((p: any) => ({
+        products: localProducts.slice(0, 50).map((p: any) => ({
           name: p.name,
           price: p.price || 0,
           stock: p.stock || 0,

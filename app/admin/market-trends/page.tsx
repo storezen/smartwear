@@ -125,10 +125,14 @@ export default function MarketTrendsPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <SpotlightCard className="p-3">
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className={`w-2 h-2 rounded-full ${data?.darazBlocked ? 'bg-red-400' : 'bg-emerald-400'}`} />
             <span className="text-[10px] text-white/50 uppercase tracking-wider">Market Products</span>
           </div>
-          <p className="text-xl font-bold text-white">{data?.summary?.totalProducts || 0}</p>
+          <p className="text-xl font-bold text-white">
+            {data?.darazBlocked ? (
+              <span className="text-red-400 text-[11px] font-medium">Blocked</span>
+            ) : (data?.summary?.totalProducts || 0)}
+          </p>
         </SpotlightCard>
         <SpotlightCard className="p-3">
           <div className="flex items-center gap-2 mb-1">
@@ -142,7 +146,9 @@ export default function MarketTrendsPage() {
             <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
             <span className="text-[10px] text-white/50 uppercase tracking-wider">Market Avg Price</span>
           </div>
-          <p className="text-xl font-bold text-white">{formatPKR(data?.summary?.avgPrice || 0)}</p>
+          <p className="text-xl font-bold text-white">
+            {data?.summary?.totalProducts ? formatPKR(data?.summary?.avgPrice) : '—'}
+          </p>
         </SpotlightCard>
         <SpotlightCard className="p-3">
           <div className="flex items-center gap-2 mb-1">
@@ -158,12 +164,17 @@ export default function MarketTrendsPage() {
       </div>
 
       {/* Gap Analysis — Missing Opportunities */}
-      {view === "compare" && gapAnalysis.length > 0 && (
+      {view === "compare" && (
         <SpotlightCard className="p-4 border-orange-400/20">
           <div className="flex items-center gap-2 mb-3">
             <AlertTriangle className="w-4 h-4 text-orange-400" />
             <h2 className="text-white font-semibold text-xs uppercase tracking-wider">Market Opportunities — Products You're Missing</h2>
           </div>
+          {data?.darazBlocked ? (
+            <p className="text-white/40 text-xs py-3">Daraz data unavailable — market comparison not possible right now. Try again later.</p>
+          ) : gapAnalysis.length === 0 ? (
+            <p className="text-white/40 text-xs py-3">No market data to compare yet. Data refreshes every hour.</p>
+          ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {gapAnalysis.filter((g: any) => g.status === 'missing' || g.status === 'low').slice(0, 6).map((g: any) => (
               <div key={g.category} className="bg-white/[0.03] border border-white/5 rounded-xl p-3">
@@ -184,6 +195,7 @@ export default function MarketTrendsPage() {
               </div>
             ))}
           </div>
+        )}
         </SpotlightCard>
       )}
 
@@ -202,7 +214,7 @@ export default function MarketTrendsPage() {
                   <span className="text-white text-[12px] font-medium">{c.category}</span>
                   <div className="flex items-center gap-1.5">
                     <span className="text-[10px] text-emerald-400">{c.marketTotalSold.toLocaleString()} sold</span>
-                    {c.youHave > 0 && <span className="text-[10px] text-white/30">· {c.yourCount} yours</span>}
+                    {c.yourCount > 0 && <span className="text-[10px] text-white/30">· {c.yourCount} yours</span>}
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-[11px]">
@@ -236,10 +248,10 @@ export default function MarketTrendsPage() {
                   </div>
                   <span className="text-[11px] font-bold text-orange-400 whitespace-nowrap">{p.price}</span>
                 </div>
-              ))}
-            </div>
-          </SpotlightCard>
-        )}
+            ))}
+          </div>
+        </SpotlightCard>
+      )}
 
         {/* Your Store Summary */}
         {showLocal && (
@@ -377,23 +389,31 @@ export default function MarketTrendsPage() {
               <tbody className="text-[12px]">
                 {localProducts.length === 0 ? (
                   <tr><td colSpan={6} className="p-8 text-center text-white/30">No products</td></tr>
-                ) : (
-                  localProducts.slice(0, 50).map((p: any, i: number) => (
-                    <tr key={i} className="border-b border-white/[0.02] hover:bg-white/[0.02]">
-                      <td className="p-3 text-white/30 font-mono">{i + 1}</td>
-                      <td className="p-3 text-white font-medium max-w-[250px] truncate" title={p.name}>
-                        <Package className="w-3 h-3 text-white/30 inline mr-1.5" />
-                        {p.name}
-                      </td>
-                      <td className="p-3 text-[#D4A017] font-semibold">{formatPKR(p.price)}</td>
-                      <td className="p-3 text-white/80">{p.stock}</td>
-                      <td className="p-3 text-white/60">{p.rating || '—'}</td>
-                      <td className="p-3">
-                        <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-white/50">{p.category}</span>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                ) : (() => {
+                  const shown = localProducts.slice(0, 50)
+                  return (
+                    <>
+                      {shown.map((p: any, i: number) => (
+                        <tr key={i} className="border-b border-white/[0.02] hover:bg-white/[0.02]">
+                          <td className="p-3 text-white/30 font-mono">{i + 1}</td>
+                          <td className="p-3 text-white font-medium max-w-[250px] truncate" title={p.name}>
+                            <Package className="w-3 h-3 text-white/30 inline mr-1.5" />
+                            {p.name}
+                          </td>
+                          <td className="p-3 text-[#D4A017] font-semibold">{formatPKR(p.price)}</td>
+                          <td className="p-3 text-white/80">{p.stock}</td>
+                          <td className="p-3 text-white/60">{p.rating || '—'}</td>
+                          <td className="p-3">
+                            <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-white/50">{p.category}</span>
+                          </td>
+                        </tr>
+                      ))}
+                      {localProducts.length > 50 && (
+                        <tr><td colSpan={6} className="p-2 text-center text-white/20 text-[10px]">Showing 50 of {localProducts.length} products</td></tr>
+                      )}
+                    </>
+                  )
+                })()}
               </tbody>
             </table>
           ) : (
@@ -459,8 +479,7 @@ export default function MarketTrendsPage() {
                           <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-white/50">{p.category}</span>
                         </td>
                       </tr>
-                    ))
-                )}
+                  )))}
               </tbody>
             </table>
           )}
