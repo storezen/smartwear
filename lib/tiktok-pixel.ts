@@ -276,9 +276,11 @@ export const TikTokEvents = {
   },
 
   purchase: (orderData: { id: string; total: number; items: Array<{ id: string; name: string; price: number; quantity: number; category?: string }> }) => {
+    const total = orderData.total > 0 ? orderData.total
+      : (orderData.items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0)
     trackTikTokEvent('CompletePayment', {
       event_id: orderData.id,
-      value: orderData.total,
+      value: total,
       contents: (orderData.items || []).map(item => ({
         content_id: item.id,
         content_type: 'product',
