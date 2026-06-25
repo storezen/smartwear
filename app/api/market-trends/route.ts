@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { saveSnapshot } from '@/lib/market-data'
 
 const CATEGORIES = [
   { query: 'smartwatch', label: 'Smart Watches' },
@@ -94,6 +95,7 @@ export async function GET() {
     }
 
     cache = { data, timestamp: Date.now() }
+    saveSnapshot(data)
     return NextResponse.json(data, {
       headers: { 'Cache-Control': `public, max-age=${CACHE_TTL}, s-maxage=${CACHE_TTL}` },
     })
