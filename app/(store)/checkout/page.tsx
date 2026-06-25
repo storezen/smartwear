@@ -98,10 +98,11 @@ export default function CheckoutPage() {
     )
   }, [items.length, subtotal])
 
-  // Store PII for TikTok Advanced Matching when user fills form
+  // Store PII & identify user for TikTok Advanced Matching when user fills form
   useEffect(() => {
     if (guestAddress.phone || guestAddress.name) {
       storeUserData({ phone: guestAddress.phone, name: guestAddress.name })
+      identifyUser(undefined, guestAddress.phone, guestAddress.name)
     }
   }, [guestAddress.phone, guestAddress.name])
 
