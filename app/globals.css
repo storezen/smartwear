@@ -438,8 +438,11 @@
   position: absolute;
   inset: 0;
   z-index: 5;
-  background: linear-gradient(135deg, transparent 50%, rgba(12,15,20,0.04) 100%);
+  background: linear-gradient(135deg, transparent 40%, rgba(12,15,20,0.10) 100%);
   pointer-events: none;
+}
+.protected-img-strong::after {
+  background: linear-gradient(135deg, transparent 30%, rgba(12,15,20,0.18) 100%);
 }
 
 /* ═══════════════════════════════════════════
