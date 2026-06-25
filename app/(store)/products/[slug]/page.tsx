@@ -344,7 +344,7 @@ function ProductContent({ product }: { product: any }) {
                     <button
                       onClick={() => setSelectedImage(idx)}
                       className={cn(
-                        "relative aspect-square w-full rounded-[12px] md:rounded-[14px] overflow-hidden sw-interactive snap-start transition-colors duration-1000 flex items-center justify-center",
+                        "relative protected-img aspect-square w-full rounded-[12px] md:rounded-[14px] overflow-hidden sw-interactive snap-start transition-colors duration-1000 flex items-center justify-center",
                         lumeMode ? "bg-black" : "bg-transparent",
                         selectedImage === idx ? (lumeMode ? "ring-2 ring-emerald-500 ring-offset-2 ring-offset-black" : "ring-2 ring-[#B8860B] ring-offset-2 ring-offset-[#0C0F14]") : "opacity-60 hover:opacity-100"
                       )}

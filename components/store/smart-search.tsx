@@ -182,7 +182,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                         )}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-[#0C0F14] border border-white/10 overflow-hidden shrink-0 relative">
+                          <div className="w-10 h-10 rounded-lg bg-[#0C0F14] border border-white/10 overflow-hidden shrink-0 relative protected-img">
                             {product.images && product.images[0] ? (
                               <Image src={product.images[0]} alt={product.name} fill sizes="40px" className="object-cover" />
                             ) : (
@@ -232,7 +232,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
               {selectedProduct ? (
                 <div className="p-6 h-full flex flex-col relative z-10">
                   <div className="flex-1">
-                    <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#0C0F14] border border-white/5 mb-6 group">
+                    <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#0C0F14] border border-white/5 mb-6 group protected-img">
                       {selectedProduct.images && selectedProduct.images[0] ? (
                         <Image 
                           src={selectedProduct.images[0]} 
