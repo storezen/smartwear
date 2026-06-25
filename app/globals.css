@@ -428,6 +428,20 @@
   border-radius: 8px;
 }
 
+/* ── AI Fingerprint Protection ── */
+.protected-img {
+  position: relative;
+  overflow: hidden;
+}
+.protected-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: linear-gradient(135deg, transparent 50%, rgba(12,15,20,0.04) 100%);
+  pointer-events: none;
+}
+
 /* ═══════════════════════════════════════════
    ANIMATIONS
    ═══════════════════════════════════════════ */
