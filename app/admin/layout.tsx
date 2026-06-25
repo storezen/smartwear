@@ -18,6 +18,7 @@ import {
   Activity,
   Megaphone,
   MessageCircle,
+  TrendingUp,
 } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
@@ -31,6 +32,7 @@ const adminNav = [
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/chat", label: "Chat", icon: MessageCircle },
   { href: "/admin/marketing", label: "Marketing", icon: Megaphone },
+  { href: "/admin/market-trends", label: "Market Trends", icon: TrendingUp },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ]
