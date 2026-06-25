@@ -294,18 +294,16 @@ export const TikTokEvents = {
 
   /* ── Audience Maturity Events ── */
 
-  search: (query: string, value = 0) => {
+  search: (query: string) => {
     trackTikTokEvent('Search', {
-      value,
       content_id: 'search',
       content_type: 'product_group',
       content_name: query,
     })
   },
 
-  addPaymentInfo: (method: string, value = 0) => {
+  addPaymentInfo: (method: string) => {
     trackTikTokEvent('AddPaymentInfo', {
-      value,
       content_id: 'payment_info',
       content_type: 'product_group',
       content_name: method || 'COD',
