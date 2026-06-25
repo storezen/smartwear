@@ -14,6 +14,12 @@ function getStoreUrl(req: Request): string {
   return `https://${host}`
 }
 
+function proxyImageUrl(baseUrl: string, originalUrl: string): string {
+  if (!originalUrl) return ''
+  const encoded = Buffer.from(originalUrl).toString('base64url')
+  return `${baseUrl}/api/img?url=${encoded}`
+}
+
 export async function GET(req: Request) {
   try {
     const products = await getProducts()
@@ -30,7 +36,8 @@ export async function GET(req: Request) {
 
     for (const p of active) {
       const link = `${baseUrl}/products/${encodeURIComponent(p.slug || p.id)}`
-      const image = Array.isArray(p.images) && p.images[0] ? p.images[0] : ''
+      const rawImage = Array.isArray(p.images) && p.images[0] ? p.images[0] : ''
+      const image = proxyImageUrl(baseUrl, rawImage)
       const desc = (p.description || p.name || '').substring(0, 5000)
       const price = `${p.price} PKR`
       const avail = (p.stock ?? 0) > 0 ? 'in_stock' : 'out_of_stock'
