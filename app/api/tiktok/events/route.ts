@@ -24,11 +24,10 @@ export async function POST(req: Request) {
     const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '127.0.0.1'
     const userAgent = req.headers.get('user-agent') || ''
 
-    const payload: Record<string, unknown> = {
-      pixel_code: pixelId,
+    const eventPayload: Record<string, unknown> = {
       event,
       event_id: event_id || `${event}_${Date.now()}`,
-      timestamp: new Date().toISOString(),
+      event_time: Math.floor(Date.now() / 1000),
       context: {
         ip,
         user_agent: userAgent,
@@ -40,13 +39,13 @@ export async function POST(req: Request) {
       },
       properties: {
         currency: 'PKR',
-        value: value || 0,
+        value: value > 0 ? value : 0,
       },
     }
 
     if (contents && Array.isArray(contents)) {
-      payload.properties = {
-        ...(payload.properties as Record<string, unknown>),
+      eventPayload.properties = {
+        ...(eventPayload.properties as Record<string, unknown>),
         contents: contents.map((i: Record<string, unknown>) => ({
           content_id: i.content_id || i.id,
           content_type: i.content_type || 'product',
@@ -57,8 +56,8 @@ export async function POST(req: Request) {
         })),
       }
     } else if (content_id) {
-      payload.properties = {
-        ...(payload.properties as Record<string, unknown>),
+      eventPayload.properties = {
+        ...(eventPayload.properties as Record<string, unknown>),
         content_id,
         content_type: content_type || 'product',
         content_category: content_category || '',
@@ -66,18 +65,22 @@ export async function POST(req: Request) {
       }
     }
 
-    const res = await fetch('https://business-api.tiktok.com/open_api/v1.3/pixel/track/', {
+    const res = await fetch('https://business-api.tiktok.com/open_api/v1.3/event/track/', {
       method: 'POST',
       headers: { 'Access-Token': accessToken, 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        event_source_id: pixelId,
+        event_source: 'web',
+        data: [eventPayload],
+      }),
     })
 
-    const data = await res.json()
+    const responseData = await res.json()
     if (!res.ok) {
-      console.error(`[TikTok CAPI] ${event} failed:`, JSON.stringify(data))
+      console.error(`[TikTok CAPI] ${event} failed:`, JSON.stringify(responseData))
     }
 
-    return NextResponse.json({ success: res.ok, event, event_id, data })
+    return NextResponse.json({ success: res.ok, event, event_id, data: responseData })
   } catch (error) {
     console.error('[TikTok CAPI] Error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

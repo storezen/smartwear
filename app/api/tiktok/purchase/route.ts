@@ -24,11 +24,13 @@ export async function POST(req: Request) {
     const ip = req.headers.get('x-forwarded-for') || '127.0.0.1'
     const userAgent = req.headers.get('user-agent') || ''
 
-    const payload = {
-      pixel_code: pixelId,
+    const totalValue = total > 0 ? total
+      : (items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0)
+
+    const eventPayload = {
       event: 'CompletePayment',
       event_id: eventId || orderId,
-      timestamp: new Date().toISOString(),
+      event_time: Math.floor(Date.now() / 1000),
       context: {
         ip,
         user_agent: userAgent,
@@ -43,14 +45,18 @@ export async function POST(req: Request) {
           quantity: i.quantity,
         })),
         currency: 'PKR',
-        value: total,
+        value: totalValue,
       },
     }
 
-    const res = await fetch('https://business-api.tiktok.com/open_api/v1.3/pixel/track/', {
+    const res = await fetch('https://business-api.tiktok.com/open_api/v1.3/event/track/', {
       method: 'POST',
       headers: { 'Access-Token': accessToken, 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        event_source_id: pixelId,
+        event_source: 'web',
+        data: [eventPayload],
+      }),
     })
 
     const data = await res.json()
