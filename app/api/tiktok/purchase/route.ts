@@ -24,8 +24,8 @@ export async function POST(req: Request) {
     const ip = req.headers.get('x-forwarded-for') || '127.0.0.1'
     const userAgent = req.headers.get('user-agent') || ''
 
-    const totalValue = total > 0 ? total
-      : (items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0)
+    const totalValue = Math.max(1, total > 0 ? total
+      : (items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0))
 
     const eventPayload = {
       event: 'CompletePayment',

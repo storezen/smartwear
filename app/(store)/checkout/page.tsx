@@ -86,7 +86,7 @@ export default function CheckoutPage() {
   }, [])
 
   useEffect(() => {
-    if (items.length > 0) TikTokEvents.initiateCheckout(
+    if (items.length > 0)     TikTokEvents.initiateCheckout(
       items.map(item => ({
         id: item.product.id,
         name: item.product.name,
@@ -96,7 +96,7 @@ export default function CheckoutPage() {
       })),
       subtotal
     )
-  }, [])
+  }, [items.length, subtotal])
 
   // Store PII for TikTok Advanced Matching when user fills form
   useEffect(() => {

@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       },
       properties: {
         currency: 'PKR',
-        value: value > 0 ? value : 0,
+        value: Math.max(1, Number(value) || 1),
       },
     }
 

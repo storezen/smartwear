@@ -45,8 +45,8 @@ async function fireTikTokOfflineConversion(orderData: any) {
   if (!accessToken || !pixelId) return
 
   try {
-    const totalValue = orderData.total > 0 ? orderData.total
-      : (orderData.items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0)
+    const totalValue = Math.max(1, orderData.total > 0 ? orderData.total
+      : (orderData.items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0))
 
     await fetch('https://business-api.tiktok.com/open_api/v1.3/event/track/', {
       method: 'POST',
@@ -100,8 +100,8 @@ async function fireTikTokCAPI(orderData: any, req: Request) {
     // Ensure we have a strictly defined event_id for deduplication
     const event_id = orderData.id;
 
-    const totalValue = orderData.total > 0 ? orderData.total
-      : (orderData.items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0)
+    const totalValue = Math.max(1, orderData.total > 0 ? orderData.total
+      : (orderData.items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0))
 
     await fetch('https://business-api.tiktok.com/open_api/v1.3/event/track/', {
       method: 'POST',

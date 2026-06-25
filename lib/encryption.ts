@@ -25,12 +25,12 @@ export function encrypt(text: string): string {
 export function decrypt(encryptedText: string): string {
   if (!encryptedText) return '';
   
+  // Not in encrypted format (no colons) → plain text
+  if (!encryptedText.includes(':')) return encryptedText;
+
   try {
     const [ivHex, authTagHex, encrypted] = encryptedText.split(':');
-    
-    if (!ivHex || !authTagHex || !encrypted) {
-      throw new Error('Invalid encrypted text format');
-    }
+    if (!ivHex || !authTagHex || !encrypted) return encryptedText;
 
     const iv = Buffer.from(ivHex, 'hex');
     const authTag = Buffer.from(authTagHex, 'hex');
@@ -44,6 +44,6 @@ export function decrypt(encryptedText: string): string {
     return decrypted;
   } catch (error) {
     console.error('Decryption failed:', error);
-    return '';
+    return encryptedText; // Return raw on failure
   }
 }

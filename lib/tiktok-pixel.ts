@@ -276,8 +276,8 @@ export const TikTokEvents = {
   },
 
   purchase: (orderData: { id: string; total: number; items: Array<{ id: string; name: string; price: number; quantity: number; category?: string }> }) => {
-    const total = orderData.total > 0 ? orderData.total
-      : (orderData.items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0)
+    const total = Math.max(1, orderData.total > 0 ? orderData.total
+      : (orderData.items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0))
     trackTikTokEvent('CompletePayment', {
       event_id: orderData.id,
       value: total,
@@ -312,8 +312,9 @@ export const TikTokEvents = {
     })
   },
 
-  subscribe: (email: string) => {
+  subscribe: (email: string, value = 1) => {
     trackTikTokEvent('Subscribe', {
+      value,
       content_id: 'newsletter',
       content_type: 'product_group',
       content_name: email,
