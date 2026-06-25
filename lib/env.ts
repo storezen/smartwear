@@ -11,7 +11,6 @@ const envSchema = z.object({
   POSTEX_WEBHOOK_SECRET: z.string().optional(),
   TIKTOK_ACCESS_TOKEN: z.string().optional(),
   TIKTOK_PIXEL_ID: z.string().optional(),
-  GEMINI_API_KEY: z.string().optional(),
 
   // Database Configuration
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional().or(z.literal("")),
@@ -31,7 +30,6 @@ const parsedEnv = envSchema.safeParse({
   POSTEX_WEBHOOK_SECRET: process.env.POSTEX_WEBHOOK_SECRET,
   TIKTOK_ACCESS_TOKEN: process.env.TIKTOK_ACCESS_TOKEN,
   TIKTOK_PIXEL_ID: process.env.TIKTOK_PIXEL_ID,
-  GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   NODE_ENV: process.env.NODE_ENV,

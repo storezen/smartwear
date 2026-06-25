@@ -24,8 +24,6 @@ function isPublicApi(pathname: string, method: string): boolean {
   if (pathname.startsWith("/api/feed")) return true
   // Market Trends — public Daraz + Google data
   if (pathname.startsWith("/api/market-trends")) return true
-  // Newsletter — public subscription endpoint
-  // Newsletter — public subscription endpoint
   if (pathname === "/api/newsletter" && method === "POST") return true
   // Health check — Vercel monitoring
   if (pathname === "/api/health") return true
