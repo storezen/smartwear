@@ -255,7 +255,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                       )}
                     </div>
                     
-                    <h3 className="text-xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+                    <h3 className="text-xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
                       {selectedProduct.name}
                     </h3>
                     <p className="text-[#D4A017] font-semibold text-lg mb-4">₨ {selectedProduct.price.toLocaleString()}</p>

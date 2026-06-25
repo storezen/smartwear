@@ -100,7 +100,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#B8860B] to-[#D4A017]" />
         
         <DialogHeader className="pt-4">
-          <DialogTitle className="text-xl font-semibold flex items-center justify-between" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+          <DialogTitle className="text-xl font-semibold flex items-center justify-between" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
             <span>Quick Buy COD</span>
             <span className="text-[#B8860B] bg-[#B8860B]/10 text-xs px-2 py-1 rounded-full flex items-center gap-1 font-sans font-bold uppercase tracking-widest">
               <Truck className="w-3 h-3" /> Cash on Delivery

@@ -221,7 +221,7 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
             </svg>
           </div>
         </div>
-        <p className="text-[14px] font-medium text-white/80 mb-1 tracking-wide" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Premium 3D Globe</p>
+        <p className="text-[14px] font-medium text-white/80 mb-1 tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Premium 3D Globe</p>
         <p className="text-[11px] text-white/40 max-w-[200px] text-center leading-relaxed">
           Rendering advanced visualization...
         </p>

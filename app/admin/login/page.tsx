@@ -118,7 +118,7 @@ export default function AdminLoginPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               className="text-2xl font-bold text-white mb-2"
-              style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}
+              style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
             >
               Command Center
             </motion.h1>

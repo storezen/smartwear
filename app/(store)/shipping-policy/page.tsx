@@ -25,7 +25,7 @@ export default function ShippingPolicyPage() {
           </div>
           <h1
             className="font-bold text-white leading-tight mb-2 sm:mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
+            style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Shipping Policy
           </h1>
@@ -43,26 +43,26 @@ export default function ShippingPolicyPage() {
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <Truck className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Nationwide Delivery</h3>
+              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Nationwide Delivery</h3>
               <p className="text-sm text-white/60">We deliver across all major cities in Pakistan.</p>
             </div>
             <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <Clock className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Fast Dispatch</h3>
+              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Fast Dispatch</h3>
               <p className="text-sm text-white/60">Orders are processed within 24 hours.</p>
             </div>
             <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <ShieldCheck className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Insured Shipping</h3>
+              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Insured Shipping</h3>
               <p className="text-sm text-white/60">All packages are fully insured during transit.</p>
             </div>
           </div>
 
-          <div className="prose prose-invert max-w-none prose-p:text-white/70 prose-headings:font-normal prose-headings:text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+          <div className="prose prose-invert max-w-none prose-p:text-white/70 prose-headings:font-normal prose-headings:text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
             <h2 className="text-2xl mb-4">1. Delivery Timeframes</h2>
             <p className="font-sans mb-8 leading-relaxed">
               We strive to deliver your order as quickly as possible. Standard delivery within Pakistan takes approximately <strong>3 to 5 business days</strong> from the date of dispatch. Deliveries to remote areas may take an additional 1-2 days. If you select Express Shipping (where available), your order will be prioritized for delivery within <strong>1 to 2 business days</strong>.

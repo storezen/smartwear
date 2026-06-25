@@ -264,7 +264,7 @@ export default function CheckoutPage() {
             <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-5 sm:mb-6 rounded-[24px] bg-white/5 border border-white/10 flex items-center justify-center">
               <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 text-white/60" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>Your cart is empty</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-heading),"Poppins",system-ui,sans-serif' }}>Your cart is empty</h1>
             <p className="text-sm text-white/60 mb-6">Add some products before checkout</p>
             <Link href="/products">
               <button className="sw-btn-gold w-full h-12">Continue Shopping</button>
@@ -307,7 +307,7 @@ export default function CheckoutPage() {
           </div>
           <h1
             className="font-bold text-white leading-tight mb-1.5 sm:mb-2"
-            style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(1.75rem, 5vw, 4.5rem)' }}
+            style={{ fontFamily: 'var(--font-heading),"Poppins",system-ui,sans-serif', fontSize: 'clamp(1.75rem, 5vw, 4.5rem)' }}
           >
             Secure Checkout
           </h1>
@@ -320,7 +320,7 @@ export default function CheckoutPage() {
           {/* Left: Delivery Form */}
           <div className="lg:col-span-2 min-w-0">
             <div className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 sm:p-8 w-full">
-              <h2 className="text-base sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>
+              <h2 className="text-base sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading),"Poppins",system-ui,sans-serif' }}>
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                 Delivery Details
               </h2>
@@ -454,7 +454,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-1 min-w-0">
             <div className="sticky top-24 rounded-2xl sm:rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl w-full">
               <div className="p-5 sm:p-8">
-                <h3 className="font-bold text-sm sm:text-lg text-white mb-4 sm:mb-6" style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}>
+                <h3 className="font-bold text-sm sm:text-lg text-white mb-4 sm:mb-6" style={{ fontFamily: 'var(--font-heading),"Poppins",system-ui,sans-serif' }}>
                   Order Summary
                 </h3>
 
@@ -718,7 +718,7 @@ function SuccessModal({ orderId, total, onClose }: { orderId: string; total: num
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="text-3xl md:text-4xl font-bold text-white mb-3"
-            style={{ fontFamily: 'var(--font-playfair),Georgia,serif' }}
+            style={{ fontFamily: 'var(--font-heading),"Poppins",system-ui,sans-serif' }}
           >
             Thank You for Your Order!
           </motion.h1>

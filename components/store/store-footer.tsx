@@ -56,7 +56,7 @@ function Logo() {
       <div>
         <span
           className="block text-white font-semibold"
-          style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "1.1rem", letterSpacing: "-0.02em" }}
+          style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "1.1rem", letterSpacing: "-0.02em" }}
         >
           Smartwear
         </span>
@@ -116,7 +116,7 @@ export function StoreFooter() {
               </p>
               <h3
                 className="text-white font-semibold mb-2"
-                style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(1.5rem,3vw,2rem)" }}
+                style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(1.5rem,3vw,2rem)" }}
               >
                 The World of Smartwear
               </h3>

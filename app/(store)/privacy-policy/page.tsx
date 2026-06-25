@@ -8,7 +8,7 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-[#06080A]">
       <div className="sw-container max-w-4xl mx-auto px-4 py-16 md:py-24">
-        <h1 className="text-3xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+        <h1 className="text-3xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
           Privacy Policy
         </h1>
         <p className="text-white/50 text-sm mb-8 md:mb-12">Last updated: June 2026</p>

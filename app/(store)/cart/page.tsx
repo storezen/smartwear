@@ -50,7 +50,7 @@ function EmptyCart() {
       <div className="w-20 h-20 rounded-[24px] border border-white/10 bg-white/5 flex items-center justify-center mx-auto mb-5">
         <ShoppingBag className="w-9 h-9 text-white/60" />
       </div>
-      <h1 className="text-xl font-semibold mb-2 text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+      <h1 className="text-xl font-semibold mb-2 text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
         Your cart is empty
       </h1>
       <p className="text-sm text-white/60 leading-relaxed mb-7">
@@ -118,7 +118,7 @@ export default function CartPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="font-bold text-white leading-tight mb-2 sm:mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
+            style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Your Cart
           </motion.h1>
@@ -238,7 +238,7 @@ export default function CartPage() {
                   border: "1px solid rgba(255,255,255,0.05)",
                 }}
               >
-                <h2 className="font-semibold text-lg mb-6" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Order Summary</h2>
+                <h2 className="font-semibold text-lg mb-6" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Order Summary</h2>
 
                 <div className="space-y-4 text-sm">
                   <div className="flex justify-between">

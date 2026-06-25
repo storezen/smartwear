@@ -136,7 +136,7 @@ export default function MarketingPage() {
             <p className="text-sm text-white/60 mb-4">Replaces the main homepage banner with the Eid promotional graphics and 20% off CTA.</p>
             <div className="aspect-video rounded-lg bg-[#0C0F14] border border-white/10 flex items-center justify-center overflow-hidden relative">
                <div className="absolute inset-0 bg-gradient-to-tr from-[#B8860B]/20 to-transparent" />
-               <span className="text-white/40 font-playfair text-lg">Eid Hero Preview</span>
+               <span className="text-white/40 font-heading text-lg">Eid Hero Preview</span>
             </div>
           </SpotlightCard>
 

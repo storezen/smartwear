@@ -86,7 +86,7 @@ export default function TrackOrderPage() {
           </div>
           <h1
             className="font-bold text-white leading-tight mb-2 sm:mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(1.75rem, 4vw, 3.5rem)" }}
+            style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(1.75rem, 4vw, 3.5rem)" }}
           >
             Track Your Order
           </h1>
@@ -129,7 +129,7 @@ export default function TrackOrderPage() {
               <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
                 <Package className="w-8 h-8 text-white/60" />
               </div>
-              <h3 className="font-semibold text-white mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Order Not Found</h3>
+              <h3 className="font-semibold text-white mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Order Not Found</h3>
               <p className="text-white/60 text-sm">
                 We couldn't find an order with that ID. Please check and try again.
               </p>
@@ -142,7 +142,7 @@ export default function TrackOrderPage() {
           <div className="space-y-6">
             <div className="rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl">
               <div className="p-6 border-b border-white/5 flex items-center justify-between">
-                <h3 className="text-lg font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Order #{searchedOrder.id}</h3>
+                <h3 className="text-lg font-bold text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Order #{searchedOrder.id}</h3>
                 <span className={cn("px-3 py-1 rounded-full text-xs font-semibold", statusColors[searchedOrder.status.toLowerCase()] || 'bg-white/10 text-white/70 border border-white/20')}>
                   {searchedOrder.status}
                 </span>
@@ -191,7 +191,7 @@ export default function TrackOrderPage() {
 
             <div className="rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl">
               <div className="p-6 border-b border-white/5">
-                <h3 className="text-lg font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Order Items</h3>
+                <h3 className="text-lg font-bold text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Order Items</h3>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
@@ -243,7 +243,7 @@ export default function TrackOrderPage() {
             {searchedOrder.shipping_address && (
               <div className="rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl">
                 <div className="p-6 border-b border-white/5">
-                  <h3 className="text-lg font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Shipping Address</h3>
+                  <h3 className="text-lg font-bold text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Shipping Address</h3>
                 </div>
                 <div className="p-6">
                   <p className="font-medium text-white mb-1">{searchedOrder.shipping_address.name}</p>

@@ -46,7 +46,7 @@ function Logo({ className = "" }: { className?: string }) {
       <div className="leading-none">
         <span
           className="block text-white font-semibold group-hover:text-[#B8860B] transition-colors"
-          style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "1.0625rem", letterSpacing: "-0.02em" }}
+          style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "1.0625rem", letterSpacing: "-0.02em" }}
         >
           Smartwear
         </span>
@@ -295,7 +295,7 @@ export function PremiumNavbar() {
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
                     className={`text-3xl font-light tracking-wide ${link.gold ? 'text-[#B8860B]' : 'text-white'}`}
-                    style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}
+                    style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
                   >
                     {link.label}
                   </Link>

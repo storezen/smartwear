@@ -67,7 +67,7 @@ function SectionLabel({ text }: { text: string }) {
 
 function SectionTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <h2 className={`text-3xl md:text-4xl lg:text-5xl font-bold text-white ${className}`} style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+    <h2 className={`text-3xl md:text-4xl lg:text-5xl font-bold text-white ${className}`} style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
       {children}
     </h2>
   )
@@ -103,7 +103,7 @@ function HeroBanner() {
                 <span className="text-white/40 text-[11px] sm:text-[10px] uppercase tracking-[0.2em] font-medium">Pakistan&apos;s Premium Watch Store</span>
               </div>
 
-              <h1 className="text-[2.2rem] sm:text-[4rem] md:text-[5rem] lg:text-[5.5rem] font-bold text-white leading-[1.1] sm:leading-[1] mb-4 sm:mb-6" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+              <h1 className="text-[2.2rem] sm:text-[4rem] md:text-[5rem] lg:text-[5.5rem] font-bold text-white leading-[1.1] sm:leading-[1] mb-4 sm:mb-6" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
                 {settings?.hero_headline ? (
                   (() => {
                     const parts = settings.hero_headline.split('.')
@@ -324,7 +324,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
 
                       <h3
                         className="text-white text-xl font-bold mb-1 tracking-wide"
-                        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                        style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}
                       >
                         {cat.name}
                       </h3>
@@ -442,7 +442,7 @@ function WhyChooseUs() {
               <div className="w-14 h-14 rounded-2xl bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center text-[#B8860B] mb-5 group-hover:bg-[#B8860B] group-hover:text-black transition-all duration-300">
                 <f.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-white text-lg font-bold mb-2" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>{f.title}</h3>
+              <h3 className="text-white text-lg font-bold mb-2" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{f.title}</h3>
               <p className="text-white/50 text-sm leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
@@ -497,7 +497,7 @@ function CollectionsBanner({ categoryImages }: { categoryImages: Record<string, 
                 </div>
 
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-white text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>{col.name}</h3>
+                  <h3 className="text-white text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{col.name}</h3>
                   <p className="text-white/50 text-sm mb-3">{col.desc}</p>
                   <span className="inline-flex items-center gap-2 text-[#B8860B] text-xs font-bold uppercase tracking-widest group-hover:gap-3 transition-all">
                     Explore <ArrowRight className="w-3.5 h-3.5" />
@@ -554,7 +554,7 @@ function CategoryShowcase({
               <div className="flex items-center justify-between gap-4 mb-4">
                 <h3
                   className="text-white text-xl md:text-2xl font-bold"
-                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                  style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}
                 >
                   {cat.name}
                 </h3>

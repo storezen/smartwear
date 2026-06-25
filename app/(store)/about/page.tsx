@@ -20,7 +20,7 @@ export default function AboutPage() {
       <div className="sw-container max-w-5xl mx-auto px-4 py-16 md:py-24">
         {/* Hero */}
         <div className="text-center mb-10 md:mb-16">
-          <h1 className="text-3xl md:text-6xl font-bold text-white mb-6" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+          <h1 className="text-3xl md:text-6xl font-bold text-white mb-6" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
             Pakistan&apos;s Most Trusted
             <br />
             <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
@@ -36,7 +36,7 @@ export default function AboutPage() {
         {/* Story */}
           <div className="grid md:grid-cols-2 gap-6 md:gap-12 mb-12 md:mb-20 items-center">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
               Our Story
             </h2>
             <div className="text-white/70 leading-relaxed space-y-4 text-sm md:text-base">
@@ -59,7 +59,7 @@ export default function AboutPage() {
           </div>
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#B8860B]/10 to-transparent flex items-center justify-center">
             <div className="text-center p-6 md:p-8">
-              <span className="text-6xl md:text-8xl font-bold text-[#B8860B] opacity-30" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>2024</span>
+              <span className="text-6xl md:text-8xl font-bold text-[#B8860B] opacity-30" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>2024</span>
               <p className="text-white/40 text-sm mt-2">Founded in Lahore, Pakistan</p>
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function AboutPage() {
         </div>
 
         {/* Values */}
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
           Why Smartwear?
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-20">
@@ -97,7 +97,7 @@ export default function AboutPage() {
         {/* Physical Presence */}
         <div className="text-center p-8 md:p-12 rounded-2xl border border-white/10 bg-gradient-to-br from-[#B8860B]/5 to-transparent">
           <Store className="w-8 h-8 text-[#B8860B] mx-auto mb-4" />
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-3" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-3" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
             Visit Our Store
           </h2>
           <p className="text-white/60 max-w-lg mx-auto leading-relaxed">

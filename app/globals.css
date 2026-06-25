@@ -87,7 +87,7 @@
 /* ── Tailwind Theme ── */
 @theme {
   --font-sans:  var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-playfair), 'Georgia', serif;
+  --font-serif: var(--font-heading), 'Poppins', system-ui, sans-serif;
 
   --color-background:          hsl(var(--background));
   --color-foreground:          hsl(var(--foreground));
@@ -192,8 +192,8 @@
 /* ═══════════════════════════════════════════
    TYPOGRAPHY
    ═══════════════════════════════════════════ */
-.sw-serif {
-  font-family: var(--font-playfair), Georgia, serif;
+.sw-serif, .font-heading {
+  font-family: var(--font-heading), 'Poppins', system-ui, sans-serif;
 }
 .sw-label {
   font-size: 0.65rem;

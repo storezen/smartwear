@@ -44,7 +44,7 @@ export default function ContactPage() {
           </div>
           <h1
             className="font-bold text-white leading-tight mb-2 sm:mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
+            style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Get in Touch
           </h1>
@@ -66,7 +66,7 @@ export default function ContactPage() {
               <div className="w-12 h-12 bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-6 border border-[#B8860B]/20">
                 <MapPin className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Visit Our Boutique</h3>
+              <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Visit Our Boutique</h3>
               <p className="text-white/60 leading-relaxed">
                 {s?.store_name || 'Smartwear'} Flagship Store<br/>
                 {s?.store_address_line1 || 'MM Alam Road'}{s?.store_address_line2 ? `, ${s.store_address_line2}` : ''}<br/>
@@ -83,7 +83,7 @@ export default function ContactPage() {
               <div className="w-12 h-12 bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-6 border border-[#B8860B]/20">
                 <Phone className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Call Us</h3>
+              <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Call Us</h3>
               <p className="text-white/60 leading-relaxed mb-1">{s?.support_phone || '+92 300 1234567'}</p>
               <p className="text-white/60 text-sm">{s?.business_hours || 'Mon-Sat: 10am - 8pm PKT'}</p>
             </motion.div>
@@ -97,7 +97,7 @@ export default function ContactPage() {
               <div className="w-12 h-12 bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-6 border border-[#B8860B]/20">
                 <Mail className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Email Us</h3>
+              <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Email Us</h3>
               <p className="text-[#B8860B] leading-relaxed">{s?.support_email || 'concierge@smartwear.pk'}</p>
             </motion.div>
           </div>
@@ -108,7 +108,7 @@ export default function ContactPage() {
             animate={{ opacity: 1, x: 0 }}
             className="p-6 md:p-10 rounded-[32px] border border-white/5 bg-white/[0.02] backdrop-blur-xl"
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Send a Message</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Send a Message</h2>
             {sent ? (
               <div className="text-center py-10">
                 <div className="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">

@@ -51,7 +51,7 @@ export default function FAQsPage() {
           </div>
           <h1
             className="font-bold text-white leading-tight mb-2 sm:mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
+            style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Frequently Asked Questions
           </h1>
@@ -65,7 +65,7 @@ export default function FAQsPage() {
         <div className="max-w-3xl mx-auto space-y-8 md:space-y-12">
           {faqs.map((section, index) => (
             <div key={index} className="space-y-6">
-              <h2 className="text-2xl font-bold flex items-center gap-3" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+              <h2 className="text-2xl font-bold flex items-center gap-3" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
                 <div className="w-8 h-8 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center">
                   <HelpCircle className="w-4 h-4 text-[#B8860B]" />
                 </div>

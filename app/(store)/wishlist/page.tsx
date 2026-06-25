@@ -49,7 +49,7 @@ export default function PremiumWishlistPage() {
               <Heart className="w-12 h-12 text-[#B8860B]" />
             </div>
           </motion.div>
-          <h1 className="text-3xl font-bold mb-3 text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Your Wishlist is Empty</h1>
+          <h1 className="text-3xl font-bold mb-3 text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Your Wishlist is Empty</h1>
           <p className="text-white/60 mb-8 text-lg max-w-md mx-auto">
             Save items you love to your wishlist and find them here anytime.
           </p>
@@ -90,7 +90,7 @@ export default function PremiumWishlistPage() {
           </div>
           <h1
             className="font-bold text-white leading-tight mb-2 sm:mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
+            style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             My Wishlist
           </h1>

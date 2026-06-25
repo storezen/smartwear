@@ -56,7 +56,7 @@ function AdminLogo({ collapsed }: { collapsed?: boolean }) {
           >
             <span
               className="block text-white text-[14px] font-bold tracking-tight"
-              style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}
+              style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
             >
               Smartwear
             </span>

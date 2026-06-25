@@ -157,7 +157,7 @@ function SuccessContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="text-3xl md:text-4xl font-bold text-white mb-3" 
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}
+            style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
           >
             Thank You for Your Order!
           </motion.h1>

@@ -477,7 +477,7 @@ export default function AdminProductsPage() {
 
           <div className="p-6 md:p-8 border-b border-white/5 sticky top-0 bg-[#0C0F14]/90 backdrop-blur-xl z-10 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
-              <SheetTitle className="text-2xl font-bold text-white font-playfair">{editingId ? 'Edit Product' : 'New Product'}</SheetTitle>
+              <SheetTitle className="text-2xl font-bold text-white font-heading">{editingId ? 'Edit Product' : 'New Product'}</SheetTitle>
               <p className="text-sm text-white/50 mt-1">{editingId ? 'Update details and pricing.' : 'Add a new masterpiece.'}</p>
             </div>
             

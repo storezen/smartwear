@@ -25,7 +25,7 @@ export default function ReturnPolicyPage() {
           </div>
           <h1
             className="font-bold text-white leading-tight mb-2 sm:mb-4"
-            style={{ fontFamily: "var(--font-playfair),Georgia,serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
+            style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Return Policy
           </h1>
@@ -43,26 +43,26 @@ export default function ReturnPolicyPage() {
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <RefreshCcw className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>7-Day Returns</h3>
+              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>7-Day Returns</h3>
               <p className="text-sm text-white/60">Request a return within 7 days of receiving your order.</p>
             </div>
             <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <Box className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Original Packaging</h3>
+              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Original Packaging</h3>
               <p className="text-sm text-white/60">Items must be unworn with all original tags attached.</p>
             </div>
             <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <ShieldCheck className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Quality Inspected</h3>
+              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Quality Inspected</h3>
               <p className="text-sm text-white/60">Returns are processed after passing quality checks.</p>
             </div>
           </div>
 
-          <div className="prose prose-invert max-w-none prose-p:text-white/70 prose-headings:font-normal prose-headings:text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+          <div className="prose prose-invert max-w-none prose-p:text-white/70 prose-headings:font-normal prose-headings:text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
             <h2 className="text-2xl mb-4">1. Eligibility for Returns</h2>
             <p className="font-sans mb-8 leading-relaxed">
               We accept returns or exchanges within <strong>7 days</strong> of delivery. To be eligible for a return, the watch must be strictly unworn, unaltered, and in the exact same condition that you received it. It must also be in the original packaging, complete with all warranty cards, manuals, and protective films intact.

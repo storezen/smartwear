@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Poppins } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AuthProvider } from '@/context/auth-context'
 import { CartProvider } from '@/context/cart-context'
@@ -15,12 +15,11 @@ const inter = Inter({
   display: 'swap',
 })
 
-const playfair = Playfair_Display({
+const poppins = Poppins({
   subsets: ['latin'],
-  variable: '--font-playfair',
+  variable: '--font-heading',
   display: 'swap',
   weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
 })
 
 export const metadata: Metadata = {
@@ -51,7 +50,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} overflow-x-hidden`}
+      className={`${inter.variable} ${poppins.variable} overflow-x-hidden`}
       data-scroll-behavior="smooth"
     >
       <head>

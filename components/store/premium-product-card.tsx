@@ -137,7 +137,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
 
             <h3 
               className="text-white text-sm font-medium line-clamp-1 group-hover:text-[#B8860B] transition-colors duration-300 mb-3"
-              style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}
+              style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
             >
               {product.name}
             </h3>

@@ -156,7 +156,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       <div className="min-h-screen bg-[#0C0F14] flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <p className="text-[#B8860B] text-xs font-bold uppercase tracking-[0.25em] mb-3">Not Found</p>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-3" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-3" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
             This timepiece isn&apos;t in our catalog
           </h1>
           <p className="text-white/55 text-sm mb-4 md:mb-8">
@@ -375,7 +375,7 @@ function ProductContent({ product }: { product: any }) {
                   <span className="font-bold text-white">{viewers}</span> people are viewing this right now
                 </motion.div>
                 
-                <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>
+                <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
                   {product.name}
                 </h1>
                 
@@ -759,7 +759,7 @@ function ProductContent({ product }: { product: any }) {
         {relatedProducts.length > 0 && (
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-10 md:mt-32">
             <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-white/5 pb-4">
-              <h3 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-playfair),Georgia,serif" }}>Complete Your Collection</h3>
+              <h3 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Complete Your Collection</h3>
               <Link href={`/products?category=${product.category_slug}`} className="text-sm text-[#B8860B] hover:text-[#D4A017] transition-colors sw-interactive font-medium flex items-center gap-1">
                 View All <ChevronRight className="w-4 h-4" />
               </Link>
