@@ -370,7 +370,7 @@ function ProductContent({ product }: { product: any }) {
                 </div>
                 
                 {/* Social Proof (Viewers) */}
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-2 text-white/80 bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-full text-xs font-medium tracking-wide">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-2 text-white/80 bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-4">
                   <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
                   <span className="font-bold text-white mr-0.5">{viewers}</span>
                   <span className="whitespace-nowrap">people are viewing this right now</span>
