@@ -45,37 +45,39 @@ async function fireTikTokOfflineConversion(orderData: any) {
   if (!accessToken || !pixelId) return
 
   try {
-    const payload = {
-      pixel_code: pixelId,
-      event: 'CompletePayment',
-      event_id: `${orderData.id}_delivered`,
-      timestamp: new Date().toISOString(),
-      event_source: 'physical_store', // Marks as offline conversion
-      context: {
-        user: {
-          phone_number: hashSHA256(orderData.phone),
-          external_id: hashSHA256(orderData.customer_name),
-        }
-      },
-      properties: {
-        contents: (orderData.items || []).map((i: any) => ({
-          content_id: i.id,
-          content_type: 'product',
-          content_name: i.name,
-          price: i.price,
-          quantity: i.quantity,
-        })),
-        currency: 'PKR',
-        value: orderData.total,
-      },
-    }
+    const totalValue = orderData.total > 0 ? orderData.total
+      : (orderData.items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0)
 
-    await fetch('https://business-api.tiktok.com/open_api/v1.3/pixel/track/', {
+    await fetch('https://business-api.tiktok.com/open_api/v1.3/event/track/', {
       method: 'POST',
       headers: { 'Access-Token': accessToken, 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        event_source_id: pixelId,
+        event_source: 'web',
+        data: [{
+          event: 'CompletePayment',
+          event_id: `${orderData.id}_delivered`,
+          event_time: Math.floor(Date.now() / 1000),
+          context: {
+            user: {
+              phone_number: hashSHA256(orderData.phone),
+              external_id: hashSHA256(orderData.customer_name),
+            }
+          },
+          properties: {
+            contents: (orderData.items || []).map((i: any) => ({
+              content_id: i.id,
+              content_type: 'product',
+              content_name: i.name,
+              price: i.price,
+              quantity: i.quantity,
+            })),
+            currency: 'PKR',
+            value: totalValue,
+          },
+        }]
+      }),
     })
-    console.log('[TikTok Offline] Delivered conversion fired for order', orderData.id)
   } catch (err) {
     console.error('[TikTok Offline] Error:', err)
   }
@@ -98,41 +100,38 @@ async function fireTikTokCAPI(orderData: any, req: Request) {
     // Ensure we have a strictly defined event_id for deduplication
     const event_id = orderData.id;
 
-    const payload = {
-      pixel_code: pixelId,
-      event: 'CompletePayment',
-      event_id,
-      timestamp: new Date().toISOString(),
-      context: {
-        ad_features: {},
-        ip: ip,
-        user_agent: userAgent,
-        user: {
-          phone_number: hashSHA256(orderData.phone)
-        }
-      },
-      properties: {
-        contents: orderData.items.map((i: any) => ({
-          content_id: i.id,
-          content_type: 'product',
-          content_name: i.name,
-          price: i.price,
-          quantity: i.quantity
-        })),
-        currency: 'PKR',
-        value: orderData.total
-      }
-    }
+    const totalValue = orderData.total > 0 ? orderData.total
+      : (orderData.items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0)
 
-    await fetch('https://business-api.tiktok.com/open_api/v1.3/pixel/track/', {
+    await fetch('https://business-api.tiktok.com/open_api/v1.3/event/track/', {
       method: 'POST',
-      headers: {
-        'Access-Token': accessToken,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
+      headers: { 'Access-Token': accessToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_source_id: pixelId,
+        event_source: 'web',
+        data: [{
+          event: 'CompletePayment',
+          event_id,
+          event_time: Math.floor(Date.now() / 1000),
+          context: {
+            ip,
+            user_agent: userAgent,
+            user: { phone_number: hashSHA256(orderData.phone) }
+          },
+          properties: {
+            contents: (orderData.items || []).map((i: any) => ({
+              content_id: i.id,
+              content_type: 'product',
+              content_name: i.name,
+              price: i.price,
+              quantity: i.quantity
+            })),
+            currency: 'PKR',
+            value: totalValue,
+          },
+        }]
+      }),
     })
-    console.log('[TikTok CAPI] Fired CompletePayment event')
   } catch (err) {
     console.error('[TikTok CAPI] Error:', err)
   }
