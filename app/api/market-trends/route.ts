@@ -1,16 +1,25 @@
 import { NextResponse } from 'next/server'
+import { performance } from 'perf_hooks'
 
-const CATEGORIES = [
-  { query: 'smartwatch', label: 'Smart Watches' },
-  { query: 'analog watch men', label: 'Analog Watches' },
-  { query: 'watch band strap', label: 'Watch Bands' },
-  { query: 'phone case cover', label: 'Phone Cases' },
-  { query: 'wireless earbuds', label: 'Earbuds' },
-  { query: 'charger fast', label: 'Chargers' },
-  { query: 'smart watch', label: 'Smart Watches' },
-  { query: 'ladies watch', label: 'Ladies Watches' },
-  { query: 'power bank', label: 'Power Banks' },
-  { query: 'bluetooth speaker', label: 'Speakers' },
+interface Product {
+  name: string; price: string; priceNum: number; originalPrice: string
+  discount: string; rating: number; sold: number; seller: string
+  location: string; url: string; image: string; category: string
+  trendScore: number; demandDensity: number
+}
+
+interface CategoryDef { queries: string[]; label: string }
+
+const CATEGORIES: CategoryDef[] = [
+  { queries: ['smartwatch', 'smart watch men', 'smart watch price in pakistan'], label: 'Smart Watches' },
+  { queries: ['analog watch men', 'wrist watch men', 'watch for men'], label: 'Analog Watches' },
+  { queries: ['ladies watch', 'women watch', 'girls watch'], label: 'Ladies Watches' },
+  { queries: ['watch band', 'watch strap', 'watch belt'], label: 'Watch Bands' },
+  { queries: ['phone case', 'mobile cover', 'phone back cover'], label: 'Phone Cases' },
+  { queries: ['wireless earbuds', 'bluetooth earphones', 'TWS earbuds'], label: 'Earbuds' },
+  { queries: ['charger fast', 'charger adapter', 'type c charger'], label: 'Chargers' },
+  { queries: ['power bank', 'powerbank 10000', 'portable charger'], label: 'Power Banks' },
+  { queries: ['bluetooth speaker', 'wireless speaker', 'speaker portable'], label: 'Speakers' },
 ]
 
 const CACHE_TTL = 3600
@@ -23,23 +32,33 @@ async function fetchTrendingPakistan() {
       headers: { 'User-Agent': 'Mozilla/5.0' },
     })
     const xml = await res.text()
-    const items: { title: string; traffic: string }[] = []
+    const items: { title: string; traffic: string; snippet: string }[] = []
     const regex = /<item>([\s\S]*?)<\/item>/g
     let match
     while ((match = regex.exec(xml)) !== null) {
       const title = match[1].match(/<title>(.*?)<\/title>/)?.[1]
       const traffic = match[1].match(/<ht:approx_traffic>(.*?)<\/ht:approx_traffic>/)?.[1]
-      if (title) items.push({ title, traffic: traffic || 'N/A' })
+      const snippet = match[1].match(/<ht:news_item_title>(.*?)<\/ht:news_item_title>/)?.[1]
+        ?.replace(/<!\[CDATA\[(.*?)\]\]>/, '$1') || ''
+      if (title) items.push({ title, traffic: traffic || 'N/A', snippet })
     }
-    return items.filter(i => !i.title.match(/^\d+$|^[a-z]$|^(n|m|s)$/i)).slice(0, 15)
+    return items
+      .filter(i => !i.title.match(/^\d+$|^[a-z]$|^(n|m|s)$/i))
+      .slice(0, 20)
+      .map(i => ({
+        ...i,
+        categoryMatch: CATEGORIES.find(c =>
+          c.queries.some(q => i.title.toLowerCase().includes(q.split(' ')[0]))
+        )?.label || null,
+      }))
   } catch {
     return []
   }
 }
 
-async function fetchDarazProducts(query: string): Promise<any[]> {
+async function fetchDarazPage(query: string, page: number): Promise<any[]> {
   try {
-    const url = `https://www.daraz.pk/catalog/?q=${encodeURIComponent(query)}&ajax=true&page=1&sort=orderdesc`
+    const url = `https://www.daraz.pk/catalog/?q=${encodeURIComponent(query)}&ajax=true&page=${page}&sort=orderdesc`
     const res = await fetch(url, {
       signal: AbortSignal.timeout(10000),
       headers: {
@@ -49,27 +68,58 @@ async function fetchDarazProducts(query: string): Promise<any[]> {
       },
     })
     const data = await res.json()
-    const items = data?.mods?.listItems || []
-    return items.slice(0, 10).map((i: any) => {
+    return data?.mods?.listItems || []
+  } catch {
+    return []
+  }
+}
+
+async function fetchDarazProducts(queries: string[]): Promise<Product[]> {
+  const allItems: any[] = []
+  for (const query of queries) {
+    for (let page = 1; page <= 3; page++) {
+      const items = await fetchDarazPage(query, page)
+      allItems.push(...items)
+      if (items.length < 20) break
+    }
+  }
+  const seen = new Set<string>()
+  return allItems
+    .filter((i: any) => {
+      const name = (i.name || '').trim()
+      if (!name || seen.has(name)) return false
+      seen.add(name)
+      return true
+    })
+    .slice(0, 30)
+    .map((i: any) => {
       const priceStr = i.priceShow || ''
       const priceNum = parseInt(priceStr.replace(/[^0-9]/g, '')) || 0
+      const sold = parseInt(i.review || '0') || 0
+      const rating = Math.round(parseFloat(i.ratingScore || '0') * 10) / 10
+      const discount = i.discount || ''
+      const discountPct = parseInt(discount.replace(/[^0-9]/g, '')) || 0
+      const trendScore = sold > 0
+        ? Math.round((sold * (rating || 3) * (1 + discountPct / 100)) / Math.max(Math.sqrt(priceNum), 1))
+        : 0
       return {
         name: (i.name || '').trim().substring(0, 80),
         price: priceStr,
         priceNum,
         originalPrice: i.originalPriceShow || '',
-        discount: i.discount || '',
-        rating: Math.round(parseFloat(i.ratingScore || '0') * 10) / 10,
-        sold: parseInt(i.review || '0') || 0,
+        discount,
+        discountPct,
+        rating,
+        sold,
         seller: i.sellerName || 'N/A',
         location: i.location || '',
         url: i.productUrl || '',
         image: i.image || '',
+        category: '',
+        trendScore,
+        demandDensity: 0,
       }
     })
-  } catch {
-    return []
-  }
 }
 
 export async function GET() {
@@ -80,21 +130,18 @@ export async function GET() {
 
     const [trending, ...categoryProducts] = await Promise.all([
       fetchTrendingPakistan(),
-      ...CATEGORIES.map(c => fetchDarazProducts(c.query)),
+      ...CATEGORIES.map(c => fetchDarazProducts(c.queries)),
     ])
 
-    const mergedLabels = [...new Set(CATEGORIES.map(c => c.label))]
-    const categories = mergedLabels.map(label => {
-      const indexes = CATEGORIES.map((c, i) => c.label === label ? i : -1).filter(i => i >= 0)
-      const allProducts = indexes.flatMap(i => (categoryProducts[i] || []).map((p: any) => ({ ...p, category: label })))
-      const unique = allProducts.filter((p, i, a) => a.findIndex(x => x.name === p.name) === i)
-      return { label, query: CATEGORIES.find(c => c.label === label)?.query || '', products: unique.slice(0, 15) }
+    const categories = CATEGORIES.map((cat, i) => {
+      const products = (categoryProducts[i] || []).map((p: Product) => ({ ...p, category: cat.label }))
+      return { label: cat.label, queries: cat.queries, products }
     })
 
-    const allProducts = categories.flatMap(c => c.products)
-      .sort((a, b) => b.sold - a.sold)
+    const allProducts = categories
+      .flatMap(c => c.products)
       .filter((p, i, a) => a.findIndex(x => x.name === p.name) === i)
-      .slice(0, 30)
+      .sort((a, b) => b.trendScore - a.trendScore)
 
     const brandMentions: Record<string, number> = {}
     allProducts.forEach(p => {
@@ -113,37 +160,80 @@ export async function GET() {
     const avgPrice = totalProducts
       ? Math.round(allProducts.reduce((s, p) => s + p.priceNum, 0) / totalProducts)
       : 0
-    const maxPrice = totalProducts ? Math.max(...allProducts.map(p => p.priceNum)) : 0
-    const minPrice = totalProducts ? Math.min(...allProducts.map(p => p.priceNum).filter(Boolean)) : 0
 
     const priceRanges = [
-      { label: 'Under PKR 1K', min: 0, max: 1000, count: 0 },
-      { label: 'PKR 1K-3K', min: 1000, max: 3000, count: 0 },
-      { label: 'PKR 3K-5K', min: 3000, max: 5000, count: 0 },
-      { label: 'PKR 5K-10K', min: 5000, max: 10000, count: 0 },
-      { label: 'PKR 10K+', min: 10000, max: Infinity, count: 0 },
+      { label: 'Under PKR 500', min: 0, max: 500, count: 0, totalSold: 0 },
+      { label: 'PKR 500-1K', min: 500, max: 1000, count: 0, totalSold: 0 },
+      { label: 'PKR 1K-3K', min: 1000, max: 3000, count: 0, totalSold: 0 },
+      { label: 'PKR 3K-5K', min: 3000, max: 5000, count: 0, totalSold: 0 },
+      { label: 'PKR 5K-10K', min: 5000, max: 10000, count: 0, totalSold: 0 },
+      { label: 'PKR 10K+', min: 10000, max: Infinity, count: 0, totalSold: 0 },
     ]
     allProducts.forEach(p => {
       const range = priceRanges.find(r => p.priceNum >= r.min && p.priceNum < r.max)
-      if (range) range.count++
+      if (range) { range.count++; range.totalSold += p.sold }
     })
 
-    const categorySummary = categories.map(c => ({
+    const categorySummary = categories.map(c => {
+      const totalSold = c.products.reduce((s, p) => s + p.sold, 0)
+      const count = c.products.length
+      return {
+        label: c.label,
+        count,
+        totalSold,
+        avgPrice: count ? Math.round(c.products.reduce((s, p) => s + p.priceNum, 0) / count) : 0,
+        avgSoldPerProduct: count ? Math.round(totalSold / count) : 0,
+        uniqueSellers: new Set(c.products.map(p => p.seller)).size,
+        competition: count > 1 ? Math.round((new Set(c.products.map(p => p.seller)).size / count) * 100) : 100,
+      }
+    }).sort((a, b) => b.totalSold - a.totalSold)
+
+    const bestPricePerCategory = categories.map(c => {
+      const ranges = [
+        { label: 'Under 500', min: 0, max: 500 },
+        { label: '500-1K', min: 500, max: 1000 },
+        { label: '1K-3K', min: 1000, max: 3000 },
+        { label: '3K-5K', min: 3000, max: 5000 },
+        { label: '5K-10K', min: 5000, max: 10000 },
+        { label: '10K+', min: 10000, max: Infinity },
+      ]
+      const withSales = ranges.map(r => {
+        const products = c.products.filter(p => p.priceNum >= r.min && p.priceNum < r.max)
+        return { ...r, count: products.length, totalSold: products.reduce((s, p) => s + p.sold, 0) }
+      }).filter(r => r.count > 0).sort((a, b) => b.totalSold - a.totalSold)
+      return { category: c.label, sweetSpot: withSales[0]?.label || null, sweetSpotSales: withSales[0]?.totalSold || 0, ranges: withSales }
+    })
+
+    const topTrending = allProducts
+      .filter(p => p.sold > 0)
+      .slice(0, 50)
+      .map((p, i) => ({ ...p, rank: i + 1 }))
+
+    const hotProducts = allProducts
+      .filter(p => p.trendScore > 0)
+      .sort((a, b) => b.trendScore - a.trendScore)
+      .slice(0, 10)
+
+    const trendingCategorySales = categorySummary.filter(c => c.totalSold > 0)
+    const opportunityScore = trendingCategorySales.map(c => ({
       label: c.label,
-      count: c.products.length,
-      totalSold: c.products.reduce((s, p) => s + p.sold, 0),
-      avgPrice: c.products.length
-        ? Math.round(c.products.reduce((s, p) => s + p.priceNum, 0) / c.products.length)
+      demandDensity: c.avgSoldPerProduct,
+      competition: c.competition,
+      opportunity: c.avgSoldPerProduct > 0 && c.competition > 0
+        ? Math.round((c.avgSoldPerProduct / Math.max(c.competition / 100, 0.1)) * 10) / 10
         : 0,
-    })).sort((a, b) => b.totalSold - a.totalSold)
+    })).sort((a, b) => b.opportunity - a.opportunity)
 
     const data = {
       trending,
       categories,
-      topSelling: allProducts,
+      topTrending,
+      hotProducts,
       brandMentions,
-      summary: { totalProducts, avgPrice, minPrice, maxPrice, priceRanges },
+      summary: { totalProducts, avgPrice, priceRanges },
       categorySummary,
+      bestPricePerCategory,
+      opportunityScore,
       generatedAt: new Date().toISOString(),
     }
 
