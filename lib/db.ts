@@ -523,7 +523,7 @@ export async function getSettings() {
     try {
       const db = await getDb()
       const fromFile = db.settings || {}
-      const result = { ...SETTINGS_DEFAULTS, ...fromFile, ...fromSupabase }
+      const result = { ...SETTINGS_DEFAULTS, ...fromSupabase, ...fromFile }
       console.log('[settings] getSettings - supabase keys:', Object.keys(fromSupabase).length, 'file keys:', Object.keys(fromFile).length)
       return result
     } catch {}
