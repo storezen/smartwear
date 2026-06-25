@@ -1,11 +1,26 @@
 import fs from 'fs/promises'
 import path from 'path'
+import { fileURLToPath } from 'url'
 import { env } from './env'
 import { normalizeProductList } from './normalize-product'
 import { resolveProductSlug } from './product-url'
 import { supabase } from './supabase'
 
-const DB_PATH = path.join(process.cwd(), 'database.json')
+// Try multiple paths so it works on dev, Vercel, and custom deploys
+function getDbPaths(): string[] {
+  const paths: string[] = ['/tmp/database.json']
+  paths.push(path.join(process.cwd(), 'database.json'))
+  // Fallback paths relative to module (handles ESM on Vercel)
+  try {
+    const modPath = fileURLToPath(import.meta.url)
+    const modDir = path.dirname(modPath)
+    paths.push(path.resolve(modDir, '../database.json'))
+    paths.push(path.resolve(modDir, '../../database.json'))
+  } catch {}
+  return [...new Set(paths)]
+}
+
+const DB_PATHS = getDbPaths()
 const TMP_DB_PATH = '/tmp/database.json'
 
 // Initial Structure
@@ -101,10 +116,8 @@ export async function getDb(retries = 3): Promise<any> {
   }
 
   try {
-    // In production, try /tmp first (writable on Vercel), then project root
-    const readPaths = env.NODE_ENV === 'production' ? [TMP_DB_PATH, DB_PATH] : [DB_PATH]
     let rawData: string | null = null
-    for (const p of readPaths) {
+    for (const p of DB_PATHS) {
       try {
         rawData = await fs.readFile(p, 'utf-8')
         break
@@ -127,9 +140,7 @@ export async function getDb(retries = 3): Promise<any> {
     return parsed
   } catch (error: any) {
     if (error.code === 'ENOENT') {
-      // If file doesn't exist, create it
-      const writePaths = env.NODE_ENV === 'production' ? [TMP_DB_PATH, DB_PATH] : [DB_PATH]
-      for (const p of writePaths) {
+      for (const p of [TMP_DB_PATH, ...DB_PATHS]) {
         try {
           await fs.writeFile(p, JSON.stringify(INITIAL_DATA, null, 2))
           break
@@ -152,18 +163,17 @@ export async function getDb(retries = 3): Promise<any> {
   }
 }
 
-export async function saveDb(data: any, targetPath = DB_PATH) {
+export async function saveDb(data: any, targetPath?: string) {
   globalAny.memoryDb = data
-  // On Vercel, project root is read-only — try /tmp fallback
-  const paths = env.NODE_ENV === 'production' ? [DB_PATH, TMP_DB_PATH] : [targetPath]
+  const paths = targetPath ? [targetPath, TMP_DB_PATH, ...DB_PATHS] : [TMP_DB_PATH, ...DB_PATHS]
   for (const p of paths) {
     try {
       const tempPath = `${p}.tmp.${Date.now()}`
       await fs.writeFile(tempPath, JSON.stringify(data, null, 2))
       await fs.rename(tempPath, p)
-      return // success — stop
+      return
     } catch {
-      continue // try next path
+      continue
     }
   }
 }

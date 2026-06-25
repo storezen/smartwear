@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { performance } from 'perf_hooks'
+import { getProducts } from '@/lib/db'
+import { normalizeCategorySlug } from '@/lib/normalize-product'
 
 interface Product {
   name: string; price: string; priceNum: number; originalPrice: string
@@ -21,6 +22,20 @@ const CATEGORIES: CategoryDef[] = [
   { queries: ['power bank', 'powerbank 10000', 'portable charger'], label: 'Power Banks' },
   { queries: ['bluetooth speaker', 'wireless speaker', 'speaker portable'], label: 'Speakers' },
 ]
+
+const CATEGORY_LABEL_MAP: Record<string, string> = {
+  'smart-watches': 'Smart Watches',
+  'analog-watches': 'Analog Watches',
+  'ladies-watches': 'Ladies Watches',
+  'watch-bands': 'Watch Bands',
+  'phone-cases': 'Phone Cases',
+  'watch-cases': 'Watch Cases',
+  'power-banks': 'Power Banks',
+  chargers: 'Chargers',
+  audio: 'Earbuds',
+  accessories: 'Accessories',
+  speakers: 'Speakers',
+}
 
 const CACHE_TTL = 3600
 let cache: { data: any; timestamp: number } | null = null
@@ -128,11 +143,45 @@ export async function GET() {
       return NextResponse.json(cache.data)
     }
 
-    const [trending, ...categoryProducts] = await Promise.all([
+    const [trending, localProducts, ...categoryProducts] = await Promise.all([
       fetchTrendingPakistan(),
+      getProducts(),
       ...CATEGORIES.map(c => fetchDarazProducts(c.queries)),
     ])
 
+    // --- Local Store Analysis ---
+    const localCategoryMap: Record<string, any[]> = {}
+    localProducts.forEach((p: any) => {
+      const label = CATEGORY_LABEL_MAP[normalizeCategorySlug(p.category_slug)] || p.category_slug || 'Other'
+      if (!localCategoryMap[label]) localCategoryMap[label] = []
+      localCategoryMap[label].push(p)
+    })
+
+    const localSummary = Object.entries(localCategoryMap).map(([label, products]) => ({
+      label,
+      count: products.length,
+      avgPrice: Math.round(products.reduce((s: number, p: any) => s + (p.price || 0), 0) / products.length),
+      minPrice: Math.min(...products.map((p: any) => p.price || 0)),
+      maxPrice: Math.max(...products.map((p: any) => p.price || 0)),
+      totalStock: products.reduce((s: number, p: any) => s + (p.stock || 0), 0),
+    })).sort((a, b) => b.count - a.count)
+
+    const localPriceRanges = [
+      { label: 'Under PKR 500', min: 0, max: 500, count: 0 },
+      { label: 'PKR 500-1K', min: 500, max: 1000, count: 0 },
+      { label: 'PKR 1K-3K', min: 1000, max: 3000, count: 0 },
+      { label: 'PKR 3K-5K', min: 3000, max: 5000, count: 0 },
+      { label: 'PKR 5K-10K', min: 5000, max: 10000, count: 0 },
+      { label: 'PKR 10K+', min: 10000, max: Infinity, count: 0 },
+    ]
+    localProducts.forEach((p: any) => {
+      const range = localPriceRanges.find(r => (p.price || 0) >= r.min && (p.price || 0) < r.max)
+      if (range) range.count++
+    })
+
+    const localTotalValue = localProducts.reduce((s: number, p: any) => s + ((p.price || 0) * (p.stock || 0)), 0)
+
+    // --- Market Data ---
     const categories = CATEGORIES.map((cat, i) => {
       const products = (categoryProducts[i] || []).map((p: Product) => ({ ...p, category: cat.label }))
       return { label: cat.label, queries: cat.queries, products }
@@ -224,6 +273,41 @@ export async function GET() {
         : 0,
     })).sort((a, b) => b.opportunity - a.opportunity)
 
+    // --- Price Comparison (Local vs Market) ---
+    const priceComparison = localSummary.map(local => {
+      const market = categorySummary.find(c => c.label === local.label)
+      return {
+        category: local.label,
+        yourCount: local.count,
+        yourAvgPrice: local.avgPrice,
+        yourMinPrice: local.minPrice,
+        yourMaxPrice: local.maxPrice,
+        marketCount: market?.count || 0,
+        marketAvgPrice: market?.avgPrice || 0,
+        marketTotalSold: market?.totalSold || 0,
+        diff: market ? local.avgPrice - market.avgPrice : 0,
+        diffPct: market && market.avgPrice > 0
+          ? Math.round(((local.avgPrice - market.avgPrice) / market.avgPrice) * 100)
+          : 0,
+      }
+    }).sort((a, b) => b.marketTotalSold - a.marketTotalSold)
+
+    // --- Gap Analysis (trending on market but missing from local) ---
+    const gapAnalysis = categorySummary
+      .filter(m => m.totalSold > 50)
+      .map(m => {
+        const local = localSummary.find(l => l.label === m.label)
+        return {
+          category: m.label,
+          marketDemand: m.totalSold,
+          marketAvgPrice: m.avgPrice,
+          youHave: local ? local.count : 0,
+          marketAvgPerProduct: m.avgSoldPerProduct,
+          gap: local ? m.avgSoldPerProduct - 0 : m.avgSoldPerProduct,
+          status: !local ? 'missing' : local.count < 5 ? 'low' : local.count < 15 ? 'medium' : 'strong',
+        }
+      }).sort((a, b) => b.marketDemand - a.marketDemand)
+
     const data = {
       trending,
       categories,
@@ -234,6 +318,23 @@ export async function GET() {
       categorySummary,
       bestPricePerCategory,
       opportunityScore,
+      // Local store data
+      local: {
+        totalProducts: localProducts.length,
+        totalValue: localTotalValue,
+        categories: localSummary,
+        priceRanges: localPriceRanges,
+        products: localProducts.slice(0, 30).map((p: any) => ({
+          name: p.name,
+          price: p.price || 0,
+          stock: p.stock || 0,
+          category: CATEGORY_LABEL_MAP[normalizeCategorySlug(p.category_slug)] || p.category_slug || 'Other',
+          rating: p.rating || 0,
+        })),
+      },
+      // Cross-analysis
+      priceComparison,
+      gapAnalysis,
       generatedAt: new Date().toISOString(),
     }
 
