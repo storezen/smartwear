@@ -38,4 +38,10 @@ const PRODUCT_SLUG_ALIASES: Record<string, string> = {
   "series-11-cod": "s11-(allow-to-open-|-cash-on-delivery)",
   "series.cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
   "series-cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
+  "series-11-(allow-to-open-|-cash-on-delivery)": "s11-(allow-to-open-|-cash-on-delivery)",
+  "series-11-(allow-to-open-cash-on-delivery)": "s11-(allow-to-open-|-cash-on-delivery)",
+  "series-11-allow-to-open-cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
+  "s11-(allow-to-open-cash-on-delivery)": "s11-(allow-to-open-|-cash-on-delivery)",
+  "s11-allow-to-open-cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
+  "s11-allow-to-open-|-cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
 }
