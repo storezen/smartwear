@@ -23,11 +23,16 @@ function isCancelledOrReturned(status: string): boolean {
   return s === 'cancelled' || s === 'returned' || s === 'rto' || s === 'rto delivered' || s.includes('return to origin') || s === 'lost' || s === 'stolen' || s === 'damage'
 }
 
-// Helper to get real product prices
+// Helper to get real product prices & cost prices
 async function getRealProductPrice(productId: string): Promise<number | null> {
   const products = await getProducts()
   const p = products.find((x: any) => x.id === productId)
   return p ? p.price : null
+}
+async function getProductCostPrice(productId: string): Promise<number | null> {
+  const products = await getProducts()
+  const p = products.find((x: any) => x.id === productId)
+  return p && p.cost_price ? p.cost_price : null
 }
 
 // Helper to hash user data for TikTok CAPI
@@ -197,8 +202,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, order: idempotencyMap.get(payload.idempotency_key), cached: true }, { status: 200 })
     }
 
-    // 4. Server-Side Cart Validation
+    // 4. Server-Side Cart Validation + COGS Calculation
     let calculatedSubtotal = 0;
+    let cogs = 0;
+    let costPriceIncomplete = false;
     for (const item of payload.items) {
       const realPrice = await getRealProductPrice(item.id)
       if (realPrice === null) {
@@ -210,6 +217,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: `Price mismatch for product: ${item.name}. Please refresh your cart.` }, { status: 400 })
       }
       calculatedSubtotal += (realPrice * item.quantity)
+      const costPrice = await getProductCostPrice(item.id)
+      if (costPrice !== null) {
+        cogs += costPrice * item.quantity
+      } else {
+        costPriceIncomplete = true
+      }
     }
 
     // Assume flat shipping for now, but in future calculate dynamically
@@ -231,7 +244,7 @@ export async function POST(req: Request) {
     }
 
     const { idempotency_key, ...payloadWithoutIdempotency } = payload;
-    const finalPayload = { ...payloadWithoutIdempotency, discount: discountAmount }
+    const finalPayload = { ...payloadWithoutIdempotency, discount: discountAmount, cogs, cost_price_incomplete: costPriceIncomplete }
     const initialHistory = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
 
     if (isSupabaseConfigured() && supabase) {

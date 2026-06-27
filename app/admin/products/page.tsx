@@ -33,6 +33,7 @@ export default function AdminProductsPage() {
     name: '',
     category_slug: 'Smartwatches',
     price: '',
+    cost_price: '',
     compare_price: '',
     stock: '',
     status: 'Draft',
@@ -72,6 +73,7 @@ export default function AdminProductsPage() {
       const payload = {
         ...formData,
         price: parseInt(formData.price),
+        cost_price: formData.cost_price ? parseInt(formData.cost_price) : undefined,
         compare_price: formData.compare_price ? parseInt(formData.compare_price) : undefined,
         stock: parseInt(formData.stock) || 0,
         slug: formData.name.toLowerCase().replace(/ /g, '-'),
@@ -159,6 +161,7 @@ export default function AdminProductsPage() {
       name: p.name,
       category_slug: p.category_slug || 'Smartwatches',
       price: p.price.toString(),
+      cost_price: p.cost_price ? p.cost_price.toString() : '',
       compare_price: p.compare_price ? p.compare_price.toString() : '',
       stock: p.stock?.toString() || '0',
       status: p.status || 'Draft',
@@ -171,7 +174,7 @@ export default function AdminProductsPage() {
 
   const openAdd = () => {
     setFormData({
-      name: '', category_slug: 'Smartwatches', price: '', compare_price: '', stock: '10', status: 'Draft',
+      name: '', category_slug: 'Smartwatches', price: '', cost_price: '', compare_price: '', stock: '10', status: 'Draft',
       images: ['https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80'],
       colors: ''
     })
@@ -545,10 +548,14 @@ export default function AdminProductsPage() {
             {/* Pricing & Stock */}
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-white flex items-center gap-2"><DollarSign className="w-4 h-4 text-[#B8860B]" /> Pricing & Inventory</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-black/20 p-6 rounded-2xl border border-white/5">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 bg-black/20 p-6 rounded-2xl border border-white/5">
                 <div className="space-y-2 group">
-                  <label className="text-xs font-semibold text-[#D4A017] uppercase tracking-widest">Price (PKR)</label>
+                  <label className="text-xs font-semibold text-[#D4A017] uppercase tracking-widest">Selling Price (PKR)</label>
                   <input type="number" placeholder="185000" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono shadow-inner" />
+                </div>
+                <div className="space-y-2 group">
+                  <label className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Cost Price (PKR)</label>
+                  <input type="number" placeholder="100000" value={formData.cost_price} onChange={e => setFormData({...formData, cost_price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-emerald-500 transition-all font-mono shadow-inner" />
                 </div>
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-white/40 uppercase tracking-widest">Compare Price</label>

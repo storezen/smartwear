@@ -29,6 +29,7 @@ export interface Product {
   slug: string
   description: string
   price: number
+  cost_price?: number
   compare_price?: number | null
   images: string[]
   colors?: string[]
@@ -84,6 +85,9 @@ export interface Order {
   shipping_cost: number
   discount: number
   total: number
+  cogs?: number
+  gross_profit?: number
+  net_profit?: number
   status: OrderStatus
   shipping_address: Address
   payment_method: string

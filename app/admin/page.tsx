@@ -32,14 +32,7 @@ import {
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { AnimatedCounter } from "@/components/ui/animated-counter"
 
-const revenueData = [
-  { month: "Jan", revenue: 0 },
-  { month: "Feb", revenue: 0 },
-  { month: "Mar", revenue: 0 },
-  { month: "Apr", revenue: 0 },
-  { month: "May", revenue: 0 },
-  { month: "Jun", revenue: 0 },
-]
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 /* ── Stat Card ────────────────────────────────────── */
 interface StatCardProps {
@@ -113,8 +106,9 @@ function CustomTooltip({ active, payload, label }: any) {
   if (active && payload?.length) {
     return (
       <div className="bg-[#0F1923] border border-white/10 rounded-xl px-4 py-2.5 shadow-xl text-sm">
-        <p className="text-white/60 text-xs mb-1">{label}</p>
-        <p className="font-bold text-[#C8972A]">{formatPrice(payload[0].value)}</p>
+        <p className="text-white/60 text-xs mb-1.5">{label}</p>
+        <p className="font-bold text-[#C8972A]">Revenue: {formatPrice(payload[0]?.value || 0)}</p>
+        {payload[1] && <p className="font-bold text-[#10B981] text-xs mt-0.5">Profit: {formatPrice(payload[1]?.value || 0)}</p>}
       </div>
     )
   }
@@ -128,6 +122,7 @@ export default function AdminDashboard() {
   const [topProducts, setTopProducts] = useState<any[]>([])
   const [healthData, setHealthData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [chartData, setChartData] = useState<{ month: string; revenue: number; profit: number }[]>(MONTHS.map(m => ({ month: m, revenue: 0, profit: 0 })))
 
   useEffect(() => {
     async function load() {
@@ -143,8 +138,33 @@ export default function AdminDashboard() {
         const health = healthRes.ok ? await healthRes.json() : null
         
         setHealthData(health)
-        
+
         const totalRevenue = orders.reduce((sum: number, o: any) => sum + (o.total || 0), 0)
+        const totalCogs = orders.reduce((sum: number, o: any) => sum + (o.cogs || 0), 0)
+        const grossProfit = orders.reduce((sum: number, o: any) => {
+          return sum + ((o.total || 0) - (o.cogs || 0) - (o.shipping_fee || 0))
+        }, 0)
+        const netProfit = orders.reduce((sum: number, o: any) => {
+          return sum + ((o.total || 0) - (o.cogs || 0) - (o.shipping_fee || 0) - (o.discount || 0))
+        }, 0)
+        const profitMargin = totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0
+
+        // Build monthly chart data
+        const monthlyMap: Record<string, { revenue: number; cogs: number; profit: number }> = {}
+        orders.forEach((o: any) => {
+          if (!o.created_at) return
+          const d = new Date(o.created_at)
+          const key = MONTHS[d.getMonth()]
+          monthlyMap[key] = monthlyMap[key] || { revenue: 0, cogs: 0, profit: 0 }
+          monthlyMap[key].revenue += o.total || 0
+          monthlyMap[key].cogs += o.cogs || 0
+          monthlyMap[key].profit += ((o.total || 0) - (o.cogs || 0) - (o.shipping_fee || 0) - (o.discount || 0))
+        })
+        const chartData = MONTHS.map((m, i) => ({
+          month: m,
+          ...(monthlyMap[m] || { revenue: 0, cogs: 0, profit: 0 })
+        }))
+        setChartData(chartData)
 
         setStats([
           {
@@ -158,31 +178,34 @@ export default function AdminDashboard() {
             iconBg: "rgba(200, 151, 42, 0.1)",
           },
           {
-            title: "Total Orders",
-            rawValue: orders.length,
-            change: "0",
-            trend: "up",
-            icon: ShoppingCart,
-            accentColor: "#3B82F6",
-            iconBg: "rgba(59, 130, 246, 0.1)",
-          },
-          {
-            title: "Products",
-            rawValue: products.length,
-            change: "+3 new",
+            title: "COGS",
+            rawValue: totalCogs,
+            prefix: "Rs. ",
+            change: "Cost of goods sold",
             trend: "up",
             icon: Package,
+            accentColor: "#F43F5E",
+            iconBg: "rgba(244, 63, 94, 0.1)",
+          },
+          {
+            title: "Gross Profit",
+            rawValue: grossProfit,
+            prefix: "Rs. ",
+            change: "After COGS + Shipping",
+            trend: "up",
+            icon: TrendingUp,
             accentColor: "#10B981",
             iconBg: "rgba(16, 185, 129, 0.1)",
           },
           {
-            title: "Customers",
-            rawValue: orders.length,
-            change: "0",
-            trend: "up",
-            icon: Users,
-            accentColor: "#8B5CF6",
-            iconBg: "rgba(139, 92, 246, 0.1)",
+            title: "Net Profit",
+            rawValue: netProfit,
+            prefix: "Rs. ",
+            change: `${profitMargin.toFixed(1)}% margin`,
+            trend: profitMargin >= 0 ? "up" : "down",
+            icon: DollarSign,
+            accentColor: "#3B82F6",
+            iconBg: "rgba(59, 130, 246, 0.1)",
           },
         ])
 
@@ -238,21 +261,25 @@ export default function AdminDashboard() {
         <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl h-full flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">REVENUE</div>
+              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">REVENUE & PROFIT</div>
               <h3 className="text-[13px] font-semibold text-white">Monthly Overview</h3>
             </div>
-            <div className="flex items-center gap-1 bg-[#4ADE80]/10 text-[#4ADE80] px-2 py-1 rounded-lg text-[10px] font-semibold">
-              <TrendingUp className="w-3 h-3" />
-              +12.5%
+            <div className="flex items-center gap-2">
+              <span className="flex items-center gap-1 text-[10px] text-[#C8972A]"><span className="w-2 h-2 rounded-full bg-[#C8972A]" /> Revenue</span>
+              <span className="flex items-center gap-1 text-[10px] text-[#10B981]"><span className="w-2 h-2 rounded-full bg-[#10B981]" /> Profit</span>
             </div>
           </div>
           <div className="flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={revenueData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+              <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="goldGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#C8972A" stopOpacity={0.15} />
                     <stop offset="95%" stopColor="#C8972A" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" />
@@ -279,6 +306,15 @@ export default function AdminDashboard() {
                   fill="url(#goldGradient)"
                   dot={false}
                   activeDot={{ r: 5, fill: "#C8972A", strokeWidth: 2, stroke: "white" }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="profit"
+                  stroke="#10B981"
+                  strokeWidth={2}
+                  fill="url(#profitGradient)"
+                  dot={false}
+                  activeDot={{ r: 4, fill: "#10B981", strokeWidth: 2, stroke: "white" }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -391,9 +427,15 @@ export default function AdminDashboard() {
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-[12px] font-bold text-white">{formatPrice(product.price)}</p>
-                  <p className="text-[9px] text-white/60 mt-0.5">
-                    {product.stock} in stock
-                  </p>
+                  {product.cost_price ? (
+                    <p className="text-[9px] text-[#10B981] mt-0.5">
+                      {formatPrice(product.price - product.cost_price)} profit/unit
+                    </p>
+                  ) : (
+                    <p className="text-[9px] text-white/40 mt-0.5">
+                      {product.stock} in stock
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
