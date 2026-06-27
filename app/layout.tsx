@@ -22,21 +22,38 @@ const poppins = Poppins({
   weight: ['400', '500', '600', '700'],
 })
 
-export const metadata: Metadata = {
-  title: 'Smartwear • Premium Watches & Accessories',
-  description:
-    'Premium Smart Watches, Analog Watches & Accessories in Pakistan. Timeless design, modern technology. Cash on Delivery across Pakistan. Shop the best watches online.',
-  keywords:
-    'smart watches pakistan, analog watches, luxury watches, watch accessories, premium watches karachi lahore, smartwatch pakistan, Smartwear',
-  generator: 'next.js',
-  icons: {
-    icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-    ],
-    apple: '/apple-icon.png',
-  },
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const settings = await getSettings()
+    return {
+      title: settings.seo_title || 'Smartwear • Premium Watches & Accessories',
+      description: settings.seo_description || 'Premium Smart Watches, Analog Watches & Accessories in Pakistan.',
+      keywords: settings.seo_keywords || 'smart watches pakistan, analog watches, luxury watches',
+      generator: 'next.js',
+      icons: {
+        icon: [
+          { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
+          { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
+          { url: '/icon.svg', type: 'image/svg+xml' },
+        ],
+        apple: '/apple-icon.png',
+      },
+    }
+  } catch {
+    return {
+      title: 'Smartwear • Premium Watches & Accessories',
+      description: 'Premium Smart Watches & Accessories in Pakistan.',
+      generator: 'next.js',
+      icons: {
+        icon: [
+          { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
+          { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
+          { url: '/icon.svg', type: 'image/svg+xml' },
+        ],
+        apple: '/apple-icon.png',
+      },
+    }
+  }
 }
 
 export default async function RootLayout({

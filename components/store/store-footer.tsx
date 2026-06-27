@@ -41,7 +41,7 @@ const iconMap: Record<string, React.ElementType> = {
   Lock: Lock, Banknote, Truck, ShieldCheck, RefreshCw, PackageOpen, MapPin, Phone, Mail,
 }
 
-function Logo() {
+function Logo({ name, tagline }: { name?: string; tagline?: string }) {
   return (
     <div className="flex items-center gap-2.5">
       <svg viewBox="0 0 36 36" fill="none" width={30} height={30}>
@@ -58,13 +58,13 @@ function Logo() {
           className="block text-white font-semibold"
           style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "1.1rem", letterSpacing: "-0.02em" }}
         >
-          Smartwear
+          {name || 'Smartwear'}
         </span>
         <span
           className="block text-white/60 font-medium mt-0.5"
           style={{ fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase" }}
         >
-          Pakistan
+          {tagline || 'Pakistan'}
         </span>
       </div>
     </div>
@@ -145,7 +145,7 @@ export function StoreFooter() {
             
             {/* Brand Column */}
             <div className="lg:col-span-4 pr-4">
-              <Logo />
+              <Logo name={s.store_name} tagline={s.store_tagline} />
               <p className="text-white/60 text-sm mt-6 mb-8 leading-relaxed max-w-xs">
                 {s.store_tagline 
                   ? `${s.store_name || 'Smartwear'} — ${s.store_tagline}. Nationwide delivery with open-box verification.`

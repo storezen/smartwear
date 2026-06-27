@@ -11,9 +11,10 @@ import { useAuth } from "@/context/auth-context"
 import { categories, products, formatPrice } from "@/lib/mock-data"
 import Image from "next/image"
 import { SmartSearch } from "@/components/store/smart-search"
+import { useSettings } from "@/lib/use-settings"
 
 /* ── Logo ── */
-function Logo({ className = "" }: { className?: string }) {
+function Logo({ className = "", name, tagline }: { className?: string; name?: string; tagline?: string }) {
   return (
     <Link href="/" className={`flex items-center gap-2.5 group shrink-0 ${className}`}>
       <motion.div
@@ -48,13 +49,13 @@ function Logo({ className = "" }: { className?: string }) {
           className="block text-white font-semibold group-hover:text-[#B8860B] transition-colors"
           style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "1.0625rem", letterSpacing: "-0.02em" }}
         >
-          Smartwear
+          {name || 'Smartwear'}
         </span>
         <span
           className="block text-white/70 font-medium mt-0.5"
           style={{ fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase" }}
         >
-          Pakistan
+          {tagline || 'Pakistan'}
         </span>
       </div>
     </Link>
@@ -121,6 +122,7 @@ export function PremiumNavbar() {
   const router = useRouter()
   const pathname = usePathname()
   const { scrollY } = useScroll()
+  const { settings: navbarSettings } = useSettings()
   
   const [searchQ, setSearchQ] = useState("")
   const [showSearch, setShowSearch] = useState(false)
@@ -202,7 +204,7 @@ export function PremiumNavbar() {
 
             {/* Logo */}
             <div className="flex-1 lg:flex-none flex justify-center lg:justify-start">
-              <Logo />
+              <Logo name={navbarSettings?.store_name} tagline={navbarSettings?.store_tagline} />
             </div>
 
             {/* Desktop Nav */}
@@ -273,7 +275,7 @@ export function PremiumNavbar() {
             className="fixed inset-0 z-[100] bg-[#0C0F14]/95 backdrop-blur-2xl flex flex-col"
           >
             <div className="flex items-center justify-between p-6">
-              <Logo />
+              <Logo name={navbarSettings?.store_name} tagline={navbarSettings?.store_tagline} />
               <button
                 onClick={() => setMobileOpen(false)}
                 className="p-2 text-white/70 hover:text-white bg-white/5 rounded-full sw-interactive"

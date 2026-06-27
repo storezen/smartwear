@@ -100,7 +100,7 @@ function HeroBanner() {
             >
               <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.03] border border-white/8 mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B]" />
-                <span className="text-white/40 text-[11px] sm:text-[10px] uppercase tracking-[0.2em] font-medium">Pakistan&apos;s Premium Watch Store</span>
+                <span className="text-white/40 text-[11px] sm:text-[10px] uppercase tracking-[0.2em] font-medium">{settings?.hero_badge_text || "Pakistan's Premium Watch Store"}</span>
               </div>
 
               <h1 className="text-[2.2rem] sm:text-[4rem] md:text-[5rem] lg:text-[5.5rem] font-bold text-white leading-[1.1] sm:leading-[1] mb-4 sm:mb-6" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
@@ -129,7 +129,7 @@ function HeroBanner() {
               </h1>
 
               <p className="text-white/45 text-sm md:text-base max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed">
-                Smart Watches · Analog Classics · Premium Accessories — curated for those who value both tradition and technology.
+                {settings?.hero_subtitle || "Smart Watches · Analog Classics · Premium Accessories — curated for those who value both tradition and technology."}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
