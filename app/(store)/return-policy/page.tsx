@@ -21,16 +21,16 @@ export default function ReturnPolicyPage() {
           <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B]" />
-            <span className="text-[#B8860B]">Return Policy</span>
+            <span className="text-[#B8860B]">Replacement Policy</span>
           </div>
           <h1
             className="font-bold text-white leading-tight mb-2 sm:mb-4"
             style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
-            Return Policy
+            Replacement Policy
           </h1>
           <p className="text-white/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
-            We stand behind the quality of our timepieces with a hassle-free return and exchange process.
+            Hassle-free replacement for defective or damaged items within 7 days of delivery.
           </p>
         </div>
       </div>
@@ -43,53 +43,54 @@ export default function ReturnPolicyPage() {
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <RefreshCcw className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>7-Day Returns</h3>
-              <p className="text-sm text-white/60">Request a return within 7 days of receiving your order.</p>
+              <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>7-Day Replacement</h3>
+              <p className="text-sm text-white/60">Request replacement within 7 days of receiving your order.</p>
             </div>
             <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <Box className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Original Packaging</h3>
-              <p className="text-sm text-white/60">Items must be unworn with all original tags attached.</p>
+              <p className="text-sm text-white/60">Items must be returned with all original packaging and accessories.</p>
             </div>
             <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <ShieldCheck className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Quality Inspected</h3>
-              <p className="text-sm text-white/60">Returns are processed after passing quality checks.</p>
+              <p className="text-sm text-white/60">Replacement is processed after passing quality checks.</p>
             </div>
           </div>
 
           <div className="prose prose-invert max-w-none prose-p:text-white/70 prose-headings:font-normal prose-headings:text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
-            <h2 className="text-2xl mb-4">1. Eligibility for Returns</h2>
+            <h2 className="text-2xl mb-4">1. Eligibility for Replacement</h2>
             <p className="font-sans mb-8 leading-relaxed">
-              We accept returns or exchanges within <strong>7 days</strong> of delivery. To be eligible for a return, the watch must be strictly unworn, unaltered, and in the exact same condition that you received it. It must also be in the original packaging, complete with all warranty cards, manuals, and protective films intact.
+              We offer replacement within <strong>7 days</strong> of delivery for defective or damaged items. To be eligible,
+              the product must be in its original condition with all packaging, warranty cards, manuals, and protective
+              films intact. Please inspect your product at the time of delivery using our open-box verification option.
             </p>
 
-            <h2 className="text-2xl mb-4">2. Non-Returnable Items</h2>
+            <h2 className="text-2xl mb-4">2. Non-Replaceable Items</h2>
             <p className="font-sans mb-8 leading-relaxed">
-              Please note that certain items cannot be returned:
-              <br />- Watches that show any signs of wear, scratches, or damage.
-              <br />- Watches that have had their straps adjusted or sized.
+              Please note that certain items cannot be replaced:
+              <br />- Products that show signs of wear, scratches, or damage caused by misuse.
+              <br />- Products that have had their straps adjusted or sized.
               <br />- Limited edition pieces or custom-ordered watches.
-              <br />- Gift cards.
+              <br />- Change of mind or preference (product must be defective).
             </p>
 
-            <h2 className="text-2xl mb-4">3. How to Initiate a Return</h2>
+            <h2 className="text-2xl mb-4">3. How to Initiate a Replacement</h2>
             <p className="font-sans mb-8 leading-relaxed">
-              To start a return, please contact our concierge team at <strong>concierge@smartwear.pk</strong> or call us at +92 300 1234567. Provide your order number and reason for return. Once approved, we will provide you with a return authorization number and instructions on how to securely ship the item back to our facility.
+              To start a replacement, please contact our concierge team at <strong>concierge@smartwear.pk</strong> or call us at
+              +92 300 1234567 within 7 days of delivery. Provide your order number and a clear description/photo of the
+              issue. Once approved, we will arrange for the replacement item to be dispatched to your address.
             </p>
 
-            <h2 className="text-2xl mb-4">4. Refunds Process</h2>
+            <h2 className="text-2xl mb-4">4. Replacement Process</h2>
             <p className="font-sans mb-8 leading-relaxed">
-              Once we receive and inspect the returned item, we will notify you of the approval or rejection of your refund. If approved, the refund will be processed to your original method of payment within 5-7 business days. Please note that original shipping costs are non-refundable.
-            </p>
-
-            <h2 className="text-2xl mb-4">5. Exchanges</h2>
-            <p className="font-sans mb-8 leading-relaxed">
-              If you wish to exchange your watch for a different model, the fastest way is to return the original item following the process above, and make a separate purchase for the new item. Alternatively, our concierge team can assist you with a direct exchange process subject to inventory availability.
+              Once we receive and inspect the returned item, we will notify you of the approval or rejection of your
+              replacement request. If approved, the replacement item will be dispatched within 2-3 business days.
+              Shipping costs for defective replacements are covered by us.
             </p>
           </div>
         </div>

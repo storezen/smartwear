@@ -75,7 +75,7 @@ async function fetchContext(intent: string, keywords: string[], productSlug: str
 
   if (intent === "policy") {
     const s = await getSettings().catch(() => ({}))
-    ctx.push(`Returns: 7-day easy return. Warranty: 1yr smart, 6mo accessories. Shipping: Free over Rs. ${(s?.free_delivery_threshold || 10000).toLocaleString()}, Std Rs. ${s?.shipping_standard_rate || 200}, Exp Rs. ${s?.shipping_express_rate || 500}. Payment: ${(() => { try { return JSON.parse(s?.payment_methods || '[]').join(", ") } catch { return "COD, JazzCash, Easypaisa, Bank Transfer" } })()}. Open box delivery.`)
+    ctx.push(`Replacement: 7-day replacement for defects. Shipping: Free over Rs. ${(s?.free_delivery_threshold || 10000).toLocaleString()}, Std Rs. ${s?.shipping_standard_rate || 200}, Exp Rs. ${s?.shipping_express_rate || 500}. Payment: ${(() => { try { return JSON.parse(s?.payment_methods || '[]').join(", ") } catch { return "COD, JazzCash, Easypaisa, Bank Transfer" } })()}. Open box delivery.`)
   }
 
   return ctx.join("\n")
@@ -106,9 +106,9 @@ function buildPersonaPrompt(): string {
 - Cart → guide to /cart page.
 - Payment → COD, JazzCash, Easypaisa. Payment link generate kar sakte hain.
 - Price objection → features justify + "COD hai, ghar pe check karo, pasand nahi to wapas".
-- Originality → "100% original, authorized dealer, bill + warranty card."
+- Originality → "Premium quality. Bill aur replacement card ke saath."
 - Gift → suggest with packaging. Occasion poocho.
-- Exchange/wapas → 7-day easy return/explain.
+- Exchange/wapas → 7-day replacement for defects.
 - Battery puchhe → "7-8 din normal, 4-5 din heavy use."
 
 ## Emotional Adaptation
@@ -152,7 +152,7 @@ function buildPersonaPrompt(): string {
 ✅ Karo: "Ji boliye, kya chahiye?"
 
 ❌ Mat karo: "Warranty 1 year hai smart watches ke liye aur 6 months accessories ke liye. Aapko warranty card bhi mile ga."
-✅ Karo: "1 year warranty." (customer ne sirf warranty poochhi hai)
+✅ Karo: "7-day replacement warranty hai. Agar koi issue ho to hum replace kar dete hain." (customer ne sirf warranty poochhi hai)
 
 ❌ Mat karo: "COD available hai. Aap jab order karein gay to rider aapke ghar aa kar deliver kare ga aur aap cash pay kar sakte hain. Open box delivery bhi hai."
 ✅ Karo: "Haan, COD hai. Ghar pe check kar ke paise do."
@@ -264,7 +264,7 @@ export async function POST(req: Request) {
       } catch {}
     }
 
-    const systemContent = [personaPrompt, langInstruction, nameContext, memoryContext, sentimentContext, seasonalContext, followupContext, ...faqContext, contextData ? `\n## Context\n${contextData}` : "", buildProductKnowledge(), `\n## Knowledge\nStore: MM Alam Road, Lahore. Mon-Sat 10am-8pm. COD. 7-day return. 1yr warranty (smart), 6mo (accessories). Free delivery >Rs. 10,000. Open box delivery.`].join("\n")
+    const systemContent = [personaPrompt, langInstruction, nameContext, memoryContext, sentimentContext, seasonalContext, followupContext, ...faqContext, contextData ? `\n## Context\n${contextData}` : "", buildProductKnowledge(), `\n## Knowledge\nStore: MM Alam Road, Lahore. Mon-Sat 10am-8pm. COD. 7-day replacement warranty. Free delivery >Rs. 10,000. Open box delivery.`].join("\n")
 
     const messages = [{ role: "system", content: systemContent }, ...previousMessages.slice(-20), { role: "user", content: message }]
 

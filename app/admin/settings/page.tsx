@@ -467,7 +467,7 @@ export default function AdminSettingsPage() {
                       onChange={(e) => update('trust_badges', e.target.value)}
                       rows={3}
                       className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/20 focus:border-[#B8860B] focus:bg-white/[0.05] outline-none transition-all text-[12px] resize-none font-mono"
-                      placeholder='[{"label":"Fast Delivery","icon":"Truck"},{"label":"1 Year Warranty","icon":"ShieldCheck"}]'
+                      placeholder='[{"label":"7-Day Replacement","icon":"RefreshCw"},{"label":"Cash on Delivery","icon":"Banknote"}]'
                     />
 
                     <div className="p-3 bg-[#B8860B]/10 border border-[#B8860B]/20 rounded-lg flex items-start gap-2.5">

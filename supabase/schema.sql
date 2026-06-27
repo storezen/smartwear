@@ -104,12 +104,12 @@ CREATE TABLE public.settings (
 
   -- SEO
   seo_title TEXT DEFAULT 'Smartwear • Premium Watches & Accessories',
-  seo_description TEXT DEFAULT 'Pakistan''s most trusted destination for premium smartwatches and accessories. Genuine products with nationwide delivery and open-box verification.',
+  seo_description TEXT DEFAULT 'Pakistan''s trusted destination for premium smartwatches and accessories. Nationwide delivery with open-box verification.',
   seo_keywords TEXT DEFAULT 'smart watches pakistan, analog watches, luxury watches, smartwear, watch store pakistan, premium watches',
 
   -- Security & Trust Badges (JSON arrays)
   security_badges TEXT DEFAULT '[{"label":"SSL Secure","icon":"Lock"},{"label":"100% COD","icon":"Banknote"},{"label":"Open Box Delivery","icon":"PackageOpen"},{"label":"Nationwide Delivery","icon":"Truck"}]',
-  trust_badges TEXT DEFAULT '[{"label":"Fast Delivery","icon":"Truck"},{"label":"1 Year Warranty","icon":"ShieldCheck"},{"label":"7-Day Returns","icon":"RefreshCw"},{"label":"Cash on Delivery","icon":"Banknote"},{"label":"Secure Checkout","icon":"Lock"}]',
+  trust_badges TEXT DEFAULT '[{"label":"7-Day Replacement","icon":"RefreshCw"},{"label":"Cash on Delivery","icon":"Banknote"},{"label":"Open Box Check","icon":"PackageOpen"},{"label":"Nationwide Delivery","icon":"Truck"},{"label":"Secure Checkout","icon":"Lock"}]',
 
   -- Integrations (existing)
   postex_api_token TEXT,

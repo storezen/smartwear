@@ -55,7 +55,7 @@ export async function GET() {
     const questionCounts: Record<string, number> = {}
     const normalize = (q: string) => q.toLowerCase().replace(/[?.!,]/g, "").trim()
     const stopWords = new Set(["ji", "hai", "hain", "ka", "ki", "ke", "ko", "se", "mein", "main", "to", "aur", "yeh", "woh", "aap", "mujhe", "kya", "konsa", "kahan", "kaise", "kab"])
-    const questionIndicators = ["price", "price?", "rate", "kitna", "cost", "hai?", "available", "delivery", "shipping", "time", "warranty", "return", "color", "feature", "review", "order", "track", "compare", "difference", "best", "latest", "new"]
+    const questionIndicators = ["price", "price?", "rate", "kitna", "cost", "hai?", "available", "delivery", "shipping", "time", "warranty", "return", "replacement", "color", "feature", "review", "order", "track", "compare", "difference", "best", "latest", "new"]
 
     for (const msg of userMsgs.data || []) {
       const clean = normalize(msg.content)

@@ -41,12 +41,12 @@ ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS hero_badge_text TEXT DEFAUL
 
 -- SEO
 ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS seo_title TEXT DEFAULT 'Smartwear • Premium Watches & Accessories';
-ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS seo_description TEXT DEFAULT 'Pakistan''s most trusted destination for premium smartwatches and accessories. Genuine products with nationwide delivery and open-box verification.';
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS seo_description TEXT DEFAULT 'Pakistan''s trusted destination for premium smartwatches and accessories. Nationwide delivery with open-box verification.';
 ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS seo_keywords TEXT DEFAULT 'smart watches pakistan, analog watches, luxury watches, smartwear, watch store pakistan, premium watches';
 
 -- Security & Trust Badges
 ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS security_badges TEXT DEFAULT '[{"label":"SSL Secure","icon":"Lock"},{"label":"100% COD","icon":"Banknote"},{"label":"Open Box Delivery","icon":"PackageOpen"},{"label":"Nationwide Delivery","icon":"Truck"}]';
-ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS trust_badges TEXT DEFAULT '[{"label":"Fast Delivery","icon":"Truck"},{"label":"1 Year Warranty","icon":"ShieldCheck"},{"label":"7-Day Returns","icon":"RefreshCw"},{"label":"Cash on Delivery","icon":"Banknote"},{"label":"Secure Checkout","icon":"Lock"}]';
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS trust_badges TEXT DEFAULT '[{"label":"7-Day Replacement","icon":"RefreshCw"},{"label":"Cash on Delivery","icon":"Banknote"},{"label":"Open Box Check","icon":"PackageOpen"},{"label":"Nationwide Delivery","icon":"Truck"},{"label":"Secure Checkout","icon":"Lock"}]';
 
 -- Ensure default row exists
 INSERT INTO public.settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;

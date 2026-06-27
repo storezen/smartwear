@@ -432,8 +432,8 @@ export default function CheckoutPage() {
                       <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 rotate-180 text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-[11px] sm:text-xs font-semibold text-white">7 Days Return</p>
-                      <p className="text-[10px] text-white/50 hidden sm:block">Money back guarantee</p>
+                      <p className="text-[11px] sm:text-xs font-semibold text-white">7-Day Replacement</p>
+                      <p className="text-[10px] text-white/50 hidden sm:block">Hassle-free replacement</p>
                     </div>
                   </div>
                 </div>
@@ -462,7 +462,7 @@ export default function CheckoutPage() {
                 )}
               </button>
               <p className="text-center text-[11px] text-white/40 mt-3 px-2">
-                Free delivery above {formatPrice(freeThreshold)} &bull; 7 days return
+                Free delivery above {formatPrice(freeThreshold)} &bull; 7-day replacement
               </p>
             </div>
           </div>

@@ -148,8 +148,8 @@ export function StoreFooter() {
               <Logo />
               <p className="text-white/60 text-sm mt-6 mb-8 leading-relaxed max-w-xs">
                 {s.store_tagline 
-                  ? `${s.store_name || 'Smartwear'} — ${s.store_tagline}. Genuine products at honest prices with nationwide delivery.`
-                  : `Pakistan's most trusted destination for premium smartwatches and accessories.`}
+                  ? `${s.store_name || 'Smartwear'} — ${s.store_tagline}. Nationwide delivery with open-box verification.`
+                  : `Pakistan's trusted destination for premium smartwatches and accessories.`}
               </p>
               <div className="flex gap-4">
                 {buildSocial().map((soc) => {

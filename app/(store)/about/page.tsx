@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Shield, Users, Award, Truck, Heart, Store } from "lucide-react"
 
 const values = [
-  { icon: Shield, label: "100% Authentic", desc: "Every product we sell is verified genuine with manufacturer warranty." },
+  { icon: Shield, label: "Premium Quality", desc: "Every product is personally tested by our team before listing." },
   { icon: Users, label: "50,000+ Happy Customers", desc: "Trusted by thousands across Pakistan for quality and reliability." },
   { icon: Award, label: "Premium Quality", desc: "We personally vet every product before it reaches our store." },
   { icon: Truck, label: "Nationwide Delivery", desc: "Free shipping across Pakistan with open-box verification." },

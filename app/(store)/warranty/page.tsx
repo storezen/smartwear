@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, ShieldCheck, Wrench, Settings, Star } from "lucide-react"
+import { ChevronRight, RefreshCw, RotateCcw, ShieldCheck } from "lucide-react"
 
 export default function WarrantyPage() {
   return (
@@ -27,10 +27,10 @@ export default function WarrantyPage() {
             className="font-bold text-white leading-tight mb-2 sm:mb-4"
             style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
-            International Warranty
+            7-Day Replacement Warranty
           </h1>
           <p className="text-white/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
-            Our commitment to exceptional craftsmanship and reliable performance.
+            Hassle-free replacement if anything is not right with your product.
           </p>
         </div>
       </div>
@@ -38,61 +38,64 @@ export default function WarrantyPage() {
       <div className="sw-container pb-12 md:pb-24">
         <div className="max-w-4xl mx-auto">
           {/* Info Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 md:mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 md:mb-12">
+            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
+              <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
+                <RotateCcw className="w-5 h-5 text-[#B8860B]" />
+              </div>
+              <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>7 Days</h3>
+              <p className="text-xs text-white/60">Replacement Window</p>
+            </div>
+            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
+              <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
+                <RefreshCw className="w-5 h-5 text-[#B8860B]" />
+              </div>
+              <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Replacement</h3>
+              <p className="text-xs text-white/60">Defective items replaced</p>
+            </div>
             <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <ShieldCheck className="w-5 h-5 text-[#B8860B]" />
               </div>
-              <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>1 Year</h3>
-              <p className="text-xs text-white/60">Standard Coverage</p>
-            </div>
-            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
-              <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
-                <Wrench className="w-5 h-5 text-[#B8860B]" />
-              </div>
-              <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Movement</h3>
-              <p className="text-xs text-white/60">Defects Covered</p>
-            </div>
-            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
-              <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
-                <Settings className="w-5 h-5 text-[#B8860B]" />
-              </div>
-              <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Parts</h3>
-              <p className="text-xs text-white/60">Authentic Replacements</p>
-            </div>
-            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
-              <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
-                <Star className="w-5 h-5 text-[#B8860B]" />
-              </div>
-              <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Expert Care</h3>
-              <p className="text-xs text-white/60">Certified Technicians</p>
+              <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Hassle-Free</h3>
+              <p className="text-xs text-white/60">Simple process</p>
             </div>
           </div>
 
           <div className="prose prose-invert max-w-none prose-p:text-white/70 prose-headings:font-normal prose-headings:text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
-            <h2 className="text-2xl mb-4">The Smartwear Guarantee</h2>
+            <h2 className="text-2xl mb-4">Our Replacement Policy</h2>
             <p className="font-sans mb-8 leading-relaxed">
-              Every Smartwear timepiece is crafted to the highest standards using premium materials and undergoes rigorous quality testing. We are proud to offer a comprehensive <strong>1-Year International Warranty</strong> from the date of purchase, ensuring your watch functions flawlessly.
+              Every Smartwear timepiece is carefully packed and quality-checked before dispatch. If you receive a product
+              with a manufacturing defect or damage during transit, we offer a hassle-free <strong>7-day replacement</strong> from
+              the date of delivery. We believe in making things right, no questions asked.
             </p>
 
             <h2 className="text-2xl mb-4">What Is Covered?</h2>
             <p className="font-sans mb-8 leading-relaxed">
-              Our warranty covers manufacturing defects and internal movement faults that exist at the time of delivery. If a defect covered by this warranty arises during the warranty period, Smartwear will repair or replace the defective parts free of charge. In cases where a repair is not possible, we will offer a replacement with an identical or similar model.
+              Replacement applies to products with genuine manufacturing defects or issues that were not visible at the
+              time of delivery. If a covered issue arises within 7 days, Smartwear will replace the item with an identical
+              or similar model free of charge.
             </p>
 
             <h2 className="text-2xl mb-4">What Is Not Covered?</h2>
             <p className="font-sans mb-8 leading-relaxed">
-              To keep our warranty fair and straightforward, please note that it does not cover:
+              Please note that replacement does not cover:
               <br />- Normal wear and tear, including scratches on the case, glass, or strap.
               <br />- Damage caused by accidents, mishandling, negligence, or impact.
               <br />- Damage resulting from improper repairs or modifications by unauthorized third parties.
-              <br />- Water damage caused by exceeding the watch's stated water resistance rating.
-              <br />- The lifespan of the battery.
+              <br />- Water damage caused by exceeding the product's stated water resistance rating.
+              <br />- Change of mind or preference (product must be defective for replacement).
             </p>
 
-            <h2 className="text-2xl mb-4">How to Claim Warranty Service</h2>
+            <h2 className="text-2xl mb-4">How to Request a Replacement</h2>
             <p className="font-sans mb-8 leading-relaxed">
-              To request warranty service, please contact our support team at <strong>concierge@smartwear.pk</strong>. You must provide a valid proof of purchase (order confirmation or receipt) and a description of the issue. Our team will guide you through sending your watch to our authorized service center for evaluation and repair.
+              To request a replacement, please contact our support team at <strong>concierge@smartwear.pk</strong> or call us
+              at +92 300 1234567 within 7 days of delivery. You must provide:
+              <br />- Your order number
+              <br />- A clear photo or video showing the issue
+              <br />- A brief description of the problem
+              <br /><br />
+              Once approved, we will arrange for the replacement to be sent to your address.
             </p>
           </div>
         </div>

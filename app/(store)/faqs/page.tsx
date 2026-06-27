@@ -13,10 +13,10 @@ const faqs = [
     ]
   },
   {
-    category: "Returns & Warranty",
+    category: "Returns & Replacement",
     items: [
-      { q: "What is your return policy?", a: "We offer a 7-day return policy for unused items in their original packaging with all tags attached." },
-      { q: "Do your watches come with a warranty?", a: "Yes, all our luxury timepieces come with a 1-year international warranty covering manufacturing defects." },
+      { q: "What is your replacement policy?", a: "We offer a 7-day replacement for defective or damaged items. Contact us within 7 days of delivery with photos of the issue." },
+      { q: "Do your watches come with a warranty?", a: "Yes, all our watches come with a 7-day replacement warranty covering manufacturing defects." },
     ]
   },
   {

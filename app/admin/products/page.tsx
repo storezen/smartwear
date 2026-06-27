@@ -193,17 +193,27 @@ export default function AdminProductsPage() {
     if (!confirm(`Update ${selectedProducts.length} products to ${status}?`)) return
     
     try {
-      // Basic sequential update for now
+      let successCount = 0
+      let failCount = 0
       for (const id of selectedProducts) {
         const product = products.find(p => p.id === id);
         if(!product) continue;
-        await fetch('/api/products', {
+        const res = await fetch('/api/products', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...product, status })
+          body: JSON.stringify({ id: product.id, status })
         })
+        if (res.ok) {
+          successCount++
+        } else {
+          failCount++
+        }
       }
-      toast.success(`Successfully updated ${selectedProducts.length} products`)
+      if (failCount === 0) {
+        toast.success(`Updated ${successCount} products to ${status}`)
+      } else {
+        toast.error(`Updated ${successCount}, failed ${failCount} products`)
+      }
       setSelectedProducts([])
       load()
     } catch(e) {

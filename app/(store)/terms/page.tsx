@@ -62,21 +62,21 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">6. Returns &amp; Refunds</h2>
+            <h2 className="text-xl font-semibold text-white mb-3">6. Replacement Policy</h2>
             <ul className="list-disc pl-5 space-y-1">
-              <li>7-day return window from delivery date</li>
+              <li>7-day replacement window from delivery date</li>
               <li>Products must be unused, in original packaging</li>
-              <li>Defective items are eligible for replacement or refund</li>
+              <li>Defective items are eligible for replacement</li>
               <li>Return shipping is covered by us for defective items</li>
-              <li>Refunds are processed within 5-7 business days after inspection</li>
+              <li>Replacement is dispatched within 2-3 business days after inspection</li>
             </ul>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold text-white mb-3">7. Warranty</h2>
             <p>
-              All smartwatches come with a 1-year international warranty covering manufacturing defects.
-              The warranty does not cover physical damage, water damage (beyond rated limits), or normal wear and tear.
+              We offer a 7-day replacement warranty covering manufacturing defects. The warranty does not
+              cover physical damage, water damage (beyond rated limits), or normal wear and tear.
             </p>
           </section>
 

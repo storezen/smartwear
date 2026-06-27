@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
-import { Minus, Plus, Star, Heart, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote } from 'lucide-react'
+import { Minus, Plus, Star, Heart, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote, PackageOpen } from 'lucide-react'
 import { ProductCard } from '@/components/store/premium-product-card'
 import { getProductBySlug as getProductBySlugMock, formatPrice, products } from '@/lib/mock-data'
 import type { Review } from '@/types'
@@ -448,10 +448,10 @@ function ProductContent({ product }: { product: any }) {
               <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3} className="grid grid-cols-2 gap-y-5 gap-x-2 bg-white/[0.03] border border-white/5 rounded-2xl p-5">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-white">
-                    <CheckCircle2 className="w-4 h-4 text-[#B8860B]" />
-                    <span className="text-xs font-bold uppercase tracking-wider">100% Original</span>
+                    <Truck className="w-4 h-4 text-[#B8860B]" />
+                    <span className="text-xs font-bold uppercase tracking-wider">Free Delivery</span>
                   </div>
-                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">Guaranteed Authentic</span>
+                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">Across Pakistan</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-white">
@@ -462,17 +462,17 @@ function ProductContent({ product }: { product: any }) {
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-white">
-                    <Shield className="w-4 h-4 text-[#B8860B]" />
-                    <span className="text-xs font-bold uppercase tracking-wider">1 Year Warranty</span>
+                    <RotateCcw className="w-4 h-4 text-[#B8860B]" />
+                    <span className="text-xs font-bold uppercase tracking-wider">7-Day Replacement</span>
                   </div>
-                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">International Coverage</span>
+                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">Hassle-free replacement</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-white">
-                    <RotateCcw className="w-4 h-4 text-[#B8860B]" />
-                    <span className="text-xs font-bold uppercase tracking-wider">7 Days Return</span>
+                    <PackageOpen className="w-4 h-4 text-[#B8860B]" />
+                    <span className="text-xs font-bold uppercase tracking-wider">Open Box Check</span>
                   </div>
-                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">Money Back Guarantee</span>
+                  <span className="text-[11px] sm:text-[10px] text-white/50 pl-6 leading-tight">Inspect before paying</span>
                 </div>
               </motion.div>
 

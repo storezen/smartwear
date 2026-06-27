@@ -8,7 +8,7 @@ import {
   ArrowRight, Shield, Truck, RefreshCw, CreditCard,
   Zap, Star, Heart, Watch, Smartphone, Battery, Headphones,
   Package, Award, Clock, Activity, HeartPulse,
-  Send, Quote, CheckCircle2, Sparkles
+  Send, Quote, CheckCircle2, Sparkles, PackageOpen, Banknote
 } from "lucide-react"
 import { ProductCard } from "@/components/store/premium-product-card"
 import {
@@ -144,8 +144,8 @@ function HeroBanner() {
 
               <div className="mt-8 sm:mt-10 flex items-center gap-6 sm:gap-8 justify-center lg:justify-start text-white/25 text-[11px] sm:text-[10px] uppercase tracking-wider">
                 <span className="flex items-center gap-1.5"><Truck className="w-3 h-3" /> Free Delivery</span>
-                <span className="flex items-center gap-1.5"><RefreshCw className="w-3 h-3" /> 7-Day Returns</span>
-                <span className="flex items-center gap-1.5"><Shield className="w-3 h-3" /> 1 Yr Warranty</span>
+                <span className="flex items-center gap-1.5"><RefreshCw className="w-3 h-3" /> 7-Day Replacement</span>
+                <span className="flex items-center gap-1.5"><PackageOpen className="w-3 h-3" /> Open Box Check</span>
               </div>
             </motion.div>
           </div>
@@ -196,10 +196,10 @@ const badgeIconMap: Record<string, React.ElementType> = {
 }
 
 const trustBadgesFallback = [
-  { icon: "Truck", label: "Fast Delivery", desc: "Across Pakistan" },
-  { icon: "Shield", label: "1 Year Warranty", desc: "Local Support" },
-  { icon: "RefreshCw", label: "7-Day Returns", desc: "Easy & Hassle-Free" },
+  { icon: "RefreshCw", label: "7-Day Replacement", desc: "Hassle-free" },
   { icon: "CreditCard", label: "Cash on Delivery", desc: "Pay When You Receive" },
+  { icon: "PackageOpen", label: "Open Box Check", desc: "Inspect before paying" },
+  { icon: "Truck", label: "Nationwide Delivery", desc: "Across Pakistan" },
   { icon: "CheckCircle2", label: "Secure Checkout", desc: "100% Safe Payment" },
 ]
 
@@ -408,9 +408,9 @@ const features = [
   { icon: Award, title: "Premium Build Quality", desc: "Handpicked watches with military-grade durability and premium materials that last." },
   { icon: HeartPulse, title: "Advanced Health Tracking", desc: "Heart rate, SpO2, sleep analysis, and 100+ sport modes to keep you at your best." },
   { icon: Battery, title: "Long Battery Life", desc: "Up to 14 days battery life so your watch works as hard as you do." },
-  { icon: Shield, title: "1 Year Warranty", desc: "Full local warranty with dedicated Pakistani customer support team." },
+  { icon: RefreshCw, title: "7-Day Replacement", desc: "Hassle-free replacement within 7 days if anything is not right." },
   { icon: Truck, title: "Fast Delivery via PostEx", desc: "Reliable delivery to every city in Pakistan within 2-5 business days." },
-  { icon: RefreshCw, title: "Easy 7-Day Returns", desc: "Not satisfied? Return hassle-free within 7 days, no questions asked." },
+  { icon: Banknote, title: "Cash on Delivery", desc: "Pay only when your parcel arrives at your doorstep. No online payment needed." },
 ]
 
 function WhyChooseUs() {

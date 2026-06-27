@@ -16,9 +16,9 @@ const faqs: FaqEntry[] = [
   { patterns: [/jazz.*discount|easyp.*discount|payment.*discount/i], answer: "JazzCash aur Easypaisa payments par 5% additional discount available hai. Checkout mein payment method select karte waqt dikh jaye ga." },
 
   // Returns & Warranty
-  { patterns: [/return (policy|kar|karna|how)/i, /wapas (kar|le)/i, /refund/i], answer: "7-day easy return policy hai. Pasand nahi aaya to wapas kar sakte hain. Full money back guarantee." },
-  { patterns: [/warranty/i, /guarantee/i], answer: "1 year warranty on smart watches, 6 months on accessories. Warranty card ke saath aata hai." },
-  { patterns: [/exchange/i, /badal|change (kar|karna)/i], answer: "7 din ke andar exchange kar sakte hain. Different color ya model le sakte hain. Difference amount adjust ho jayega." },
+  { patterns: [/return (policy|kar|karna|how)/i, /wapas (kar|le)/i, /refund/i], answer: "7-day replacement policy hai. Agar product defective hai to hum replacement provide karte hain. Contact concierge@smartwear.pk for help." },
+  { patterns: [/warranty/i, /guarantee/i], answer: "7-day replacement warranty on all products. Agar delivery par koi issue ho to hum replacement kar dete hain." },
+  { patterns: [/exchange/i, /badal|change (kar|karna)/i], answer: "7 din ke andar defective product ki replacement kar sakte hain. Contact concierge@smartwear.pk for assistance." },
 
   // Products
   { patterns: [/best (smart)?watch/i, /top (smart)?watch/i, /kaunsa.*(best|acha|recommend|suggest)/i], answer: "Ultra Sync Pro Rs. 8,500 bestseller hai — AMOLED display, BT calling, heart rate, 7 days battery. Budget option Smart Band 5 Rs. 4,500 hai." },
