@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextResponse } from 'next/server'
-import { getProducts, addProduct, updateProduct, deleteProduct } from '@/lib/db'
+import { getProducts, addProduct, updateProduct, deleteProduct, bulkUpdateProducts } from '@/lib/db'
 import { isSupabaseConfigured, supabase } from '@/lib/supabase'
 import { ProductCreationSchema, ProductUpdateSchema } from '@/lib/validations/products'
 
@@ -70,6 +70,17 @@ export async function PUT(req: Request) {
     return NextResponse.json({ success: true, product })
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const rawData = await req.json()
+    const updates = Array.isArray(rawData) ? rawData : [rawData]
+    await bulkUpdateProducts(updates)
+    return NextResponse.json({ success: true, count: updates.length })
+  } catch (error) {
+    return NextResponse.json({ error: 'Bulk update failed' }, { status: 500 })
   }
 }
 

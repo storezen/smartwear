@@ -249,6 +249,21 @@ export async function updateProduct(id: string, updates: any) {
   return null
 }
 
+export async function bulkUpdateProducts(updates: { id: string; status?: string; is_active?: boolean }[]) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    for (const u of updates) {
+      await supabase.from('products').update(u).eq('id', u.id)
+    }
+    return
+  }
+  const db = await getDb()
+  for (const u of updates) {
+    const idx = db.products.findIndex((p: any) => p.id === u.id)
+    if (idx !== -1) db.products[idx] = { ...db.products[idx], ...u }
+  }
+  await saveDb(db)
+}
+
 export async function deleteProduct(id: string) {
   if (env.NODE_ENV === 'production' && supabase) {
     const { error } = await supabase.from('products').delete().eq('id', id)

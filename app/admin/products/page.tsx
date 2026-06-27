@@ -193,21 +193,15 @@ export default function AdminProductsPage() {
     if (!confirm(`Update ${selectedProducts.length} products to ${status}?`)) return
     
     try {
-      const results = await Promise.all(
-        selectedProducts.map(id =>
-          fetch('/api/products', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, status, is_active: status === 'Active' })
-          }).then(r => r.ok)
-        )
-      )
-      const successCount = results.filter(Boolean).length
-      const failCount = results.length - successCount
-      if (failCount === 0) {
-        toast.success(`Updated ${successCount} products to ${status}`)
+      const res = await fetch('/api/products', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(selectedProducts.map(id => ({ id, status, is_active: status === 'Active' })))
+      })
+      if (res.ok) {
+        toast.success(`Updated ${selectedProducts.length} products to ${status}`)
       } else {
-        toast.error(`Updated ${successCount}, failed ${failCount} products`)
+        toast.error("Bulk update failed")
       }
       setSelectedProducts([])
       load()
@@ -219,12 +213,13 @@ export default function AdminProductsPage() {
   const handleBulkDelete = async () => {
     if (!confirm(`Are you sure you want to delete ${selectedProducts.length} products?`)) return
     try {
-      await Promise.all(
+      const results = await Promise.all(
         selectedProducts.map(id =>
-          fetch(`/api/products?id=${id}`, { method: 'DELETE' })
+          fetch(`/api/products?id=${id}`, { method: 'DELETE' }).then(r => r.ok)
         )
       )
-      toast.success(`Deleted ${selectedProducts.length} products`)
+      const successCount = results.filter(Boolean).length
+      toast.success(`Deleted ${successCount} products`)
       setSelectedProducts([])
       load()
     } catch(e) {
