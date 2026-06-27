@@ -16,7 +16,7 @@ export async function GET(req: Request) {
     const fromDate = from ? new Date(from).toISOString() : new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
     const toDate = to ? new Date(to).toISOString() : new Date().toISOString()
 
-    if (env.NODE_ENV === "production" && supabase) {
+    if (supabase) {
       const { data, error } = await supabase
         .from("analytics")
         .select("*")
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       globalAny.liveAnalytics.length = 10000
     }
 
-    if (env.NODE_ENV === "production" && supabase) {
+    if (supabase) {
       const { error } = await supabase.from("analytics").insert([newEvent])
       if (error) {
         console.warn("Supabase Analytics Insert Error:", error.message)

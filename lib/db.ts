@@ -1,7 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { env } from './env'
 import { normalizeProductList } from './normalize-product'
 import { resolveProductSlug } from './product-url'
 import { supabase } from './supabase'
@@ -206,7 +205,7 @@ export async function saveDb(data: any, targetPath?: string) {
 
 // Products
 export async function getProducts() {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
     if (error) {
       console.error('Supabase getProducts error:', error)
@@ -235,7 +234,7 @@ export async function getProducts() {
 export async function getProduct(slug: string) {
   const canonicalSlug = resolveProductSlug(slug)
 
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('products').select('*').eq('slug', canonicalSlug).single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getProduct error:', error)
     if (data) return normalizeProductList([data])[0]
@@ -256,7 +255,7 @@ export async function addProduct(product: any) {
   if (!product.created_at) product.created_at = new Date().toISOString()
   if (product.is_active === undefined) product.is_active = product.status === 'Active'
   
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('products').insert([stripNonProductFields(product)]).select().single()
     if (!error && data) {
       const merged = { ...data, ...product }
@@ -277,7 +276,7 @@ export async function updateProduct(id: string, updates: any) {
   if (updates.status !== undefined && updates.is_active === undefined) {
     updates.is_active = updates.status === 'Active' || updates.status === 'Out of Stock'
   }
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('products').update(stripNonProductFields(updates)).eq('id', id).select().single()
     if (!error && data) {
       const merged = { ...data, ...updates }
@@ -302,7 +301,7 @@ export async function updateProduct(id: string, updates: any) {
 }
 
 export async function bulkUpdateProducts(updates: { id: string; status?: string; is_active?: boolean }[]) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     for (const u of updates) {
       await supabase.from('products').update(stripNonProductFields(u)).eq('id', u.id)
     }
@@ -317,7 +316,7 @@ export async function bulkUpdateProducts(updates: { id: string; status?: string;
 }
 
 export async function deleteProduct(id: string) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { error } = await supabase.from('products').delete().eq('id', id)
     if (!error) {
       const db = await getDb()
@@ -336,7 +335,7 @@ export async function deleteProduct(id: string) {
 }
 
 export async function bulkImportProducts(productsToImport: any[], overwrite: boolean = false) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const cleaned = productsToImport.map((p) => {
       if (!p.id) p.id = `PROD-${crypto.randomUUID()}`
       if (!p.created_at) p.created_at = new Date().toISOString()
@@ -398,7 +397,7 @@ export async function bulkImportProducts(productsToImport: any[], overwrite: boo
 
 // Orders
 export async function getOrders() {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false })
     if (error) console.error('Supabase getOrders error:', error)
     return data || []
@@ -408,7 +407,7 @@ export async function getOrders() {
 }
 
 export async function getOrderById(id: string) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('orders').select('*').eq('id', id).single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getOrderById error:', error)
     return data || null
@@ -419,7 +418,7 @@ export async function getOrderById(id: string) {
 
 export async function createOrder(order: any) {
   // Deduct stock is complex in API, but for simplicity we fetch and update
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const deductedItems: { id: string; quantity: number }[] = []
     for (const item of order.items) {
       const { data: product, error: pError } = await supabase.from('products').select('id, stock, name').eq('id', item.id).single()
@@ -477,7 +476,7 @@ function isCancelledOrReturned(status: string): boolean {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateOrderStatus(orderId: string, status: string, postexId?: string, note?: string, postexCharges?: any) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data: order } = await supabase.from('orders').select('*').eq('id', orderId).single()
     if (!order) return null
     if (order.status !== status || note) {
@@ -530,7 +529,7 @@ export async function updateOrderStatus(orderId: string, status: string, postexI
 }
 
 export async function deleteOrders(ids: string[]) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { error } = await supabase.from('orders').delete().in('id', ids)
     if (!error) return { success: true }
     console.warn("Supabase deleteOrders failed, falling back to memory:", error?.message)
@@ -605,7 +604,7 @@ const KNOWN_SETTINGS_COLUMNS = new Set([
 
 // Settings
 export async function getSettings() {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('settings').select('*').single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getSettings error:', error)
 
@@ -639,7 +638,7 @@ export async function getSettings() {
 }
 
 export async function updateSettings(updates: any) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const current = await getSettings()
     const merged = { ...current, ...updates }
 
@@ -683,7 +682,7 @@ export async function updateSettings(updates: any) {
 
 // Marketing
 export async function getPromos() {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('marketing').select('*').order('created_at', { ascending: false })
     if (error) console.error('Supabase getPromos error:', error)
     return data || []
@@ -693,7 +692,7 @@ export async function getPromos() {
 }
 
 export async function getPromoByCode(code: string) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('marketing').select('*').ilike('code', code).single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getPromoByCode error:', error)
     return data || null
@@ -704,7 +703,7 @@ export async function getPromoByCode(code: string) {
 }
 
 export async function incrementPromoUsage(code: string) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data: promo } = await supabase.from('marketing').select('*').ilike('code', code).single()
     if (promo) {
       await supabase.from('marketing').update({ usage_count: (promo.usage_count || 0) + 1 }).eq('id', promo.id)
@@ -724,7 +723,7 @@ export async function createPromo(promo: any) {
   promo.created_at = new Date().toISOString()
   promo.usage_count = 0
   
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('marketing').insert([promo]).select().single()
     if (!error && data) return data
     console.warn("Supabase createPromo failed, falling back to memory:", error?.message)
@@ -737,7 +736,7 @@ export async function createPromo(promo: any) {
 }
 
 export async function updatePromo(id: string, updates: any) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { data, error } = await supabase.from('marketing').update(updates).eq('id', id).select().single()
     if (!error && data) return data
     console.warn("Supabase updatePromo failed, falling back to memory:", error?.message)
@@ -754,7 +753,7 @@ export async function updatePromo(id: string, updates: any) {
 }
 
 export async function deletePromo(id: string) {
-  if (env.NODE_ENV === 'production' && supabase) {
+  if (supabase) {
     const { error } = await supabase.from('marketing').delete().eq('id', id)
     if (!error) return
     console.warn("Supabase deletePromo failed, falling back to memory:", error?.message)

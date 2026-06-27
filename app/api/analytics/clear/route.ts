@@ -10,7 +10,7 @@ globalAny.liveAnalytics = globalAny.liveAnalytics || []
 
 export async function POST() {
   try {
-    if (env.NODE_ENV === "production" && supabase) {
+    if (supabase) {
       const { error } = await supabase.from("analytics").delete().neq("id", "0")
       if (error) {
         console.warn("Supabase Analytics Clear Error:", error.message)

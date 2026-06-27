@@ -18,7 +18,7 @@ export async function GET(req: Request) {
 
     let events: any[] = []
 
-    if (env.NODE_ENV === "production" && supabase) {
+    if (supabase) {
       const { data, error } = await supabase
         .from("analytics")
         .select("*")
