@@ -206,12 +206,26 @@ export async function saveDb(data: any, targetPath?: string) {
 // Products
 export async function getProducts() {
   if (supabase) {
-    const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
-    if (error) {
-      console.error('Supabase getProducts error:', error)
-    } else if (data) {
-      return normalizeProductList(data)
+    let allData: any[] = []
+    const PAGE_SIZE = 1000
+    let from = 0
+    let to = PAGE_SIZE - 1
+    let hasMore = true
+    while (hasMore) {
+      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false }).range(from, to)
+      if (error) {
+        console.error('Supabase getProducts error:', error)
+        break
+      }
+      if (data && data.length > 0) {
+        allData = allData.concat(data)
+        if (data.length < PAGE_SIZE) hasMore = false
+        else { from += PAGE_SIZE; to += PAGE_SIZE }
+      } else {
+        hasMore = false
+      }
     }
+    if (allData.length > 0) return normalizeProductList(allData)
   }
 
   const db = await getDb()
