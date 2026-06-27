@@ -3,7 +3,11 @@ import { getSettings } from '@/lib/db'
 import { decrypt } from '@/lib/encryption'
 import crypto from 'crypto'
 
-const TIKTOK_EVENT_KEYS = new Set(['ViewContent','AddToCart','AddToWishlist','InitiateCheckout','AddPaymentInfo','CompletePayment','Search','Subscribe'])
+const TIKTOK_EVENT_KEYS = new Set([
+  'ViewContent','AddToCart','AddToWishlist','InitiateCheckout',
+  'AddPaymentInfo','CompletePayment','Purchase','PlaceAnOrder',
+  'Search','Subscribe','CompleteRegistration'
+])
 
 function hashSHA256(value: string | undefined | null): string | undefined {
   if (!value) return undefined

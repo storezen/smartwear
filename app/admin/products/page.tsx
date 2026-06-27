@@ -100,8 +100,8 @@ export default function AdminProductsPage() {
         const err = await res.json()
         toast.error(`Failed: ${err.error || "Unknown error"}`)
       }
-    } catch (e) {
-      toast.error("An error occurred while saving")
+    } catch (e: any) {
+      toast.error(e.message || "An error occurred while saving")
     }
   }
 

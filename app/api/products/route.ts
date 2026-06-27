@@ -9,9 +9,7 @@ export async function GET() {
     const products = await getProducts()
     return NextResponse.json(products, {
       headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
       },
     })
   } catch (error) {
@@ -32,8 +30,8 @@ export async function POST(req: Request) {
       created_at: new Date().toISOString()
     })
     return NextResponse.json({ success: true, product }, { status: 201 })
-  } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Failed to create product' }, { status: 500 })
   }
 }
 
@@ -48,8 +46,8 @@ export async function PUT(req: Request) {
     const { id, ...updates } = validation.data
     const product = await updateProduct(id, updates)
     return NextResponse.json({ success: true, product })
-  } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Failed to update product' }, { status: 500 })
   }
 }
 
@@ -59,8 +57,8 @@ export async function PATCH(req: Request) {
     const updates = Array.isArray(rawData) ? rawData : [rawData]
     await bulkUpdateProducts(updates)
     return NextResponse.json({ success: true, count: updates.length })
-  } catch (error) {
-    return NextResponse.json({ error: 'Bulk update failed' }, { status: 500 })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Bulk update failed' }, { status: 500 })
   }
 }
 
@@ -81,7 +79,7 @@ export async function DELETE(req: Request) {
     if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 })
     await deleteProduct(id)
     return NextResponse.json({ success: true })
-  } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Failed to delete product' }, { status: 500 })
   }
 }

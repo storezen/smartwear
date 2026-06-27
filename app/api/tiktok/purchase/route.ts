@@ -10,7 +10,7 @@ function hashSHA256(value: string | undefined | null): string | undefined {
 
 export async function POST(req: Request) {
   try {
-    const { orderId, total, items, phone, eventId } = await req.json()
+    const { orderId, total, items, phone, email, name, eventId } = await req.json()
     if (!orderId) return NextResponse.json({ error: 'orderId required' }, { status: 400 })
 
     const settings = await getSettings()
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'TikTok not configured' }, { status: 400 })
     }
 
-    const ip = req.headers.get('x-forwarded-for') || '127.0.0.1'
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '127.0.0.1'
     const userAgent = req.headers.get('user-agent') || ''
 
     const totalValue = Math.max(1, total > 0 ? total
@@ -34,7 +34,11 @@ export async function POST(req: Request) {
       context: {
         ip,
         user_agent: userAgent,
-        user: { phone_number: hashSHA256(phone) },
+        user: {
+          phone_number: hashSHA256(phone),
+          email: hashSHA256(email),
+          external_id: hashSHA256(name),
+        },
       },
       properties: {
         contents: (items || []).map((i: any) => ({

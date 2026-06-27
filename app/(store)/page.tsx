@@ -355,7 +355,7 @@ function ProductSection({
   products,
   badge,
   viewAllHref = "/products",
-  limit = HOMEPAGE_CARDS_PER_SECTION,
+  limit = 8,
 }: {
   label: string
   title: string
@@ -364,6 +364,11 @@ function ProductSection({
   viewAllHref?: string
   limit?: number
 }) {
+  const [showAll, setShowAll] = useState(false)
+  const initialCount = 8
+  const displayed = showAll ? products.slice(0, limit) : products.slice(0, initialCount)
+  const hasMore = products.length > initialCount && !showAll
+
   if (!products?.length) return null
 
   return (
@@ -385,20 +390,35 @@ function ProductSection({
           </motion.div>
         </motion.div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
-          {products.slice(0, limit).map((product: any, i: number) => (
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+          {displayed.map((product: any, i: number) => (
             <motion.div
               key={product.id || i}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06, duration: 0.5 }}
-              className="snap-start shrink-0 w-[240px] sm:w-[280px] md:w-auto"
             >
               <ProductCard product={product} />
             </motion.div>
           ))}
         </div>
+
+        {hasMore && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="flex justify-center mt-8"
+          >
+            <button
+              onClick={() => setShowAll(true)}
+              className="group px-10 py-3.5 rounded-xl border border-white/10 text-white/60 hover:text-white hover:border-white/25 text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-white/[0.03]"
+            >
+              Load More ({products.length - initialCount})
+            </button>
+          </motion.div>
+        )}
       </div>
     </section>
   )

@@ -150,14 +150,21 @@ function sendToAnalytics(event: string, meta?: AnalyticsMeta) {
   } catch {}
 }
 
-/* ── CAPI Backup ── */
+/* ── CAPI Backup (purchase-only to avoid double-counting) ── */
 
 async function fireCapi(event: string, payload: Record<string, unknown>) {
+  const capiEvents = new Set(['CompletePayment', 'Purchase', 'PlaceAnOrder'])
+  if (!capiEvents.has(event)) return
+
   try {
+    const userData = getUserData()
+    const phone = userData?.phone || ''
+    const email = userData?.email || ''
+    const name = userData?.name || ''
     await fetch('/api/tiktok/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event, ...payload }),
+      body: JSON.stringify({ event, phone, email, name, ...payload }),
     })
   } catch {}
 }

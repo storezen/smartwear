@@ -344,7 +344,10 @@ export default function CheckoutPage() {
                   <input
                     type="tel"
                     value={guestAddress.phone}
-                    onChange={(e) => setGuestAddress({ ...guestAddress, phone: e.target.value })}
+                    onChange={(e) => {
+                      setGuestAddress({ ...guestAddress, phone: e.target.value })
+                      sessionStorage.setItem('sw_phone', e.target.value)
+                    }}
                     placeholder="0300 1234567"
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
                   />
@@ -359,7 +362,10 @@ export default function CheckoutPage() {
                   <input
                     type="email"
                     value={guestAddress.email}
-                    onChange={(e) => setGuestAddress({ ...guestAddress, email: e.target.value })}
+                    onChange={(e) => {
+                      setGuestAddress({ ...guestAddress, email: e.target.value })
+                      sessionStorage.setItem('sw_email', e.target.value)
+                    }}
                     placeholder="ahmad@example.com"
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
                   />

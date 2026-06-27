@@ -269,7 +269,7 @@ export async function addProduct(product: any) {
       globalAny.memoryDb = db
       return merged
     }
-    console.warn("Supabase addProduct failed, falling back to memory:", error?.message)
+    throw new Error(error?.message || 'Supabase add failed')
   }
   const db = await getDb()
   db.products.unshift(product)
@@ -293,7 +293,7 @@ export async function updateProduct(id: string, updates: any) {
       }
       return merged
     }
-    console.warn("Supabase updateProduct failed, falling back to memory:", error?.message)
+    throw new Error(error?.message || 'Supabase update failed')
   }
   const db = await getDb()
   const index = db.products.findIndex((p: any) => p.id === id)
@@ -302,7 +302,7 @@ export async function updateProduct(id: string, updates: any) {
     await saveDb(db)
     return db.products[index]
   }
-  return null
+  throw new Error('Product not found')
 }
 
 export async function bulkUpdateProducts(updates: { id: string; status?: string; is_active?: boolean }[]) {
@@ -329,7 +329,7 @@ export async function deleteProduct(id: string) {
       globalAny.memoryDb = db
       return
     }
-    console.warn("Supabase deleteProduct failed, falling back to memory:", error?.message)
+    throw new Error(error?.message || 'Supabase delete failed')
   }
   const db = await getDb()
   const initialLength = db.products.length

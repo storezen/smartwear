@@ -93,35 +93,10 @@ export default function ProductPage({ params }: ProductPageProps) {
           return
         }
       } catch {
-        // fall through to catalog / mock lookup
+        // fall through
       }
 
-      try {
-        const catalogRes = await fetch('/api/products')
-        if (catalogRes.ok) {
-          const catalog = await catalogRes.json()
-          const match = await loadFromCatalog(Array.isArray(catalog) ? catalog : [])
-          if (match) {
-            if (!cancelled) {
-              setProduct(match)
-              setStatus('ready')
-            }
-            return
-          }
-        }
-      } catch {
-        // fall through to mock
-      }
-
-      const mock = getProductBySlugMock(slug)
-      if (!cancelled) {
-        if (mock) {
-          setProduct(mock)
-          setStatus('ready')
-        } else {
-          setStatus('not-found')
-        }
-      }
+      if (!cancelled) setStatus('not-found')
     }
 
     load()
@@ -696,25 +671,27 @@ function ProductContent({ product }: { product: any }) {
                       </div>
                     )}
                     <div 
-                      className="description-content text-white/75 leading-relaxed text-sm md:text-base
-                      [&_h1]:text-xl [&_h1]:font-bold [&_h1]:text-white [&_h1]:mt-8 [&_h1]:mb-4
-                      [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-white [&_h2]:mt-8 [&_h2]:mb-4
-                      [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-white [&_h3]:mt-6 [&_h3]:mb-3
-                      [&_h4]:text-sm [&_h4]:font-semibold [&_h4]:text-white [&_h4]:mt-4 [&_h4]:mb-2
-                      [&_p]:mb-4 [&_p]:leading-relaxed
-                      [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4 [&_ul]:space-y-1.5
-                      [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-4 [&_ol]:space-y-1.5
-                      [&_li]:text-white/75
-                      [&_strong]:text-white [&_strong]:font-semibold
-                      [&_a]:text-[#B8860B] [&_a]:hover:text-[#D4A017] [&_a]:underline
-                      [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-4 [&_img]:shadow-lg [&_img]:border [&_img]:border-white/5
-                      [&_table]:w-full [&_table]:border-collapse [&_table]:my-6 [&_table]:rounded-xl [&_table]:overflow-hidden [&_table]:shadow-sm
-                      [&_table_td]:border [&_table_td]:border-white/10 [&_table_td]:px-4 [&_table_td]:py-3 [&_table_td]:text-sm [&_table_td]:text-white/75
-                      [&_table_th]:border [&_table_th]:border-white/10 [&_table_th]:px-4 [&_table_th]:py-3 [&_table_th]:text-sm [&_table_th]:font-semibold [&_table_th]:text-white [&_table_th]:bg-white/[0.03]
+                      className="description-content text-white/70 leading-[1.75] text-sm md:text-base
+                      [&_h1]:text-xl [&_h1]:font-light [&_h1]:tracking-wide [&_h1]:text-white/90 [&_h1]:mt-10 [&_h1]:mb-5
+                      [&_h2]:text-lg [&_h2]:font-light [&_h2]:tracking-wide [&_h2]:text-white/85 [&_h2]:mt-10 [&_h2]:mb-4
+                      [&_h3]:text-base [&_h3]:font-normal [&_h3]:tracking-wide [&_h3]:text-white/80 [&_h3]:mt-8 [&_h3]:mb-3
+                      [&_h4]:text-sm [&_h4]:font-normal [&_h4]:text-white/75 [&_h4]:mt-6 [&_h4]:mb-3
+                      [&_p]:mb-5 [&_p]:leading-[1.75]
+                      [&_ul]:list-none [&_ul]:pl-0 [&_ul]:mb-5 [&_ul]:space-y-2
+                      [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-5 [&_ol]:space-y-1.5
+                      [&_li]:text-white/65 [&_li]:pl-0
+                      [&_ul_li]:relative [&_ul_li]:pl-4
+                      [&_ul_li:before]:content-['—'] [&_ul_li:before]:absolute [&_ul_li:before]:left-0 [&_ul_li:before]:text-white/30
+                      [&_strong]:text-white/90 [&_strong]:font-medium
+                      [&_a]:text-[#B8860B] [&_a]:hover:text-[#D4A017] [&_a]:no-underline [&_a]:border-b [&_a]:border-white/10 [&_a]:hover:border-[#D4A017]/50 [&_a]:transition-colors
+                      [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-6 [&_img]:shadow-sm [&_img]:border [&_img]:border-white/[0.06] [&_img]:opacity-95 [&_img]:hover:opacity-100 [&_img]:transition-opacity
+                      [&_table]:w-full [&_table]:border-collapse [&_table]:my-8 [&_table]:text-sm
+                      [&_table_td]:border-b [&_table_td]:border-white/[0.06] [&_table_td]:px-4 [&_table_td]:py-3.5 [&_table_td]:text-white/65 [&_table_td]:align-top
+                      [&_table_th]:border-b [&_table_th]:border-white/[0.08] [&_table_th]:px-4 [&_table_th]:py-3.5 [&_table_th]:text-left [&_table_th]:text-xs [&_table_th]:font-medium [&_table_th]:tracking-widest [&_table_th]:uppercase [&_table_th]:text-white/40
                       [&_tr]:border-none
-                      [&_table_td:first-child]:font-medium [&_table_td:first-child]:text-white/90
-                      [&_div.product-description]:space-y-2
-                      [&_span]:!text-white/75"
+                      [&_table_td:first-child]:text-white/80 [&_table_td:first-child]:font-medium
+                      [&_div.product-description]:space-y-3
+                      [&_span]:text-white/65"
                       dangerouslySetInnerHTML={{ __html: descriptionHtml }}
                     />
                   </div>
