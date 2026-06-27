@@ -93,7 +93,7 @@ function NavBadge({ count }: { count: number }) {
   )
 }
 
-/* ── Announcement Text (dynamic from settings) ── */
+/* ── Announcement Ticker (marquee left-to-right, dynamic from settings) ── */
 function AnnouncementText() {
   const [text, setText] = useState("")
   useEffect(() => {
@@ -108,11 +108,19 @@ function AnnouncementText() {
           data.announcement_line2,
           data.announcement_line3,
         ].filter(Boolean)
-        setText(parts.join(" · "))
+        setText(parts.join("  ·  "))
       })
       .catch(() => setText("Free Delivery · Open Box · 100% COD"))
   }, [])
-  return <>{text}</>
+  if (!text) return null
+  return (
+    <div className="overflow-hidden whitespace-nowrap w-full">
+      <div className="inline-block animate-marquee">
+        <span>{text}</span>
+        <span className="ml-[5vw]">{text}</span>
+      </div>
+    </div>
+  )
 }
 
 /* ══════════════════════════════
@@ -176,13 +184,20 @@ export function PremiumNavbar() {
         transition={{ duration: 0.35, ease: "easeInOut" }}
         className="fixed top-0 left-0 right-0 z-50"
       >
-        {/* Top Announcement Bar - inside fixed header so it stays visible */}
-        <div className="bg-gradient-to-r from-[#B8860B]/10 via-[#B8860B]/5 to-[#B8860B]/10 border-b border-[#B8860B]/10">
+        {/* Top Announcement Bar — news ticker */}
+        <div className="relative bg-gradient-to-r from-[#0A0B0E] via-[#1A1105] to-[#0A0B0E] border-b border-[#B8860B]/20 before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNCODI2MEIiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] before:opacity-50">
           <div className="sw-container">
-            <div className="flex items-center justify-center h-9 md:h-10 px-4">
-              <p className="text-[11px] md:text-xs text-white/70 font-medium tracking-wide">
+            <div className="flex items-center h-9 md:h-10 px-4">
+              <div className="hidden sm:flex items-center gap-2 mr-4 shrink-0">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]" />
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B8860B]">Live</span>
+              </div>
+              <div className="flex-1 min-w-0">
                 <AnnouncementText />
-              </p>
+              </div>
             </div>
           </div>
         </div>
