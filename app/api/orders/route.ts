@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
-import { createOrder, getOrders, updateOrderStatus, getProducts } from '@/lib/db'
+import { createOrder, getOrders, updateOrderStatus, getProducts, incrementPromoUsage } from '@/lib/db'
 import { isSupabaseConfigured, supabase } from '@/lib/supabase'
 import { OrderCreationSchema, OrderStatusUpdateSchema } from '@/lib/validations/orders'
 import { calculateDiscount } from '@/lib/promotions'
@@ -258,7 +258,6 @@ export async function POST(req: Request) {
         await supabase.from('orders').update({ tiktok_capi_fired: true }).eq('id', supabaseOrder.id)
         if (payload.idempotency_key) idempotencyMap.set(payload.idempotency_key, supabaseOrder)
         if (payload.promo_code) {
-          const { incrementPromoUsage } = await import('@/lib/db')
           incrementPromoUsage(payload.promo_code)
         }
         return NextResponse.json({ success: true, order: supabaseOrder }, { status: 201 })
