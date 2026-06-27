@@ -35,13 +35,19 @@ export function resolveProductSlug(slug: string): string {
 }
 
 const PRODUCT_SLUG_ALIASES: Record<string, string> = {
-  "series-11-cod": "s11-(allow-to-open-|-cash-on-delivery)",
-  "series.cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
-  "series-cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
-  "series-11-(allow-to-open-|-cash-on-delivery)": "s11-(allow-to-open-|-cash-on-delivery)",
-  "series-11-(allow-to-open-cash-on-delivery)": "s11-(allow-to-open-|-cash-on-delivery)",
-  "series-11-allow-to-open-cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
-  "s11-(allow-to-open-cash-on-delivery)": "s11-(allow-to-open-|-cash-on-delivery)",
-  "s11-allow-to-open-cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
-  "s11-allow-to-open-|-cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
+  "series-11-cod": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "series.cash-on-delivery": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "series-cash-on-delivery": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "series-11-(allow-to-open-|-cash-on-delivery)": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "series-11-(allow-to-open-cash-on-delivery)": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "series-11-allow-to-open-cash-on-delivery": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "s11-(allow-to-open-|-cash-on-delivery)": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "s11-(allow-to-open-cash-on-delivery)": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "s11-allow-to-open-cash-on-delivery": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "s11-allow-to-open-|-cash-on-delivery": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "series-10-apple-logo-with-megnatic-chain-allow-to-open": "series-10-apple-logo-with-megnatic-chain-allow-to-open",
+  "series-11-(allow-to-open-parcel)": "series-11-apple-logo-nike-free-loop-master-replica-allow-to-open-parcel",
+  "series-11-allow-to-open-parcel": "series-11-apple-logo-nike-free-loop-master-replica-allow-to-open-parcel",
+  "s11-(allow-to-open-parcel)": "series-11-apple-logo-nike-free-loop-master-replica-allow-to-open-parcel",
+  "s11-allow-to-open-parcel": "series-11-apple-logo-nike-free-loop-master-replica-allow-to-open-parcel",
 }

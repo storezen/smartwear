@@ -11,7 +11,9 @@
  */
 
 function generateUUID() {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID()
+  try {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID()
+  } catch {}
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
     const r = Math.random() * 16 | 0
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16)
@@ -52,11 +54,13 @@ export function initTikTokPixel(pixelId: string) {
 /* ── Advanced Matching: SHA256 + ttq.identify ── */
 
 async function sha256(value: string): Promise<string> {
-  if (typeof crypto === 'undefined' || !crypto.subtle) return value
-  const encoder = new TextEncoder()
-  const data = encoder.encode(value.trim().toLowerCase())
-  const hash = await crypto.subtle.digest('SHA-256', data)
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('')
+  try {
+    if (typeof crypto === 'undefined' || !crypto.subtle || typeof crypto.subtle.digest !== 'function') return value
+    const encoder = new TextEncoder()
+    const data = encoder.encode(value.trim().toLowerCase())
+    const hash = await crypto.subtle.digest('SHA-256', data)
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('')
+  } catch { return value }
 }
 
 const USER_DATA_KEY = 'sw_user_data'
