@@ -210,19 +210,6 @@ export async function getProducts() {
     if (error) {
       console.error('Supabase getProducts error:', error)
     } else if (data) {
-      if (data.length === 0) {
-        const db = await getDb()
-        const local = normalizeProductList(db.products || [])
-        if (local.length > 10) {
-          console.log(`[db] Seeding empty Supabase: ${local.length} products...`)
-          const toInsert = local.map((p: any) => stripNonProductFields({ ...p, created_at: p.created_at || new Date().toISOString() }))
-          const BATCH_SIZE = 100
-          for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
-            const batch = toInsert.slice(i, i + BATCH_SIZE)
-            try { await supabase.from('products').upsert(batch, { onConflict: 'id', ignoreDuplicates: false }) } catch {}
-          }
-        }
-      }
       if (data.length > 0) return normalizeProductList(data)
     }
   }
