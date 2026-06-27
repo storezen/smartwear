@@ -168,16 +168,23 @@ export async function getDb(retries = 3): Promise<any> {
 export async function saveDb(data: any, targetPath?: string) {
   globalAny.memoryDb = data
   const paths = targetPath ? [targetPath, TMP_DB_PATH, ...DB_PATHS] : [TMP_DB_PATH, ...DB_PATHS]
+  const seen = new Set<string>()
+  let wroteAny = false
   for (const p of paths) {
+    if (seen.has(p)) continue
+    seen.add(p)
     try {
       const tempPath = `${p}.tmp.${Date.now()}`
       await fs.writeFile(tempPath, JSON.stringify(data, null, 2))
       await fs.rename(tempPath, p)
-      return
+      wroteAny = true
     } catch {
-      continue
+      /* skip unwritable paths */
     }
   }
+  // On Vercel only /tmp is writable; on dev both /tmp and project-root work.
+  // At least one should succeed — if none did the in-memory copy is still available
+  // for the lifetime of the Node process.
 }
 
 // --- Helper Functions ---
