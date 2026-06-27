@@ -1,10 +1,9 @@
 "use client"
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { use } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Minus, Plus, Star, Heart, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote, PackageOpen, Clock } from 'lucide-react'
 import { ProductCard } from '@/components/store/premium-product-card'
@@ -21,10 +20,6 @@ import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { PurchaseNotification } from '@/components/store/purchase-notification'
 import { toast } from 'sonner'
 import { Skeleton } from '@/components/ui/skeleton'
-
-interface ProductPageProps {
-  params: Promise<{ slug: string }>
-}
 
 const fadeUp: any = {
   hidden: { opacity: 0, y: 24 },
@@ -203,9 +198,9 @@ function RecentlyViewed({ currentId, currentSlug }: { currentId: string; current
   )
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
-  const resolvedParams = use(params)
-  const slug = resolveProductSlug(decodeProductSlug(resolvedParams.slug))
+export default function ProductPage() {
+  const params = useParams()
+  const slug = resolveProductSlug(decodeProductSlug((params.slug as string) || ''))
   const [product, setProduct] = useState<any>(null)
   const [status, setStatus] = useState<'loading' | 'ready' | 'not-found'>('loading')
   const [relatedProducts, setRelatedProducts] = useState<any[]>([])
