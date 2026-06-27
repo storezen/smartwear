@@ -80,7 +80,17 @@ export default function ProductPage({ params }: ProductPageProps) {
     let cancelled = false
 
     async function loadFromCatalog(catalog: any[]) {
-      return catalog.find((p) => p.slug === slug && p.is_active !== false)
+      const exact = catalog.find((p) => p.slug === slug && p.is_active !== false)
+      if (exact) return exact
+      const normalizedName = slug.replace(/-/g, ' ').toLowerCase()
+      return catalog.find((p) => {
+        if (p.is_active === false) return false
+        const pSlugNorm = p.slug?.replace(/-/g, ' ').toLowerCase()
+        if (pSlugNorm === normalizedName) return true
+        const pNameNorm = p.name?.toLowerCase()
+        if (pNameNorm === normalizedName) return true
+        return false
+      })
     }
 
     async function load() {

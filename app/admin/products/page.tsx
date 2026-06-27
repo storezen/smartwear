@@ -31,6 +31,7 @@ export default function AdminProductsPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     name: '',
+    slug: '',
     category_slug: 'Smartwatches',
     price: '',
     cost_price: '',
@@ -76,7 +77,7 @@ export default function AdminProductsPage() {
         cost_price: formData.cost_price ? parseInt(formData.cost_price) : undefined,
         compare_price: formData.compare_price ? parseInt(formData.compare_price) : null,
         stock: parseInt(formData.stock) || 0,
-        slug: formData.name.toLowerCase().replace(/ /g, '-'),
+        slug: editingId ? formData.slug : formData.name.toLowerCase().replace(/ /g, '-'),
         colors: formData.colors ? formData.colors.split(',').map(c => c.trim()).filter(Boolean) : [],
       }
 
@@ -159,6 +160,7 @@ export default function AdminProductsPage() {
   const openEdit = (p: any) => {
     setFormData({
       name: p.name,
+      slug: p.slug,
       category_slug: p.category_slug || 'Smartwatches',
       price: p.price.toString(),
       cost_price: p.cost_price ? p.cost_price.toString() : '',
@@ -174,7 +176,8 @@ export default function AdminProductsPage() {
 
   const openAdd = () => {
     setFormData({
-      name: '', category_slug: 'Smartwatches', price: '', cost_price: '', compare_price: '', stock: '10', status: 'Draft',
+      name: '', slug: '',
+      category_slug: 'Smartwatches', price: '', cost_price: '', compare_price: '', stock: '10', status: 'Draft',
       images: ['https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80'],
       colors: ''
     })

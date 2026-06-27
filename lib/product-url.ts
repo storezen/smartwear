@@ -27,15 +27,15 @@ export function resolveProductSlug(slug: string): string {
   if (PRODUCT_SLUG_ALIASES[key]) return PRODUCT_SLUG_ALIASES[key]
 
   // Common corruption when "|" or parentheses break routing/CDN paths
-  if (/^series[.\-_]?(11)?[.\-_]?(cash|cod)/i.test(decoded) || /^series\.cash-on-delivery/i.test(decoded)) {
-    return "series-11-(allow-to-open-|-cash-on-delivery)"
+  if (/^(series|s)[.\-_]?(11)?[.\-_]?(cash|cod)/i.test(decoded) || /^series\.cash-on-delivery/i.test(decoded)) {
+    return "s11-(allow-to-open-|-cash-on-delivery)"
   }
 
   return decoded
 }
 
 const PRODUCT_SLUG_ALIASES: Record<string, string> = {
-  "series-11-cod": "series-11-(allow-to-open-|-cash-on-delivery)",
-  "series.cash-on-delivery": "series-11-(allow-to-open-|-cash-on-delivery)",
-  "series-cash-on-delivery": "series-11-(allow-to-open-|-cash-on-delivery)",
+  "series-11-cod": "s11-(allow-to-open-|-cash-on-delivery)",
+  "series.cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
+  "series-cash-on-delivery": "s11-(allow-to-open-|-cash-on-delivery)",
 }
