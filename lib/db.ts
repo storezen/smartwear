@@ -215,7 +215,11 @@ export async function getProducts() {
   }
 
   const db = await getDb()
-  return normalizeProductList(db.products || [])
+  const local = normalizeProductList(db.products || [])
+  if (local.length > 0) return local
+
+  // Last-resort fallback: seed products from INITIAL_DATA
+  return normalizeProductList(INITIAL_DATA.products || [])
 }
 
 export async function getProduct(slug: string) {
