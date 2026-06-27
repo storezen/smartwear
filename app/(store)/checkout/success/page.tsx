@@ -72,7 +72,9 @@ function SuccessContent() {
 
   useEffect(() => {
     const dedupKey = `tiktokPurchaseSent_${orderId}`
-    if (!orderId || sessionStorage.getItem(dedupKey)) return
+    let alreadySent = false
+    try { alreadySent = !!sessionStorage.getItem(dedupKey) } catch {}
+    if (!orderId || alreadySent) return
 
     const firePurchase = async () => {
       let orderTotal = 0
@@ -95,7 +97,7 @@ function SuccessContent() {
       if (orderItems.length === 0 && !totalFromQuery) return
       if (email || phone) identifyUser(email, phone)
       TikTokEvents.purchase({ id: orderId, total: orderTotal || totalFromQuery || 0, items: orderItems })
-      sessionStorage.setItem(dedupKey, '1')
+      try { sessionStorage.setItem(dedupKey, '1') } catch {}
     }
 
     firePurchase()
