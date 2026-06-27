@@ -128,8 +128,8 @@ function resolveColorHex(color: string): string {
 function SkeletonPDP() {
   return (
     <div className="min-h-screen bg-[#0C0F14]">
-      <div className="sw-container pt-16 md:pt-28 pb-12 md:pb-24">
-        <div className="grid lg:grid-cols-12 gap-6 lg:gap-16">
+      <div className="sw-container pt-12 md:pt-16 pb-8 md:pb-12">
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-10">
           <div className="lg:col-span-7 space-y-6">
             <Skeleton className="aspect-[4/3] lg:aspect-auto lg:h-[600px] xl:h-[700px] w-full rounded-[24px] md:rounded-[32px] bg-white/5" />
             <div className="flex gap-3">
@@ -182,8 +182,8 @@ function RecentlyViewed({ currentId, currentSlug }: { currentId: string; current
   if (recent.length === 0) return null
 
   return (
-    <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-10 md:mt-20">
-      <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-white/5 pb-4">
+    <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-6 md:mt-12">
+      <div className="flex items-center justify-between mb-4 md:mb-6 border-b border-white/5 pb-3">
         <div className="flex items-center gap-2">
           <Clock className="w-5 h-5 text-[#B8860B]" />
           <h3 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Recently Viewed</h3>
@@ -407,7 +407,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
       <div className={cn("fixed top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full blur-[150px] pointer-events-none transition-all duration-1000", lumeMode ? "opacity-[0.1] bg-emerald-500" : "opacity-[0.15] bg-[#B8860B]")} />
       <div className={cn("fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[150px] pointer-events-none transition-all duration-1000", lumeMode ? "opacity-[0.05] bg-green-400" : "opacity-[0.1] bg-[#D4A017]")} />
 
-      <div className="sw-container pt-16 md:pt-28 pb-3 md:pb-4 relative z-10">
+      <div className="sw-container pt-12 md:pt-16 pb-2 md:pb-3 relative z-10">
         <motion.div
           initial="hidden" animate="show" variants={fadeUp} custom={0}
           className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-[10px] text-white/70 uppercase tracking-[0.15em] sm:tracking-[0.2em] w-full"
@@ -420,8 +420,8 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
         </motion.div>
       </div>
 
-      <div className="sw-container pb-12 md:pb-24 relative z-10" ref={heroRef}>
-        <div className="grid lg:grid-cols-12 gap-6 lg:gap-16">
+      <div className="sw-container pb-8 md:pb-12 relative z-10" ref={heroRef}>
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-10">
 
           {/* LEFT: Cinematic Image Gallery */}
           <motion.div
@@ -722,9 +722,9 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
         </div>
 
         {/* Product Details Tabs (with Reviews integrated) */}
-        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-10 lg:mt-32 pb-16 md:pb-0">
+        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-8 lg:mt-12 pb-12 md:pb-0">
           {/* Tab Navigation */}
-          <div className="p-1 rounded-2xl bg-white/[0.02] border border-white/10 w-fit mb-4 md:mb-8 overflow-x-auto hide-scrollbar">
+          <div className="p-1 rounded-2xl bg-white/[0.02] border border-white/10 w-fit mb-3 md:mb-4 overflow-x-auto hide-scrollbar">
             <div className="flex items-center gap-1">
               {[
                 { key: 'description' as const, label: 'Description' },
@@ -946,8 +946,8 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
 
         {/* Related Products (from API) */}
         {relatedProducts.length > 0 && (
-          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-10 md:mt-32">
-            <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-white/5 pb-4">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-8 md:mt-16">
+            <div className="flex items-center justify-between mb-4 md:mb-6 border-b border-white/5 pb-3">
               <h3 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Complete Your Collection</h3>
               <Link href={`/products?category=${product.category_slug}`} className="text-sm text-[#B8860B] hover:text-[#D4A017] transition-colors sw-interactive font-medium flex items-center gap-1">
                 View All <ChevronRight className="w-4 h-4" />
