@@ -167,12 +167,12 @@ export function PremiumNavbar() {
 
   return (
     <>
-      {/* Top Announcement Bar */}
-      <div className="relative z-50 bg-gradient-to-r from-[#B8860B]/10 via-[#B8860B]/5 to-[#B8860B]/10 border-b border-[#B8860B]/10">
+      {/* Top Announcement Bar - higher z-index so it's NOT hidden behind fixed navbar */}
+      <div className="relative z-[60] bg-gradient-to-r from-[#B8860B]/10 via-[#B8860B]/5 to-[#B8860B]/10 border-b border-[#B8860B]/10">
         <div className="sw-container">
           <div className="flex items-center justify-center h-9 md:h-10 px-4">
             <p className="text-[11px] md:text-xs text-white/70 font-medium tracking-wide">
-              <AnnouncementText />{/* */}
+              <AnnouncementText />
             </p>
           </div>
         </div>
