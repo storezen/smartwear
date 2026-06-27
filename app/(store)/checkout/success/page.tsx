@@ -65,36 +65,45 @@ function SuccessContent() {
   const searchParams = useSearchParams()
   const orderIdFromQuery = searchParams.get('order')
   const totalFromQuery = parseFloat(searchParams.get('total') || '0')
-  const orderId = orderIdFromQuery || `ORD-${Date.now().toString().slice(-8)}`
+  const orderId = orderIdFromQuery || ''
 
   const [orderDetails, setOrderDetails] = useState<any>(null)
   const [showParticles, setShowParticles] = useState(false)
 
   useEffect(() => {
+    const dedupKey = `tiktokPurchaseSent_${orderId}`
+    if (!orderId || sessionStorage.getItem(dedupKey)) return
+
     const firePurchase = async () => {
-      let orderTotal = totalFromQuery
+      let orderTotal = 0
       let orderItems: any[] = []
+      let email = ''
+      let phone = ''
       try {
         const res = await fetch(`/api/orders/track?id=${orderId}`)
         if (res.ok) {
           const data = await res.json()
           if (data.order) {
             setOrderDetails(data.order)
-            TikTokEvents.purchase(data.order)
-            return
+            orderTotal = data.order.total || 0
+            orderItems = data.order.items || []
+            email = data.order.email || ''
+            phone = data.order.phone || ''
           }
         }
       } catch (_) {}
-      TikTokEvents.purchase({ id: orderId, total: orderTotal, items: orderItems })
+      if (orderItems.length === 0 && !totalFromQuery) return
+      if (email || phone) identifyUser(email, phone)
+      TikTokEvents.purchase({ id: orderId, total: orderTotal || totalFromQuery || 0, items: orderItems })
+      sessionStorage.setItem(dedupKey, '1')
     }
 
     firePurchase()
 
-    // Trigger confetti after short delay
     const t1 = setTimeout(() => setShowParticles(true), 400)
     const t2 = setTimeout(() => setShowParticles(false), 6000)
     return () => { clearTimeout(t1); clearTimeout(t2) }
-  }, [orderId])
+  }, [orderId, totalFromQuery])
 
   const deliveryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PK', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',

@@ -3,6 +3,8 @@ import { getSettings } from '@/lib/db'
 import { decrypt } from '@/lib/encryption'
 import crypto from 'crypto'
 
+const TIKTOK_EVENT_KEYS = new Set(['ViewContent','AddToCart','AddToWishlist','InitiateCheckout','AddPaymentInfo','CompletePayment','Search','Subscribe'])
+
 function hashSHA256(value: string | undefined | null): string | undefined {
   if (!value) return undefined
   return crypto.createHash('sha256').update(value.trim().toLowerCase()).digest('hex')
@@ -11,7 +13,7 @@ function hashSHA256(value: string | undefined | null): string | undefined {
 export async function POST(req: Request) {
   try {
     const { event, event_id, content_id, content_type, content_category, description, content_name, value, contents, phone, email, name } = await req.json()
-    if (!event) return NextResponse.json({ error: 'event required' }, { status: 400 })
+    if (!event || !TIKTOK_EVENT_KEYS.has(event)) return NextResponse.json({ error: 'invalid event' }, { status: 400 })
 
     const settings = await getSettings()
     const accessToken = decrypt(settings.tiktok_access_token) || process.env.TIKTOK_ACCESS_TOKEN
@@ -26,7 +28,7 @@ export async function POST(req: Request) {
 
     const eventPayload: Record<string, unknown> = {
       event,
-      event_id: event_id || `${event}_${Date.now()}`,
+      event_id: event_id || `${event}_${crypto.randomUUID()}`,
       event_time: Math.floor(Date.now() / 1000),
       context: {
         ip,

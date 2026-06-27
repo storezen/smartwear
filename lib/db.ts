@@ -332,24 +332,34 @@ export async function getOrderById(id: string) {
 export async function createOrder(order: any) {
   // Deduct stock is complex in API, but for simplicity we fetch and update
   if (env.NODE_ENV === 'production' && supabase) {
-    let hasError = false;
+    const deductedItems: { id: string; quantity: number }[] = []
     for (const item of order.items) {
       const { data: product, error: pError } = await supabase.from('products').select('id, stock, name').eq('id', item.id).single()
-      if (pError) { hasError = true; console.warn("Supabase product check failed:", pError.message); }
-      if (!pError && product && (product.stock || 0) >= item.quantity) {
+      if (pError) { console.warn("Supabase product check failed:", pError.message); continue }
+      if (product && (product.stock || 0) >= item.quantity) {
         await supabase.from('products').update({ stock: product.stock - item.quantity }).eq('id', item.id)
+        deductedItems.push({ id: item.id, quantity: item.quantity })
       }
     }
     
-    order.id = `ORD-${Math.floor(100000 + Math.random() * 900000)}`
+    order.id = `ORD-${crypto.randomUUID().slice(0, 8).toUpperCase()}`
     order.created_at = new Date().toISOString()
     order.history = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
     order.notes = ""
     order.status = "Pending"
     
     const { data, error } = await supabase.from('orders').insert([order]).select().single()
-    if (!error && data) return data
+    if (!error && data) {
+      if (order.promo_code) {
+        await incrementPromoUsage(order.promo_code)
+      }
+      return data
+    }
     console.warn("Supabase createOrder failed, falling back to memory:", error?.message)
+    for (const item of deductedItems) {
+      const { data: product } = await supabase.from('products').select('stock').eq('id', item.id).single()
+      if (product) await supabase.from('products').update({ stock: (product.stock || 0) + item.quantity }).eq('id', item.id)
+    }
   }
 
   const db = await getDb()
@@ -362,7 +372,7 @@ export async function createOrder(order: any) {
     const product = db.products.find((p: any) => p.id === item.id)
     if (product) product.stock -= item.quantity
   }
-  order.id = `ORD-${Math.floor(100000 + Math.random() * 900000)}`
+  order.id = `ORD-${crypto.randomUUID().slice(0, 8).toUpperCase()}`
   order.created_at = new Date().toISOString()
   order.history = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
   order.notes = ""
@@ -604,6 +614,22 @@ export async function getPromoByCode(code: string) {
   const db = await getDb()
   const marketing = db.marketing || []
   return marketing.find((p: any) => p.code.toUpperCase() === code.toUpperCase()) || null
+}
+
+export async function incrementPromoUsage(code: string) {
+  if (env.NODE_ENV === 'production' && supabase) {
+    const { data: promo } = await supabase.from('marketing').select('*').ilike('code', code).single()
+    if (promo) {
+      await supabase.from('marketing').update({ usage_count: (promo.usage_count || 0) + 1 }).eq('id', promo.id)
+    }
+    return
+  }
+  const db = await getDb()
+  const promo = db.marketing?.find((p: any) => p.code.toUpperCase() === code.toUpperCase())
+  if (promo) {
+    promo.usage_count = (promo.usage_count || 0) + 1
+    await saveDb(db)
+  }
 }
 
 export async function createPromo(promo: any) {

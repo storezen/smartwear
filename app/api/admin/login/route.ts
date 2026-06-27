@@ -2,12 +2,25 @@ import { NextResponse } from "next/server"
 import { SignJWT } from "jose"
 import { AdminLoginSchema } from "@/lib/validations/admin"
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-for-development"
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin"
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123"
+const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'development' ? 'dev-secret-not-for-production' : undefined)
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || (process.env.NODE_ENV === 'development' ? 'admin' : undefined)
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV === 'development' ? 'admin123' : undefined)
+
+const loginRateLimit = new Map<string, { count: number; resetAt: number }>()
+const LOGIN_RATE_WINDOW = 60000
+const LOGIN_MAX_ATTEMPTS = 5
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get('x-forwarded-for') || '127.0.0.1'
+    const now = Date.now()
+    const record = loginRateLimit.get(ip) || { count: 0, resetAt: now + LOGIN_RATE_WINDOW }
+    if (now > record.resetAt) { record.count = 0; record.resetAt = now + LOGIN_RATE_WINDOW }
+    record.count++
+    loginRateLimit.set(ip, record)
+    if (record.count > LOGIN_MAX_ATTEMPTS) {
+      return NextResponse.json({ error: 'Too many login attempts. Try again later.' }, { status: 429 })
+    }
     const body = await req.json()
     
     // Validate request body using Zod

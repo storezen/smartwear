@@ -10,6 +10,8 @@ export default function AdminCustomersPage() {
   const [customers, setCustomers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
+  const [page, setPage] = useState(1)
+  const perPage = 20
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
 
@@ -60,6 +62,8 @@ export default function AdminCustomersPage() {
     c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     c.phone.includes(searchQuery)
   )
+  const totalPages = Math.ceil(filteredCustomers.length / perPage)
+  const paginatedCustomers = filteredCustomers.slice(0, page * perPage)
 
   const openCustomer = (customer: any) => {
     setSelectedCustomer(customer)
@@ -96,8 +100,9 @@ export default function AdminCustomersPage() {
           <p className="text-white/50 text-[12px] mb-4 max-w-md mx-auto">No customer records match your search criteria.</p>
         </div>
       ) : (
+        <>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {filteredCustomers.map((customer, i) => (
+          {paginatedCustomers.map((customer, i) => (
             <SpotlightCard key={customer.phone} className="p-4 cursor-pointer hover:border-[#B8860B]/30 transition-colors" onClick={() => openCustomer(customer)}>
               <div className="flex justify-between items-start mb-3">
                 <div className="flex items-center gap-2.5">
@@ -129,6 +134,17 @@ export default function AdminCustomersPage() {
             </SpotlightCard>
           ))}
         </div>
+        {totalPages > 1 && page < totalPages && (
+          <div className="text-center mt-4">
+            <button
+              onClick={() => setPage(p => p + 1)}
+              className="px-6 py-2 rounded-lg border border-white/10 text-white/70 hover:text-white hover:border-white/20 text-[12px] transition-colors"
+            >
+              Load More ({filteredCustomers.length - page * perPage} remaining)
+            </button>
+          </div>
+        )}
+        </>
       )}
 
       {/* Customer Detail Sheet */}

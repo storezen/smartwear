@@ -8,6 +8,7 @@ import { OrderCreationSchema, OrderStatusUpdateSchema } from '@/lib/validations/
 import { calculateDiscount } from '@/lib/promotions'
 import { getSettings } from '@/lib/db'
 import { decrypt } from '@/lib/encryption'
+import { jwtVerify } from 'jose'
 
 // In-memory stores for Rate Limiting & Idempotency (For Serverless, use Redis instead)
 const rateLimitMap = new Map<string, { count: number, resetAt: number }>();
@@ -137,8 +138,19 @@ async function fireTikTokCAPI(orderData: any, req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const token = req.headers.get('cookie')?.match(/smartwear_admin_token=([^;]+)/)?.[1]
+    if (token) {
+      try {
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
+        await jwtVerify(token, secret)
+      } catch {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+    } else {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     if (isSupabaseConfigured() && supabase) {
       const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false })
       if (!error && data) return NextResponse.json(data)
@@ -223,7 +235,15 @@ export async function POST(req: Request) {
     const initialHistory = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
 
     if (isSupabaseConfigured() && supabase) {
-      const orderId = `ORD-${Math.floor(100000 + Math.random() * 900000)}`
+      const orderId = `ORD-${crypto.randomUUID().slice(0, 8).toUpperCase()}`
+      const deductedItems: { id: string; quantity: number }[] = []
+      for (const item of payload.items) {
+        const { data: product } = await supabase.from('products').select('id, stock').eq('id', item.id).single()
+        if (product && (product.stock || 0) >= item.quantity) {
+          await supabase.from('products').update({ stock: product.stock - item.quantity }).eq('id', item.id)
+          deductedItems.push({ id: item.id, quantity: item.quantity })
+        }
+      }
       const { data: supabaseOrder, error } = await supabase.from('orders').insert({
         ...finalPayload,
         id: orderId,
@@ -237,9 +257,17 @@ export async function POST(req: Request) {
         await fireTikTokCAPI(supabaseOrder, req)
         await supabase.from('orders').update({ tiktok_capi_fired: true }).eq('id', supabaseOrder.id)
         if (payload.idempotency_key) idempotencyMap.set(payload.idempotency_key, supabaseOrder)
+        if (payload.promo_code) {
+          const { incrementPromoUsage } = await import('@/lib/db')
+          incrementPromoUsage(payload.promo_code)
+        }
         return NextResponse.json({ success: true, order: supabaseOrder }, { status: 201 })
       } else {
         console.warn("Supabase create order failed, falling back to local DB:", error?.message)
+        for (const item of deductedItems) {
+          const { data: product } = await supabase.from('products').select('stock').eq('id', item.id).single()
+          if (product) await supabase.from('products').update({ stock: (product.stock || 0) + item.quantity }).eq('id', item.id)
+        }
       }
     }
 

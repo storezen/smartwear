@@ -44,6 +44,6 @@ export function decrypt(encryptedText: string): string {
     return decrypted;
   } catch (error) {
     console.error('Decryption failed:', error);
-    return encryptedText; // Return raw on failure
+    return ''
   }
 }

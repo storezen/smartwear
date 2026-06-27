@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { jwtVerify } from "jose"
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-for-development"
+const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'development' ? 'dev-secret-not-for-production' : undefined)
 const publicAdminPaths = ["/admin/login"]
 
 /** Storefront + webhook APIs that stay public */

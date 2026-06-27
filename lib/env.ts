@@ -46,12 +46,15 @@ if (!parsedEnv.success) {
 
 const env = parsedEnv.success ? parsedEnv.data : ({} as any);
 
-if (env.NODE_ENV === 'production') {
-  if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    console.error("❌ Missing Supabase Configuration. NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required in production.");
-    if (typeof window === "undefined") {
-      throw new Error("Missing Supabase configuration in production");
-    }
+if (env.NODE_ENV === 'production' && typeof window === 'undefined') {
+  const missing: string[] = []
+  if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.NEXT_PUBLIC_SUPABASE_ANON_KEY) missing.push('NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY')
+  if (!env.JWT_SECRET) missing.push('JWT_SECRET')
+  if (!env.ADMIN_USERNAME) missing.push('ADMIN_USERNAME')
+  if (!env.ADMIN_PASSWORD) missing.push('ADMIN_PASSWORD')
+  if (missing.length) {
+    console.error(`❌ Missing required env vars in production: ${missing.join(', ')}`)
+    throw new Error(`Missing required environment variables: ${missing.join(', ')}`)
   }
 }
 

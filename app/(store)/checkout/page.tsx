@@ -44,6 +44,7 @@ export default function CheckoutPage() {
   const [guestAddress, setGuestAddress] = useState({
     name: '',
     phone: '',
+    email: '',
     address_line1: '',
     city: 'Karachi',
     province: detectProvince('Karachi'),
@@ -101,10 +102,10 @@ export default function CheckoutPage() {
   // Store PII & identify user for TikTok Advanced Matching when user fills form
   useEffect(() => {
     if (guestAddress.phone || guestAddress.name) {
-      storeUserData({ phone: guestAddress.phone, name: guestAddress.name })
-      identifyUser(undefined, guestAddress.phone, guestAddress.name)
+      storeUserData({ phone: guestAddress.phone, name: guestAddress.name, email: guestAddress.email })
+      identifyUser(guestAddress.email || undefined, guestAddress.phone, guestAddress.name)
     }
-  }, [guestAddress.phone, guestAddress.name])
+  }, [guestAddress.phone, guestAddress.name, guestAddress.email])
 
   // Fire AddPaymentInfo when user fills name + phone (strong purchase intent signal)
   useEffect(() => {
@@ -134,7 +135,7 @@ export default function CheckoutPage() {
   // Identify user on order placement for purchase event matching
   const handleIdentifyUser = () => {
     if (guestAddress.phone || guestAddress.name) {
-      identifyUser(undefined, guestAddress.phone, guestAddress.name)
+      identifyUser(guestAddress.email || undefined, guestAddress.phone, guestAddress.name)
     }
   }
 
@@ -204,13 +205,13 @@ export default function CheckoutPage() {
     }
 
     setIsProcessing(true)
-    let orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000)
+    let orderId = 'ORD-' + (crypto.randomUUID ? crypto.randomUUID().slice(0, 8).toUpperCase() : Math.floor(100000 + Math.random() * 900000))
 
     try {
       const idempotencyKey = `IDMP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       const orderPayload = {
         customer_name: guestAddress.name,
-        email: 'guest@smartwear.pk',
+        email: guestAddress.email || 'guest@smartwear.pk',
         phone: guestAddress.phone,
         shipping_address: guestAddress,
         payment_method: 'COD',
@@ -350,6 +351,21 @@ export default function CheckoutPage() {
                   <p className="text-[11px] sm:text-[10px] text-white/40 mt-1.5 flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
                     Courier will call this number before delivery
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm text-white/70 mb-1.5">Email (for receipt)</label>
+                  <input
+                    type="email"
+                    value={guestAddress.email}
+                    onChange={(e) => setGuestAddress({ ...guestAddress, email: e.target.value })}
+                    placeholder="ahmad@example.com"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
+                  />
+                  <p className="text-[11px] sm:text-[10px] text-white/40 mt-1.5 flex items-start gap-1.5">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
+                    Order receipt aur tracking link yahan bhejein ge
                   </p>
                 </div>
 
