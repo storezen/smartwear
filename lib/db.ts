@@ -6,6 +6,21 @@ import { normalizeProductList } from './normalize-product'
 import { resolveProductSlug } from './product-url'
 import { supabase } from './supabase'
 
+// Supabase products table columns (strip unknown fields before write)
+const SUPABASE_PRODUCT_COLUMNS = new Set([
+  'id', 'created_at', 'name', 'slug', 'description', 'price', 'compare_price',
+  'images', 'category_slug', 'brand', 'stock', 'rating', 'reviews_count',
+  'specifications', 'is_featured', 'is_active', 'upsell_accessories', 'cost_price'
+])
+
+function stripNonProductFields(row: any) {
+  const clean: Record<string, any> = {}
+  for (const key of SUPABASE_PRODUCT_COLUMNS) {
+    if (row[key] !== undefined) clean[key] = row[key]
+  }
+  return clean
+}
+
 // Try multiple paths so it works on dev, Vercel, and custom deploys
 function getDbPaths(): string[] {
   const paths: string[] = ['/tmp/database.json']
@@ -196,12 +211,12 @@ export async function getProducts() {
     if (error) {
       console.error('Supabase getProducts error:', error)
     } else if (data) {
-      // If Supabase has insufficient data (first deploy), seed from file DB
       const db = await getDb()
       const local = normalizeProductList(db.products || [])
-      if (data.length < 10 && local.length > 0) {
-        console.log('[db] Seeding Supabase from database.json...')
-        const toInsert = local.map((p: any) => ({ ...p, created_at: p.created_at || new Date().toISOString() }))
+      // If Supabase has fewer products than file DB, seed from file DB
+      if (data.length < local.length && local.length > 10) {
+        console.log(`[db] Seeding Supabase: ${local.length} products (had ${data.length})...`)
+        const toInsert = local.map((p: any) => stripNonProductFields({ ...p, created_at: p.created_at || new Date().toISOString() }))
         const BATCH_SIZE = 100
         for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
           const batch = toInsert.slice(i, i + BATCH_SIZE)
@@ -246,8 +261,14 @@ export async function addProduct(product: any) {
   if (product.is_active === undefined) product.is_active = product.status === 'Active'
   
   if (env.NODE_ENV === 'production' && supabase) {
-    const { data, error } = await supabase.from('products').insert([product]).select().single()
-    if (!error && data) return data
+    const { data, error } = await supabase.from('products').insert([stripNonProductFields(product)]).select().single()
+    if (!error && data) {
+      const merged = { ...data, ...product }
+      const db = await getDb()
+      db.products.unshift(merged)
+      globalAny.memoryDb = db
+      return merged
+    }
     console.warn("Supabase addProduct failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
@@ -261,8 +282,17 @@ export async function updateProduct(id: string, updates: any) {
     updates.is_active = updates.status === 'Active' || updates.status === 'Out of Stock'
   }
   if (env.NODE_ENV === 'production' && supabase) {
-    const { data, error } = await supabase.from('products').update(updates).eq('id', id).select().single()
-    if (!error && data) return data
+    const { data, error } = await supabase.from('products').update(stripNonProductFields(updates)).eq('id', id).select().single()
+    if (!error && data) {
+      const merged = { ...data, ...updates }
+      const db = await getDb()
+      const index = db.products.findIndex((p: any) => p.id === id)
+      if (index !== -1) {
+        db.products[index] = { ...db.products[index], ...updates }
+        globalAny.memoryDb = db
+      }
+      return merged
+    }
     console.warn("Supabase updateProduct failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
@@ -278,7 +308,7 @@ export async function updateProduct(id: string, updates: any) {
 export async function bulkUpdateProducts(updates: { id: string; status?: string; is_active?: boolean }[]) {
   if (env.NODE_ENV === 'production' && supabase) {
     for (const u of updates) {
-      await supabase.from('products').update(u).eq('id', u.id)
+      await supabase.from('products').update(stripNonProductFields(u)).eq('id', u.id)
     }
     return
   }
@@ -293,7 +323,12 @@ export async function bulkUpdateProducts(updates: { id: string; status?: string;
 export async function deleteProduct(id: string) {
   if (env.NODE_ENV === 'production' && supabase) {
     const { error } = await supabase.from('products').delete().eq('id', id)
-    if (!error) return
+    if (!error) {
+      const db = await getDb()
+      db.products = db.products.filter((p: any) => p.id !== id)
+      globalAny.memoryDb = db
+      return
+    }
     console.warn("Supabase deleteProduct failed, falling back to memory:", error?.message)
   }
   const db = await getDb()
@@ -306,24 +341,40 @@ export async function deleteProduct(id: string) {
 
 export async function bulkImportProducts(productsToImport: any[], overwrite: boolean = false) {
   if (env.NODE_ENV === 'production' && supabase) {
-    // Basic implementation for Supabase bulk upsert
+    const cleaned = productsToImport.map((p) => {
+      if (!p.id) p.id = `PROD-${crypto.randomUUID()}`
+      if (!p.created_at) p.created_at = new Date().toISOString()
+      return stripNonProductFields(p)
+    })
+    // Upsert in batches
     let added = 0; let updated = 0; let skipped = 0;
+    const BATCH_SIZE = 100;
+    for (let i = 0; i < cleaned.length; i += BATCH_SIZE) {
+      const batch = cleaned.slice(i, i + BATCH_SIZE)
+      const { error } = await supabase.from('products').upsert(batch, { onConflict: 'id', ignoreDuplicates: false })
+      if (!error) {
+        added += batch.length
+      } else {
+        console.error('Supabase bulkImportProducts batch error:', error.message)
+      }
+    }
+    // Also update file DB cache
+    const db = await getDb()
     for (const newProduct of productsToImport) {
-      const { data: existing } = await supabase.from('products').select('id').eq('slug', newProduct.slug).single()
-      if (existing) {
+      const existingIndex = db.products.findIndex((p: any) => p.slug === newProduct.slug)
+      if (existingIndex !== -1) {
         if (overwrite) {
-          await supabase.from('products').update(newProduct).eq('id', existing.id)
+          db.products[existingIndex] = { ...db.products[existingIndex], ...newProduct, id: db.products[existingIndex].id }
           updated++
         } else {
           skipped++
         }
       } else {
-        newProduct.id = `PROD-${crypto.randomUUID()}`
-        if (!newProduct.created_at) newProduct.created_at = new Date().toISOString()
-        await supabase.from('products').insert([newProduct])
+        db.products.unshift(newProduct)
         added++
       }
     }
+    globalAny.memoryDb = db
     return { added, updated, skipped }
   }
 

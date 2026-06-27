@@ -76,11 +76,14 @@ export function normalizeProductRecord<T extends ProductRecord>(product: T): T {
 }
 
 /** Ensure `status` and `is_active` are always consistent.
- *  `is_active` is ALWAYS derived from `status` so that admin edits to
- *  `status` immediately reflect in storefront visibility.
+ *  When reading from Supabase (no `status` column), rely on `is_active`.
  */
 function normalizeProductStatus(p: any): any {
-  p.is_active = p.status === 'Active' || p.status === 'Out of Stock'
+  if (p.status !== undefined) {
+    p.is_active = p.status === 'Active' || p.status === 'Out of Stock'
+  } else if (p.is_active === undefined) {
+    p.is_active = true
+  }
   if (p.status === undefined) {
     p.status = p.is_active ? 'Active' : 'Draft'
   }
