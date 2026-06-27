@@ -52,6 +52,7 @@ export function initTikTokPixel(pixelId: string) {
 /* ── Advanced Matching: SHA256 + ttq.identify ── */
 
 async function sha256(value: string): Promise<string> {
+  if (typeof crypto === 'undefined' || !crypto.subtle) return value
   const encoder = new TextEncoder()
   const data = encoder.encode(value.trim().toLowerCase())
   const hash = await crypto.subtle.digest('SHA-256', data)
