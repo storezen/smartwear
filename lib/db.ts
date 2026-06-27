@@ -210,7 +210,7 @@ export async function getProducts() {
     if (error) {
       console.error('Supabase getProducts error:', error)
     } else if (data) {
-      if (data.length > 0) return normalizeProductList(data)
+      return normalizeProductList(data)
     }
   }
 
