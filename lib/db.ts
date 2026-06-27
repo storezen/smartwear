@@ -191,37 +191,50 @@ export async function saveDb(data: any, targetPath?: string) {
 
 // Products
 export async function getProducts() {
-  const db = await getDb()
-  const local = normalizeProductList(db.products || [])
-
-  // database.json is the maintained catalog — prefer it when populated
-  if (local.length > 0) {
-    return local
-  }
-
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
-    if (error) console.error('Supabase getProducts error:', error)
-    return normalizeProductList(data || [])
+    if (error) {
+      console.error('Supabase getProducts error:', error)
+    } else if (data) {
+      // If Supabase has insufficient data (first deploy), seed from file DB
+      const db = await getDb()
+      const local = normalizeProductList(db.products || [])
+      if (data.length < 10 && local.length > 0) {
+        console.log('[db] Seeding Supabase from database.json...')
+        const toInsert = local.map((p: any) => ({ ...p, created_at: p.created_at || new Date().toISOString() }))
+        const BATCH_SIZE = 100
+        for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
+          const batch = toInsert.slice(i, i + BATCH_SIZE)
+          try {
+            await supabase.from('products').upsert(batch, { onConflict: 'id', ignoreDuplicates: false })
+          } catch (e: any) {
+            console.error(`[db] Seed batch ${i / BATCH_SIZE} failed:`, e?.message)
+          }
+        }
+        return local
+      }
+      if (data.length > 0) return normalizeProductList(data)
+    }
   }
 
-  return []
+  const db = await getDb()
+  return normalizeProductList(db.products || [])
 }
 
 export async function getProduct(slug: string) {
   const canonicalSlug = resolveProductSlug(slug)
-  const db = await getDb()
-  const local = normalizeProductList(db.products || [])
-
-  if (local.length > 0) {
-    const product = local.find((p: any) => p.slug === canonicalSlug || p.slug === slug)
-    if (product) return product
-  }
 
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('products').select('*').eq('slug', canonicalSlug).single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getProduct error:', error)
-    return data ? normalizeProductList([data])[0] : null
+    if (data) return normalizeProductList([data])[0]
+  }
+
+  const db = await getDb()
+  const local = normalizeProductList(db.products || [])
+  if (local.length > 0) {
+    const product = local.find((p: any) => p.slug === canonicalSlug || p.slug === slug)
+    if (product) return product
   }
 
   return null
