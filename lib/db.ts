@@ -40,6 +40,7 @@ const INITIAL_DATA = {
       rating: 4.3,
       reviews_count: 86,
       specifications: { "Case": "49mm Titanium", "Display": "Always-On Retina", "Water Resistance": "100m" },
+      status: "Active",
       is_featured: true,
       is_active: true,
       upsell_accessories: ["prod-2"]
@@ -58,6 +59,7 @@ const INITIAL_DATA = {
       rating: 4.0,
       reviews_count: 32,
       specifications: { "Material": "Fine Woven", "Closure": "Magnetic" },
+      status: "Active",
       is_featured: false,
       is_active: true,
       upsell_accessories: []
@@ -221,6 +223,7 @@ export async function getProduct(slug: string) {
 export async function addProduct(product: any) {
   product.id = `PROD-${crypto.randomUUID()}`
   if (!product.created_at) product.created_at = new Date().toISOString()
+  if (product.is_active === undefined) product.is_active = product.status === 'Active'
   
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('products').insert([product]).select().single()

@@ -75,6 +75,17 @@ export function normalizeProductRecord<T extends ProductRecord>(product: T): T {
   return { ...product, category_slug: slug }
 }
 
+/** Ensure `status` and `is_active` are always consistent. */
+function normalizeProductStatus(p: any): any {
+  if (p.is_active === undefined) {
+    p.is_active = p.status === 'Active'
+  }
+  if (p.status === undefined) {
+    p.status = p.is_active ? 'Active' : 'Draft'
+  }
+  return p
+}
+
 export function normalizeProductList<T extends ProductRecord>(products: T[]): T[] {
-  return products.map(normalizeProductRecord)
+  return products.map(p => normalizeProductStatus(normalizeProductRecord(p)))
 }

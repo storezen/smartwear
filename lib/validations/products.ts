@@ -17,6 +17,7 @@ export const ProductCreationSchema = z.object({
   images: z.array(z.string().url("Must be a valid image URL")).min(1, "At least one image is required"),
   colors: z.array(z.string()).optional(),
   status: ProductStatusEnum.default("Draft"),
+  is_active: z.boolean().optional(),
   upsell_accessories: z.array(z.string()).optional(),
   description: z.string().optional(),
 });
