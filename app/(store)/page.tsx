@@ -91,7 +91,7 @@ function HeroBanner() {
       </div>
 
       <div className="sw-container relative z-10 w-full">
-        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-20 py-10 md:py-24 mt-14 md:mt-0">
+        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-20 py-10 md:py-24 mt-0 md:mt-0">
           <div className="flex-1 text-center lg:text-left lg:max-w-[48%]">
             <motion.div
               initial={{ opacity: 0, y: 30 }}

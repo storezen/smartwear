@@ -167,17 +167,6 @@ export function PremiumNavbar() {
 
   return (
     <>
-      {/* Top Announcement Bar - higher z-index so it's NOT hidden behind fixed navbar */}
-      <div className="relative z-[60] bg-gradient-to-r from-[#B8860B]/10 via-[#B8860B]/5 to-[#B8860B]/10 border-b border-[#B8860B]/10">
-        <div className="sw-container">
-          <div className="flex items-center justify-center h-9 md:h-10 px-4">
-            <p className="text-[11px] md:text-xs text-white/70 font-medium tracking-wide">
-              <AnnouncementText />
-            </p>
-          </div>
-        </div>
-      </div>
-
       <motion.header
         variants={{
           visible: { y: 0 },
@@ -185,12 +174,26 @@ export function PremiumNavbar() {
         }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.35, ease: "easeInOut" }}
-        className="fixed top-0 left-0 right-0 z-50 border-b border-white/5"
-        style={{
-          background: scrolled ? "rgba(12, 15, 20, 0.85)" : "rgba(12, 15, 20, 1)",
-          backdropFilter: scrolled ? "blur(24px) saturate(150%)" : "none",
-        }}
+        className="fixed top-0 left-0 right-0 z-50"
       >
+        {/* Top Announcement Bar - inside fixed header so it stays visible */}
+        <div className="bg-gradient-to-r from-[#B8860B]/10 via-[#B8860B]/5 to-[#B8860B]/10 border-b border-[#B8860B]/10">
+          <div className="sw-container">
+            <div className="flex items-center justify-center h-9 md:h-10 px-4">
+              <p className="text-[11px] md:text-xs text-white/70 font-medium tracking-wide">
+                <AnnouncementText />
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="border-b border-white/5"
+          style={{
+            background: scrolled ? "rgba(12, 15, 20, 0.85)" : "rgba(12, 15, 20, 1)",
+            backdropFilter: scrolled ? "blur(24px) saturate(150%)" : "none",
+          }}
+        >
         <div className="sw-container">
           <div className="flex items-center justify-between h-[80px]">
             {/* Mobile Menu Toggle */}
@@ -262,6 +265,7 @@ export function PremiumNavbar() {
               </Link>
             </div>
           </div>
+        </div>
         </div>
       </motion.header>
 

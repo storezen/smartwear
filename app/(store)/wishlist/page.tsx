@@ -71,7 +71,7 @@ export default function PremiumWishlistPage() {
       <div className="fixed inset-0 bg-[#0C0F14] opacity-30 pointer-events-none" />
 
       {/* Header */}
-      <div className="relative overflow-hidden text-white pt-14 pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-white  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{

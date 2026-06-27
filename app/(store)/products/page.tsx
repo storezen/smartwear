@@ -167,7 +167,7 @@ function ProductsContent() {
     <div className="min-h-screen bg-[#0C0F14] text-white">
 
       {/* Hero */}
-      <div className="relative overflow-hidden text-white pt-14 pb-8 md:pt-32 md:pb-24">
+      <div className="relative overflow-hidden text-white  pb-8 md:pt-32 md:pb-24">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{

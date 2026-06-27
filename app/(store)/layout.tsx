@@ -12,6 +12,7 @@ export default function StoreLayout({
     <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
       <HeartbeatProvider>
         <PremiumNavbar />
+        <div className="h-[116px] md:h-[120px]" /> {/* spacer for fixed announcement bar + navbar */}
         <main className="flex-1 w-full">{children}</main>
         <StoreFooter />
         <WhatsAppButton />
