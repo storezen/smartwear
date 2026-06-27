@@ -35,9 +35,8 @@ const fadeUp: any = {
 }
 
 function parseDescription(html: string) {
-  if (!html) return { textOnlyHtml: '', images: [] };
+  if (!html) return { html: '' };
   
-  // Strip dangerous tags and attributes (XSS sanitize)
   const sanitized = html
     .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
@@ -48,21 +47,7 @@ function parseDescription(html: string) {
     .replace(/javascript\s*:/gi, '')
     .replace(/data\s*:\s*\S+/gi, '')
   
-  const images: string[] = [];
-  const imgRegex = /<img[^>]+src="([^">]+)"[^>]*>/gi;
-  
-  let match;
-  while ((match = imgRegex.exec(sanitized)) !== null) {
-    images.push(match[1]);
-  }
-  
-  // Remove images from HTML
-  let textOnlyHtml = sanitized.replace(/<img[^>]*>/gi, '');
-  
-  // Clean up empty paragraph tags that wrapped the images
-  textOnlyHtml = textOnlyHtml.replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '');
-  
-  return { textOnlyHtml, images };
+  return { html: sanitized };
 }
 
 const scaleIn: any = {
@@ -200,7 +185,7 @@ function ProductContent({ product }: { product: any }) {
   const [lumeMode, setLumeMode] = useState(false)
   const [selectedColor, setSelectedColor] = useState<string | null>(product?.colors?.[0] || null)
   
-  const { textOnlyHtml, images: descriptionImages } = useMemo(() => parseDescription(product?.description || ''), [product?.description])
+  const { html: descriptionHtml } = useMemo(() => parseDescription(product?.description || ''), [product?.description])
   const heroRef = useRef<HTMLDivElement>(null)
   const { addToCart } = useCart()
 
@@ -699,41 +684,39 @@ function ProductContent({ product }: { product: any }) {
             <AnimatePresence mode="wait">
               {activeTab === 'description' && (
                 <motion.div key="description" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
-                    <div className={cn("order-2 lg:order-1", descriptionImages.length > 0 ? "lg:col-span-7 xl:col-span-8" : "lg:col-span-12")}>
-                      {/* Key Highlights Strip */}
-                      {specs.slice(0, 3).length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {specs.slice(0, 3).map(([k, v]) => (
-                            <span key={k} className="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-white/70 text-xs font-medium">
-                              <span className="text-white/40 capitalize">{k.replace('_', ' ')}: </span>
-                              {String(v)}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      <div 
-                        className="text-white/75 leading-relaxed text-sm md:text-base prose prose-invert max-w-none
-                        [&_span]:!text-white/75 [&_p]:!text-white/75 [&_div]:!text-white/75 [&_li]:!text-white/75
-                        [&_h1]:!text-white [&_h2]:!text-white [&_h3]:!text-white [&_h4]:!text-white [&_strong]:!text-white
-                        prose-a:!text-[#B8860B] hover:prose-a:!text-[#D4A017]
-                        prose-ul:list-disc prose-ol:list-decimal prose-li:my-1
-                        [&_iframe]:!w-full [&_iframe]:!max-w-full [&_iframe]:aspect-video [&_iframe]:!h-auto [&_iframe]:rounded-xl [&_iframe]:my-6
-                        [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:inline-block [&_img]:align-middle"
-                        dangerouslySetInnerHTML={{ __html: textOnlyHtml }}
-                      />
-                    </div>
-                    {descriptionImages.length > 0 && (
-                      <div className="lg:col-span-5 xl:col-span-4 order-1 lg:order-2">
-                        <div className="columns-2 gap-4 space-y-4">
-                          {descriptionImages.map((src, i) => (
-                            <div key={i} className="break-inside-avoid relative rounded-[20px] overflow-hidden shadow-xl border border-white/5 hover:border-[#B8860B]/30 hover:shadow-[0_8px_32px_rgba(184,134,11,0.15)] transition-all duration-500 group">
-                              <img src={src} alt={`Product Detail ${i + 1}`} className="w-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                            </div>
-                          ))}
-                        </div>
+                  <div className="max-w-none">
+                    {specs.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-8">
+                        {specs.slice(0, 4).map(([k, v]) => (
+                          <span key={k} className="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-white/70 text-xs font-medium">
+                            <span className="text-white/40 capitalize">{k.replace(/_/g, ' ')}: </span>
+                            {String(v)}
+                          </span>
+                        ))}
                       </div>
                     )}
+                    <div 
+                      className="description-content text-white/75 leading-relaxed text-sm md:text-base
+                      [&_h1]:text-xl [&_h1]:font-bold [&_h1]:text-white [&_h1]:mt-8 [&_h1]:mb-4
+                      [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-white [&_h2]:mt-8 [&_h2]:mb-4
+                      [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-white [&_h3]:mt-6 [&_h3]:mb-3
+                      [&_h4]:text-sm [&_h4]:font-semibold [&_h4]:text-white [&_h4]:mt-4 [&_h4]:mb-2
+                      [&_p]:mb-4 [&_p]:leading-relaxed
+                      [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4 [&_ul]:space-y-1.5
+                      [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-4 [&_ol]:space-y-1.5
+                      [&_li]:text-white/75
+                      [&_strong]:text-white [&_strong]:font-semibold
+                      [&_a]:text-[#B8860B] [&_a]:hover:text-[#D4A017] [&_a]:underline
+                      [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-4 [&_img]:shadow-lg [&_img]:border [&_img]:border-white/5
+                      [&_table]:w-full [&_table]:border-collapse [&_table]:my-6 [&_table]:rounded-xl [&_table]:overflow-hidden [&_table]:shadow-sm
+                      [&_table_td]:border [&_table_td]:border-white/10 [&_table_td]:px-4 [&_table_td]:py-3 [&_table_td]:text-sm [&_table_td]:text-white/75
+                      [&_table_th]:border [&_table_th]:border-white/10 [&_table_th]:px-4 [&_table_th]:py-3 [&_table_th]:text-sm [&_table_th]:font-semibold [&_table_th]:text-white [&_table_th]:bg-white/[0.03]
+                      [&_tr]:border-none
+                      [&_table_td:first-child]:font-medium [&_table_td:first-child]:text-white/90
+                      [&_div.product-description]:space-y-2
+                      [&_span]:!text-white/75"
+                      dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+                    />
                   </div>
                 </motion.div>
               )}
