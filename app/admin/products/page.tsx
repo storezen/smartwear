@@ -193,20 +193,17 @@ export default function AdminProductsPage() {
     if (!confirm(`Update ${selectedProducts.length} products to ${status}?`)) return
     
     try {
-      let successCount = 0
-      let failCount = 0
-      for (const id of selectedProducts) {
-        const res = await fetch('/api/products', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id, status, is_active: status === 'Active' })
-        })
-        if (res.ok) {
-          successCount++
-        } else {
-          failCount++
-        }
-      }
+      const results = await Promise.all(
+        selectedProducts.map(id =>
+          fetch('/api/products', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status, is_active: status === 'Active' })
+          }).then(r => r.ok)
+        )
+      )
+      const successCount = results.filter(Boolean).length
+      const failCount = results.length - successCount
       if (failCount === 0) {
         toast.success(`Updated ${successCount} products to ${status}`)
       } else {
@@ -222,9 +219,11 @@ export default function AdminProductsPage() {
   const handleBulkDelete = async () => {
     if (!confirm(`Are you sure you want to delete ${selectedProducts.length} products?`)) return
     try {
-      for (const id of selectedProducts) {
-        await fetch(`/api/products?id=${id}`, { method: 'DELETE' })
-      }
+      await Promise.all(
+        selectedProducts.map(id =>
+          fetch(`/api/products?id=${id}`, { method: 'DELETE' })
+        )
+      )
       toast.success(`Deleted ${selectedProducts.length} products`)
       setSelectedProducts([])
       load()
