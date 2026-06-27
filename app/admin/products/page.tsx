@@ -74,7 +74,7 @@ export default function AdminProductsPage() {
         ...formData,
         price: parseInt(formData.price),
         cost_price: formData.cost_price ? parseInt(formData.cost_price) : undefined,
-        compare_price: formData.compare_price ? parseInt(formData.compare_price) : undefined,
+        compare_price: formData.compare_price ? parseInt(formData.compare_price) : null,
         stock: parseInt(formData.stock) || 0,
         slug: formData.name.toLowerCase().replace(/ /g, '-'),
         colors: formData.colors ? formData.colors.split(',').map(c => c.trim()).filter(Boolean) : [],
