@@ -39,7 +39,8 @@ export default function AdminProductsPage() {
     stock: '',
     status: 'Draft',
     images: ['https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80'],
-    colors: ''
+    colors: '',
+    description: ''
   })
   const [importUrl, setImportUrl] = useState("")
   const [importingUrl, setImportingUrl] = useState(false)
@@ -168,7 +169,8 @@ export default function AdminProductsPage() {
       stock: p.stock?.toString() || '0',
       status: p.status || 'Draft',
       images: p.images || [],
-      colors: p.colors ? p.colors.join(', ') : ''
+      colors: p.colors ? p.colors.join(', ') : '',
+      description: p.description || ''
     })
     setEditingId(p.id)
     setShowAddModal(true)
@@ -179,7 +181,7 @@ export default function AdminProductsPage() {
       name: '', slug: '',
       category_slug: 'Smartwatches', price: '', cost_price: '', compare_price: '', stock: '10', status: 'Draft',
       images: ['https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80'],
-      colors: ''
+      colors: '', description: ''
     })
     setEditingId(null); setImportUrl("")
     setShowAddModal(true)
@@ -551,6 +553,17 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Pricing & Stock */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-white flex items-center gap-2"><Tag className="w-4 h-4 text-[#B8860B]" /> Description</h3>
+              <textarea
+                value={formData.description}
+                onChange={e => setFormData({...formData, description: e.target.value})}
+                placeholder="Product description (HTML supported — tables, lists, images)"
+                rows={6}
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner font-mono text-sm resize-y min-h-[120px]"
+              />
+            </div>
+
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-white flex items-center gap-2"><DollarSign className="w-4 h-4 text-[#B8860B]" /> Pricing & Inventory</h3>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 bg-black/20 p-6 rounded-2xl border border-white/5">
