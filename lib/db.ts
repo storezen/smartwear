@@ -237,6 +237,9 @@ export async function addProduct(product: any) {
 }
 
 export async function updateProduct(id: string, updates: any) {
+  if (updates.status !== undefined && updates.is_active === undefined) {
+    updates.is_active = updates.status === 'Active' || updates.status === 'Out of Stock'
+  }
   if (env.NODE_ENV === 'production' && supabase) {
     const { data, error } = await supabase.from('products').update(updates).eq('id', id).select().single()
     if (!error && data) return data

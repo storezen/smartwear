@@ -75,11 +75,12 @@ export function normalizeProductRecord<T extends ProductRecord>(product: T): T {
   return { ...product, category_slug: slug }
 }
 
-/** Ensure `status` and `is_active` are always consistent. */
+/** Ensure `status` and `is_active` are always consistent.
+ *  `is_active` is ALWAYS derived from `status` so that admin edits to
+ *  `status` immediately reflect in storefront visibility.
+ */
 function normalizeProductStatus(p: any): any {
-  if (p.is_active === undefined) {
-    p.is_active = p.status === 'Active'
-  }
+  p.is_active = p.status === 'Active' || p.status === 'Out of Stock'
   if (p.status === undefined) {
     p.status = p.is_active ? 'Active' : 'Draft'
   }
