@@ -1,23 +1,32 @@
 import type { Review } from "@/types"
 
-const FIRST_NAMES = [
-  "Ahmed","Sara","Usman","Fatima","Bilal","Ayesha","Tariq","Hira","Rizwan","Maria",
-  "Kamran","Zainab","Fahad","Nadia","Imran","Rabia","Hassan","Sadia","Naveed","Sana",
-  "Shahid","Iqra","Asif","Saima","Waqas","Tahira","Farhan","Bushra","Adeel","Nida",
-  "Haroon","Kanwal","Zain","Rukhsar","Saad","Samina","Yasir","Farzana","Noman","Shazia",
-  "Taimoor","Sobia","Junaid","Khadija","Salman","Uzma","Omar","Noreen","Daniyal","Mehwish",
-  "Adnan","Shabnam","Zubair","Neelam","Faisal","Arifa","Mohsin","Shama","Waleed","Nasreen",
-  "Javed","Shazia","Naeem","Rubina","Ghulam","Parveen","Sajjad","Nasreen","Khalid","Shamim",
-  "Pervaiz","Tasneem","Rashid","Shahnaz","Akram","Zubaida","Iftikhar","Farkhanda","Irshad",
-  "Mobeen","Nagina","Arslan","Shagufta","Tanveer","Farhat","Aamir","Bilkis","Raja","Ashraf",
-  "Zahid","Kausar","Sohail","Amtul","Hameed","Mahjabeen","Nadeem","Shaista","Shafqat","Sultan",
-  "Fehmida","Maqsood","Razia","Anwar","Rauf","Khalil","Zareen","Fazal","Mumtaz","Ishtiaq",
-  "Shabbir","Abida","Pakeeza","Javaid","Zahida","Mushtaq","Saeeda","Manzoor","Shahida","Tahir",
-  "Saleem","Khalida","Jahangir","Shahina","Aslam","Rehan","Fouzia","Irfan","Musarrat","Abrar",
-  "Shoukat","Riaz","Zakia","Sikandar","Naheed","Mahmood","Safia","Zafar","Murtaza","Shaheen",
-  "Shoaib","Aqeel","Shazma","Shafi","Shahana","Tauseef","Nazia","Fawad","Ruqayya","Anila",
-  "Shahbaz","Shumaila","Sarfaraz","Ijaz","Mariam","Jahanzeb","Kashif","Yasmeen","Imtiaz",
-  "Sajid","Nabeel","Shahana","Ahmad","Haleema","Adil","Mehek","Naeemuddin",
+const MALE_NAMES = [
+  "Ahmed","Usman","Bilal","Tariq","Rizwan","Kamran","Fahad","Imran","Hassan","Naveed",
+  "Shahid","Asif","Waqas","Farhan","Adeel","Haroon","Zain","Saad","Yasir","Noman",
+  "Taimoor","Junaid","Salman","Omar","Daniyal","Adnan","Zubair","Faisal","Mohsin","Waleed",
+  "Javed","Naeem","Ghulam","Sajjad","Khalid","Pervaiz","Rashid","Akram","Iftikhar","Irshad",
+  "Mobeen","Arslan","Tanveer","Aamir","Raja","Zahid","Sohail","Hameed","Nadeem","Shafqat",
+  "Maqsood","Anwar","Rauf","Khalil","Fazal","Mumtaz","Ishtiaq","Shabbir","Javaid","Mushtaq",
+  "Manzoor","Tahir","Saleem","Jahangir","Aslam","Rehan","Irfan","Abrar","Shoukat","Riaz",
+  "Sikandar","Mahmood","Zafar","Murtaza","Shoaib","Aqeel","Shafi","Tauseef","Fawad","Shahbaz",
+  "Sarfaraz","Jahanzeb","Kashif","Imtiaz","Sajid","Nabeel","Ahmad","Adil","Naeemuddin",
+  "Shahzad","Waqar","Babar","Fawwad","Hasan","Huzaifa","Ibrahim","Junaid","Kamil",
+  "Mansoor","Nasir","Owais","Qadir","Rizwan","Saadat","Talha","Umer","Wajid","Zia",
+  "Azhar","Danish","Ehsan","Furqan","Gohar","Hamza","Ijaz","Jamshed","Kashif","Luqman",
+  "Murad","Nouman","Parvez","Qaiser","Rafaqat","Shahid","Tauseef","Ubaid","Wasif","Yasir",
+]
+
+const FEMALE_NAMES = [
+  "Sara","Fatima","Ayesha","Hira","Maria","Zainab","Nadia","Rabia","Sadia","Sana",
+  "Iqra","Saima","Tahira","Bushra","Nida","Kanwal","Rukhsar","Samina","Farzana","Shazia",
+  "Sobia","Khadija","Uzma","Noreen","Mehwish","Shabnam","Neelam","Arifa","Shama","Nasreen",
+  "Rubina","Parveen","Shamim","Tasneem","Shahnaz","Zubaida","Farkhanda","Nagina","Shagufta",
+  "Farhat","Bilkis","Kausar","Amtul","Mahjabeen","Shaista","Fehmida","Razia","Zareen",
+  "Abida","Pakeeza","Zahida","Saeeda","Shahida","Khalida","Shahina","Fouzia","Musarrat",
+  "Zakia","Naheed","Safia","Shaheen","Shazma","Shahana","Nazia","Ruqayya","Anila",
+  "Shumaila","Mariam","Yasmeen","Haleema","Mehek","Asma","Bushra","Fariha","Ghazala",
+  "Hina","Javeria","Komal","Lubna","Mahnoor","Nargis","Parveen","Qurat","Riffat","Shabana",
+  "Tahira","Uzma","Zainab","Arooj","Benish","Chandra","Deeba","Erum","Fiza","Gulshan",
 ]
 
 const LAST_NAMES = [
@@ -36,6 +45,8 @@ const LAST_NAMES = [
   "Burki","Sherazi","Tirmazi","Faridi","Siddiqi","Qadri","Ansari","Sabri","Rizvi",
   "Lodhi","Mughal","Kiyani","Kasi","Jiskani","Korai","Chandio","Bhutto","Bugti",
   "Junejo","Bijarani","Rashdi","Lashari","Brohi","Jamali","Marri",
+  "Kakar","Magsi","Lehri","Mengal","Zehri","Marri","Bugti","Rind","Gabol","Channa",
+  "Junijo","Khoso","Samo","Malkani","Bhatti","Hingoro","Mughairi","Sial","Lakho","Sethar",
 ]
 
 function seededRandom(seed: number): () => number {
@@ -50,12 +61,21 @@ function hashProductId(id: string): number {
 
 function pick<T>(arr: T[], rand: () => number): T { return arr[Math.floor(rand() * arr.length)] }
 
-function generateName(seed: number): string {
-  const r = seededRandom(seed)
-  const fn = FIRST_NAMES[Math.floor(r() * FIRST_NAMES.length)]
-  const ln = LAST_NAMES[Math.floor(r() * LAST_NAMES.length)]
-  if (r() > 0.75) return `${fn} ${LAST_NAMES[Math.floor(r() * 30)]} ${ln}`
-  return `${fn} ${ln}`
+let globalNameCounter = 0
+
+function generateName(seed: number, index: number): { name: string; isFemale: boolean } {
+  // ~30% female across all reviews using a deterministic pattern
+  const isFemale = ((seed + index * 13) % 10) < 3
+  const namePool = isFemale ? FEMALE_NAMES : MALE_NAMES
+  const r = seededRandom(seed + index * 7 + globalNameCounter * 3)
+  const fn = namePool[Math.floor(r() * namePool.length)]
+  const ln1 = LAST_NAMES[Math.floor(r() * LAST_NAMES.length)]
+  const ln2 = LAST_NAMES[Math.floor(r() * LAST_NAMES.length)]
+  globalNameCounter++
+  // ~15% chance of double-barrel surname for variety
+  if (r() > 0.85) return { name: `${fn} ${ln1} ${ln2}`, isFemale }
+  if (r() > 0.70) return { name: `${fn} ${ln1}-${ln2}`, isFemale }
+  return { name: `${fn} ${ln1}`, isFemale }
 }
 
 function generateDates(count: number, seed: number): string[] {
@@ -259,12 +279,13 @@ export function generateProductReviews(
       ? pick(candidates, rand)
       : { rating: chosenRating, text: "Product theek hai. Overall kaam chl jata hai." }
 
-    let userName = generateName(baseSeed + i * 7 + 3)
+    let userName: string
     let attempts = 0
-    while (usedNames.has(userName) && attempts < 50) {
-      userName = generateName(baseSeed + i * 7 + 3 + attempts * 11)
+    do {
+      const result = generateName(baseSeed + productId.length * 31, i + attempts * 50)
+      userName = result.name
       attempts++
-    }
+    } while (usedNames.has(userName) && attempts < 100)
     usedNames.add(userName)
 
     generated.push({
