@@ -205,7 +205,6 @@ export async function POST(req: Request) {
     // 4. Server-Side Cart Validation + COGS Calculation
     let calculatedSubtotal = 0;
     let cogs = 0;
-    let costPriceIncomplete = false;
     for (const item of payload.items) {
       const realPrice = await getRealProductPrice(item.id)
       if (realPrice === null) {
@@ -220,8 +219,6 @@ export async function POST(req: Request) {
       const costPrice = await getProductCostPrice(item.id)
       if (costPrice !== null) {
         cogs += costPrice * item.quantity
-      } else {
-        costPriceIncomplete = true
       }
     }
 
@@ -244,7 +241,7 @@ export async function POST(req: Request) {
     }
 
     const { idempotency_key, ...payloadWithoutIdempotency } = payload;
-    const finalPayload = { ...payloadWithoutIdempotency, discount: discountAmount, cogs, cost_price_incomplete: costPriceIncomplete }
+    const finalPayload = { ...payloadWithoutIdempotency, discount: discountAmount, cogs }
     const initialHistory = [{ status: 'Pending', timestamp: new Date().toISOString(), note: 'Order placed' }]
 
     if (isSupabaseConfigured() && supabase) {
