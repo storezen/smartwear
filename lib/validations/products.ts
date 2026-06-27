@@ -23,6 +23,7 @@ export const ProductCreationSchema = z.object({
 
 export const ProductUpdateSchema = ProductCreationSchema.partial().extend({
   id: z.string().min(1, "Product ID is required"),
+  is_active: z.boolean().optional(),
 });
 
 export type ProductCreation = z.infer<typeof ProductCreationSchema>;

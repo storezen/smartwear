@@ -196,12 +196,10 @@ export default function AdminProductsPage() {
       let successCount = 0
       let failCount = 0
       for (const id of selectedProducts) {
-        const product = products.find(p => p.id === id);
-        if(!product) continue;
         const res = await fetch('/api/products', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: product.id, status })
+          body: JSON.stringify({ id, status, is_active: status === 'Active' })
         })
         if (res.ok) {
           successCount++
@@ -345,7 +343,7 @@ export default function AdminProductsPage() {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-white/60 text-xs mr-2">Change status to:</span>
-            {['Active', 'Draft', 'Archived'].map(status => (
+            {['Active', 'Draft', 'Out of Stock'].map(status => (
               <button 
                 key={status}
                 onClick={() => handleBulkStatusUpdate(status)}
