@@ -65,8 +65,8 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
           const comparePriceStr = row['Variant Compare At Price'] || ''
           const comparePrice = comparePriceStr ? parseFloat(comparePriceStr.replace(/[^0-9.]/g, '')) : null
 
-          const stockStr = row['Variant Inventory Qty'] || '0'
-          const stock = parseInt(stockStr, 10) || 0
+          const stockStr = row['Variant Inventory Qty']
+          const stock = stockStr ? parseInt(stockStr, 10) || 0 : 100
 
           const imageUrl = row['Image Src'] || row['Variant Image'] || ''
           

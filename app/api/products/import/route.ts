@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       images: Array.isArray(p.images) ? p.images : (typeof p.images === 'string' ? [p.images] : []),
       category_slug: p.category_slug || 'uncategorized',
       brand: p.brand || 'Smartwear',
-      stock: Number(p.stock) || 0,
+      stock: p.stock != null ? Number(p.stock) : 100,
       rating: Number(p.rating) || 4.8,
       reviews_count: Number(p.reviews_count) || 0,
       specifications: typeof p.specifications === 'object' && p.specifications !== null ? p.specifications : {},
