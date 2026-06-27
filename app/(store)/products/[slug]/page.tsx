@@ -46,8 +46,43 @@ function parseDescription(html: string) {
     .replace(/on\w+\s*=\s*\S+/gi, '')
     .replace(/javascript\s*:/gi, '')
     .replace(/data\s*:\s*\S+/gi, '')
-  
-  return { html: sanitized };
+
+  const imgBlockRegex = /(<p[^>]*>\s*<img[^>]*>\s*<\/p>|<(?:div|span)[^>]*>\s*<img[^>]*>\s*<\/(?:div|span)>|<img[^>]*>)/gi
+  const imgPositions: { index: number; end: number; block: string }[] = []
+  let m: RegExpExecArray | null
+  while ((m = imgBlockRegex.exec(sanitized)) !== null) {
+    imgPositions.push({ index: m.index, end: m.index + m[0].length, block: m[0] })
+  }
+
+  if (imgPositions.length < 2) return { html: sanitized }
+
+  const groups: { blocks: string[]; start: number; end: number }[] = []
+  let current: { blocks: string[]; start: number; end: number } | null = null
+  for (const pos of imgPositions) {
+    if (current && pos.index - current.end < 100) {
+      current.end = pos.end
+      current.blocks.push(pos.block)
+    } else {
+      if (current) groups.push(current)
+      current = { blocks: [pos.block], start: pos.index, end: pos.end }
+    }
+  }
+  if (current) groups.push(current)
+
+  let result = sanitized
+  let offset = 0
+  for (const g of groups) {
+    if (g.blocks.length < 2) continue
+    const orig = g.blocks.join('')
+    const wrapped = `<div class="img-grid">${orig}</div>`
+    const idx = result.indexOf(orig, g.start + offset)
+    if (idx !== -1) {
+      result = result.slice(0, idx) + wrapped + result.slice(idx + orig.length)
+      offset += wrapped.length - orig.length
+    }
+  }
+
+  return { html: result };
 }
 
 const scaleIn: any = {
@@ -684,6 +719,9 @@ function ProductContent({ product }: { product: any }) {
                       [&_ul_li:before]:content-['—'] [&_ul_li:before]:absolute [&_ul_li:before]:left-0 [&_ul_li:before]:text-white/30
                       [&_strong]:text-white/90 [&_strong]:font-medium
                       [&_a]:text-[#B8860B] [&_a]:hover:text-[#D4A017] [&_a]:no-underline [&_a]:border-b [&_a]:border-white/10 [&_a]:hover:border-[#D4A017]/50 [&_a]:transition-colors
+                      [&_.img-grid]:grid [&_.img-grid]:grid-cols-2 [&_.img-grid]:md:grid-cols-3 [&_.img-grid]:gap-2 [&_.img-grid]:md:gap-3 [&_.img-grid]:my-6
+                      [&_.img-grid_img]:!my-0 [&_.img-grid_img]:!rounded-lg [&_.img-grid_img]:!shadow-sm [&_.img-grid_img]:!border [&_.img-grid_img]:!border-white/[0.06] [&_.img-grid_img]:w-full [&_.img-grid_img]:object-cover [&_.img-grid_img]:aspect-[4/3]
+                      [&_.img-grid_img:only-child]:!col-span-2 [&_.img-grid_img:only-child]:md:!col-span-3 [&_.img-grid_img:only-child]:!aspect-video
                       [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-6 [&_img]:shadow-sm [&_img]:border [&_img]:border-white/[0.06] [&_img]:opacity-95 [&_img]:hover:opacity-100 [&_img]:transition-opacity
                       [&_table]:w-full [&_table]:border-collapse [&_table]:my-8 [&_table]:text-sm
                       [&_table_td]:border-b [&_table_td]:border-white/[0.06] [&_table_td]:px-4 [&_table_td]:py-3.5 [&_table_td]:text-white/65 [&_table_td]:align-top

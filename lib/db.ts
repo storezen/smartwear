@@ -211,22 +211,18 @@ export async function getProducts() {
     if (error) {
       console.error('Supabase getProducts error:', error)
     } else if (data) {
-      const db = await getDb()
-      const local = normalizeProductList(db.products || [])
-      // If Supabase has fewer products than file DB, seed from file DB
-      if (data.length < local.length && local.length > 10) {
-        console.log(`[db] Seeding Supabase: ${local.length} products (had ${data.length})...`)
-        const toInsert = local.map((p: any) => stripNonProductFields({ ...p, created_at: p.created_at || new Date().toISOString() }))
-        const BATCH_SIZE = 100
-        for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
-          const batch = toInsert.slice(i, i + BATCH_SIZE)
-          try {
-            await supabase.from('products').upsert(batch, { onConflict: 'id', ignoreDuplicates: false })
-          } catch (e: any) {
-            console.error(`[db] Seed batch ${i / BATCH_SIZE} failed:`, e?.message)
+      if (data.length === 0) {
+        const db = await getDb()
+        const local = normalizeProductList(db.products || [])
+        if (local.length > 10) {
+          console.log(`[db] Seeding empty Supabase: ${local.length} products...`)
+          const toInsert = local.map((p: any) => stripNonProductFields({ ...p, created_at: p.created_at || new Date().toISOString() }))
+          const BATCH_SIZE = 100
+          for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
+            const batch = toInsert.slice(i, i + BATCH_SIZE)
+            try { await supabase.from('products').upsert(batch, { onConflict: 'id', ignoreDuplicates: false }) } catch {}
           }
         }
-        return local
       }
       if (data.length > 0) return normalizeProductList(data)
     }
@@ -625,8 +621,7 @@ export async function getSettings() {
     try {
       const db = await getDb()
       const fromFile = db.settings || {}
-      const result = { ...SETTINGS_DEFAULTS, ...fromSupabase, ...fromFile }
-      console.log('[settings] getSettings - supabase keys:', Object.keys(fromSupabase).length, 'file keys:', Object.keys(fromFile).length)
+      const result = { ...SETTINGS_DEFAULTS, ...fromFile, ...fromSupabase }
       return result
     } catch {}
 

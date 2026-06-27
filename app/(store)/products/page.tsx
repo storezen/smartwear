@@ -6,7 +6,7 @@ import { SlidersHorizontal, X, ChevronRight, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Slider } from "@/components/ui/slider"
-import { ProductCardGrid } from "@/components/store/premium-product-card"
+import { ProductCard, ProductCardGrid } from "@/components/store/premium-product-card"
 import { categories, formatPrice } from "@/lib/mock-data"
 import { normalizeCategorySlug, normalizeProductList } from "@/lib/normalize-product"
 
@@ -103,7 +103,10 @@ function ProductsContent() {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 500000])
   const [selected, setSelected] = useState<string[]>([])
   const [page, setPage] = useState(1)
+  const [mobilePage, setMobilePage] = useState(1)
   const ITEMS_PER_PAGE = 12
+  const MOBILE_INITIAL = 8
+  const MOBILE_INCREMENT = 4
 
   const catSlug = params.get("category")
   const saleOnly = params.get("sale")
@@ -326,9 +329,23 @@ function ProductsContent() {
               <Skeleton count={8} />
             ) : products.length > 0 ? (
               <>
-                {/* Mobile: all products in 2-col scroll (no pagination) */}
+                {/* Mobile: 2-col grid with load more */}
                 <div className="md:hidden">
-                  <ProductCardGrid products={products as any} />
+                  <div className="grid grid-cols-2 gap-3">
+                    {products.slice(0, mobilePage * MOBILE_INCREMENT + (MOBILE_INITIAL - MOBILE_INCREMENT)).map((product: any) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                  {products.length > mobilePage * MOBILE_INCREMENT + (MOBILE_INITIAL - MOBILE_INCREMENT) && (
+                    <div className="flex justify-center mt-6">
+                      <button
+                        onClick={() => setMobilePage(p => p + 1)}
+                        className="px-10 py-3.5 rounded-xl border border-white/10 text-white/60 hover:text-white hover:border-white/25 text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-white/[0.03]"
+                      >
+                        Load More ({products.length - (mobilePage * MOBILE_INCREMENT + (MOBILE_INITIAL - MOBILE_INCREMENT))})
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Desktop: paginated grid */}
