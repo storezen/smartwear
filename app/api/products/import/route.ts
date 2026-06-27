@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { isSupabaseConfigured, supabase } from '@/lib/supabase'
 import { bulkImportProducts } from '@/lib/db'
 
 export async function POST(req: Request) {
@@ -10,7 +9,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No products provided' }, { status: 400 })
     }
 
-    // Ensure all products have the required structure and ONLY valid fields
     const formattedProducts = products.map((p: any) => ({
       id: p.id || crypto.randomUUID(),
       name: p.name || p.slug,
@@ -31,40 +29,11 @@ export async function POST(req: Request) {
       created_at: new Date().toISOString()
     }))
 
-    if (isSupabaseConfigured()) {
-      const { data: existingData } = await supabase!.from('products').select('id, slug')
-      const existingSlugsMap = new Map(existingData?.map(row => [row.slug, row.id]) || [])
-
-      const productsToInsert = overwrite 
-        ? formattedProducts 
-        : formattedProducts.filter(p => !existingSlugsMap.has(p.slug))
-
-      if (productsToInsert.length === 0) {
-        return NextResponse.json({ success: true, message: `0 products imported. Skipped ${formattedProducts.length} existing products.` })
-      }
-
-      // Ensure existing products keep their original ID during upsert
-      const finalProductsToInsert = productsToInsert.map(p => ({
-        ...p,
-        id: existingSlugsMap.get(p.slug) || p.id
-      }))
-
-      const { error } = await supabase!
-        .from('products')
-        .upsert(finalProductsToInsert, { onConflict: 'slug' })
-      
-      if (error) throw error
-      
-      return NextResponse.json({ success: true, message: `Imported ${productsToInsert.length} products to Supabase. ${!overwrite ? `Skipped ${formattedProducts.length - productsToInsert.length} existing.` : 'Overwrote existing.'}` })
-    } else {
-      // Fallback to local JSON database
-      const result = await bulkImportProducts(formattedProducts, overwrite)
-      return NextResponse.json({ 
-        success: true, 
-        message: `Successfully processed ${formattedProducts.length} products. Added: ${result.added}, Updated: ${result.updated}, Skipped: ${result.skipped || 0}.` 
-      })
-    }
-
+    const result = await bulkImportProducts(formattedProducts, overwrite)
+    return NextResponse.json({
+      success: true,
+      message: `Processed ${formattedProducts.length} products. Added: ${result.added}, Updated: ${result.updated}, Skipped: ${result.skipped || 0}.`
+    })
   } catch (error: any) {
     console.error('CSV Import Error:', error)
     return NextResponse.json(
