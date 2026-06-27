@@ -215,11 +215,7 @@ export async function getProducts() {
   }
 
   const db = await getDb()
-  const local = normalizeProductList(db.products || [])
-  if (local.length > 0) return local
-
-  // Last-resort fallback: seed products from INITIAL_DATA
-  return normalizeProductList(INITIAL_DATA.products || [])
+  return normalizeProductList(db.products || [])
 }
 
 export async function getProduct(slug: string) {
@@ -313,6 +309,7 @@ export async function deleteProduct(id: string) {
       const db = await getDb()
       db.products = db.products.filter((p: any) => p.id !== id)
       globalAny.memoryDb = db
+      await saveDb(db)
       return
     }
     throw new Error(error?.message || 'Supabase delete failed')
