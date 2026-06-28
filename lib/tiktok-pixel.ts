@@ -230,6 +230,8 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
     } else {
       window.ttq.push(['track', event, browserPayload])
     }
+  } else if (TIKTOK_DEBUG_MODE) {
+    console.warn(`%c[TikTok Pixel] ⚠️ window.ttq not found — pixel not initialized?`, 'color:#ff6b35; font-weight:bold')
   }
 
   if (TIKTOK_DEBUG_MODE) {
