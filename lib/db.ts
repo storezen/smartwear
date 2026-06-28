@@ -9,7 +9,8 @@ import { supabase } from './supabase'
 const SUPABASE_PRODUCT_COLUMNS = new Set([
   'id', 'created_at', 'name', 'slug', 'description', 'price', 'compare_price',
   'images', 'category_slug', 'brand', 'stock', 'rating', 'reviews_count',
-  'specifications', 'is_featured', 'is_active', 'upsell_accessories', 'cost_price'
+  'specifications', 'is_featured', 'is_active', 'upsell_accessories', 'cost_price',
+  'colors'
 ])
 
 function stripNonProductFields(row: any) {
@@ -225,7 +226,11 @@ export async function getProducts() {
         hasMore = false
       }
     }
-    if (allData.length > 0) return normalizeProductList(allData)
+    if (allData.length > 0) {
+      const db = await getDb()
+      const localMap = new Map((db.products || []).map((p: any) => [p.slug, p]))
+      return normalizeProductList(allData.map((p: any) => ({ ...localMap.get(p.slug), ...p })))
+    }
   }
 
   const db = await getDb()
@@ -238,7 +243,11 @@ export async function getProduct(slug: string) {
   if (supabase) {
     const { data, error } = await supabase.from('products').select('*').eq('slug', canonicalSlug).single()
     if (error && error.code !== 'PGRST116') console.error('Supabase getProduct error:', error)
-    if (data) return normalizeProductList([data])[0]
+    if (data) {
+      const db = await getDb()
+      const local = (db.products || []).find((p: any) => p.slug === canonicalSlug || p.slug === slug)
+      return normalizeProductList([{ ...local, ...data }])[0]
+    }
   }
 
   const db = await getDb()
@@ -251,19 +260,23 @@ export async function getProduct(slug: string) {
   return null
 }
 
-export async function addProduct(product: any) {
+export async function addProduct(product: any, skipSupabase = false) {
   product.id = `PROD-${crypto.randomUUID()}`
   if (!product.created_at) product.created_at = new Date().toISOString()
   if (product.is_active === undefined) product.is_active = product.status === 'Active'
   
-  if (supabase) {
-    const { data, error } = await supabase.from('products').insert([stripNonProductFields(product)]).select().single()
+  if (supabase && !skipSupabase) {
+    const stripped = stripNonProductFields(product)
+    const { data, error } = await supabase.from('products').insert([stripped]).select().single()
     if (!error && data) {
       const merged = { ...data, ...product }
       const db = await getDb()
       db.products.unshift(merged)
       globalAny.memoryDb = db
       return merged
+    }
+    if (error?.message?.includes('column') || error?.code === 'PGRST204') {
+      return addProduct(product, true)
     }
     throw new Error(error?.message || 'Supabase add failed')
   }
@@ -273,12 +286,13 @@ export async function addProduct(product: any) {
   return product
 }
 
-export async function updateProduct(id: string, updates: any) {
+export async function updateProduct(id: string, updates: any, skipSupabase = false) {
   if (updates.status !== undefined && updates.is_active === undefined) {
     updates.is_active = updates.status === 'Active' || updates.status === 'Out of Stock'
   }
-  if (supabase) {
-    const { data, error } = await supabase.from('products').update(stripNonProductFields(updates)).eq('id', id).select().single()
+  if (supabase && !skipSupabase) {
+    const stripped = stripNonProductFields(updates)
+    const { data, error } = await supabase.from('products').update(stripped).eq('id', id).select().single()
     if (!error && data) {
       const merged = { ...data, ...updates }
       const db = await getDb()
@@ -288,6 +302,9 @@ export async function updateProduct(id: string, updates: any) {
         globalAny.memoryDb = db
       }
       return merged
+    }
+    if (error?.message?.includes('column') || error?.code === 'PGRST204') {
+      return updateProduct(id, updates, true)
     }
     throw new Error(error?.message || 'Supabase update failed')
   }
