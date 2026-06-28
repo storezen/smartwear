@@ -229,7 +229,7 @@ export async function getProducts() {
     if (allData.length > 0) {
       const db = await getDb()
       const localMap = new Map((db.products || []).map((p: any) => [p.slug, p]))
-      return normalizeProductList(allData.map((p: any) => ({ ...localMap.get(p.slug), ...p })))
+      return normalizeProductList(allData.map((p: any) => ({ ...(localMap.get(p.slug) || {}), ...p })))
     }
   }
 
@@ -246,7 +246,7 @@ export async function getProduct(slug: string) {
     if (data) {
       const db = await getDb()
       const local = (db.products || []).find((p: any) => p.slug === canonicalSlug || p.slug === slug)
-      return normalizeProductList([{ ...local, ...data }])[0]
+      return normalizeProductList([{ ...(local || {}), ...data }])[0]
     }
   }
 
