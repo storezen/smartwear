@@ -48,6 +48,7 @@ async function fireTikTokOfflineConversion(orderData: any) {
   const settings = await getSettings();
   const accessToken = decrypt(settings.tiktok_access_token) || process.env.TIKTOK_ACCESS_TOKEN
   const pixelId = settings.tiktok_pixel_id || process.env.TIKTOK_PIXEL_ID
+  const testEventCode = settings.tiktok_test_event_code || undefined
   if (!accessToken || !pixelId) return
 
   try {
@@ -64,6 +65,7 @@ async function fireTikTokOfflineConversion(orderData: any) {
           event: 'CompletePayment',
           event_id: `${orderData.id}_delivered`,
           event_time: Math.floor(Date.now() / 1000),
+          ...(testEventCode ? { test_event_code: testEventCode } : {}),
           context: {
             user: {
               phone_number: hashSHA256(orderData.phone),
@@ -96,6 +98,7 @@ async function fireTikTokCAPI(orderData: any, req: Request) {
   const settings = await getSettings();
   const accessToken = decrypt(settings.tiktok_access_token) || process.env.TIKTOK_ACCESS_TOKEN
   const pixelId = settings.tiktok_pixel_id || process.env.TIKTOK_PIXEL_ID
+  const testEventCode = settings.tiktok_test_event_code || undefined
   
   if (!accessToken || !pixelId) return // Skip if not configured
 
@@ -119,6 +122,7 @@ async function fireTikTokCAPI(orderData: any, req: Request) {
           event: 'CompletePayment',
           event_id,
           event_time: Math.floor(Date.now() / 1000),
+          ...(testEventCode ? { test_event_code: testEventCode } : {}),
           context: {
             ip,
             user_agent: userAgent,

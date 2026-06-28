@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     const settings = await getSettings()
     const accessToken = decrypt(settings.tiktok_access_token) || process.env.TIKTOK_ACCESS_TOKEN
     const pixelId = settings.tiktok_pixel_id || process.env.TIKTOK_PIXEL_ID
+    const testEventCode = settings.tiktok_test_event_code || undefined
 
     if (!accessToken || !pixelId) {
       return NextResponse.json({ error: 'TikTok not configured' }, { status: 400 })
@@ -31,7 +32,7 @@ export async function POST(req: Request) {
       event: 'CompletePayment',
       event_id: eventId || orderId,
       event_time: Math.floor(Date.now() / 1000),
-      ...(test_event_code ? { test_event_code } : {}),
+      ...(testEventCode ? { test_event_code: testEventCode } : {}),
       context: {
         ip,
         user_agent: userAgent,

@@ -115,7 +115,8 @@ CREATE TABLE public.settings (
   postex_api_token TEXT,
   postex_webhook_secret TEXT,
   tiktok_pixel_id TEXT,
-  tiktok_access_token TEXT
+  tiktok_access_token TEXT,
+  tiktok_test_event_code TEXT
 );
 
 -- Insert Default Settings Row

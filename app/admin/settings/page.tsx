@@ -51,6 +51,7 @@ const settingsSchema = z.object({
   postex_webhook_secret: z.string().optional().nullable(),
   tiktok_pixel_id: z.string().optional().nullable(),
   tiktok_access_token: z.string().optional().nullable(),
+  tiktok_test_event_code: z.string().optional().nullable(),
 })
 
 type SettingsForm = z.infer<typeof settingsSchema>
@@ -509,6 +510,10 @@ export default function AdminSettingsPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {renderInput('tiktok_pixel_id', 'TikTok Pixel ID', 'text', 'CQU9XYZ123...')}
                         {renderInput('tiktok_access_token', 'TikTok CAPI Access Token', 'password', 'Enter token to encrypt', true)}
+                      </div>
+                      <div className="mt-2">
+                        {renderInput('tiktok_test_event_code', 'Test Event Code (optional)', 'text', 'Leave empty in production')}
+                        <p className="text-[10px] text-white/30 mt-1 ml-1">Fill during testing to see events in TikTok Test Events panel. Leave empty for live events.</p>
                       </div>
                     </div>
                   </div>

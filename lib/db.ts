@@ -598,6 +598,7 @@ const SETTINGS_DEFAULTS = {
   postex_webhook_secret: "",
   tiktok_pixel_id: "",
   tiktok_access_token: "",
+  tiktok_test_event_code: "",
 }
 
 // Fields that exist in the Supabase `settings` table schema.
@@ -618,7 +619,7 @@ const KNOWN_SETTINGS_COLUMNS = new Set([
   'seo_title', 'seo_description', 'seo_keywords',
   'security_badges', 'trust_badges',
   'postex_api_token', 'postex_webhook_secret',
-  'tiktok_pixel_id', 'tiktok_access_token',
+  'tiktok_pixel_id', 'tiktok_access_token', 'tiktok_test_event_code',
 ])
 
 // Settings

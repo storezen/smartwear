@@ -61,7 +61,8 @@ CREATE TABLE IF NOT EXISTS public.settings (
   shipping_flat_rate TEXT DEFAULT '250',
   postex_api_token TEXT,
   tiktok_pixel_id TEXT,
-  tiktok_access_token TEXT
+  tiktok_access_token TEXT,
+  tiktok_test_event_code TEXT
 );
 
 -- Insert Default Settings Row
