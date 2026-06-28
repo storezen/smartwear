@@ -800,17 +800,34 @@ function NewsletterSignup() {
   )
 }
 
+function resolvePicks(picks: Record<string, string[]> | undefined, key: string, fallback: any[]) {
+  if (!picks?.[key]?.length) return fallback
+  return picks[key]
+    .map(id => fallback.find(p => p.id === id || p.slug === id))
+    .filter(Boolean)
+}
+
 export default function HomePage() {
   const [allProducts, setAllProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [homepagePicks, setHomepagePicks] = useState<Record<string, string[]> | undefined>(undefined)
 
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/products")
-        const data = await res.json()
+        const [prodRes, setRes] = await Promise.all([
+          fetch("/api/products"),
+          fetch("/api/public/settings"),
+        ])
+        const data = await prodRes.json()
+        const settings = await setRes.json()
         if (Array.isArray(data)) {
           setAllProducts(normalizeProductList(data))
+        }
+        if (settings.homepage_picks) {
+          try {
+            setHomepagePicks(JSON.parse(settings.homepage_picks))
+          } catch {}
         }
       } catch (e) {
         console.error("Failed to fetch products")
@@ -845,19 +862,24 @@ export default function HomePage() {
 
   const bestsellers = useMemo(
     () =>
-      pickTopProducts(allProducts, {
-        maxTotal: 8,
-        sortFn: (a, b) => {
-          if (!!a.is_featured !== !!b.is_featured) return a.is_featured ? -1 : 1
-          return (b.rating || 0) - (a.rating || 0)
-        },
-      }),
-    [allProducts]
+      resolvePicks(homepagePicks, 'bestsellers',
+        pickTopProducts(allProducts, {
+          maxTotal: 8,
+          sortFn: (a, b) => {
+            if (!!a.is_featured !== !!b.is_featured) return a.is_featured ? -1 : 1
+            return (b.rating || 0) - (a.rating || 0)
+          },
+        })
+      ),
+    [allProducts, homepagePicks]
   )
 
   const newArrivals = useMemo(
-    () => pickNewArrivals(allProducts, 8),
-    [allProducts]
+    () =>
+      resolvePicks(homepagePicks, 'new-arrivals',
+        pickNewArrivals(allProducts, 8)
+      ),
+    [allProducts, homepagePicks]
   )
 
   const showcaseByCategory = useMemo(
@@ -865,24 +887,35 @@ export default function HomePage() {
       Object.fromEntries(
         HOMEPAGE_SHOWCASE_SLUGS.map((slug) => [
           slug,
-          pickFromCategory(allProducts, slug, HOMEPAGE_SHOWCASE_PER_CATEGORY),
+          resolvePicks(homepagePicks, slug,
+            pickFromCategory(allProducts, slug, HOMEPAGE_SHOWCASE_PER_CATEGORY)
+          ),
         ])
       ) as Record<string, any[]>,
-    [allProducts]
+    [allProducts, homepagePicks]
   )
 
   const collectionProducts = useMemo(
     () => ({
-      'smart-watches': pickCategoryProducts(allProducts, 'smart-watches', 4),
-      'analog-watches': pickCategoryProducts(allProducts, 'analog-watches', 4),
-      'ladies-watches': pickCategoryProducts(allProducts, 'ladies-watches', 4),
+      'smart-watches': resolvePicks(homepagePicks, 'pro-series',
+        pickCategoryProducts(allProducts, 'smart-watches', 4)
+      ),
+      'analog-watches': resolvePicks(homepagePicks, 'classic-series',
+        pickCategoryProducts(allProducts, 'analog-watches', 4)
+      ),
+      'ladies-watches': resolvePicks(homepagePicks, 'sport-series',
+        pickCategoryProducts(allProducts, 'ladies-watches', 4)
+      ),
     }),
-    [allProducts]
+    [allProducts, homepagePicks]
   )
 
   const watchAccessories = useMemo(
-    () => pickAccessoriesForWatches(allProducts, 4),
-    [allProducts]
+    () =>
+      resolvePicks(homepagePicks, 'accessories',
+        pickAccessoriesForWatches(allProducts, 4)
+      ),
+    [allProducts, homepagePicks]
   )
 
   return (

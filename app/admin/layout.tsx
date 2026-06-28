@@ -34,6 +34,7 @@ const adminNav = [
   { href: "/admin/marketing", label: "Marketing", icon: Megaphone },
   { href: "/admin/market-trends", label: "Market Trends", icon: TrendingUp },
   { href: "/admin/customers", label: "Customers", icon: Users },
+  { href: "/admin/homepage", label: "Homepage", icon: LayoutDashboard },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ]
 
