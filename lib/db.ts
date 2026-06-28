@@ -42,42 +42,292 @@ const TMP_DB_PATH = '/tmp/database.json'
 const INITIAL_DATA = {
   products: [
     {
-      id: "prod-1",
-      name: "Apple Watch Ultra 2",
-      slug: "apple-watch-ultra-2",
-      description: "The most rugged and capable Apple Watch. Designed for outdoor adventures and supercharged workouts.",
-      price: 185000,
-      compare_price: 200000,
-      images: ["https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80"],
-      category_slug: "smartwatches",
-      brand: "Apple",
-      stock: 45,
-      rating: 4.3,
-      reviews_count: 86,
-      specifications: { "Case": "49mm Titanium", "Display": "Always-On Retina", "Water Resistance": "100m" },
-      status: "Active",
-      is_featured: true,
-      is_active: true,
-      upsell_accessories: ["prod-2"]
+      id: "prod-smart-1", name: "Smart Watch Pro Max (Test)", slug: "smart-watch-pro-max-test",
+      description: "Premium smartwatch with HD display, health tracking, and 7-day battery life.",
+      price: 5500, compare_price: 8000,
+      images: ["https://images.unsplash.com/photo-1546868871-af0de0ae72b8?w=800&q=80"],
+      category_slug: "smart-watches", brand: "Smartwear", stock: 50, rating: 4.5, reviews_count: 12,
+      specifications: { "Case Size": "45mm", "Display": "2.05 HD IPS", "Battery": "420mAh", "Water Resistant": "IP67" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-15", upsell_accessories: []
     },
     {
-      id: "prod-2",
-      name: "Magnetic Link Strap",
-      slug: "magnetic-link-strap",
-      description: "Elegant magnetic link strap for all Apple Watch models.",
-      price: 8500,
-      compare_price: 12000,
-      images: ["https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=800&q=80"],
-      category_slug: "straps",
-      brand: "Smartwear",
-      stock: 200,
-      rating: 4.0,
-      reviews_count: 32,
-      specifications: { "Material": "Fine Woven", "Closure": "Magnetic" },
-      status: "Active",
-      is_featured: false,
-      is_active: true,
-      upsell_accessories: []
+      id: "prod-smart-2", name: "UltraFit Pro S3", slug: "ultrafit-pro-s3",
+      description: "Advanced fitness tracking with GPS, heart rate monitor, SpO2, and 100+ workout modes.",
+      price: 7200, compare_price: 9500,
+      images: ["https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80"],
+      category_slug: "smart-watches", brand: "Smartwear", stock: 35, rating: 4.7, reviews_count: 28,
+      specifications: { "Display": "1.43 AMOLED", "Battery": "14 Days", "GPS": "Built-in", "Sensors": "HR, SpO2, Sleep" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-18", upsell_accessories: []
+    },
+    {
+      id: "prod-smart-3", name: "StyleWatch Air 2026", slug: "stylewatch-air-2026",
+      description: "Slim design, vibrant AMOLED display, Bluetooth calling, and AI-powered health insights.",
+      price: 4800, compare_price: 6500,
+      images: ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80"],
+      category_slug: "smart-watches", brand: "Smartwear", stock: 60, rating: 4.3, reviews_count: 45,
+      specifications: { "Display": "1.39 AMOLED", "Battery": "7 Days", "Bluetooth": "5.3", "Water Resistant": "IP68" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-12", upsell_accessories: []
+    },
+    {
+      id: "prod-smart-4", name: "Titan X Sport", slug: "titan-x-sport",
+      description: "Rugged design for extreme conditions. 10 ATM water resistance, impact-resistant body, and dual-band GPS.",
+      price: 8900, compare_price: 12000,
+      images: ["https://images.unsplash.com/photo-1557438159-51eec7dbc7a1?w=800&q=80"],
+      category_slug: "smart-watches", brand: "Smartwear", stock: 20, rating: 4.8, reviews_count: 19,
+      specifications: { "Case": "Titanium Alloy", "Display": "1.5 AMOLED", "Water Resistance": "10 ATM", "GPS": "Dual-band" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-20", upsell_accessories: []
+    },
+    {
+      id: "prod-analog-1", name: "Heritage Classic Automatic", slug: "heritage-classic-automatic",
+      description: "Japanese automatic movement, sapphire crystal, and genuine leather strap.",
+      price: 12999, compare_price: 15999,
+      images: ["https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&q=80"],
+      category_slug: "analog-watches", brand: "Heritage", stock: 25, rating: 4.6, reviews_count: 34,
+      specifications: { "Movement": "Automatic NH35A", "Case": "40mm Stainless Steel", "Crystal": "Sapphire", "Strap": "Genuine Leather" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-10", upsell_accessories: []
+    },
+    {
+      id: "prod-analog-2", name: "Aviator Chronograph", slug: "aviator-chronograph",
+      description: "Inspired by vintage pilot watches. Chronograph function, luminous hands, and a sturdy stainless steel bracelet.",
+      price: 8999, compare_price: 10999,
+      images: ["https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&q=80"],
+      category_slug: "analog-watches", brand: "Aviator", stock: 32, rating: 4.4, reviews_count: 27,
+      specifications: { "Movement": "Quartz Chronograph", "Case": "42mm Steel", "Crystal": "Mineral Glass", "Water Resistance": "50m" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-08", upsell_accessories: []
+    },
+    {
+      id: "prod-analog-3", name: "Minimalist Dress Watch", slug: "minimalist-dress-watch",
+      description: "Clean, ultra-thin design with a sunburst dial and Italian leather strap.",
+      price: 6999, compare_price: 8500,
+      images: ["https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&q=80"],
+      category_slug: "analog-watches", brand: "Heritage", stock: 40, rating: 4.2, reviews_count: 18,
+      specifications: { "Movement": "Quartz", "Case": "38mm Steel", "Strap": "Italian Leather", "Thickness": "7mm" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-05", upsell_accessories: []
+    },
+    {
+      id: "prod-analog-4", name: "Diver 200 Automatic", slug: "diver-200-automatic",
+      description: "Professional 200m water resistance, unidirectional bezel, and automatic movement.",
+      price: 15999, compare_price: 18999,
+      images: ["https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80"],
+      category_slug: "analog-watches", brand: "Heritage", stock: 15, rating: 4.9, reviews_count: 22,
+      specifications: { "Movement": "Automatic 4R36", "Case": "44mm Steel", "Water Resistance": "200m", "Bezel": "Unidirectional" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-01", upsell_accessories: []
+    },
+    {
+      id: "prod-ladies-1", name: "Elegance Rose Gold", slug: "elegance-rose-gold",
+      description: "Beautiful rose gold case with mother-of-pearl dial and genuine crystal accents.",
+      price: 8499, compare_price: 10999,
+      images: ["https://images.unsplash.com/photo-1612817159949-195b6eb9e1af?w=800&q=80"],
+      category_slug: "ladies-watches", brand: "Elegance", stock: 30, rating: 4.7, reviews_count: 41,
+      specifications: { "Case": "30mm Rose Gold", "Dial": "Mother of Pearl", "Strap": "Genuine Leather", "Movement": "Quartz" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-14", upsell_accessories: []
+    },
+    {
+      id: "prod-ladies-2", name: "Parisian Charm Bracelet Watch", slug: "parisian-charm-bracelet",
+      description: "Elegant bracelet-style watch with a mesh strap and minimalist dial.",
+      price: 6499, compare_price: 7999,
+      images: ["https://images.unsplash.com/photo-1594534475808-b18fc33b045e?w=800&q=80"],
+      category_slug: "ladies-watches", brand: "Elegance", stock: 45, rating: 4.5, reviews_count: 33,
+      specifications: { "Case": "28mm Steel", "Strap": "Mesh Bracelet", "Movement": "Quartz", "Water Resistant": "Splash Proof" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-11", upsell_accessories: []
+    },
+    {
+      id: "prod-ladies-3", name: "Crystal Glitz Diamond", slug: "crystal-glitz-diamond",
+      description: "Dazzling crystal-embellished bezel with a white mother-of-pearl dial.",
+      price: 11999, compare_price: 14999,
+      images: ["https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80"],
+      category_slug: "ladies-watches", brand: "Elegance", stock: 18, rating: 4.8, reviews_count: 26,
+      specifications: { "Case": "32mm Steel", "Crystal": "Crystal Bezel", "Strap": "Leather", "Movement": "Quartz" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-03", upsell_accessories: []
+    },
+    {
+      id: "prod-ladies-4", name: "Petite Vintage Round", slug: "petite-vintage-round",
+      description: "Vintage-inspired small round case with Roman numerals and a soft pastel leather strap.",
+      price: 4499, compare_price: 5500,
+      images: ["https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=800&q=80"],
+      category_slug: "ladies-watches", brand: "Elegance", stock: 55, rating: 4.3, reviews_count: 38,
+      specifications: { "Case": "26mm Steel", "Strap": "Pastel Leather", "Movement": "Quartz", "Dial": "Roman Numerals" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-05-28", upsell_accessories: []
+    },
+    {
+      id: "prod-phone-1", name: "Lux Silicone Case - iPhone 15 Pro Max", slug: "lux-silicone-case-iphone15pm",
+      description: "Premium liquid silicone case with microfiber lining. Drop protection up to 6 feet.",
+      price: 1499, compare_price: 2500,
+      images: ["https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=800&q=80"],
+      category_slug: "phone-cases", brand: "Lux", stock: 80, rating: 4.4, reviews_count: 67,
+      specifications: { "Material": "Liquid Silicone", "Compatibility": "iPhone 15 Pro Max", "Protection": "6ft Drop", "Color": "Multiple Options" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-16", upsell_accessories: []
+    },
+    {
+      id: "prod-phone-2", name: "ArmorX Clear Case - Samsung S24 Ultra", slug: "armorx-clear-case-s24ultra",
+      description: "Ultra-clear, scratch-resistant case with military-grade drop protection and 3-year anti-yellow guarantee.",
+      price: 1799, compare_price: 3000,
+      images: ["https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&q=80"],
+      category_slug: "phone-cases", brand: "ArmorX", stock: 65, rating: 4.6, reviews_count: 52,
+      specifications: { "Material": "Polycarbonate + TPU", "Compatibility": "Samsung S24 Ultra", "Protection": "Military Grade", "Feature": "Anti-Yellow" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-13", upsell_accessories: []
+    },
+    {
+      id: "prod-phone-3", name: "Leather Folio Wallet Case", slug: "leather-folio-wallet-case",
+      description: "Genuine leather folio case with card slots, magnetic closure, and kickstand.",
+      price: 2499, compare_price: 3500,
+      images: ["https://images.unsplash.com/photo-1564466809058-bf4114d55352?w=800&q=80"],
+      category_slug: "phone-cases", brand: "Lux", stock: 40, rating: 4.3, reviews_count: 31,
+      specifications: { "Material": "Genuine Leather", "Feature": "Card Slots + Kickstand", "Closure": "Magnetic" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-09", upsell_accessories: []
+    },
+    {
+      id: "prod-phone-4", name: "Glossy Clear MagSafe Case", slug: "glossy-magsafe-case",
+      description: "Ultra-thin, crystal clear case with built-in MagSafe magnets. Wireless charging compatible.",
+      price: 1299, compare_price: 2200,
+      images: ["https://images.unsplash.com/photo-1555316227-402f9645e213?w=800&q=80"],
+      category_slug: "phone-cases", brand: "ArmorX", stock: 90, rating: 4.1, reviews_count: 44,
+      specifications: { "Material": "Hybrid Clear", "MagSafe": "Yes", "Thickness": "1.5mm", "Wireless Charging": "Compatible" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-07", upsell_accessories: []
+    },
+    {
+      id: "prod-bands-1", name: "Silicone Sport Band - 22mm", slug: "silicone-sport-band-22mm",
+      description: "Soft, sweatproof silicone band with quick-release pins. 7 colors available.",
+      price: 999, compare_price: 1500,
+      images: ["https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&q=80"],
+      category_slug: "watch-bands", brand: "Lumina", stock: 120, rating: 4.5, reviews_count: 89,
+      specifications: { "Material": "Premium Silicone", "Width": "22mm", "Feature": "Quick-Release Pins", "Waterproof": "Yes" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-19", upsell_accessories: []
+    },
+    {
+      id: "prod-bands-2", name: "Genuine Leather Band - 20mm", slug: "genuine-leather-band-20mm",
+      description: "Handcrafted Italian leather band with stitched detailing. Fits most 20mm watches.",
+      price: 1999, compare_price: 3000,
+      images: ["https://images.unsplash.com/photo-1491336477066-31156b5e4f35?w=800&q=80"],
+      category_slug: "watch-bands", brand: "Lumina", stock: 55, rating: 4.7, reviews_count: 42,
+      specifications: { "Material": "Italian Leather", "Width": "20mm", "Stitching": "Handcrafted", "Hardware": "Brushed Steel" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-17", upsell_accessories: []
+    },
+    {
+      id: "prod-bands-3", name: "Metal Link Bracelet - 22mm", slug: "metal-link-bracelet-22mm",
+      description: "Premium stainless steel mesh bracelet with adjustable clasp. Breathable and comfortable.",
+      price: 2499, compare_price: 3999,
+      images: ["https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80"],
+      category_slug: "watch-bands", brand: "Lumina", stock: 40, rating: 4.4, reviews_count: 37,
+      specifications: { "Material": "Stainless Steel Mesh", "Width": "22mm", "Clasp": "Magnetic Adjustable", "Finish": "Brushed Silver" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-06", upsell_accessories: []
+    },
+    {
+      id: "prod-audio-1", name: "SoundPods Pro Wireless Earbuds", slug: "soundpods-pro-earbuds",
+      description: "Active noise cancellation, 30-hour battery, and crystal-clear calls. IPX5 water resistant.",
+      price: 4999, compare_price: 6999,
+      images: ["https://images.unsplash.com/photo-1484704849701-f2a667e90430?w=800&q=80"],
+      category_slug: "audio", brand: "SoundPods", stock: 60, rating: 4.6, reviews_count: 73,
+      specifications: { "Type": "True Wireless Earbuds", "ANC": "Yes", "Battery": "30 Hours", "Water Resistant": "IPX5" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-22", upsell_accessories: []
+    },
+    {
+      id: "prod-audio-2", name: "BassBoost Wireless Over-Ear Headphones", slug: "bassboost-wireless-headphones",
+      description: "Deep bass, 40-hour playback, and ultra-comfortable memory foam ear cups. Foldable design.",
+      price: 6999, compare_price: 8999,
+      images: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80"],
+      category_slug: "audio", brand: "BassBoost", stock: 25, rating: 4.5, reviews_count: 58,
+      specifications: { "Type": "Over-Ear", "Battery": "40 Hours", "Driver": "40mm Dynamic", "Foldable": "Yes" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-20", upsell_accessories: []
+    },
+    {
+      id: "prod-audio-3", name: "AirPods Style TWS Earbuds", slug: "airpods-style-tws-earbuds",
+      description: "Seamless pairing, comfortable fit, and impressive sound quality. Works with all Bluetooth devices.",
+      price: 2999, compare_price: 4500,
+      images: ["https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=800&q=80"],
+      category_slug: "audio", brand: "SoundPods", stock: 75, rating: 4.2, reviews_count: 64,
+      specifications: { "Type": "TWS Earbuds", "Battery": "24 Hours", "Bluetooth": "5.3", "Charging": "USB-C" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-04", upsell_accessories: []
+    },
+    {
+      id: "prod-audio-4", name: "Neckband Pro Bluetooth", slug: "neckband-pro-bluetooth",
+      description: "Magnetic earbuds, 20-hour battery, and tangle-free flat cable. Ideal for commutes.",
+      price: 1799, compare_price: 2500,
+      images: ["https://images.unsplash.com/photo-1590658268037-6bf12f032f55?w=800&q=80"],
+      category_slug: "audio", brand: "BassBoost", stock: 85, rating: 4.0, reviews_count: 49,
+      specifications: { "Type": "Neckband", "Battery": "20 Hours", "Feature": "Magnetic Earbuds", "Cable": "Flat Tangle-Free" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-05-30", upsell_accessories: []
+    },
+    {
+      id: "prod-charger-1", name: "SuperFast 65W GaN Charger", slug: "superfast-65w-gan-charger",
+      description: "Compact GaN technology charger with dual USB-C ports. Charges laptop, tablet, and phone.",
+      price: 3499, compare_price: 4999,
+      images: ["https://images.unsplash.com/photo-1591290619762-d2d4e1d8b8c8?w=800&q=80"],
+      category_slug: "chargers", brand: "PowerUp", stock: 45, rating: 4.6, reviews_count: 81,
+      specifications: { "Power": "65W GaN", "Ports": "2x USB-C", "Compatibility": "Laptop, Tablet, Phone", "Compact": "Yes" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-21", upsell_accessories: []
+    },
+    {
+      id: "prod-charger-2", name: "3-in-1 Wireless Charging Station", slug: "3in1-wireless-charging-station",
+      description: "Charge your phone, watch, and earbuds simultaneously. LED indicator and anti-slip design.",
+      price: 4499, compare_price: 5999,
+      images: ["https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&q=80"],
+      category_slug: "chargers", brand: "PowerUp", stock: 30, rating: 4.4, reviews_count: 36,
+      specifications: { "Type": "Wireless", "Devices": "3 Devices", "Compatibility": "Phone + Watch + Buds", "Feature": "LED Indicator" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-02", upsell_accessories: []
+    },
+    {
+      id: "prod-charger-3", name: "Magnetic Watch Charger Cable", slug: "magnetic-watch-charger-cable",
+      description: "Official-grade magnetic charging cable for smartwatches. Fast charging with 1.5m length.",
+      price: 1499, compare_price: 2500,
+      images: ["https://images.unsplash.com/photo-1586954551646-3c5b1a0a5b5e?w=800&q=80"],
+      category_slug: "chargers", brand: "PowerUp", stock: 70, rating: 4.3, reviews_count: 55,
+      specifications: { "Type": "Magnetic Charger", "Length": "1.5m", "Compatibility": "Smartwatches", "Fast Charge": "Yes" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-05-25", upsell_accessories: []
+    },
+    {
+      id: "prod-power-1", name: "PowerBank 20000mAh", slug: "powerbank-20000mah",
+      description: "High-capacity 20000mAh power bank with dual USB-A and USB-C output.",
+      price: 3999, compare_price: 5499,
+      images: ["https://images.unsplash.com/photo-1609091839311-9ed94aeb2f64?w=800&q=80"],
+      category_slug: "power-banks", brand: "PowerUp", stock: 35, rating: 4.5, reviews_count: 62,
+      specifications: { "Capacity": "20000mAh", "Output": "2x USB-A + USB-C", "Fast Charge": "18W PD", "Feature": "LED Battery Indicator" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-18", upsell_accessories: []
+    },
+    {
+      id: "prod-power-2", name: "MagSafe Power Bank 10000mAh", slug: "magsafe-powerbank-10000mah",
+      description: "Slim MagSafe-compatible wireless power bank. Snap on and charge without cables.",
+      price: 5499, compare_price: 7500,
+      images: ["https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&q=80"],
+      category_slug: "power-banks", brand: "PowerUp", stock: 28, rating: 4.2, reviews_count: 19,
+      specifications: { "Capacity": "10000mAh", "Wireless": "15W MagSafe", "Cable": "USB-C Cable", "Thickness": "12mm" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-12", upsell_accessories: []
+    },
+    {
+      id: "prod-watchcase-1", name: "SlimGuard Watch Case 45mm", slug: "slimguard-watch-case-45mm",
+      description: "Ultra-thin TPU bumper case with raised bezel protection. Full access to buttons.",
+      price: 799, compare_price: 1200,
+      images: ["https://images.unsplash.com/photo-1617625802912-888f43813e2f?w=800&q=80"],
+      category_slug: "watch-cases", brand: "SlimGuard", stock: 100, rating: 4.3, reviews_count: 47,
+      specifications: { "Material": "TPU", "Compatibility": "45mm Smartwatches", "Protection": "Raised Bezel", "Feature": "Ultra-Thin" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-15", upsell_accessories: []
+    },
+    {
+      id: "prod-watchcase-2", name: "Tempered Glass Screen Protector", slug: "tempered-glass-watch-protector",
+      description: "HD clear tempered glass with oleophobic coating. 9H hardness, bubble-free installation.",
+      price: 599, compare_price: 999,
+      images: ["https://images.unsplash.com/photo-1574701148212-8518049c7b2a?w=800&q=80"],
+      category_slug: "watch-cases", brand: "SlimGuard", stock: 150, rating: 4.4, reviews_count: 38,
+      specifications: { "Material": "Tempered Glass", "Hardness": "9H", "Coating": "Oleophobic", "Compatibility": "44-46mm Smartwatches" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-10", upsell_accessories: []
+    },
+    {
+      id: "prod-acc-1", name: "Watch Travel Case - 2 Slot", slug: "watch-travel-case-2slot",
+      description: "Compact, protective case for two watches. Soft microfiber lining and elegant leather exterior.",
+      price: 2499, compare_price: 3499,
+      images: ["https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=800&q=80"],
+      category_slug: "accessories", brand: "Lumina", stock: 41, rating: 4.7, reviews_count: 29,
+      specifications: { "Capacity": "2 Watches", "Material": "Leather + Microfiber", "Dimensions": "18 x 10 x 6 cm", "Feature": "Compact" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-06-08", upsell_accessories: []
+    },
+    {
+      id: "prod-acc-2", name: "Watch Cleaning Kit", slug: "watch-cleaning-kit",
+      description: "Complete care kit with microfiber cloth, cleaning solution, and soft brush.",
+      price: 699, compare_price: 1200,
+      images: ["https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&q=80"],
+      category_slug: "accessories", brand: "Lumina", stock: 200, rating: 4.1, reviews_count: 15,
+      specifications: { "Includes": "Microfiber Cloth, Solution, Brush", "Purpose": "Watch & Jewelry Cleaning", "Portable": "Yes" },
+      status: "Active", is_featured: false, is_active: true, created_at: "2026-06-01", upsell_accessories: []
     }
   ],
   orders: [],
