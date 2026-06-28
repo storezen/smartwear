@@ -40,6 +40,7 @@ export default function AdminProductsPage() {
     status: 'Draft',
     images: ['https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80'],
     colors: '',
+    specifications: {} as Record<string, unknown>,
     description: ''
   })
   const [importUrl, setImportUrl] = useState("")
@@ -79,7 +80,11 @@ export default function AdminProductsPage() {
         compare_price: formData.compare_price ? parseInt(formData.compare_price) : null,
         stock: parseInt(formData.stock) || 0,
         slug: editingId ? formData.slug : formData.name.toLowerCase().replace(/ /g, '-'),
-        colors: formData.colors ? formData.colors.split(',').map(c => c.trim()).filter(Boolean) : [],
+        colors: undefined,
+        specifications: {
+          ...(formData.specifications || {}),
+          _colors: formData.colors ? formData.colors.split(',').map(c => c.trim()).filter(Boolean) : [],
+        },
       }
 
       const method = editingId ? 'PUT' : 'POST'
@@ -169,7 +174,8 @@ export default function AdminProductsPage() {
       stock: p.stock?.toString() || '0',
       status: p.status || 'Draft',
       images: p.images || [],
-      colors: p.colors ? p.colors.join(', ') : '',
+      colors: p.specifications?._colors ? p.specifications._colors.join(', ') : p.colors ? p.colors.join(', ') : '',
+      specifications: p.specifications || {},
       description: p.description || ''
     })
     setEditingId(p.id)
@@ -181,7 +187,7 @@ export default function AdminProductsPage() {
       name: '', slug: '',
       category_slug: 'Smartwatches', price: '', cost_price: '', compare_price: '', stock: '10', status: 'Draft',
       images: ['https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80'],
-      colors: '', description: ''
+      colors: '', specifications: {}, description: ''
     })
     setEditingId(null); setImportUrl("")
     setShowAddModal(true)

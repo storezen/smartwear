@@ -16,6 +16,7 @@ export const ProductCreationSchema = z.object({
   stock: z.number().int().nonnegative("Stock cannot be negative"),
   images: z.array(z.string().url("Must be a valid image URL")).min(1, "At least one image is required"),
   colors: z.array(z.string()).optional(),
+  specifications: z.record(z.unknown()).optional(),
   status: ProductStatusEnum.default("Draft"),
   is_active: z.boolean().optional(),
   upsell_accessories: z.array(z.string()).optional(),

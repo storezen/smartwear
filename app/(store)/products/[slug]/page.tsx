@@ -290,7 +290,8 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
   const stockLeft = product.stock
 
   const [lumeMode, setLumeMode] = useState(false)
-  const [selectedColor, setSelectedColor] = useState<string | null>(product?.colors?.[0] || null)
+  const productColors = product?.specifications?._colors || product?.colors || []
+  const [selectedColor, setSelectedColor] = useState<string | null>(productColors[0] || null)
 
   const { html: descriptionHtml } = useMemo(() => parseDescription(product?.description || ''), [product?.description])
   const heroRef = useRef<HTMLDivElement>(null)
@@ -636,13 +637,13 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
               </motion.div>
 
               {/* Color Selection with Swatches */}
-              {product.colors?.length > 0 && (
+              {productColors.length > 0 && (
                 <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3.5} className="space-y-3">
                   <p className="text-xs font-semibold text-white/40 uppercase tracking-widest">
                     Select Color: <span className="text-white ml-1">{selectedColor}</span>
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {product.colors.map((color: string) => {
+                    {productColors.map((color: string) => {
                       const hex = resolveColorHex(color)
                       const isSelected = selectedColor === color
                       return (
