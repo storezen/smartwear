@@ -248,14 +248,17 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
 type ExtraOpts = { _extra?: Record<string, unknown>; test_event_code?: string }
 
 export const TikTokEvents = {
-  addToWishlist: (product: { id: string; name: string; price: number }, category = '', extra?: ExtraOpts) => {
+  addToWishlist: (product: { id?: string; name?: string; price?: number; slug?: string }, category = '', extra?: ExtraOpts) => {
+    const pid = product.id || product.slug || `prod_${Date.now()}`
+    const pname = product.name || 'Product'
+    const pprice = product.price || 0
     trackTikTokEvent('AddToWishlist', {
-      content_id: product.id,
+      content_id: pid,
       content_type: 'product',
       content_category: category,
-      content_name: product.name,
-      value: product.price,
-      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity: 1 }],
+      content_name: pname,
+      value: pprice,
+      contents: [{ content_id: pid, content_type: 'product', content_category: category, content_name: pname, price: pprice, quantity: 1 }],
       ...extra,
     })
   },
@@ -268,26 +271,32 @@ export const TikTokEvents = {
     sendToAnalytics('PageView')
   },
 
-  viewContent: (product: { id: string; name: string; price: number }, category = '', extra?: ExtraOpts) => {
+  viewContent: (product: { id?: string; name?: string; price?: number; slug?: string }, category = '', extra?: ExtraOpts) => {
+    const pid = product.id || product.slug || `prod_${Date.now()}`
+    const pname = product.name || 'Product'
+    const pprice = product.price || 0
     trackTikTokEvent('ViewContent', {
-      content_id: product.id,
+      content_id: pid,
       content_type: 'product',
       content_category: category,
-      content_name: product.name,
-      value: product.price,
-      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity: 1 }],
+      content_name: pname,
+      value: pprice,
+      contents: [{ content_id: pid, content_type: 'product', content_category: category, content_name: pname, price: pprice, quantity: 1 }],
       ...extra,
     })
   },
 
-  addToCart: (product: { id: string; name: string; price: number }, quantity = 1, category = '', extra?: ExtraOpts) => {
+  addToCart: (product: { id?: string; name?: string; price?: number; slug?: string }, quantity = 1, category = '', extra?: ExtraOpts) => {
+    const pid = product.id || product.slug || `prod_${Date.now()}`
+    const pname = product.name || 'Product'
+    const pprice = product.price || 0
     trackTikTokEvent('AddToCart', {
-      content_id: product.id,
+      content_id: pid,
       content_type: 'product',
       content_category: category,
-      content_name: product.name,
-      value: product.price * quantity,
-      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity }],
+      content_name: pname,
+      value: pprice * quantity,
+      contents: [{ content_id: pid, content_type: 'product', content_category: category, content_name: pname, price: pprice, quantity }],
       ...extra,
     })
   },
@@ -307,19 +316,19 @@ export const TikTokEvents = {
     })
   },
 
-  purchase: (orderData: { id: string; total: number; items: Array<{ id: string; name: string; price: number; quantity: number; category?: string }>, _extra?: Record<string, unknown> }) => {
+  purchase: (orderData: { id: string; total: number; items?: Array<{ id?: string; name?: string; price?: number; quantity?: number; category?: string }>, _extra?: Record<string, unknown> }) => {
     const total = Math.max(1, orderData.total > 0 ? orderData.total
-      : (orderData.items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0))
+      : (orderData.items || []).reduce((s, i) => s + ((i.price || 0)) * (i.quantity || 1), 0))
     trackTikTokEvent('CompletePayment', {
       event_id: orderData.id,
       value: total,
       contents: (orderData.items || []).map(item => ({
-        content_id: item.id,
+        content_id: item.id || `item_${Date.now()}`,
         content_type: 'product',
         content_category: item.category || '',
-        content_name: item.name,
-        price: item.price,
-        quantity: item.quantity,
+        content_name: item.name || 'Product',
+        price: item.price || 0,
+        quantity: item.quantity || 1,
       })),
       _extra: orderData._extra,
     })
