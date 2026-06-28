@@ -59,6 +59,23 @@ export function buildCategoryImageMap(products: ProductLike[]) {
   ) as Record<string, string>
 }
 
+/** Pick top N products globally (not balanced per category). */
+export function pickTopProducts(
+  products: ProductLike[],
+  options: {
+    maxTotal?: number
+    sortFn?: (a: ProductLike, b: ProductLike) => number
+    excludeCategory?: string
+  } = {}
+) {
+  const { maxTotal = HOMEPAGE_CARDS_PER_SECTION, sortFn, excludeCategory } = options
+  let pool = products.filter((p) => (p as { is_active?: boolean }).is_active !== false)
+  if (excludeCategory) pool = pool.filter((p) => normalizeCategorySlug(p.category_slug) !== excludeCategory)
+  if (sortFn) pool = [...pool].sort(sortFn)
+  else pool = [...pool].sort((a, b) => (b.rating || 0) - (a.rating || 0))
+  return pool.slice(0, maxTotal)
+}
+
 /** Pick N products per category for balanced homepage grids. */
 export function pickBalancedProducts(
   products: ProductLike[],
@@ -88,6 +105,17 @@ export function pickBalancedProducts(
   return picked.slice(0, maxTotal)
 }
 
+export function pickNewArrivals(
+  products: ProductLike[],
+  maxTotal = HOMEPAGE_CARDS_PER_SECTION
+) {
+  return pickTopProducts(products, {
+    maxTotal,
+    sortFn: (a, b) =>
+      new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime(),
+  })
+}
+
 export function pickBalancedNewArrivals(
   products: ProductLike[],
   perCategory = 1,
@@ -99,6 +127,30 @@ export function pickBalancedNewArrivals(
     sortFn: (a, b) =>
       new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime(),
   })
+}
+
+export function pickCategoryProducts(
+  products: ProductLike[],
+  slug: string,
+  limit = 4
+) {
+  return productsInCategory(products, slug)
+    .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+    .slice(0, limit)
+}
+
+export function pickAccessoriesForWatches(
+  products: ProductLike[],
+  limit = 4
+) {
+  const accessorySlugs = ['watch-bands', 'watch-cases', 'accessories', 'power-banks', 'chargers']
+  const pool = products.filter((p) => {
+    const slug = normalizeCategorySlug(p.category_slug)
+    return accessorySlugs.includes(slug) && (p as { is_active?: boolean }).is_active !== false
+  })
+  return pool
+    .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+    .slice(0, limit)
 }
 
 export function pickFromCategory(

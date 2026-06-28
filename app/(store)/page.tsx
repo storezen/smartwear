@@ -27,6 +27,10 @@ import {
   pickBalancedNewArrivals,
   pickBalancedProducts,
   pickFromCategory,
+  pickTopProducts,
+  pickNewArrivals,
+  pickCategoryProducts,
+  pickAccessoriesForWatches,
 } from "@/lib/homepage-helpers"
 import { normalizeCategorySlug, normalizeProductList } from "@/lib/normalize-product"
 import { TikTokEvents } from '@/lib/tiktok-pixel'
@@ -478,11 +482,18 @@ const collectionMeta = [
   { name: "Sport Series", desc: "Lightweight & durable for workouts", tag: "BESTSELLER", slug: "ladies-watches" as const },
 ]
 
-function CollectionsBanner({ categoryImages }: { categoryImages: Record<string, string> }) {
+function CollectionsBanner({
+  categoryImages,
+  collectionProducts,
+}: {
+  categoryImages: Record<string, string>
+  collectionProducts: Record<string, any[]>
+}) {
   const collections = collectionMeta.map((col) => ({
     ...col,
     image: categoryImages[col.slug] || storeCategories.find((c) => c.slug === col.slug)?.image || "",
     href: `/products?category=${col.slug}`,
+    products: collectionProducts[col.slug] || [],
   }))
   return (
     <section className={`${SECTION_PAD} bg-[#0C0F14]`}>
@@ -496,35 +507,64 @@ function CollectionsBanner({ categoryImages }: { categoryImages: Record<string, 
           <motion.div variants={staggerItem}><SectionTitle>Smartwatch Collections</SectionTitle></motion.div>
         </motion.div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-3 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
+        <div className="space-y-10">
           {collections.map((col, i) => (
-            <motion.div
-              key={col.name}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.12 }}
-              className="snap-start shrink-0 w-[280px] sm:w-[320px] md:w-auto"
-            >
-              <Link href={col.href} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/3]">
-                <Image src={col.image} alt={col.name} fill sizes="(max-width: 768px) 280px, 320px" className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+            <div key={col.name}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12 }}
+              >
+                <Link href={col.href} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/3] md:aspect-[5/2]">
+                  <Image src={col.image} alt={col.name} fill sizes="100vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
-                <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 rounded-full bg-[#B8860B]/20 border border-[#B8860B]/30 text-[#B8860B] text-[10px] sm:text-[9px] font-bold uppercase tracking-widest">
-                    {col.tag}
-                  </span>
-                </div>
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 rounded-full bg-[#B8860B]/20 border border-[#B8860B]/30 text-[#B8860B] text-[10px] sm:text-[9px] font-bold uppercase tracking-widest">
+                      {col.tag}
+                    </span>
+                  </div>
 
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-white text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{col.name}</h3>
-                  <p className="text-white/50 text-sm mb-3">{col.desc}</p>
-                  <span className="inline-flex items-center gap-2 text-[#B8860B] text-xs font-bold uppercase tracking-widest group-hover:gap-3 transition-all">
-                    Explore <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-              </Link>
-            </motion.div>
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-white text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{col.name}</h3>
+                    <p className="text-white/50 text-sm mb-3">{col.desc}</p>
+                    <span className="inline-flex items-center gap-2 text-[#B8860B] text-xs font-bold uppercase tracking-widest group-hover:gap-3 transition-all">
+                      Explore <ArrowRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+
+              {col.products.length > 0 && (
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={staggerContainer}
+                  className="mt-6"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-white/70 text-sm font-semibold uppercase tracking-widest">
+                      From this collection
+                    </h4>
+                    <Link href={col.href} className="text-[#B8860B]/70 hover:text-[#B8860B] text-xs font-bold uppercase tracking-widest transition-colors">
+                      View All
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+                    {col.products.map((product: any, pi: number) => (
+                      <motion.div
+                        key={product.id || pi}
+                        variants={staggerItem}
+                      >
+                        <ProductCard product={product} />
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -805,9 +845,8 @@ export default function HomePage() {
 
   const bestsellers = useMemo(
     () =>
-      pickBalancedProducts(allProducts, {
-        perCategory: 1,
-        maxTotal: HOMEPAGE_CARDS_PER_SECTION,
+      pickTopProducts(allProducts, {
+        maxTotal: 8,
         sortFn: (a, b) => {
           if (!!a.is_featured !== !!b.is_featured) return a.is_featured ? -1 : 1
           return (b.rating || 0) - (a.rating || 0)
@@ -817,7 +856,7 @@ export default function HomePage() {
   )
 
   const newArrivals = useMemo(
-    () => pickBalancedNewArrivals(allProducts, 1, HOMEPAGE_CARDS_PER_SECTION),
+    () => pickNewArrivals(allProducts, 8),
     [allProducts]
   )
 
@@ -829,6 +868,20 @@ export default function HomePage() {
           pickFromCategory(allProducts, slug, HOMEPAGE_SHOWCASE_PER_CATEGORY),
         ])
       ) as Record<string, any[]>,
+    [allProducts]
+  )
+
+  const collectionProducts = useMemo(
+    () => ({
+      'smart-watches': pickCategoryProducts(allProducts, 'smart-watches', 4),
+      'analog-watches': pickCategoryProducts(allProducts, 'analog-watches', 4),
+      'ladies-watches': pickCategoryProducts(allProducts, 'ladies-watches', 4),
+    }),
+    [allProducts]
+  )
+
+  const watchAccessories = useMemo(
+    () => pickAccessoriesForWatches(allProducts, 4),
     [allProducts]
   )
 
@@ -845,7 +898,10 @@ export default function HomePage() {
           badge="Bestseller"
         />
       )}
-      <CollectionsBanner categoryImages={categoryImageMap} />
+      <CollectionsBanner
+        categoryImages={categoryImageMap}
+        collectionProducts={collectionProducts}
+      />
       {!loading && (
         <ProductSection
           label="Fresh Drops"
@@ -856,6 +912,14 @@ export default function HomePage() {
       )}
       <WhyChooseUs />
       {!loading && <CategoryShowcase productsByCategory={showcaseByCategory} />}
+      {!loading && watchAccessories.length > 0 && (
+        <ProductSection
+          label="Complete Your Setup"
+          title="Essential Accessories"
+          products={watchAccessories}
+          viewAllHref="/products?category=accessories"
+        />
+      )}
       <CustomerTestimonials />
       <NewsletterSignup />
     </main>
