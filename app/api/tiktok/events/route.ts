@@ -16,7 +16,7 @@ function hashSHA256(value: string | undefined | null): string | undefined {
 
 export async function POST(req: Request) {
   try {
-    const { event, event_id, content_id, content_type, content_category, description, content_name, value, contents, phone, email, name } = await req.json()
+    const { event, event_id, content_id, content_type, content_category, description, content_name, value, contents, phone, email, name, test_event_code } = await req.json()
     if (!event || !TIKTOK_EVENT_KEYS.has(event)) return NextResponse.json({ error: 'invalid event' }, { status: 400 })
 
     const settings = await getSettings()
@@ -34,6 +34,7 @@ export async function POST(req: Request) {
       event,
       event_id: event_id || `${event}_${crypto.randomUUID()}`,
       event_time: Math.floor(Date.now() / 1000),
+      ...(test_event_code ? { test_event_code } : {}),
       context: {
         ip,
         user_agent: userAgent,

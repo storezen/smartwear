@@ -193,6 +193,8 @@ interface TrackOptions {
     quantity?: number
   }>
   content_name?: string
+  /** Test event code (TikTok CAPI testing) */
+  test_event_code?: string
   /** Extra data forwarded to CAPI */
   _extra?: Record<string, unknown>
 }
@@ -203,43 +205,42 @@ export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
   if (typeof window === 'undefined') return
 
   const event_id = options.event_id || generateUUID()
-  const payload: Record<string, unknown> = {
-    ...options,
-    event_id,
-    currency: options.currency || 'PKR',
-  }
-  delete payload._extra
+  const testEventCode = options.test_event_code || (options._extra?.test_event_code as string | undefined)
+  const { test_event_code: _tc, _extra, ...browserPayload } = { ...options, event_id, currency: options.currency || 'PKR' }
 
   if (window.ttq) {
     if (typeof window.ttq.track === 'function') {
-      window.ttq.track(event, payload)
+      window.ttq.track(event, browserPayload)
     } else {
-      window.ttq.push(['track', event, payload])
+      window.ttq.push(['track', event, browserPayload])
     }
   }
 
   if (TIKTOK_DEBUG_MODE) {
-    console.log(`%c[TikTok Event] ${event}`, 'color:#00f2fe; font-weight:bold', payload)
+    console.log(`%c[TikTok Event] ${event}`, 'color:#00f2fe; font-weight:bold', browserPayload)
   }
 
   const itemName = options.content_name || options.contents?.[0]?.content_name || 'Store Visit'
   sendToAnalytics(event, { itemName, value: options.value })
 
   // CAPI backup for all events (server-side dedup via same event_id)
-  fireCapi(event, { event_id, ...options })
+  fireCapi(event, { event_id, test_event_code: testEventCode, ...options })
 }
 
 /* ── Public Helpers ── */
 
+type ExtraOpts = { _extra?: Record<string, unknown>; test_event_code?: string }
+
 export const TikTokEvents = {
-  addToWishlist: (product: { id: string; name: string; price: number }, category = '') => {
+  addToWishlist: (product: { id: string; name: string; price: number }, category = '', extra?: ExtraOpts) => {
     trackTikTokEvent('AddToWishlist', {
       content_id: product.id,
       content_type: 'product',
       content_category: category,
       content_name: product.name,
       value: product.price,
-      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity: 1 }]
+      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity: 1 }],
+      ...extra,
     })
   },
 
@@ -251,29 +252,31 @@ export const TikTokEvents = {
     sendToAnalytics('PageView')
   },
 
-  viewContent: (product: { id: string; name: string; price: number }, category = '') => {
+  viewContent: (product: { id: string; name: string; price: number }, category = '', extra?: ExtraOpts) => {
     trackTikTokEvent('ViewContent', {
       content_id: product.id,
       content_type: 'product',
       content_category: category,
       content_name: product.name,
       value: product.price,
-      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity: 1 }]
+      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity: 1 }],
+      ...extra,
     })
   },
 
-  addToCart: (product: { id: string; name: string; price: number }, quantity = 1, category = '') => {
+  addToCart: (product: { id: string; name: string; price: number }, quantity = 1, category = '', extra?: ExtraOpts) => {
     trackTikTokEvent('AddToCart', {
       content_id: product.id,
       content_type: 'product',
       content_category: category,
       content_name: product.name,
       value: product.price * quantity,
-      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity }]
+      contents: [{ content_id: product.id, content_type: 'product', content_category: category, content_name: product.name, price: product.price, quantity }],
+      ...extra,
     })
   },
 
-  initiateCheckout: (items: { id: string; name: string; price: number; quantity: number; category?: string }[], subtotal: number) => {
+  initiateCheckout: (items: { id: string; name: string; price: number; quantity: number; category?: string }[], subtotal: number, extra?: ExtraOpts) => {
     trackTikTokEvent('InitiateCheckout', {
       value: subtotal,
       contents: items.map(item => ({
@@ -283,11 +286,12 @@ export const TikTokEvents = {
         content_name: item.name,
         price: item.price,
         quantity: item.quantity,
-      }))
+      })),
+      ...extra,
     })
   },
 
-  purchase: (orderData: { id: string; total: number; items: Array<{ id: string; name: string; price: number; quantity: number; category?: string }> }) => {
+  purchase: (orderData: { id: string; total: number; items: Array<{ id: string; name: string; price: number; quantity: number; category?: string }>, _extra?: Record<string, unknown> }) => {
     const total = Math.max(1, orderData.total > 0 ? orderData.total
       : (orderData.items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0))
     trackTikTokEvent('CompletePayment', {
@@ -300,7 +304,8 @@ export const TikTokEvents = {
         content_name: item.name,
         price: item.price,
         quantity: item.quantity,
-      }))
+      })),
+      _extra: orderData._extra,
     })
   },
 

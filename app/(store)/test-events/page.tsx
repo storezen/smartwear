@@ -15,30 +15,33 @@ export default function TestTikTokEventsPage() {
   const [price, setPrice] = useState(224999)
   const [orderId, setOrderId] = useState('ORD-TEST1234')
   const [orderTotal, setOrderTotal] = useState(224999)
+  const [testCode, setTestCode] = useState('')
 
   const addLog = (msg: string) => {
     const timestamp = new Date().toLocaleTimeString()
     setLogs(prev => [`[${timestamp}] ${msg}`, ...prev].slice(0, 15))
   }
 
+  const opts = () => testCode ? { _extra: { test_event_code: testCode } } : {}
+
   const testViewContent = () => {
-    TikTokEvents.viewContent({ id: productId, name: productName, price })
-    addLog(`Fired: ViewContent for ${productName}`)
+    TikTokEvents.viewContent({ id: productId, name: productName, price }, '', opts() as any)
+    addLog(`Fired: ViewContent for ${productName}${testCode ? ` (test: ${testCode})` : ''}`)
   }
 
   const testAddToCart = () => {
-    TikTokEvents.addToCart({ id: productId, name: productName, price }, 1)
-    addLog(`Fired: AddToCart for ${productName}`)
+    TikTokEvents.addToCart({ id: productId, name: productName, price }, 1, '', opts() as any)
+    addLog(`Fired: AddToCart for ${productName}${testCode ? ` (test: ${testCode})` : ''}`)
   }
 
   const testInitiateCheckout = () => {
-    TikTokEvents.initiateCheckout([{ id: productId, name: productName, price, quantity: 1 }], price)
-    addLog(`Fired: InitiateCheckout total=${price}`)
+    TikTokEvents.initiateCheckout([{ id: productId, name: productName, price, quantity: 1 }], price, opts() as any)
+    addLog(`Fired: InitiateCheckout total=${price}${testCode ? ` (test: ${testCode})` : ''}`)
   }
 
   const testPurchase = () => {
-    TikTokEvents.purchase({ id: orderId, total: orderTotal, items: [{ id: productId, name: productName, price, quantity: 1 }] })
-    addLog(`Fired: Purchase order=${orderId} total=${orderTotal}`)
+    TikTokEvents.purchase({ id: orderId, total: orderTotal, items: [{ id: productId, name: productName, price, quantity: 1 }], ...opts() as any })
+    addLog(`Fired: Purchase order=${orderId} total=${orderTotal}${testCode ? ` (test: ${testCode})` : ''}`)
   }
 
   return (
@@ -82,6 +85,10 @@ export default function TestTikTokEventsPage() {
               <div>
                 <Label>Order Total (for Purchase)</Label>
                 <Input type="number" value={orderTotal} onChange={e => setOrderTotal(Number(e.target.value))} />
+              </div>
+              <div>
+                <Label>Test Event Code (CAPI)</Label>
+                <Input value={testCode} onChange={e => setTestCode(e.target.value)} placeholder="e.g. TEST74095" />
               </div>
             </div>
           </CardContent>

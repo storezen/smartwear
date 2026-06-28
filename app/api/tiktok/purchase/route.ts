@@ -10,7 +10,7 @@ function hashSHA256(value: string | undefined | null): string | undefined {
 
 export async function POST(req: Request) {
   try {
-    const { orderId, total, items, phone, email, name, eventId } = await req.json()
+    const { orderId, total, items, phone, email, name, eventId, test_event_code } = await req.json()
     if (!orderId) return NextResponse.json({ error: 'orderId required' }, { status: 400 })
 
     const settings = await getSettings()
@@ -31,6 +31,7 @@ export async function POST(req: Request) {
       event: 'CompletePayment',
       event_id: eventId || orderId,
       event_time: Math.floor(Date.now() / 1000),
+      ...(test_event_code ? { test_event_code } : {}),
       context: {
         ip,
         user_agent: userAgent,
