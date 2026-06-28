@@ -18,7 +18,7 @@ function normalizePhone(phone: string | undefined | null): string | undefined {
 
 export async function POST(req: Request) {
   try {
-    const { orderId, total, items, phone, email, name, eventId, test_event_code } = await req.json()
+    const { orderId, total, items, phone, email, name, eventId, test_event_code, url, ttclid } = await req.json()
     if (!orderId) return NextResponse.json({ error: 'orderId required' }, { status: 400 })
 
     const settings = await getSettings()
@@ -41,6 +41,7 @@ export async function POST(req: Request) {
       event_id: eventId || orderId,
       event_time: Math.floor(Date.now() / 1000),
       ...(testEventCode ? { test_event_code: testEventCode } : {}),
+      ...(url ? { event_source_url: url } : {}),
       context: {
         ip,
         user_agent: userAgent,
@@ -49,6 +50,7 @@ export async function POST(req: Request) {
           email: hashSHA256(email),
           external_id: hashSHA256(name),
         },
+        ...(ttclid ? { ad: { callback: ttclid } } : {}),
       },
       properties: {
         contents: (items || []).map((i: any) => ({

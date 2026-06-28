@@ -24,7 +24,7 @@ function normalizePhone(phone: string | undefined | null): string | undefined {
 
 export async function POST(req: Request) {
   try {
-    const { event, event_id, content_id, content_type, content_category, description, content_name, value, contents, phone, email, name, test_event_code } = await req.json()
+    const { event, event_id, content_id, content_type, content_category, description, content_name, value, contents, phone, email, name, test_event_code, url, ttclid } = await req.json()
     if (!event || !TIKTOK_EVENT_KEYS.has(event)) return NextResponse.json({ error: 'invalid event' }, { status: 400 })
 
     const settings = await getSettings()
@@ -44,6 +44,7 @@ export async function POST(req: Request) {
       event_id: event_id || `${event}_${crypto.randomUUID()}`,
       event_time: Math.floor(Date.now() / 1000),
       ...(testEventCode ? { test_event_code: testEventCode } : {}),
+      ...(url ? { event_source_url: url } : {}),
       context: {
         ip,
         user_agent: userAgent,
@@ -52,6 +53,7 @@ export async function POST(req: Request) {
           phone_number: hashSHA256(normalizePhone(phone)),
           external_id: hashSHA256(name),
         },
+        ...(ttclid ? { ad: { callback: ttclid } } : {}),
       },
       properties: {
         currency: 'PKR',

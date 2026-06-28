@@ -180,10 +180,12 @@ async function fireCapi(event: string, payload: Record<string, unknown>) {
     const phone = userData?.phone || ''
     const email = userData?.email || ''
     const name = userData?.name || ''
+    const url = typeof window !== 'undefined' ? window.location.href : ''
+    const ttclid = typeof window !== 'undefined' ? sessionStorage.getItem('ttclid') || '' : ''
     await fetch('/api/tiktok/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event, phone, email, name, ...payload }),
+      body: JSON.stringify({ event, phone, email, name, url, ttclid, ...payload }),
     })
   } catch {}
 }
