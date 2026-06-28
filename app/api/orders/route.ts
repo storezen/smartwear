@@ -38,9 +38,16 @@ async function getProductCostPrice(productId: string): Promise<number | null> {
 // Helper to hash user data for TikTok CAPI
 function hashSHA256(value: string | undefined | null): string | undefined {
   if (!value) return undefined;
-  // TikTok expects lowercase, whitespace trimmed, sha256 hash
   const normalized = value.trim().toLowerCase();
   return crypto.createHash('sha256').update(normalized).digest('hex');
+}
+
+function normalizePhone(phone: string | undefined | null): string | undefined {
+  if (!phone) return undefined
+  let cleaned = phone.replace(/[^0-9]/g, '')
+  if (cleaned.startsWith('0')) cleaned = '92' + cleaned.slice(1)
+  else if (!cleaned.startsWith('92')) cleaned = '92' + cleaned
+  return cleaned
 }
 
 // Helper for TikTok Offline Conversion — fires when COD is marked Delivered
@@ -68,7 +75,8 @@ async function fireTikTokOfflineConversion(orderData: any) {
           ...(testEventCode ? { test_event_code: testEventCode } : {}),
           context: {
             user: {
-              phone_number: hashSHA256(orderData.phone),
+              email: hashSHA256(orderData.email),
+              phone_number: hashSHA256(normalizePhone(orderData.phone)),
               external_id: hashSHA256(orderData.customer_name),
             }
           },
@@ -126,7 +134,11 @@ async function fireTikTokCAPI(orderData: any, req: Request) {
           context: {
             ip,
             user_agent: userAgent,
-            user: { phone_number: hashSHA256(orderData.phone) }
+            user: {
+              email: hashSHA256(orderData.email),
+              phone_number: hashSHA256(normalizePhone(orderData.phone)),
+              external_id: hashSHA256(orderData.customer_name),
+            }
           },
           properties: {
             contents: (orderData.items || []).map((i: any) => ({

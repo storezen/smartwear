@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { User, Address } from '@/types'
 import { mockUser, mockAddresses } from '@/lib/mock-data'
+import { identifyUser, identifyFromStoredData } from '@/lib/tiktok-pixel'
 
 interface AuthContextType {
   user: User | null
@@ -32,8 +33,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const savedAddresses = localStorage.getItem('techmart_addresses')
     
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
+      const userData = JSON.parse(savedUser)
+      setUser(userData)
       setAddresses(savedAddresses ? JSON.parse(savedAddresses) : mockAddresses)
+      // Sync PII to TikTok for logged-in users
+      if (userData.email || userData.phone) {
+        identifyUser(userData.email, userData.phone, userData.name)
+      }
+    } else {
+      // Try to identify from stored PII (checkout flow)
+      identifyFromStoredData()
     }
     setIsLoading(false)
   }, [])
@@ -54,6 +63,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setAddresses(mockAddresses)
       localStorage.setItem('techmart_user', JSON.stringify(userData))
       localStorage.setItem('techmart_addresses', JSON.stringify(mockAddresses))
+      // Sync PII to TikTok on login
+      identifyUser(userData.email, userData.phone, userData.name)
       setIsLoading(false)
       return true
     }
@@ -80,6 +91,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAddresses([])
     localStorage.setItem('techmart_user', JSON.stringify(userData))
     localStorage.setItem('techmart_addresses', JSON.stringify([]))
+    // Sync PII to TikTok on signup
+    identifyUser(userData.email, userData.phone, userData.name)
     setIsLoading(false)
     return true
   }

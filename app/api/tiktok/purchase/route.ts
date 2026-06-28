@@ -8,6 +8,14 @@ function hashSHA256(value: string | undefined | null): string | undefined {
   return crypto.createHash('sha256').update(value.trim().toLowerCase()).digest('hex')
 }
 
+function normalizePhone(phone: string | undefined | null): string | undefined {
+  if (!phone) return undefined
+  let cleaned = phone.replace(/[^0-9]/g, '')
+  if (cleaned.startsWith('0')) cleaned = '92' + cleaned.slice(1)
+  else if (!cleaned.startsWith('92')) cleaned = '92' + cleaned
+  return cleaned
+}
+
 export async function POST(req: Request) {
   try {
     const { orderId, total, items, phone, email, name, eventId, test_event_code } = await req.json()
@@ -37,7 +45,7 @@ export async function POST(req: Request) {
         ip,
         user_agent: userAgent,
         user: {
-          phone_number: hashSHA256(phone),
+          phone_number: hashSHA256(normalizePhone(phone)),
           email: hashSHA256(email),
           external_id: hashSHA256(name),
         },

@@ -7,6 +7,9 @@
  * - Event ID Deduplication: every event gets a unique event_id for browser↔server sync
  * - UTM/TTCLID persistence: attribution survives page navigation
  * - Analytics pipeline: sendBeacon to internal analytics for dashboard
+ * - CAPI fires for ALL events with PII for max EMQ (TikTok standard)
+ * - PII stored in localStorage (persists across sessions)
+ * - Phone normalized to E.164 format (92xxxxxxxxxx) for Pakistan
  * - Debug Mode
  */
 
@@ -72,13 +75,17 @@ interface UserPII {
 }
 
 export function storeUserData(pii: UserPII) {
-  try { sessionStorage.setItem(USER_DATA_KEY, JSON.stringify(pii)) } catch {}
+  try { localStorage.setItem(USER_DATA_KEY, JSON.stringify(pii)) } catch {}
 }
 function getUserData(): UserPII | null {
   try {
-    const raw = sessionStorage.getItem(USER_DATA_KEY)
+    const raw = localStorage.getItem(USER_DATA_KEY)
     return raw ? JSON.parse(raw) : null
   } catch { return null }
+}
+
+export function clearUserData() {
+  try { localStorage.removeItem(USER_DATA_KEY) } catch {}
 }
 
 /**
@@ -90,9 +97,11 @@ export async function identifyUser(email?: string, phone?: string, name?: string
   const pii: Record<string, string> = {}
   if (email) pii.email = await sha256(email)
   if (phone) {
-    const cleaned = phone.replace(/[^0-9]/g, '')
-    if (cleaned.startsWith('0')) pii.phone_number = await sha256('92' + cleaned.slice(1))
-    else pii.phone_number = await sha256(cleaned)
+    let cleaned = phone.replace(/[^0-9]/g, '')
+    if (cleaned.startsWith('0')) cleaned = '92' + cleaned.slice(1)
+    else if (cleaned.startsWith('92')) { /* already correct */ }
+    else if (!cleaned.startsWith('92')) cleaned = '92' + cleaned
+    pii.phone_number = await sha256(cleaned)
   }
   if (name) pii.external_id = await sha256(name)
 
@@ -109,6 +118,14 @@ export async function identifyUser(email?: string, phone?: string, name?: string
     console.log('%c[TikTok Pixel] Identify:', 'color:#00f2fe; font-weight:bold', pii)
   }
   storeUserData({ email, phone, name })
+}
+
+export function identifyFromStoredData() {
+  if (typeof window === 'undefined') return
+  const stored = getUserData()
+  if (stored && (stored.email || stored.phone)) {
+    identifyUser(stored.email, stored.phone, stored.name)
+  }
 }
 
 /* ── Internal Analytics ── */
@@ -155,12 +172,9 @@ function sendToAnalytics(event: string, meta?: AnalyticsMeta) {
   } catch {}
 }
 
-/* ── CAPI Backup (purchase-only to avoid double-counting) ── */
+/* ── CAPI Backup for ALL events (max EMQ — TikTok best practice) ── */
 
 async function fireCapi(event: string, payload: Record<string, unknown>) {
-  const capiEvents = new Set(['CompletePayment', 'Purchase', 'PlaceAnOrder'])
-  if (!capiEvents.has(event)) return
-
   try {
     const userData = getUserData()
     const phone = userData?.phone || ''
@@ -334,7 +348,7 @@ export const TikTokEvents = {
       value,
       content_id: 'newsletter',
       content_type: 'product_group',
-      content_name: email,
+      content_name: email.split('@')[0],
     })
   },
 
