@@ -14,6 +14,7 @@ import { decodeProductSlug, productApiPath, resolveProductSlug } from '@/lib/pro
 import { useSettings } from '@/lib/use-settings'
 import { useCart } from '@/context/cart-context'
 import { TikTokEvents } from '@/lib/tiktok-pixel'
+import { useWishlist } from '@/context/wishlist-context'
 import { ProductSchema } from '@/components/store/product-schema'
 import { cn } from '@/lib/utils'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
@@ -279,8 +280,9 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
   const { settings } = useSettings()
   const [quantity, setQuantity] = useState(1)
   const [selectedImage, setSelectedImage] = useState(0)
-  const [isWishlisted, setIsWishlisted] = useState(false)
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description')
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
+  const isWishlisted = isInWishlist(product?.id || '')
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 })
   const [isZooming, setIsZooming] = useState(false)
@@ -758,7 +760,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   </div>
 
                   <button
-                    onClick={() => setIsWishlisted(!isWishlisted)}
+                    onClick={() => isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)}
                     className={cn(
                       "w-12 h-12 rounded-xl border flex items-center justify-center transition-all sw-interactive shrink-0",
                       isWishlisted ? "bg-[#B8860B]/10 border-[#B8860B] text-[#B8860B]" : "bg-[#0F1923] border-white/10 text-white/60 hover:text-white hover:bg-white/5 hover:border-white/20"
