@@ -946,10 +946,12 @@ export async function updateSettings(updates: any) {
     console.warn('[settings] upsert (filtered) failed:', error2?.message)
 
     // Retry by excluding columns that don't exist in the table
-    // Extract column name from PostgREST error: column "xxx" of relation "yyy" does not exist
-    const missingColumnMatch = error2?.message?.match(/column "([^"]+)"(?: of relation "[^"]+")? does not exist/)
+    // Extract column name from PostgREST error:
+    //   - column "xxx" of relation "yyy" does not exist (Postgres)
+    //   - Could not find the 'xxx' column of 'yyy' in the schema cache (PostgREST)
+    const missingColumnMatch = error2?.message?.match(/column "([^"]+)"(?: of relation "[^"]+")? does not exist|Could not find the '([^']+)' column/)
     if (missingColumnMatch) {
-      const badColumn = missingColumnMatch[1]
+      const badColumn = missingColumnMatch[1] || missingColumnMatch[2]
       console.warn('[settings] retrying without column:', badColumn)
       delete filtered[badColumn]
       const { data: data3, error: error3 } = await supabase.from('settings').upsert(filtered).select().single()
