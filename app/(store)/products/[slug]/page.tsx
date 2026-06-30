@@ -285,6 +285,26 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 })
   const [isZooming, setIsZooming] = useState(false)
   const imageRef = useRef<HTMLDivElement>(null)
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    const dy = e.changedTouches[0].clientY - touchStartY.current
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      setSelectedImage(prev => {
+        const next = dx < 0 ? prev + 1 : prev - 1
+        if (next < 0) return product?.images?.length ? product.images.length - 1 : 0
+        if (next >= (product?.images?.length || 1)) return 0
+        return next
+      })
+    }
+  }
 
   const [viewers] = useState(() => Math.floor(Math.random() * 25) + 12)
   const stockLeft = product.stock
@@ -438,6 +458,8 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsZooming(true)}
                 onMouseLeave={() => setIsZooming(false)}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
               >
                 <button
                   onClick={() => setLumeMode(!lumeMode)}
@@ -513,6 +535,24 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                     </motion.div>
                   )}
                 </div>
+
+                {/* Mobile dot indicators */}
+                {product.images.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 md:hidden">
+                    {product.images.map((_: string, idx: number) => (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedImage(idx)}
+                        className={cn(
+                          "w-2 h-2 rounded-full transition-all",
+                          idx === selectedImage
+                            ? "bg-[#B8860B] w-4"
+                            : "bg-white/40 hover:bg-white/70"
+                        )}
+                      />
+                    ))}
+                  </div>
+                )}
               </motion.div>
             </SpotlightCard>
 
