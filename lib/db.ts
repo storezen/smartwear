@@ -946,8 +946,8 @@ export async function updateSettings(updates: any) {
     console.warn('[settings] upsert (filtered) failed:', error2?.message)
 
     // Retry by excluding columns that don't exist in the table
-    // Extract column name from Postgres error: column "xxx" does not exist
-    const missingColumnMatch = error2?.message?.match(/column "([^"]+)" does not exist/)
+    // Extract column name from PostgREST error: column "xxx" of relation "yyy" does not exist
+    const missingColumnMatch = error2?.message?.match(/column "([^"]+)"(?: of relation "[^"]+")? does not exist/)
     if (missingColumnMatch) {
       const badColumn = missingColumnMatch[1]
       console.warn('[settings] retrying without column:', badColumn)
