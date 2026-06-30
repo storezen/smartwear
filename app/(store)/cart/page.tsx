@@ -288,11 +288,11 @@ export default function CartPage() {
 
       {/* Delete Confirmation Modal */}
       {itemToDelete && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div className="fixed top-0 left-0 right-0 bottom-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm min-h-screen min-h-[100dvh]">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-sm bg-[#0F1923] border border-white/10 rounded-2xl shadow-2xl p-6 text-center"
+            className="w-[90%] max-w-sm bg-[#0F1923] border border-white/10 rounded-2xl shadow-2xl p-6 text-center mx-auto"
           >
             <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-8 h-8 text-red-500" />

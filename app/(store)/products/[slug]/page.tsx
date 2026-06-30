@@ -288,6 +288,15 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
   const imageRef = useRef<HTMLDivElement>(null)
   const touchStartX = useRef(0)
   const touchStartY = useRef(0)
+  const slideDir = useRef(1)
+  const thumbsRef = useRef<HTMLDivElement>(null)
+
+  const goToImage = (idx: number) => {
+    const total = product?.images?.length || 1
+    const next = ((idx % total) + total) % total
+    slideDir.current = next > selectedImage ? 1 : -1
+    setSelectedImage(next)
+  }
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
@@ -298,14 +307,17 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
     const dx = e.changedTouches[0].clientX - touchStartX.current
     const dy = e.changedTouches[0].clientY - touchStartY.current
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      setSelectedImage(prev => {
-        const next = dx < 0 ? prev + 1 : prev - 1
-        if (next < 0) return product?.images?.length ? product.images.length - 1 : 0
-        if (next >= (product?.images?.length || 1)) return 0
-        return next
-      })
+      const total = product?.images?.length || 1
+      const next = dx < 0 ? selectedImage + 1 : selectedImage - 1
+      goToImage(next)
     }
   }
+
+  useEffect(() => {
+    if (!thumbsRef.current) return
+    const active = thumbsRef.current.children[selectedImage] as HTMLElement
+    if (active) active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+  }, [selectedImage])
 
   const [viewers] = useState(() => Math.floor(Math.random() * 25) + 12)
   const stockLeft = product.stock
@@ -482,13 +494,14 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                 >
                   <Zap className={cn("w-5 h-5 transition-all duration-700", lumeMode ? "fill-emerald-400 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]" : "text-white/70 group-hover:text-white")} />
                 </button>
-                <AnimatePresence mode="wait">
+                <AnimatePresence custom={slideDir.current}>
                   <motion.div
                     key={selectedImage}
-                    initial={{ opacity: 0, scale: 1.05 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    custom={slideDir.current}
+                    initial={{ opacity: 0, x: slideDir.current * 120 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: slideDir.current * -120 }}
+                    transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                     className="absolute inset-0"
                   >
                     <div className="absolute inset-0 z-10 bg-gradient-to-br from-transparent via-transparent to-[#0C0F14]/5 pointer-events-none" />
@@ -556,7 +569,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                     {product.images.map((_: string, idx: number) => (
                       <button
                         key={idx}
-                        onClick={() => setSelectedImage(idx)}
+                        onClick={() => goToImage(idx)}
                         className={cn(
                           "w-2 h-2 rounded-full transition-all",
                           idx === selectedImage
@@ -572,11 +585,11 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
 
             {/* Thumbnails */}
             {product.images.length > 1 && (
-              <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 hide-scrollbar mt-2 w-full">
+              <div ref={thumbsRef} className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 hide-scrollbar mt-2 w-full">
                 {product.images.map((img: string, idx: number) => (
                   <SpotlightCard key={idx} className={cn("p-1 shrink-0 w-20 md:w-28 transition-colors duration-1000", lumeMode ? "bg-black/50 border border-emerald-500/20" : "")}>
                     <button
-                      onClick={() => setSelectedImage(idx)}
+                      onClick={() => goToImage(idx)}
                       className={cn(
                         "relative protected-img aspect-square w-full rounded-[12px] md:rounded-[14px] overflow-hidden sw-interactive snap-start transition-colors duration-1000 flex items-center justify-center",
                         lumeMode ? "bg-black" : "bg-transparent",

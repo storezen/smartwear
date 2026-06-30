@@ -685,8 +685,8 @@ function SuccessModal({ orderId, total, onClose }: { orderId: string; total: num
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
-      style={{ background: 'rgba(12,15,20,0.95)' }}
+      className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-[rgba(12,15,20,0.95)] min-h-screen min-h-[100dvh]"
+
     >
       <GoldParticles active={showParticles} />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full blur-[150px] opacity-[0.15] bg-[#B8860B] pointer-events-none" />
