@@ -943,7 +943,23 @@ export async function updateSettings(updates: any) {
       return data2
     }
 
-    console.error('[settings] upsert (filtered) also failed:', error2?.message, JSON.stringify(error2))
+    console.warn('[settings] upsert (filtered) failed:', error2?.message)
+
+    // Retry by excluding columns that don't exist in the table
+    // Extract column name from Postgres error: column "xxx" does not exist
+    const missingColumnMatch = error2?.message?.match(/column "([^"]+)" does not exist/)
+    if (missingColumnMatch) {
+      const badColumn = missingColumnMatch[1]
+      console.warn('[settings] retrying without column:', badColumn)
+      delete filtered[badColumn]
+      const { data: data3, error: error3 } = await supabase.from('settings').upsert(filtered).select().single()
+      if (!error3 && data3) {
+        console.log('[settings] upsert (excluded column) succeeded')
+        return data3
+      }
+      console.error('[settings] upsert (excluded column) also failed:', error3?.message)
+    }
+
     return merged
   }
   const db = await getDb()
