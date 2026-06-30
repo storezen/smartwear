@@ -37,8 +37,6 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { items, subtotal, clearCart, addToCart } = useCart()
 
-  const [freeThreshold, setFreeThreshold] = useState(10000)
-  const [shippingRate, setShippingRate] = useState(200)
   const [codAvailable, setCodAvailable] = useState(true)
   const [paymentMethods, setPaymentMethods] = useState(["COD"])
   const [guestAddress, setGuestAddress] = useState({
@@ -60,8 +58,6 @@ export default function CheckoutPage() {
     fetch('/api/public/settings')
       .then(r => r.json())
       .then(data => {
-        if (data?.free_delivery_threshold) setFreeThreshold(Number(data.free_delivery_threshold))
-        if (data?.shipping_standard_rate) setShippingRate(Number(data.shipping_standard_rate))
         if (typeof data?.cod_available === 'boolean') setCodAvailable(data.cod_available)
         if (data?.payment_methods) {
           try {
@@ -139,8 +135,8 @@ export default function CheckoutPage() {
     }
   }
 
-  const shippingCost = subtotal >= freeThreshold ? 0 : shippingRate
-  const total = subtotal + shippingCost - (appliedPromo?.discount || 0)
+  const shippingCost = 0
+  const total = subtotal - (appliedPromo?.discount || 0)
 
   const handleApplyPromo = async () => {
     if (!promoCodeInput.trim()) return
@@ -430,7 +426,7 @@ export default function CheckoutPage() {
                     </div>
                     <div>
                       <p className="text-[11px] sm:text-xs font-semibold text-white">Free Shipping</p>
-                      <p className="text-[10px] text-white/50 hidden sm:block">On orders above {formatPrice(freeThreshold)}</p>
+                      <p className="text-[10px] text-white/50 hidden sm:block">Across Pakistan — no minimum</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2.5">
@@ -468,7 +464,7 @@ export default function CheckoutPage() {
                 )}
               </button>
               <p className="text-center text-[11px] text-white/40 mt-3 px-2">
-                Free delivery above {formatPrice(freeThreshold)} &bull; 7-day replacement
+                Free delivery — all Pakistan &bull; 7-day replacement
               </p>
             </div>
           </div>

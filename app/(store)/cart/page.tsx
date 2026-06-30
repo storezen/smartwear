@@ -9,35 +9,18 @@ import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Truck, ChevronRight, Aler
 import { useCart } from "@/context/cart-context"
 import { formatPrice } from "@/lib/mock-data"
 
-/* ── Free shipping progress ── */
-function ShippingBar({ subtotal, threshold }: { subtotal: number; threshold: number }) {
-  const pct = Math.min((subtotal / threshold) * 100, 100)
-  const remaining = threshold - subtotal
+/* ── Free shipping ── */
+function ShippingBar() {
   return (
     <div
       className="rounded-2xl p-4"
       style={{ background: "rgba(22, 163, 74, 0.05)", border: "1px solid rgba(22, 163, 74, 0.2)" }}
     >
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <Truck className="w-4 h-4" style={{ color: "#4ADE80" }} />
-          {subtotal >= threshold ? (
-            <p className="text-sm font-semibold" style={{ color: "#4ADE80" }}>
-              🎉 You've unlocked free delivery!
-            </p>
-          ) : (
-            <p className="text-sm" style={{ color: "#4ADE80" }}>
-              Add <strong className="text-white">{formatPrice(remaining)}</strong> more for free delivery
-            </p>
-          )}
-        </div>
-        <span className="text-xs font-semibold" style={{ color: "#4ADE80" }}>{Math.round(pct)}%</span>
-      </div>
-      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
-        <div
-          className="h-full rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(34,197,94,0.5)]"
-          style={{ width: `${pct}%`, background: "linear-gradient(90deg, #16A34A, #22C55E)" }}
-        />
+      <div className="flex items-center gap-2">
+        <Truck className="w-4 h-4" style={{ color: "#4ADE80" }} />
+        <p className="text-sm font-semibold" style={{ color: "#4ADE80" }}>
+          🎉 Free delivery — across Pakistan
+        </p>
       </div>
     </div>
   )
@@ -72,14 +55,10 @@ function EmptyCart() {
 export default function CartPage() {
   const { items, itemCount, subtotal, updateQuantity, removeFromCart } = useCart()
   const [itemToDelete, setItemToDelete] = useState<string | null>(null)
-  const [freeThreshold, setFreeThreshold] = useState<number>(10000)
-  const [shippingRate, setShippingRate] = useState(200)
   const [codAvailable, setCodAvailable] = useState(true)
   const [paymentMethods, setPaymentMethods] = useState(["COD", "JazzCash", "Easypaisa", "Bank Transfer"])
   useEffect(() => {
     fetch('/api/public/settings').then(r => r.json()).then(d => {
-      if (d?.free_delivery_threshold) setFreeThreshold(Number(d.free_delivery_threshold))
-      if (d?.shipping_standard_rate) setShippingRate(Number(d.shipping_standard_rate))
       if (typeof d?.cod_available === 'boolean') setCodAvailable(d.cod_available)
       if (d?.payment_methods) {
         try {
@@ -89,8 +68,8 @@ export default function CartPage() {
       }
     }).catch(() => {})
   }, [])
-  const shipping = subtotal >= freeThreshold ? 0 : shippingRate
-  const total = subtotal + shipping
+  const shipping = 0
+  const total = subtotal
 
   return (
     <div className="min-h-screen bg-[#0C0F14] text-white">
@@ -138,7 +117,7 @@ export default function CartPage() {
 
             {/* Items */}
             <div className="lg:col-span-2 space-y-3.5 min-w-0">
-              <ShippingBar subtotal={subtotal} threshold={freeThreshold} />
+              <ShippingBar />
 
               {items.map((item, index) => (
                 <motion.div

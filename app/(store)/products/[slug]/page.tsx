@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
@@ -284,6 +284,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 })
   const [isZooming, setIsZooming] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
   const imageRef = useRef<HTMLDivElement>(null)
   const touchStartX = useRef(0)
   const touchStartY = useRef(0)
@@ -320,6 +321,13 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 768)
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     if (product) TikTokEvents.viewContent(product, product.category?.name || '')
@@ -385,15 +393,22 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
       }
     } catch {}
     return [
-      { label: 'Free Delivery', icon: 'Truck', detail: settings?.shipping_flat_rate ? `Rs ${settings.shipping_flat_rate} flat rate` : 'Across Pakistan' },
-      { label: 'Cash on Delivery', icon: 'Banknote', detail: settings?.cod_available ? 'Pay when you receive' : 'Online payment' },
+      { label: 'Free Delivery', icon: 'Truck', detail: 'Across Pakistan — no minimum order' },
+      { label: 'Cash on Delivery', icon: 'Banknote', detail: 'Pay when you receive' },
       { label: '7-Day Replacement', icon: 'RotateCcw', detail: 'Hassle-free replacement' },
       { label: 'Open Box Check', icon: 'PackageOpen', detail: 'Inspect before paying' },
     ]
   }, [settings])
 
-  const handleAddToCart = () => {
+  const handleQuickBuy = () => {
     setIsAddingToCart(true)
+    addToCart(product, quantity, selectedColor || undefined)
+    setTimeout(() => {
+      router.push('/checkout')
+    }, 300)
+  }
+
+  const handleAddToCart = () => {
     addToCart(product, quantity, selectedColor || undefined)
     toast.success(`Added to cart!`, {
       description: `${product.name} x${quantity} added to your cart`,
@@ -402,11 +417,10 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
         onClick: () => router.push('/checkout'),
       },
     })
-    setTimeout(() => setIsAddingToCart(false), 600)
   }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!imageRef.current) return
+    if (!imageRef.current || !isDesktop) return
     const rect = imageRef.current.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
@@ -456,7 +470,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                 style={{ y: imageY, scale: imageScale }}
                 className={cn("relative w-full h-full rounded-[20px] md:rounded-[28px] overflow-hidden transition-shadow duration-700 transform-gpu cursor-crosshair", lumeMode ? "bg-black shadow-[0_0_80px_rgba(16,185,129,0.3)]" : "bg-[#0C0F14]")}
                 onMouseMove={handleMouseMove}
-                onMouseEnter={() => setIsZooming(true)}
+                onMouseEnter={() => isDesktop && setIsZooming(true)}
                 onMouseLeave={() => setIsZooming(false)}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
@@ -489,7 +503,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   </motion.div>
                 </AnimatePresence>
 
-                {isZooming && (
+                {isDesktop && isZooming && (
                   <div
                     className="absolute inset-0 z-20 pointer-events-none"
                     style={{
@@ -498,7 +512,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   />
                 )}
 
-                {isZooming && (
+                {isDesktop && isZooming && (
                   <div
                     className="absolute z-30 w-[280px] h-[280px] rounded-full border-2 border-[#B8860B]/40 shadow-[0_0_30px_rgba(184,134,11,0.2)] pointer-events-none overflow-hidden bg-[#0C0F14]"
                     style={{
@@ -657,7 +671,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   <div>
                     <p className="text-xs text-white/70">Shipping</p>
                     <p className="text-sm font-semibold text-white">
-                      {settings?.shipping_flat_rate ? `Rs ${settings.shipping_flat_rate}` : 'Free'} & Fast
+                      Free — All Pakistan
                     </p>
                   </div>
                 </div>
@@ -744,7 +758,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                 </div>
 
                 <button
-                  onClick={handleAddToCart}
+                  onClick={handleQuickBuy}
                   disabled={product.stock === 0 || isAddingToCart}
                   className="group relative w-full h-16 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_30px_rgba(184,134,11,0.3)] hover:shadow-[0_0_40px_rgba(184,134,11,0.5)] transition-all sw-interactive disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -1015,7 +1029,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
       {/* Mobile Sticky Action Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0C0F14]/90 backdrop-blur-xl border-t border-white/10 p-4 md:hidden pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <button
-          onClick={handleAddToCart}
+          onClick={handleQuickBuy}
           disabled={product.stock === 0 || isAddingToCart}
           className="group relative w-full h-14 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_20px_rgba(184,134,11,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive"
         >
