@@ -469,7 +469,22 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
         </motion.div>
       </div>
 
+      {/* Mobile: Title above image */}
       <div className="sw-container pb-8 md:pb-12 relative z-10" ref={heroRef}>
+        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={0.5} className="md:hidden mb-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[#B8860B] text-xs font-bold uppercase tracking-[0.2em]">{product.brand}</span>
+            <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full border border-white/10">
+              <Star className="w-3 h-3 fill-[#B8860B] text-[#B8860B]" />
+              <span className="text-xs font-semibold text-white">{product.rating}</span>
+              <span className="text-xs text-white/60">({product.reviews_count})</span>
+            </div>
+          </div>
+          <h1 className="text-xl font-bold text-white leading-snug tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
+            {product.name}
+          </h1>
+        </motion.div>
+
         <div className="grid lg:grid-cols-12 gap-6 lg:gap-10">
 
           {/* LEFT: Cinematic Image Gallery */}
@@ -610,7 +625,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
           <div className="lg:col-span-5 pb-16 md:pb-0 min-w-0 w-full">
             <div className="md:sticky md:top-32 flex flex-col space-y-6 md:space-y-8">
               <motion.div initial="hidden" animate="show" variants={fadeUp} custom={1}>
-                <div className="flex items-center justify-between mb-3">
+                <div className="hidden md:flex items-center justify-between mb-3">
                   <span className="text-[#B8860B] text-xs font-bold uppercase tracking-[0.2em]">{product.brand}</span>
                   <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full border border-white/10">
                     <Star className="w-3 h-3 fill-[#B8860B] text-[#B8860B]" />
@@ -619,13 +634,13 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   </div>
                 </div>
 
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-2 text-white/80 bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-4">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="hidden md:flex items-center gap-2 text-white/80 bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-4">
                   <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
                   <span className="font-bold text-white mr-0.5">{viewers}</span>
                   <span className="whitespace-nowrap">people are viewing this right now</span>
                 </motion.div>
 
-                <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
+                <h1 className="hidden md:block text-2xl md:text-3xl font-bold text-white leading-snug tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
                   {product.name}
                 </h1>
 
