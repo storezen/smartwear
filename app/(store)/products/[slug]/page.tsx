@@ -471,18 +471,18 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
 
       {/* Mobile: Title above image */}
       <div className="sw-container pb-8 md:pb-12 relative z-10" ref={heroRef}>
-        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={0.5} className="md:hidden mb-4 space-y-2">
+        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={0.5} className="md:hidden mb-4 space-y-1.5">
+          <h1 className="text-xl font-bold text-white leading-snug tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
+            {product.name}
+          </h1>
           <div className="flex items-center justify-between">
             <span className="text-[#B8860B] text-xs font-bold uppercase tracking-[0.2em]">{product.brand}</span>
-            <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full border border-white/10">
+            <div className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-full border border-white/10">
               <Star className="w-3 h-3 fill-[#B8860B] text-[#B8860B]" />
               <span className="text-xs font-semibold text-white">{product.rating}</span>
               <span className="text-xs text-white/60">({product.reviews_count})</span>
             </div>
           </div>
-          <h1 className="text-xl font-bold text-white leading-snug tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
-            {product.name}
-          </h1>
         </motion.div>
 
         <div className="grid lg:grid-cols-12 gap-6 lg:gap-10">
