@@ -133,14 +133,14 @@ function HeroBanner() {
 
               <div className="mb-3">
                 <div className="flex items-center gap-2 justify-center lg:justify-start mb-1">
-                  <span className="text-white/30 text-[11px] tracking-[0.3em] uppercase font-medium">Smartwear</span>
+                  <span className="text-white/60 text-[11px] tracking-[0.3em] uppercase font-semibold">Smartwear</span>
                   <span className="w-6 h-[1px] bg-[#B8860B]/30" />
                   <span className="flex items-center gap-0.5">
                     {[1,2,3,4,5].map(i => (
                       <svg key={i} className="w-3 h-3 text-[#F0C75A]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                     ))}
                   </span>
-                  <span className="text-white/20 text-[10px]">4.9</span>
+                  <span className="text-white/50 text-[10px] font-bold">4.9</span>
                 </div>
                 <h1 className="text-[2.8rem] sm:text-[4.8rem] md:text-[5.8rem] lg:text-[6.2rem] font-bold text-white leading-[0.95] tracking-tight" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
                   Series{" "}
@@ -150,8 +150,8 @@ function HeroBanner() {
                 </h1>
               </div>
 
-              <p className="text-white/35 text-sm md:text-[15px] max-w-sm mx-auto lg:mx-0 mb-5 leading-relaxed">
-                Ultra-slim design. AMOLED display. Bluetooth calling. AI health tracking with 7-day battery — engineered to elevate every moment.
+              <p className="text-white/65 text-sm md:text-[15px] max-w-sm mx-auto lg:mx-0 mb-5 leading-relaxed font-medium">
+                Ultra-slim design meets powerhouse performance — AMOLED display, Bluetooth calling, AI health tracking with 7-day battery.
               </p>
 
               <div className="flex items-center justify-center lg:justify-start gap-3 mb-5">
@@ -228,7 +228,7 @@ function HeroBanner() {
                 <motion.div
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute top-[2%] right-[2%] px-3 py-1 rounded-full bg-gradient-to-r from-[#B8860B]/15 to-[#B8860B]/5 border border-[#B8860B]/25 text-[#F0C75A] text-[9px] font-extrabold uppercase tracking-[0.15em] shadow-[0_0_15px_rgba(184,134,11,0.1)] backdrop-blur-sm"
+                  className="absolute top-[2%] right-[2%] px-3 py-1.5 rounded-full bg-gradient-to-r from-[#B8860B]/20 to-[#B8860B]/10 border border-[#B8860B]/30 text-[#F0C75A] text-[9px] font-extrabold uppercase tracking-[0.15em] shadow-[0_0_20px_rgba(184,134,11,0.15)] backdrop-blur-md"
                 >
                   ⚡ New Launch
                 </motion.div>
@@ -236,7 +236,7 @@ function HeroBanner() {
                 <motion.div
                   animate={{ scale: [1, 1.08, 1] }}
                   transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                  className="absolute bottom-[8%] left-[2%] px-2.5 py-1 rounded-full bg-white/[0.02] border border-white/6 text-white/25 text-[8px] font-bold uppercase tracking-wider backdrop-blur-sm"
+                  className="absolute bottom-[8%] left-[2%] px-3 py-1.5 rounded-full bg-black/50 border border-[#B8860B]/20 text-[#B8860B] text-[8px] font-extrabold uppercase tracking-wider backdrop-blur-md shadow-[0_0_12px_rgba(184,134,11,0.08)]"
                 >
                   ★ Best Seller
                 </motion.div>
@@ -252,14 +252,14 @@ function HeroBanner() {
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.4, delay: 0.7 + i * 0.08, ease: "backOut" }}
-                      className="absolute hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 border border-white/6 text-white/35 text-[8px] font-medium tracking-wider whitespace-nowrap backdrop-blur-md hover:border-[#B8860B]/20 hover:text-[#B8860B]/50 transition-all cursor-default"
+                      className="absolute hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 border border-white/12 text-white/70 text-[9px] font-semibold tracking-wider whitespace-nowrap backdrop-blur-md shadow-lg hover:border-[#B8860B]/30 hover:text-[#B8860B] hover:bg-black/70 transition-all cursor-default"
                       style={{
                         left: `${x}%`,
                         top: `${y}%`,
                         transform: "translate(-50%, -50%)",
                       }}
                     >
-                      <span className="text-[#B8860B]/50 text-[10px]">{spec.icon}</span>
+                      <span className="text-[#B8860B]/70 text-[10px]">{spec.icon}</span>
                       {spec.label}
                     </motion.div>
                   )
