@@ -129,8 +129,7 @@ function HeroBanner() {
               <div className="mb-4">
                 <span className="text-white/20 text-xs tracking-[0.3em] uppercase font-medium">Smartwear</span>
                 <h1 className="text-[2.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6rem] font-bold text-white leading-[1.0] mt-1" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
-                  Series
-                  <br />
+                  Series{" "}
                   <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent tracking-tight">
                     11
                   </span>
@@ -218,11 +217,11 @@ function HeroBanner() {
                     className="relative w-full h-full"
                   >
                     <Image
-                      src="https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80"
+                      src="/series-11-hero.png"
                       alt="Series 11 Smart Watch"
                       fill
-                      sizes="(max-width: 640px) 192px, (max-width: 1024px) 312px, 390px"
-                      className="object-contain drop-shadow-[0_60px_140px_rgba(184,134,11,0.35)] scale-110"
+                      sizes="(max-width: 640px) 192px, (max-width: 1024px) 312px, 390px)"
+                      className="object-contain drop-shadow-[0_60px_140px_rgba(184,134,11,0.35)] scale-125"
                       priority
                     />
                   </motion.div>
