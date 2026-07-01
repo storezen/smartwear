@@ -375,6 +375,7 @@ type ShopCategoryCard = {
   image: string
   icon: typeof Watch
   description: string
+  products: any[]
 }
 
 function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
@@ -408,39 +409,76 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.06, duration: 0.5 }}
                 >
-                  <Link
-                    href={`/products?category=${cat.slug}`}
-                    className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/5] sm:aspect-square lg:aspect-[3/4]"
-                  >
-                    <Image
-                      src={cat.image}
-                      alt={cat.name}
-                      fill
-                      sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0C0F14] via-[#0C0F14]/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
-
-                    <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end">
-                      <div className="w-12 h-12 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center text-white mb-4 group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] group-hover:-translate-y-1 transition-all duration-500 shadow-lg">
-                        <cat.icon className="w-5 h-5" />
-                      </div>
-
-                      <h3
-                        className="text-white text-xl font-bold mb-1 tracking-wide"
-                        style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}
-                      >
-                        {cat.name}
-                      </h3>
-                      <p className="text-white/60 text-sm mb-6 line-clamp-1">{cat.description}</p>
-
-                      <div className="mt-auto">
-                        <span className="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 text-white text-xs font-bold uppercase tracking-widest px-5 py-3 rounded-xl group-hover:bg-[#B8860B] group-hover:border-[#B8860B] group-hover:text-[#0C0F14] transition-all duration-500 shadow-xl">
-                          Shop Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <div className="rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 bg-[#080A0D] h-full">
+                    <Link
+                      href={`/products?category=${cat.slug}`}
+                      className="group block relative aspect-[4/3] overflow-hidden"
+                    >
+                      <Image
+                        src={cat.image}
+                        alt={cat.name}
+                        fill
+                        sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#080A0D] via-transparent to-transparent" />
+                      <div className="absolute bottom-3 left-3">
+                        <span className="px-3 py-1 rounded-full bg-[#B8860B]/15 border border-[#B8860B]/25 text-[#B8860B] text-[9px] font-bold uppercase tracking-widest backdrop-blur-sm">
+                          {cat.products.length} Items
                         </span>
                       </div>
+                    </Link>
+
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center text-[#B8860B] shrink-0">
+                          <cat.icon className="w-3.5 h-3.5" />
+                        </div>
+                        <div>
+                          <h3 className="text-white text-sm font-bold" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
+                            {cat.name}
+                          </h3>
+                          <p className="text-white/40 text-[10px] line-clamp-1">{cat.description}</p>
+                        </div>
+                      </div>
+
+                      {cat.products.length > 0 && (
+                        <div className="grid grid-cols-2 gap-2 mb-3">
+                          {cat.products.slice(0, 4).map((p: any) => (
+                            <Link
+                              key={p.id || p.slug}
+                              href={`/products/${p.slug}`}
+                              className="group/prod relative aspect-square rounded-xl overflow-hidden bg-white/[0.02] border border-white/5 hover:border-[#B8860B]/20 transition-all"
+                            >
+                              {p.images?.[0] && (
+                                <Image
+                                  src={p.images[0]}
+                                  alt={p.name}
+                                  fill
+                                  sizes="100px"
+                                  className="object-cover group-hover/prod:scale-110 transition-transform duration-500"
+                                />
+                              )}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/prod:opacity-100 transition-opacity" />
+                              <div className="absolute bottom-1 left-1 right-1">
+                                <p className="text-[9px] text-white font-medium truncate opacity-0 group-hover/prod:opacity-100 transition-opacity drop-shadow-lg">
+                                  Rs. {p.price?.toLocaleString()}
+                                </p>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+
+                      <Link
+                        href={`/products?category=${cat.slug}`}
+                        className="group flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-white/8 text-white/40 hover:text-white hover:border-white/20 text-[10px] font-bold uppercase tracking-widest transition-all"
+                      >
+                        Shop {cat.name}
+                        <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                      </Link>
                     </div>
-                  </Link>
+                  </div>
                 </motion.div>
               </CarouselItem>
             ))}
@@ -956,6 +994,9 @@ export default function HomePage() {
           image: categoryImageMap[cat.slug] || cat.image,
           icon: categoryIcons[cat.slug] ?? Package,
           description: cat.description ?? "",
+          products: allProducts.filter(
+            (p) => normalizeCategorySlug(p.category_slug) === cat.slug && p.is_active !== false
+          ).slice(0, 4),
         })),
     [categoryImageMap, allProducts]
   )
