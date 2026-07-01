@@ -471,7 +471,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
 
       {/* Mobile: Title above image */}
       <div className="sw-container pb-8 md:pb-12 relative z-10" ref={heroRef}>
-        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={0.5} className="md:hidden mb-4 space-y-1.5">
+        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={0.5} className="md:hidden mb-4 mt-3 space-y-1.5">
           <h1 className="text-xl font-bold text-white leading-snug tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
             {product.name}
           </h1>
