@@ -131,6 +131,7 @@ export default function CheckoutPage() {
   // Identify user on order placement for purchase event matching
   const handleIdentifyUser = () => {
     if (guestAddress.phone || guestAddress.name) {
+      storeUserData({ email: guestAddress.email || undefined, phone: guestAddress.phone, name: guestAddress.name })
       identifyUser(guestAddress.email || undefined, guestAddress.phone, guestAddress.name)
     }
   }
