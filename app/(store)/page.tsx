@@ -1031,10 +1031,7 @@ export default function HomePage() {
           badge="Bestseller"
         />
       )}
-      <CollectionsBanner
-        categoryImages={categoryImageMap}
-        collectionProducts={collectionProducts}
-      />
+      {/* CollectionsBanner removed */}
       {!loading && (
         <ProductSection
           label="Fresh Drops"
