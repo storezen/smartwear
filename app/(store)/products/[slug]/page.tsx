@@ -720,13 +720,11 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                 ))}
               </motion.div>
 
-              {/* Color Selection with Swatches */}
-              {productColors.length > 0 && (
-                <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3.5} className="space-y-3">
-                  <p className="text-xs font-semibold text-white/40 uppercase tracking-widest">
-                    Select Color: <span className="text-white ml-1">{selectedColor}</span>
-                  </p>
-                  <div className="flex flex-wrap gap-2">
+              {/* Color, Quantity & Wishlist — all in one row */}
+              <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3.5} className="flex items-center gap-3 flex-wrap">
+                {productColors.length > 0 && (
+                  <div className="flex items-center gap-1.5 bg-[#0F1923] border border-white/10 rounded-xl px-3 py-2 h-12">
+                    <span className="text-[10px] text-white/50 uppercase tracking-widest font-semibold mr-1">Color</span>
                     {productColors.map((color: string) => {
                       const hex = resolveColorHex(color)
                       const isSelected = selectedColor === color
@@ -735,78 +733,60 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                           key={color}
                           onClick={() => setSelectedColor(color)}
                           className={cn(
-                            "relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl border text-xs font-medium transition-all duration-300 min-w-[64px]",
-                            isSelected
-                              ? "bg-[#B8860B]/10 border-[#B8860B] text-[#D4A017] shadow-[0_0_15px_rgba(184,134,11,0.2)]"
-                              : "bg-white/[0.02] border-white/10 text-white/60 hover:text-white hover:border-white/30"
+                            "w-7 h-7 rounded-full border-2 shrink-0 transition-all sw-interactive",
+                            isSelected ? "border-[#B8860B] scale-110 shadow-[0_0_10px_rgba(184,134,11,0.4)]" : "border-white/20 hover:border-white/50"
                           )}
-                        >
-                          <span
-                            className={cn(
-                              "w-6 h-6 rounded-full border border-white/20 shrink-0",
-                              isSelected && "ring-2 ring-[#B8860B] ring-offset-2 ring-offset-[#0C0F14]"
-                            )}
-                            style={{ backgroundColor: hex }}
-                          />
-                          <span className="capitalize text-[10px] leading-tight mt-0.5">{color}</span>
-                          {isSelected && (
-                            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#B8860B] rounded-full flex items-center justify-center">
-                              <CheckCircle2 className="w-2.5 h-2.5 text-[#0C0F14]" />
-                            </span>
-                          )}
-                        </button>
+                          style={{ backgroundColor: hex }}
+                          aria-label={color}
+                          title={color}
+                        />
                       )
                     })}
                   </div>
-                </motion.div>
-              )}
+                )}
 
-              {/* Quantity & Actions */}
-              <motion.div initial="hidden" animate="show" variants={fadeUp} custom={4} className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center bg-[#0F1923] border border-white/10 rounded-xl p-1 h-12">
-                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors sw-interactive" aria-label="Decrease quantity">
-                      <Minus className="w-4 h-4" />
-                    </button>
-                    <span className="w-10 text-center font-semibold text-white">{quantity}</span>
-                    <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="w-10 h-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors sw-interactive" aria-label="Increase quantity">
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={() => isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)}
-                    className={cn(
-                      "w-12 h-12 rounded-xl border flex items-center justify-center transition-all sw-interactive shrink-0",
-                      isWishlisted ? "bg-[#B8860B]/10 border-[#B8860B] text-[#B8860B]" : "bg-[#0F1923] border-white/10 text-white/60 hover:text-white hover:bg-white/5 hover:border-white/20"
-                    )}
-                    aria-label="Toggle wishlist"
-                  >
-                    <Heart className={cn("w-5 h-5 transition-all", isWishlisted && "fill-current scale-110")} />
+                <div className="flex items-center bg-[#0F1923] border border-white/10 rounded-xl p-1 h-12">
+                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors sw-interactive" aria-label="Decrease quantity">
+                    <Minus className="w-4 h-4" />
                   </button>
-
+                  <span className="w-10 text-center font-semibold text-white">{quantity}</span>
+                  <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="w-10 h-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors sw-interactive" aria-label="Increase quantity">
+                    <Plus className="w-4 h-4" />
+                  </button>
                 </div>
 
                 <button
-                  onClick={handleQuickBuy}
-                  disabled={product.stock === 0 || isAddingToCart}
-                  className="group relative w-full h-16 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_30px_rgba(184,134,11,0.3)] hover:shadow-[0_0_40px_rgba(184,134,11,0.5)] transition-all sw-interactive disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)}
+                  className={cn(
+                    "w-12 h-12 rounded-xl border flex items-center justify-center transition-all sw-interactive shrink-0",
+                    isWishlisted ? "bg-[#B8860B]/10 border-[#B8860B] text-[#B8860B]" : "bg-[#0F1923] border-white/10 text-white/60 hover:text-white hover:bg-white/5 hover:border-white/20"
+                  )}
+                  aria-label="Toggle wishlist"
                 >
-                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                  <div className="relative flex flex-col items-center justify-center h-full">
-                    <div className="flex items-center gap-3 text-[#0C0F14] font-bold text-base uppercase tracking-widest">
-                      {isAddingToCart ? (
-                        <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Adding...</>
-                      ) : (
-                        <><Truck className="w-5 h-5" /> Quick Buy — Pay on Delivery</>
-                      )}
-                    </div>
-                    <span className="text-[#0C0F14]/70 text-[10px] font-medium tracking-widest uppercase mt-0.5">
-                      {formatPrice(product.price * quantity)}
-                    </span>
-                  </div>
+                  <Heart className={cn("w-5 h-5 transition-all", isWishlisted && "fill-current scale-110")} />
                 </button>
               </motion.div>
+
+              <motion.button
+                initial="hidden" animate="show" variants={fadeUp} custom={4}
+                onClick={handleQuickBuy}
+                disabled={product.stock === 0 || isAddingToCart}
+                className="group relative w-full h-16 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_30px_rgba(184,134,11,0.3)] hover:shadow-[0_0_40px_rgba(184,134,11,0.5)] transition-all sw-interactive disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                <div className="relative flex flex-col items-center justify-center h-full">
+                  <div className="flex items-center gap-3 text-[#0C0F14] font-bold text-base uppercase tracking-widest">
+                    {isAddingToCart ? (
+                      <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Adding...</>
+                    ) : (
+                      <><Truck className="w-5 h-5" /> Quick Buy — Pay on Delivery</>
+                    )}
+                  </div>
+                  <span className="text-[#0C0F14]/70 text-[10px] font-medium tracking-widest uppercase mt-0.5">
+                    {formatPrice(product.price * quantity)}
+                  </span>
+                </div>
+              </motion.button>
             </div>
           </div>
         </div>
