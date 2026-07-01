@@ -95,12 +95,14 @@ function HeroBanner() {
   return (
     <section className="relative min-h-[80svh] flex items-center overflow-hidden bg-[#06080A]">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[60%] h-full bg-gradient-to-bl from-[#B8860B]/8 via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-gradient-to-tr from-[#B8860B]/4 via-transparent to-transparent" />
-        <div className="absolute top-[15%] right-[10%] w-[400px] md:w-[600px] aspect-square rounded-full bg-[#B8860B]/5 blur-[160px]" />
-        <div className="absolute bottom-[10%] left-[5%] w-[300px] aspect-square rounded-full bg-white/[0.02] blur-[100px]" />
-        <div className="absolute inset-0 opacity-[0.015]" style={{ backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.4) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
-        <svg className="absolute inset-0 w-full h-full opacity-[0.03]" viewBox="0 0 1440 900" fill="none">
+        <div className="absolute top-0 right-0 w-[60%] h-full bg-gradient-to-bl from-[#B8860B]/10 via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-gradient-to-tr from-[#B8860B]/5 via-transparent to-transparent" />
+        <div className="absolute top-[10%] right-[5%] w-[500px] md:w-[700px] aspect-square rounded-full bg-[#B8860B]/6 blur-[180px]" />
+        <div className="absolute bottom-[15%] left-[10%] w-[350px] aspect-square rounded-full bg-white/[0.015] blur-[120px]" />
+        <div className="absolute top-[40%] left-[40%] w-[200px] aspect-square rounded-full bg-[#F0C75A]/3 blur-[100px]" />
+        <div className="absolute inset-0 opacity-[0.012]" style={{ backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.4) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
+        <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: "radial-gradient(ellipse at 80% 50%, rgba(184,134,11,0.06) 0%, transparent 70%)" }} />
+        <svg className="absolute inset-0 w-full h-full opacity-[0.02]" viewBox="0 0 1440 900" fill="none">
           <path d="M0 0L1440 450L1440 900L0 900Z" fill="url(#g1)"/>
           <defs>
             <linearGradient id="g1" x1="0" y1="0" x2="1440" y2="900">
@@ -110,85 +112,138 @@ function HeroBanner() {
             </linearGradient>
           </defs>
         </svg>
-        <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-[#B8860B]/10 to-transparent hidden lg:block" />
+        <div className="absolute right-[30%] top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-[#B8860B]/8 to-transparent hidden lg:block" />
       </div>
 
       <div className="sw-container relative z-10 w-full">
-        <div className="flex flex-col lg:flex-row items-center gap-0 lg:gap-10 py-8 md:py-12">
-          <div className="flex-1 text-center lg:text-left lg:max-w-[44%] z-10 pt-10 md:pt-20 lg:pt-0">
+        <div className="flex flex-col lg:flex-row items-center gap-0 lg:gap-8 py-6 md:py-10">
+          <div className="flex-1 text-center lg:text-left lg:max-w-[42%] z-10 pt-6 md:pt-12 lg:pt-0">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#B8860B]/8 border border-[#B8860B]/20 mb-6 backdrop-blur-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B] animate-pulse" />
-                <span className="text-[#B8860B] text-[11px] sm:text-[10px] uppercase tracking-[0.2em] font-bold">{settings?.hero_badge_text || "Just Landed — Series 11"}</span>
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-[#B8860B]/10 to-[#B8860B]/5 border border-[#B8860B]/20 mb-5 shadow-[0_0_20px_rgba(184,134,11,0.08)]">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B8860B] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B8860B]" />
+                </span>
+                <span className="text-[#B8860B] text-[10px] uppercase tracking-[0.25em] font-bold">{settings?.hero_badge_text || "Just Landed — Series 11"}</span>
               </div>
 
-              <div className="mb-4">
-                <span className="text-white/20 text-xs tracking-[0.3em] uppercase font-medium">Smartwear</span>
-                <h1 className="text-[2.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6rem] font-bold text-white leading-[1.0] mt-1" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
+              <div className="mb-3">
+                <div className="flex items-center gap-2 justify-center lg:justify-start mb-1">
+                  <span className="text-white/30 text-[11px] tracking-[0.3em] uppercase font-medium">Smartwear</span>
+                  <span className="w-6 h-[1px] bg-[#B8860B]/30" />
+                  <span className="flex items-center gap-0.5">
+                    {[1,2,3,4,5].map(i => (
+                      <svg key={i} className="w-3 h-3 text-[#F0C75A]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    ))}
+                  </span>
+                  <span className="text-white/20 text-[10px]">4.9</span>
+                </div>
+                <h1 className="text-[2.8rem] sm:text-[4.8rem] md:text-[5.8rem] lg:text-[6.2rem] font-bold text-white leading-[0.95] tracking-tight" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
                   Series{" "}
-                  <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent tracking-tight">
+                  <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
                     11
                   </span>
                 </h1>
               </div>
 
-              <p className="text-white/40 text-sm md:text-base max-w-md mx-auto lg:mx-0 mb-6 leading-relaxed">
-                Ultra-slim. Powerhouse performance. AMOLED display, Bluetooth calling, AI health tracking — redefining what a smartwatch can do.
+              <p className="text-white/35 text-sm md:text-[15px] max-w-sm mx-auto lg:mx-0 mb-5 leading-relaxed">
+                Ultra-slim design. AMOLED display. Bluetooth calling. AI health tracking with 7-day battery — engineered to elevate every moment.
               </p>
 
-              <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
-                <div className="text-3xl md:text-4xl font-bold text-white tracking-tight" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
-                  Rs. 5,500
+              <div className="flex items-center justify-center lg:justify-start gap-3 mb-5">
+                <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/5">
+                  <span className="text-2xl md:text-3xl font-bold text-white tracking-tight" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
+                    Rs. 5,500
+                  </span>
+                  <span className="text-sm md:text-base text-white/20 line-through">Rs. 8,500</span>
                 </div>
-                <div className="text-lg md:text-xl text-white/25 line-through">Rs. 8,500</div>
-                <div className="px-3 py-1 rounded-md bg-[#B8860B]/15 border border-[#B8860B]/25 text-[#F0C75A] text-xs font-bold tracking-wider">
-                  -35%
+                <div className="px-3 py-2 rounded-xl bg-gradient-to-br from-[#B8860B]/20 to-[#B8860B]/10 border border-[#B8860B]/25 shadow-[0_0_15px_rgba(184,134,11,0.1)]">
+                  <span className="text-[#F0C75A] text-xs font-extrabold tracking-wider">-35% OFF</span>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Link href="/products/series-11" className="group sw-btn-gold px-8 py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2.5 rounded-xl min-h-[52px]">
-                  Buy Now — Series 11
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <div className="flex flex-col sm:flex-row gap-2.5 justify-center lg:justify-start">
+                <Link href="/products/series-11" className="group relative sw-btn-gold px-8 py-3.5 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2.5 rounded-xl min-h-[48px] overflow-hidden">
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                  <span className="relative z-10 flex items-center gap-2.5">
+                    Buy Now — Series 11
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </Link>
-                <Link href="/products" className="px-8 py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[52px] border border-white/15 text-white/60 hover:text-white hover:border-white/30 transition-all">
-                  View All Watches
+                <Link href="/products" className="group px-8 py-3.5 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[48px] border border-white/12 text-white/50 hover:text-white hover:border-white/25 transition-all">
+                  View All
                 </Link>
               </div>
 
-              <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-4 sm:gap-6 justify-center lg:justify-start text-white/20 text-[10px] uppercase tracking-wider">
-                <span className="flex items-center gap-1.5"><Truck className="w-3 h-3" /> Free Delivery</span>
-                <span className="flex items-center gap-1.5"><RefreshCw className="w-3 h-3" /> 7-Day Replacement</span>
-                <span className="flex items-center gap-1.5"><PackageOpen className="w-3 h-3" /> Open Box Check</span>
+              <div className="mt-5 flex flex-wrap items-center gap-3 sm:gap-5 justify-center lg:justify-start">
+                {[
+                  { icon: Truck, label: "Free Delivery" },
+                  { icon: RefreshCw, label: "7-Day Replacement" },
+                  { icon: PackageOpen, label: "Open Box Check" },
+                ].map((item, i) => (
+                  <motion.span
+                    key={item.label}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 + i * 0.1 }}
+                    className="flex items-center gap-1.5 text-white/15 text-[9px] uppercase tracking-wider"
+                  >
+                    <item.icon className="w-2.5 h-2.5 text-[#B8860B]/40" />
+                    {item.label}
+                  </motion.span>
+                ))}
               </div>
             </motion.div>
           </div>
 
           <div className="flex-1 flex items-center justify-center relative w-full min-h-[30vh] md:min-h-[40vh] lg:min-h-[60vh]">
             <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
+              initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
+              transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
               className="relative w-full h-full flex items-center justify-center"
             >
-              <div className="relative w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] md:w-[520px] md:h-[520px] lg:w-[650px] lg:h-[650px] flex items-center justify-center">
-                <div className="absolute inset-[5%] rounded-full bg-gradient-to-br from-[#B8860B]/10 via-[#B8860B]/5 to-transparent blur-[80px] animate-pulse" />
-                <div className="absolute inset-0 rounded-full border border-[#B8860B]/8" />
-                <div className="absolute inset-[18%] rounded-full border border-white/[0.03]" />
-                <div className="absolute inset-[35%] rounded-full border border-[#B8860B]/5 animate-[spin_40s_linear_infinite]" />
+              <div className="relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] flex items-center justify-center">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-[3%] rounded-full bg-gradient-to-br from-[#B8860B]/8 via-transparent to-[#B8860B]/3 blur-[60px]"
+                />
+                <motion.div
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 rounded-full border border-[#B8860B]/6"
+                />
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-[12%] rounded-full border border-dashed border-[#B8860B]/4"
+                />
+                <div className="absolute inset-[28%] rounded-full bg-[#B8860B]/4 blur-[40px]" />
 
-                <div className="absolute top-[3%] right-[3%] px-3 py-1.5 rounded-full bg-[#B8860B]/10 border border-[#B8860B]/20 text-[#B8860B] text-[10px] font-bold uppercase tracking-widest backdrop-blur-sm animate-pulse">
-                  New
-                </div>
+                <motion.div
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute top-[2%] right-[2%] px-3 py-1 rounded-full bg-gradient-to-r from-[#B8860B]/15 to-[#B8860B]/5 border border-[#B8860B]/25 text-[#F0C75A] text-[9px] font-extrabold uppercase tracking-[0.15em] shadow-[0_0_15px_rgba(184,134,11,0.1)] backdrop-blur-sm"
+                >
+                  ⚡ New Launch
+                </motion.div>
 
-                {/* Floating spec tags */}
+                <motion.div
+                  animate={{ scale: [1, 1.08, 1] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  className="absolute bottom-[8%] left-[2%] px-2.5 py-1 rounded-full bg-white/[0.02] border border-white/6 text-white/25 text-[8px] font-bold uppercase tracking-wider backdrop-blur-sm"
+                >
+                  ★ Best Seller
+                </motion.div>
+
                 {specs.map((spec, i) => {
-                  const angle = (i * 72) * (Math.PI / 180)
-                  const radius = 40
+                  const angle = (i * 72 - 90) * (Math.PI / 180)
+                  const radius = 38
                   const x = 50 + radius * Math.cos(angle)
                   const y = 50 + radius * Math.sin(angle)
                   return (
@@ -196,39 +251,39 @@ function HeroBanner() {
                       key={spec.label}
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.6 + i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-                      className="absolute hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/8 text-white/40 text-[9px] font-medium tracking-wider whitespace-nowrap backdrop-blur-sm hover:border-[#B8860B]/20 hover:text-[#B8860B]/60 transition-colors"
+                      transition={{ duration: 0.4, delay: 0.7 + i * 0.08, ease: "backOut" }}
+                      className="absolute hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 border border-white/6 text-white/35 text-[8px] font-medium tracking-wider whitespace-nowrap backdrop-blur-md hover:border-[#B8860B]/20 hover:text-[#B8860B]/50 transition-all cursor-default"
                       style={{
                         left: `${x}%`,
                         top: `${y}%`,
                         transform: "translate(-50%, -50%)",
                       }}
                     >
-                      <span className="text-[#B8860B]/40">{spec.icon}</span>
+                      <span className="text-[#B8860B]/50 text-[10px]">{spec.icon}</span>
                       {spec.label}
                     </motion.div>
                   )
                 })}
 
-                <div className="relative w-[60%] aspect-square">
+                <div className="relative w-[55%] aspect-square">
                   <motion.div
-                    animate={{ y: [0, -8, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
                     className="relative w-full h-full"
                   >
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#B8860B]/8 to-transparent blur-[40px]" />
                     <Image
                       src="/series-11-hero.png"
                       alt="Series 11 Smart Watch"
                       fill
-                      sizes="(max-width: 640px) 192px, (max-width: 1024px) 312px, 390px)"
-                      className="object-contain drop-shadow-[0_60px_140px_rgba(184,134,11,0.35)] scale-125"
+                      sizes="(max-width: 640px) 165px, (max-width: 1024px) 275px, 330px)"
+                      className="object-contain drop-shadow-[0_40px_100px_rgba(184,134,11,0.3)] scale-125"
                       priority
                     />
                   </motion.div>
                 </div>
 
-                {/* Bottom gradient fade */}
-                <div className="absolute -bottom-8 left-[10%] right-[10%] h-20 bg-gradient-to-t from-[#06080A] via-[#06080A]/60 to-transparent blur-sm" />
+                <div className="absolute -bottom-6 left-[10%] right-[10%] h-16 bg-gradient-to-t from-[#06080A] via-[#06080A]/50 to-transparent blur-md" />
               </div>
             </motion.div>
           </div>
