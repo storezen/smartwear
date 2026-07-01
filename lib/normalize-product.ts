@@ -59,17 +59,13 @@ export function normalizeProductRecord<T extends ProductRecord>(product: T): T {
     ? product.tags.join(', ')
     : (product.tags as string) || ''
 
-  let slug = normalizeCategorySlug(product.category_slug)
-
-  if (!CANONICAL_SLUGS.has(slug)) {
-    const categoryName = getProductCategory(
-      product.name || '',
-      tags,
-      '',
-      product.slug || ''
-    )
-    slug = getCategorySlug(categoryName)
-  }
+  const categoryName = getProductCategory(
+    product.name || '',
+    tags,
+    '',
+    product.slug || ''
+  )
+  const slug = getCategorySlug(categoryName)
 
   if (product.category_slug === slug) return product
   return { ...product, category_slug: slug }
