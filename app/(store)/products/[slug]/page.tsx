@@ -709,7 +709,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
 
               {/* Trust & Guarantees (from settings) */}
               <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3} className="grid grid-cols-2 gap-y-5 gap-x-2 bg-white/[0.03] border border-white/5 rounded-2xl p-5">
-                {trustBadges.map((badge: any, i: number) => (
+                {trustBadges.filter((b: any) => b.label === '7-Day Replacement' || b.label === 'Cash on Delivery').map((badge: any, i: number) => (
                   <div key={i} className="flex flex-col gap-1">
                     <div className="flex items-center gap-2 text-white">
                       {renderBadgeIcon(badge.icon || '')}
