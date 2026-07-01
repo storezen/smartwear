@@ -78,6 +78,15 @@ const INITIAL_DATA = {
       status: "Active", is_featured: true, is_active: true, created_at: "2026-06-20", upsell_accessories: []
     },
     {
+      id: "prod-smart-5", name: "Series 11", slug: "series-11",
+      description: "Ultra-slim design meets powerhouse performance. AMOLED display, Bluetooth calling, AI health tracking, and 7-day battery — redefining what a smartwatch can do.",
+      price: 5500, compare_price: 8500,
+      images: ["https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80", "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=800&q=80", "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80"],
+      category_slug: "smart-watches", brand: "Smartwear", stock: 100, rating: 4.9, reviews_count: 86,
+      specifications: { "Display": "1.43 AMOLED", "Battery": "7 Days", "Bluetooth": "5.3 Calling", "Health": "HR, SpO2, Sleep, Stress", "Water Resistant": "IP68" },
+      status: "Active", is_featured: true, is_active: true, created_at: "2026-07-01", upsell_accessories: []
+    },
+    {
       id: "prod-analog-1", name: "Heritage Classic Automatic", slug: "heritage-classic-automatic",
       description: "Japanese automatic movement, sapphire crystal, and genuine leather strap.",
       price: 12999, compare_price: 15999,
