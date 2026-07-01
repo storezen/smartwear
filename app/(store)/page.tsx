@@ -93,7 +93,7 @@ function HeroBanner() {
   ]
 
   return (
-    <section className="relative min-h-[90svh] md:min-h-screen flex items-center overflow-hidden bg-[#06080A]">
+    <section className="relative min-h-[80svh] flex items-center overflow-hidden bg-[#06080A]">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[60%] h-full bg-gradient-to-bl from-[#B8860B]/8 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-gradient-to-tr from-[#B8860B]/4 via-transparent to-transparent" />
@@ -114,7 +114,7 @@ function HeroBanner() {
       </div>
 
       <div className="sw-container relative z-10 w-full">
-        <div className="flex flex-col lg:flex-row items-center gap-0 lg:gap-10 py-8 md:py-16 min-h-[90svh] md:min-h-screen">
+        <div className="flex flex-col lg:flex-row items-center gap-0 lg:gap-10 py-8 md:py-12">
           <div className="flex-1 text-center lg:text-left lg:max-w-[44%] z-10 pt-10 md:pt-20 lg:pt-0">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -168,7 +168,7 @@ function HeroBanner() {
             </motion.div>
           </div>
 
-          <div className="flex-1 flex items-center justify-center relative w-full min-h-[40vh] md:min-h-[55vh] lg:min-h-[85vh]">
+          <div className="flex-1 flex items-center justify-center relative w-full min-h-[30vh] md:min-h-[40vh] lg:min-h-[60vh]">
             <motion.div
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
