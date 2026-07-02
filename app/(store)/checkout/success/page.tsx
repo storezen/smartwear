@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, Suspense, useRef } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -23,7 +23,6 @@ function SuccessContent() {
   const orderId = orderIdFromQuery || ''
 
   const [orderDetails, setOrderDetails] = useState<any>(null)
-  const printRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const dedupKey = `tiktokPurchaseSent_${orderId}`
@@ -63,8 +62,71 @@ function SuccessContent() {
   })
 
   const handlePrint = () => {
-    const printContent = printRef.current?.innerHTML
-    if (!printContent) return
+    const name = orderDetails?.customer_name || orderDetails?.shipping_address?.name || ''
+    const phone = orderDetails?.phone || orderDetails?.shipping_address?.phone || ''
+    const addr = orderDetails?.shipping_address?.address_line1 || ''
+    const city = orderDetails?.shipping_address?.city || ''
+    const items = orderDetails?.items || []
+    const total = orderDetails?.total || totalFromQuery
+
+    let itemsHtml = ''
+    if (items.length > 0) {
+      const rows = items.map((item: any) =>
+        `<tr>
+          <td>${item.name || item.product_name}${item.color ? ` (${item.color})` : ''}</td>
+          <td style="text-align:right">${formatPrice(item.price)}</td>
+          <td style="text-align:right">${item.quantity}</td>
+          <td style="text-align:right">${formatPrice(item.price * item.quantity)}</td>
+        </tr>`
+      ).join('')
+
+      itemsHtml = `
+        <div style="margin:24px 0">
+          <h2 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#888;margin:0 0 12px">Order Items</h2>
+          <table style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr>
+                <th style="padding:10px 0;text-align:left;border-bottom:1px solid #eee;font-size:14px;color:#888;font-weight:normal">Item</th>
+                <th style="padding:10px 0;text-align:right;border-bottom:1px solid #eee;font-size:14px;color:#888;font-weight:normal">Price</th>
+                <th style="padding:10px 0;text-align:right;border-bottom:1px solid #eee;font-size:14px;color:#888;font-weight:normal">Qty</th>
+                <th style="padding:10px 0;text-align:right;border-bottom:1px solid #eee;font-size:14px;color:#888;font-weight:normal">Total</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <div style="display:flex;justify-content:space-between;padding:12px 0 0;margin-top:8px;border-top:2px solid #D4A017;font-size:16px;font-weight:bold">
+            <span>Total</span>
+            <span>${formatPrice(total)}</span>
+          </div>
+          <div style="margin-top:8px;font-size:13px;color:#666;display:flex;justify-content:space-between">
+            <span>Payment Method</span>
+            <span>Cash on Delivery</span>
+          </div>
+        </div>`
+    }
+
+    let addressHtml = ''
+    if (name || addr || city || phone) {
+      addressHtml = `
+        <div style="margin:24px 0">
+          <h2 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#888;margin:0 0 12px">Delivery Address</h2>
+          <div style="background:#f9f9f9;padding:16px;border-radius:8px;font-size:14px;line-height:1.6">
+            ${name ? `<p><strong>${name}</strong></p>` : ''}
+            ${addr ? `<p>${addr}</p>` : ''}
+            ${city ? `<p>${city}</p>` : ''}
+            ${phone ? `<p>${phone}</p>` : ''}
+          </div>
+        </div>`
+    }
+
+    const timelineHtml = `
+      <div style="margin:24px 0">
+        <h2 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#888;margin:0 0 12px">Delivery Timeline</h2>
+        <p style="font-size:14px;color:#333">Estimated Delivery: <strong>${deliveryDate}</strong></p>
+        <ul style="margin-top:8px;padding-left:18px;font-size:13px;color:#555;line-height:1.8">
+          ${TIMELINE_STEPS.map(s => `<li>${s.label} — ${s.sub}</li>`).join('')}
+        </ul>
+      </div>`
 
     const win = window.open('', '', 'width=800,height=600')
     if (!win) return
@@ -80,18 +142,7 @@ function SuccessContent() {
             .header p { font-size: 13px; color: #666; margin: 0; }
             .order-id { text-align: center; font-size: 16px; margin: 24px 0; padding: 12px; background: #f5f5f5; border-radius: 8px; }
             .order-id strong { color: #B8860B; }
-            .section { margin: 24px 0; }
-            .section h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin: 0 0 12px; }
-            .item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 14px; }
-            .item:last-child { border-bottom: none; }
-            .total-row { display: flex; justify-content: space-between; padding: 12px 0 0; margin-top: 8px; border-top: 2px solid #D4A017; font-size: 16px; font-weight: bold; }
-            .address-box { background: #f9f9f9; padding: 16px; border-radius: 8px; font-size: 14px; line-height: 1.6; }
-            .address-box p { margin: 2px 0; }
             .footer { text-align: center; margin-top: 32px; padding-top: 16px; border-top: 1px solid #eee; font-size: 11px; color: #999; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { padding: 10px 0; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
-            th { color: #888; font-weight: normal; }
-            .text-right { text-align: right; }
             @page { margin: 1.5cm; }
             @media print { body { padding: 0; } }
           </style>
@@ -101,20 +152,25 @@ function SuccessContent() {
             <h1>Order Confirmation</h1>
             <p>Smart Wear Pakistan</p>
           </div>
-          <div class="order-id">
-            Order Number: <strong>${orderId}</strong>
-          </div>
-          ${printContent}
+          <div class="order-id">Order Number: <strong>${orderId}</strong></div>
+          ${itemsHtml}
+          ${addressHtml}
+          ${timelineHtml}
           <div class="footer">
             <p>Smart Wear Pakistan — Free Shipping | Cash on Delivery | 7-Day Replacement</p>
             <p>Generated on ${new Date().toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
           </div>
+          <script>window.onload=function(){setTimeout(function(){window.print();window.close()},300)}<\/script>
         </body>
       </html>
     `)
     win.document.close()
-    setTimeout(() => { win.print(); win.close() }, 500)
   }
+
+  const name = orderDetails?.customer_name || orderDetails?.shipping_address?.name || ''
+  const phone = orderDetails?.phone || orderDetails?.shipping_address?.phone || ''
+  const addr = orderDetails?.shipping_address?.address_line1 || ''
+  const city = orderDetails?.shipping_address?.city || ''
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-start md:justify-center px-4 py-6 md:py-16 relative overflow-hidden">
@@ -126,7 +182,6 @@ function SuccessContent() {
       >
         <SpotlightCard className="p-6 sm:p-8 text-center relative overflow-hidden">
 
-          {/* Print Button */}
           <button
             onClick={handlePrint}
             className="absolute top-4 right-4 z-20 w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-border transition-all sw-interactive"
@@ -156,6 +211,19 @@ function SuccessContent() {
             <span className="text-[#B8860B] font-mono font-bold tracking-wider text-sm">{orderId}</span>
           </div>
 
+          {/* Address */}
+          {(name || addr || city || phone) && (
+            <div className="bg-card border border-border rounded-2xl p-4 mb-4 text-left">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-2">Delivery Address</h3>
+              <div className="text-sm text-foreground/80 space-y-0.5">
+                {name && <p className="text-foreground font-medium">{name}</p>}
+                {addr && <p>{addr}</p>}
+                {city && <p>{city}</p>}
+                {phone && <p>{phone}</p>}
+              </div>
+            </div>
+          )}
+
           {/* Order Items */}
           {orderDetails?.items && orderDetails.items.length > 0 && (
             <div className="bg-card border border-border rounded-2xl p-4 mb-4 text-left">
@@ -163,7 +231,7 @@ function SuccessContent() {
               {orderDetails.items.map((item: any, idx: number) => (
                 <div key={idx} className="flex items-center justify-between gap-3 py-2 border-b border-border last:border-0">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
+                    <p className="text-sm font-medium text-foreground truncate">{item.name || item.product_name}</p>
                     {item.color && <p className="text-[11px] text-foreground/50">{item.color}</p>}
                   </div>
                   <div className="text-right shrink-0">
@@ -179,19 +247,6 @@ function SuccessContent() {
               <div className="flex items-center justify-between text-xs text-foreground/50 mt-1">
                 <span>Payment</span>
                 <span className="font-medium text-foreground/70">Cash on Delivery</span>
-              </div>
-            </div>
-          )}
-
-          {/* Delivery Address */}
-          {orderDetails?.shipping_address && (
-            <div className="bg-card border border-border rounded-2xl p-4 mb-4 text-left">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-2">Delivery Address</h3>
-              <div className="text-sm text-foreground/80 space-y-0.5">
-                <p className="text-foreground font-medium">{orderDetails.shipping_address.name}</p>
-                <p>{orderDetails.shipping_address.address_line1}</p>
-                <p>{orderDetails.shipping_address.city}</p>
-                <p>{orderDetails.shipping_address.phone}</p>
               </div>
             </div>
           )}
@@ -219,7 +274,6 @@ function SuccessContent() {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/products"
@@ -238,65 +292,6 @@ function SuccessContent() {
 
         </SpotlightCard>
       </motion.div>
-
-      {/* Hidden print content — only order details */}
-      <div ref={printRef} style={{ display: 'none' }}>
-        {orderDetails?.items && orderDetails.items.length > 0 && (
-          <div>
-            <h2>Order Items</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th style={{ textAlign: 'right' }}>Price</th>
-                  <th style={{ textAlign: 'right' }}>Qty</th>
-                  <th style={{ textAlign: 'right' }}>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orderDetails.items.map((item: any, idx: number) => (
-                  <tr key={idx}>
-                    <td>{item.name}{item.color ? ` (${item.color})` : ''}</td>
-                    <td style={{ textAlign: 'right' }}>{formatPrice(item.price)}</td>
-                    <td style={{ textAlign: 'right' }}>{item.quantity}</td>
-                    <td style={{ textAlign: 'right' }}>{formatPrice(item.price * item.quantity)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 12, marginTop: 8, borderTop: '2px solid #D4A017', fontSize: 16, fontWeight: 'bold' }}>
-              <span>Total</span>
-              <span>{formatPrice(orderDetails.total || totalFromQuery)}</span>
-            </div>
-            <div style={{ marginTop: 8, fontSize: 13, color: '#666', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Payment Method</span>
-              <span>Cash on Delivery</span>
-            </div>
-          </div>
-        )}
-
-        {orderDetails?.shipping_address && (
-          <div>
-            <h2>Delivery Address</h2>
-            <div style={{ background: '#f9f9f9', padding: 16, borderRadius: 8, fontSize: 14, lineHeight: 1.6 }}>
-              <p><strong>{orderDetails.shipping_address.name}</strong></p>
-              <p>{orderDetails.shipping_address.address_line1}</p>
-              <p>{orderDetails.shipping_address.city}</p>
-              <p>{orderDetails.shipping_address.phone}</p>
-            </div>
-          </div>
-        )}
-
-        <div>
-          <h2>Delivery Timeline</h2>
-          <p>Estimated Delivery: <strong>{deliveryDate}</strong></p>
-          <ul>
-            {TIMELINE_STEPS.map((step, idx) => (
-              <li key={idx}>{step.label} — {step.sub}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
     </div>
   )
 }
