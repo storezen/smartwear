@@ -382,7 +382,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
   if (!items.length) return null
 
   const carouselNavClass =
-    "hidden md:flex h-10 w-10 border-border bg-background/95 text-foreground hover:bg-[#B8860B] hover:text-[#0C0F14] hover:border-[#B8860B] disabled:opacity-30"
+    "hidden md:flex h-10 w-10 border-border bg-background/95 text-foreground hover:bg-[#B8860B] hover:text-black hover:border-[#B8860B] disabled:opacity-30"
 
   return (
     <section className={`${SECTION_PAD} bg-background`}>

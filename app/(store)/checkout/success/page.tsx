@@ -211,7 +211,7 @@ function SuccessContent() {
               <div className="space-y-6">
                 {TIMELINE_STEPS.map((step, idx) => (
                   <div key={idx} className="relative flex items-start gap-4 z-10">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${step.done ? 'bg-[#B8860B] text-[#0C0F14] shadow-[0_0_15px_rgba(184,134,11,0.5)]' : 'bg-card border border-border text-foreground/60'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${step.done ? 'bg-[#B8860B] text-black shadow-[0_0_15px_rgba(184,134,11,0.5)]' : 'bg-card border border-border text-foreground/60'}`}>
                       <step.icon className="w-4 h-4" />
                     </div>
                     <div className="mt-1">

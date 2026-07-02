@@ -108,8 +108,8 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
           </DialogTitle>
         </DialogHeader>
 
-        <div className="bg-background rounded-xl p-4 flex gap-4 items-center mb-6 mt-2 border border-white/5">
-          <div className="w-16 h-16 rounded-lg bg-card overflow-hidden shrink-0 relative border border-white/5 protected-img">
+        <div className="bg-background rounded-xl p-4 flex gap-4 items-center mb-6 mt-2 border border-border">
+          <div className="w-16 h-16 rounded-lg bg-card overflow-hidden shrink-0 relative border border-border protected-img">
             <Image src={product.images[0]} alt={product.name} fill sizes="64px" className="object-cover" />
           </div>
           <div className="flex-1">
@@ -130,7 +130,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
               type="text"
               value={formData.name}
               onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
-              className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
+              className="w-full h-12 bg-card border border-border rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-card outline-none transition-all"
               placeholder="e.g. Ali Khan"
             />
           </div>
@@ -141,7 +141,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData(p => ({ ...p, phone: e.target.value }))}
-              className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
+              className="w-full h-12 bg-card border border-border rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-card outline-none transition-all"
               placeholder="0300 1234567"
             />
           </div>
@@ -153,7 +153,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
                 type="text"
                 value={formData.address}
                 onChange={(e) => setFormData(p => ({ ...p, address: e.target.value }))}
-                className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
+                className="w-full h-12 bg-card border border-border rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-card outline-none transition-all"
                 placeholder="House, Street, Area"
               />
             </div>
@@ -164,7 +164,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
                 type="text"
                 value={formData.city}
                 onChange={(e) => setFormData(p => ({ ...p, city: e.target.value }))}
-                className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
+                className="w-full h-12 bg-card border border-border rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-card outline-none transition-all"
                 placeholder="Karachi, Lahore, Islamabad..."
               />
             </div>
@@ -173,7 +173,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
           <button
             type="submit"
             disabled={isProcessing}
-            className="w-full h-12 mt-4 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-[#0C0F14] font-bold text-sm tracking-widest uppercase hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full h-12 mt-4 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black font-bold text-sm tracking-widest uppercase hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {isProcessing ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>

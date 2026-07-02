@@ -177,7 +177,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                         className={cn(
                           "flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all duration-200 group",
                           selectedIndex === idx 
-                            ? "bg-white/10" 
+                            ? "bg-accent/10" 
                             : "hover:bg-card"
                         )}
                       >
@@ -218,11 +218,11 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
               {/* Footer Actions */}
               <div className="hidden md:flex items-center gap-4 px-4 py-3 border-t border-border text-[10px] text-foreground/40">
                 <div className="flex items-center gap-1.5">
-                  <span className="flex items-center justify-center w-5 h-5 rounded bg-white/10 border border-border">↵</span> to select
+                  <span className="flex items-center justify-center w-5 h-5 rounded bg-accent/10 border border-border">↵</span> to select
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="flex items-center justify-center w-5 h-5 rounded bg-white/10 border border-border">↑</span>
-                  <span className="flex items-center justify-center w-5 h-5 rounded bg-white/10 border border-border">↓</span> to navigate
+                  <span className="flex items-center justify-center w-5 h-5 rounded bg-accent/10 border border-border">↑</span>
+                  <span className="flex items-center justify-center w-5 h-5 rounded bg-accent/10 border border-border">↓</span> to navigate
                 </div>
               </div>
             </div>
@@ -278,7 +278,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                       router.push(`/products/${selectedProduct.slug}`)
                       onClose()
                     }}
-                    className="w-full py-3 rounded-xl bg-card hover:bg-white/10 border border-border text-sm font-semibold flex items-center justify-center gap-2 transition-colors mt-auto group"
+                    className="w-full py-3 rounded-xl bg-card hover:bg-accent/10 border border-border text-sm font-semibold flex items-center justify-center gap-2 transition-colors mt-auto group"
                   >
                     View Details <ArrowUpRight className="w-4 h-4 text-foreground/40 group-hover:text-foreground transition-colors" />
                   </button>

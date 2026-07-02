@@ -84,7 +84,7 @@ function ProductCard({ data, onAddToCart, addingToCart }: ProductCardWithCartPro
         href={`/products/${encodeURIComponent(data.slug)}`}
         className="flex items-center gap-3 p-2.5 rounded-xl bg-card border border-border hover:bg-card hover:border-[#B8860B]/20 transition-all"
       >
-        <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-[#06080A] shrink-0">
+        <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-background shrink-0">
           <Image
             src={data.image || FALLBACK_PRODUCT_IMG}
             alt={data.name}
@@ -94,7 +94,7 @@ function ProductCard({ data, onAddToCart, addingToCart }: ProductCardWithCartPro
           />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-white text-xs font-semibold truncate">{data.name}</p>
+          <p className="text-foreground text-xs font-semibold truncate">{data.name}</p>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[#B8860B] text-xs font-bold">Rs. {data.price?.toLocaleString()}</span>
             {data.comparePrice && (
@@ -129,12 +129,12 @@ function OrderCard({ data }: { data: OrderInfoData }) {
   return (
     <div className="p-3 rounded-xl bg-[#1F2A33] border border-border mt-2">
       <div className="flex items-center justify-between mb-2">
-        <p className="text-white text-xs font-semibold">Order #{data.id}</p>
+        <p className="text-foreground text-xs font-semibold">Order #{data.id}</p>
         <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
           data.status === "Delivered" ? "bg-emerald-500/10 text-emerald-400" :
           data.status === "Booked" ? "bg-blue-500/10 text-blue-400" :
           data.status === "Processing" ? "bg-amber-500/10 text-amber-400" :
-          "bg-white/5 text-foreground/50"
+          "bg-card text-foreground/50"
         }`}>
           {data.status}
         </span>
@@ -143,7 +143,7 @@ function OrderCard({ data }: { data: OrderInfoData }) {
         <p key={i} className="text-foreground/50 text-[11px]">{item.name} x{item.qty}</p>
       ))}
       <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
-        <span className="text-white text-xs font-bold">Rs. {data.total?.toLocaleString()}</span>
+        <span className="text-foreground text-xs font-bold">Rs. {data.total?.toLocaleString()}</span>
         {data.daysLeft !== undefined && (
           <span className="text-foreground/40 text-[10px] flex items-center gap-1">
             <Clock className="w-3 h-3" /> Return by: {data.daysLeft} days
@@ -531,7 +531,7 @@ export function AIChat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className={`fixed bottom-6 right-6 z-50 w-[360px] sm:w-[400px] rounded-2xl overflow-hidden shadow-2xl bg-[#0A0D11] border border-white/10 ${
+            className={`fixed bottom-6 right-6 z-50 w-[360px] sm:w-[400px] rounded-2xl overflow-hidden shadow-2xl bg-background border border-border ${
               isMinimized ? "h-[60px]" : "h-[620px] max-h-[85vh]"
             }`}
           >
@@ -543,27 +543,27 @@ export function AIChat() {
                   <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#075E54]" />
                 </div>
                 <div>
-                  <p className="text-white text-sm font-semibold">Smartwear Pakistan</p>
+                  <p className="text-foreground text-sm font-semibold">Smartwear Pakistan</p>
                   <p className="text-[#25D366] text-[10px] font-medium">{isTyping ? "Typing..." : "Online"}</p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={(e) => { e.stopPropagation(); toggleLang() }}
-                  className="w-7 h-7 rounded-full hover:bg-white/10 flex items-center justify-center text-foreground/50 hover:text-foreground text-[10px] font-bold uppercase transition-colors"
+                  className="w-7 h-7 rounded-full hover:bg-accent/10 flex items-center justify-center text-foreground/50 hover:text-foreground text-[10px] font-bold uppercase transition-colors"
                   title={lang === "urdu" ? "Switch to English" : "Urdu mein badlein"}
                 >
                   {lang === "urdu" ? "EN" : "UR"}
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); setIsMinimized(!isMinimized) }}
-                  className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors"
+                  className="w-8 h-8 rounded-full hover:bg-accent/10 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); setIsOpen(false) }}
-                  className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors"
+                  className="w-8 h-8 rounded-full hover:bg-accent/10 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -572,7 +572,7 @@ export function AIChat() {
 
             {/* Messages */}
             {!isMinimized && (
-              <div className="flex-1 h-[calc(100%-125px)] overflow-y-auto px-3 py-3 space-y-2 bg-[#0A0D11]" style={{ backgroundImage: "radial-gradient(circle at 25% 25%, rgba(255,255,255,0.01) 0%, transparent 60%)" }}>
+              <div className="flex-1 h-[calc(100%-125px)] overflow-y-auto px-3 py-3 space-y-2 bg-background" style={{ backgroundImage: "radial-gradient(circle at 25% 25%, rgba(255,255,255,0.01) 0%, transparent 60%)" }}>
                 {messages.map((msg) => (
                   <div key={msg.id}>
                     <div className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -626,9 +626,9 @@ export function AIChat() {
                   <div className="flex justify-start">
                     <div className="bg-[#1F2A33] px-4 py-3 rounded-2xl rounded-bl-sm">
                       <div className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-                        <span className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-                        <span className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+                        <span className="w-2 h-2 rounded-full bg-foreground/40 animate-bounce" style={{ animationDelay: "0ms" }} />
+                        <span className="w-2 h-2 rounded-full bg-foreground/40 animate-bounce" style={{ animationDelay: "150ms" }} />
+                        <span className="w-2 h-2 rounded-full bg-foreground/40 animate-bounce" style={{ animationDelay: "300ms" }} />
                       </div>
                     </div>
                   </div>
@@ -658,7 +658,7 @@ export function AIChat() {
                         </button>
                         <button
                           onClick={() => { sessionStorage.setItem("chat_failed_count", "0"); setFailedCount(0) }}
-                          className="px-3 py-1.5 rounded-lg border border-white/10 text-foreground/50 text-xs hover:text-foreground/& transition-colors"
+                          className="px-3 py-1.5 rounded-lg border border-border text-foreground/50 text-xs hover:text-foreground/& transition-colors"
                         >
                           {lang === "urdu" ? "Nahi, AI se baat karo" : "No, continue with AI"}
                         </button>
@@ -673,7 +673,7 @@ export function AIChat() {
 
             {/* Input */}
             {!isMinimized && (
-              <div className="border-t border-border bg-[#0A0D11]">
+              <div className="border-t border-border bg-background">
                 {messages.length <= 1 && (
                   <div className="px-3 pt-2 pb-1 flex flex-wrap gap-1.5">
                     {quickReplies.map((qr) => (
@@ -694,12 +694,12 @@ export function AIChat() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder={lang === "urdu" ? "Yahan likhein..." : "Type a message..."}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-foreground text-sm placeholder-white/30 focus:outline-none focus:border-[#25D366]/40 transition-all"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-card border border-border text-foreground text-sm placeholder-foreground/30 focus:outline-none focus:border-[#25D366]/40 transition-all"
                   />
                   <button
                     type="button"
                     onClick={toggleVoice}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${isListening ? "bg-red-500 animate-pulse text-foreground" : "bg-white/5 border border-white/10 text-foreground/50 hover:text-foreground/& hover:bg-white/10"}`}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${isListening ? "bg-red-500 animate-pulse text-foreground" : "bg-card border border-border text-foreground/50 hover:text-foreground/& hover:bg-accent/10"}`}
                     title={lang === "urdu" ? "Bolein" : "Voice input"}
                   >
                     <Mic className="w-4 h-4" />

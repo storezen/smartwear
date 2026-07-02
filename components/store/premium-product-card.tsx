@@ -55,16 +55,16 @@ export function ProductCard({ product, className }: { product: Product; classNam
   return (
     <>
       <div className={cn("group block cursor-pointer", className)} onClick={handleNavigate}>
-        <SpotlightCard className="h-full relative overflow-hidden bg-card rounded-2xl border-white/[0.06] transition-colors duration-500 hover:border-[#B8860B]/25 flex flex-col">
+        <SpotlightCard className="h-full relative overflow-hidden bg-card rounded-2xl border-border transition-colors duration-500 hover:border-[#B8860B]/25 flex flex-col">
           <div className="absolute inset-0 bg-gradient-to-b from-[#B8860B]/0 to-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
           {/* ── IMAGE ── */}
-          <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-[#0F1923] to-[#0A0D12] shrink-0">
+          <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-card to-card shrink-0">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] rounded-full bg-[#B8860B]/10 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
 
             {!imgErr ? (
               <div className="absolute inset-0 z-10">
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-[#0C0F14]/5 pointer-events-none z-20" />
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-background/5 pointer-events-none z-20" />
                 <Image
                   src={product.images[0]}
                   alt={product.name}
@@ -92,12 +92,12 @@ export function ProductCard({ product, className }: { product: Product; classNam
             <div className="absolute top-3 left-3 right-3 flex justify-between items-start z-40 pointer-events-none">
               <div className="flex flex-col gap-1">
                 {discount > 0 && (
-                  <span className="bg-[#B8860B] text-[#0C0F14] text-[9px] font-bold px-2.5 py-0.5 rounded-md uppercase tracking-wider shadow-lg self-start">
+                  <span className="bg-[#B8860B] text-black text-[9px] font-bold px-2.5 py-0.5 rounded-md uppercase tracking-wider shadow-lg self-start">
                     -{discount}%
                   </span>
                 )}
                 {product.is_featured && (
-                  <span className="bg-white/10 backdrop-blur-md text-foreground border border-border text-[9px] font-semibold px-2.5 py-0.5 rounded-md uppercase tracking-wider self-start">
+                  <span className="bg-accent/10 backdrop-blur-md text-foreground border border-border text-[9px] font-semibold px-2.5 py-0.5 rounded-md uppercase tracking-wider self-start">
                     Featured
                   </span>
                 )}
@@ -105,7 +105,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
 
               <button
                 onClick={handleWishlist}
-                className="pointer-events-auto w-11 h-11 rounded-full flex items-center justify-center bg-black/30 backdrop-blur-md border border-border text-foreground hover:bg-[#B8860B]/20 hover:border-[#B8860B]/50 transition-all sw-interactive group/heart"
+                className="pointer-events-auto w-11 h-11 rounded-full flex items-center justify-center bg-background/30 backdrop-blur-md border border-border text-foreground hover:bg-[#B8860B]/20 hover:border-[#B8860B]/50 transition-all sw-interactive group/heart"
                 aria-label="Toggle wishlist"
               >
                 <Heart
@@ -127,7 +127,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
           </div>
 
           {/* ── INFO ── */}
-          <div className="relative p-4 bg-gradient-to-b from-transparent to-[#0C0F14] z-20 border-t border-border group-hover:border-[#B8860B]/20 transition-colors duration-500 flex-1 flex flex-col justify-between">
+          <div className="relative p-4 bg-gradient-to-b from-transparent to-background z-20 border-t border-border group-hover:border-[#B8860B]/20 transition-colors duration-500 flex-1 flex flex-col justify-between">
             
             <div className="flex items-center justify-between gap-2 mb-2">
               <span className="text-[#B8860B] text-[9px] font-bold uppercase tracking-[0.2em] truncate">{product.brand}</span>
@@ -139,7 +139,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
             </div>
 
             <h3 
-              className="text-white text-sm font-medium line-clamp-1 group-hover:text-[#B8860B] transition-colors duration-300 mb-3"
+              className="text-foreground text-sm font-medium line-clamp-1 group-hover:text-[#B8860B] transition-colors duration-300 mb-3"
               style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
             >
               {product.name}
@@ -148,7 +148,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
             <div className="flex items-baseline gap-2 mb-3">
               {discount > 0 && product.compare_price ? (
                 <>
-                  <span className="text-white font-semibold text-[15px] tracking-wide">
+                  <span className="text-foreground font-semibold text-[15px] tracking-wide">
                     {formatPrice(product.price)}
                   </span>
                   <span className="text-foreground/40 text-[10px] line-through decoration-white/20">
@@ -156,7 +156,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
                   </span>
                 </>
               ) : (
-                <span className="text-white font-semibold text-[15px] tracking-wide">
+                <span className="text-foreground font-semibold text-[15px] tracking-wide">
                   {formatPrice(product.price)}
                 </span>
               )}
@@ -173,14 +173,14 @@ export function ProductCard({ product, className }: { product: Product; classNam
               <button
                 onClick={handleQuickBuy}
                 disabled={!inStock}
-                className="col-span-3 h-11 rounded-lg bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-[#0C0F14] font-bold text-[10px] uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50 sw-interactive flex items-center justify-center gap-1.5"
+                className="col-span-3 h-11 rounded-lg bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black font-bold text-[10px] uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50 sw-interactive flex items-center justify-center gap-1.5"
               >
-                {inStock ? <><Zap className="w-3 h-3 fill-[#0C0F14]" /> Quick Buy</> : "Out of Stock"}
+                {inStock ? <><Zap className="w-3 h-3 fill-black" /> Quick Buy</> : "Out of Stock"}
               </button>
               <button
                 onClick={handleCart}
                 disabled={!inStock}
-                className="col-span-1 h-11 rounded-lg bg-white/5 border border-border flex items-center justify-center text-foreground hover:bg-white/10 transition-colors sw-interactive disabled:opacity-50"
+                className="col-span-1 h-11 rounded-lg bg-card border border-border flex items-center justify-center text-foreground hover:bg-accent/10 transition-colors sw-interactive disabled:opacity-50"
                 aria-label="Add to cart"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />

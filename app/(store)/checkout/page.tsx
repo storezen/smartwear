@@ -446,7 +446,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handlePlaceOrder}
                 disabled={isProcessing}
-                className="w-full h-16 mt-6 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-[#0C0F14] font-bold text-base uppercase tracking-widest hover:shadow-[0_0_30px_rgba(184,134,11,0.3)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                className="w-full h-16 mt-6 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black font-bold text-base uppercase tracking-widest hover:shadow-[0_0_30px_rgba(184,134,11,0.3)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
               >
                 {isProcessing ? (
                   <span className="flex items-center gap-2">
@@ -686,7 +686,7 @@ function SuccessModal({ orderId, total, onClose }: { orderId: string; total: num
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-[rgba(12,15,20,0.95)] min-h-screen min-h-[100dvh]"
+      className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-[hsl(var(--background)/0.95)] min-h-screen min-h-[100dvh]"
 
     >
       <GoldParticles active={showParticles} />
@@ -778,7 +778,7 @@ function SuccessModal({ orderId, total, onClose }: { orderId: string; total: num
               <div className="space-y-6">
                 {TIMELINE_STEPS.map((step, idx) => (
                   <div key={idx} className="relative flex items-start gap-4 z-10">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${step.done ? 'bg-[#B8860B] text-[#0C0F14] shadow-[0_0_15px_rgba(184,134,11,0.5)]' : 'bg-card border border-border text-foreground/60'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${step.done ? 'bg-[#B8860B] text-black shadow-[0_0_15px_rgba(184,134,11,0.5)]' : 'bg-card border border-border text-foreground/60'}`}>
                       <step.icon className="w-4 h-4" />
                     </div>
                     <div className="mt-1">

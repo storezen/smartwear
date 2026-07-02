@@ -521,7 +521,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                     transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                     className="absolute inset-0"
                   >
-                    <div className="absolute inset-0 z-10 bg-gradient-to-br from-transparent via-transparent to-[#0C0F14]/5 pointer-events-none" />
+                    <div className="absolute inset-0 z-10 bg-gradient-to-br from-transparent via-transparent to-background/5 pointer-events-none" />
                     <Image
                       src={product.images[selectedImage]}
                       alt={product.name}
@@ -569,7 +569,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
 
                 <div className="absolute top-6 left-6 flex flex-col gap-2 z-10">
                   {discount > 0 && (
-                    <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 }} className={cn("text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider shadow-lg transition-colors", lumeMode ? "bg-emerald-500 text-black" : "bg-[#B8860B] text-[#0C0F14]")}>
+                    <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 }} className={cn("text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider shadow-lg transition-colors", lumeMode ? "bg-emerald-500 text-black" : "bg-[#B8860B] text-black")}>
                       Save {discount}%
                     </motion.div>
                   )}
@@ -782,7 +782,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                       <><Truck className="w-5 h-5" /> Quick Buy — Pay on Delivery</>
                     )}
                   </div>
-                  <span className="text-[#0C0F14]/70 text-[10px] font-medium tracking-widest uppercase mt-0.5">
+                  <span className="text-black/70 text-[10px] font-medium tracking-widest uppercase mt-0.5">
                     {formatPrice(product.price * quantity)}
                   </span>
                 </div>
@@ -807,7 +807,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   className={cn(
                     "relative px-4 sm:px-6 py-3 text-xs font-semibold tracking-widest uppercase rounded-xl transition-all whitespace-nowrap sw-interactive",
                     activeTab === tab.key
-                      ? "text-[#0C0F14] bg-gradient-to-r from-[#B8860B] to-[#D4A017] shadow-[0_4px_16px_rgba(184,134,11,0.3)]"
+                      ? "text-black bg-gradient-to-r from-[#B8860B] to-[#D4A017] shadow-[0_4px_16px_rgba(184,134,11,0.3)]"
                       : "text-foreground/50 hover:text-foreground hover:bg-card"
                   )}
                 >

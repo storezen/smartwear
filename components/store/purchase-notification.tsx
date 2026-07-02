@@ -51,13 +51,13 @@ export function PurchaseNotification({ productName }: { productName: string }) {
             className="pointer-events-auto bg-gradient-to-br from-background to-[#141820] border border-[#B8860B]/25 rounded-xl p-3.5 shadow-[0_8px_32px_rgba(184,134,11,0.15)] flex items-center gap-3"
           >
             <div className="relative shrink-0">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center text-[11px] font-bold text-[#0C0F14]">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center text-[11px] font-bold text-black">
                 {item.name.charAt(0)}
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#0C0F14] rounded-full" />
             </div>
             <div className="min-w-0">
-              <p className="text-white text-xs leading-tight">
+              <p className="text-foreground text-xs leading-tight">
                 <span className="font-bold text-[#D4A017]">{item.name}</span>
                 <span className="text-foreground/60 font-normal"> purchased</span>
               </p>

@@ -55,7 +55,7 @@ function RankBadge({ rank }: { rank: number }) {
       </svg>
     )
   return (
-    <span className="w-6 h-6 shrink-0 flex items-center justify-center text-[10px] font-bold text-foreground/20 bg-card rounded-full border border-white/5">#{rank}</span>
+    <span className="w-6 h-6 shrink-0 flex items-center justify-center text-[10px] font-bold text-foreground/20 bg-card rounded-full border border-border">#{rank}</span>
   )
 }
 
