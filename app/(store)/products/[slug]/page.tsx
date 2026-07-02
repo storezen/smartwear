@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import { Minus, Plus, Star, Heart, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote, PackageOpen, Clock, Lock } from 'lucide-react'
+import { Minus, Plus, Star, Heart, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote, PackageOpen, Clock, Lock, CalendarDays } from 'lucide-react'
 import { ProductCard } from '@/components/store/premium-product-card'
 import { formatPrice } from '@/lib/mock-data'
 import type { Review } from '@/types'
@@ -696,13 +696,14 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                 </div>
                 <div className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4">
                   <div className="w-8 h-8 rounded-full bg-[#B8860B]/20 flex items-center justify-center shrink-0">
-                    <Truck className="w-4 h-4 text-[#B8860B]" />
+                    <CalendarDays className="w-4 h-4 text-[#B8860B]" />
                   </div>
                   <div>
-                    <p className="text-xs text-foreground/70">Shipping</p>
+                    <p className="text-xs text-foreground/70">Delivery</p>
                     <p className="text-sm font-semibold text-foreground">
-                      Free — All Pakistan
+                      3–5 Business Days
                     </p>
+                    <p className="text-[10px] text-foreground/50 mt-0.5">Free — All Pakistan</p>
                   </div>
                 </div>
               </motion.div>
