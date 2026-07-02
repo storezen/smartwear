@@ -9,56 +9,12 @@ import { TikTokEvents, identifyUser } from '@/lib/tiktok-pixel'
 import { formatPrice } from '@/lib/mock-data'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 
-const PARTICLES = Array.from({ length: 45 }, (_, i) => ({
-  id: i,
-  x: Math.random() * 100,
-  size: 3 + Math.random() * 10,
-  delay: Math.random() * 2,
-  duration: 2.5 + Math.random() * 3,
-  drift: (Math.random() - 0.5) * 150,
-  rotate: Math.random() * 720,
-  color: i % 3 === 0 ? '#D4A017' : i % 3 === 1 ? '#F0C040' : '#B8860B',
-  shape: i % 4 === 0 ? 'circle' : i % 4 === 1 ? 'square' : i % 4 === 2 ? 'diamond' : 'bar',
-}))
-
 const TIMELINE_STEPS = [
   { icon: CheckCircle, label: 'Order Confirmed', sub: 'Just now', done: true },
   { icon: Package, label: 'Processing', sub: 'Within 24 hours', done: false },
   { icon: Truck, label: 'Out for Delivery', sub: '2\u20134 business days', done: false },
   { icon: Home, label: 'Delivered', sub: 'At your doorstep', done: false },
 ]
-
-function GoldParticles({ active }: { active: boolean }) {
-  if (!active) return null
-  return (
-    <div className="fixed inset-0 pointer-events-none z-[100] overflow-hidden no-print">
-      {PARTICLES.map((p) => (
-        <motion.div
-          key={p.id}
-          initial={{ opacity: 1, y: -20, x: `${p.x}vw`, rotate: 0, scale: 1 }}
-          animate={{
-            y: '120vh',
-            x: `calc(${p.x}vw + ${p.drift}px)`,
-            rotate: p.rotate,
-            scale: [1, 0.8, 0.3],
-            opacity: [1, 1, 0],
-          }}
-          transition={{ duration: p.duration, delay: p.delay, ease: 'easeIn' }}
-          style={{
-            position: 'absolute',
-            top: -20,
-            width: p.size,
-            height: p.shape === 'bar' ? p.size * 0.35 : p.size,
-            background: p.color,
-            borderRadius: p.shape === 'circle' ? '50%' : p.shape === 'diamond' ? '2px' : '1px',
-            transform: p.shape === 'diamond' ? 'rotate(45deg)' : undefined,
-            boxShadow: `0 0 ${p.size * 1.5}px ${p.color}80`,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
 
 function SuccessContent() {
   const searchParams = useSearchParams()
@@ -67,7 +23,6 @@ function SuccessContent() {
   const orderId = orderIdFromQuery || ''
 
   const [orderDetails, setOrderDetails] = useState<any>(null)
-  const [showParticles, setShowParticles] = useState(false)
   const printRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -101,10 +56,6 @@ function SuccessContent() {
     }
 
     firePurchase()
-
-    const t1 = setTimeout(() => setShowParticles(true), 400)
-    const t2 = setTimeout(() => setShowParticles(false), 6000)
-    return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [orderId, totalFromQuery])
 
   const deliveryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PK', {
@@ -112,226 +63,241 @@ function SuccessContent() {
   })
 
   const handlePrint = () => {
-    window.print()
+    const printContent = printRef.current?.innerHTML
+    if (!printContent) return
+
+    const win = window.open('', '', 'width=800,height=600')
+    if (!win) return
+
+    win.document.write(`
+      <html>
+        <head>
+          <title>Order #${orderId}</title>
+          <style>
+            body { font-family: Arial, sans-serif; color: #000; padding: 40px; margin: 0; }
+            .header { text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid #D4A017; }
+            .header h1 { font-size: 22px; margin: 0 0 4px; color: #1a1a1a; }
+            .header p { font-size: 13px; color: #666; margin: 0; }
+            .order-id { text-align: center; font-size: 16px; margin: 24px 0; padding: 12px; background: #f5f5f5; border-radius: 8px; }
+            .order-id strong { color: #B8860B; }
+            .section { margin: 24px 0; }
+            .section h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin: 0 0 12px; }
+            .item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+            .item:last-child { border-bottom: none; }
+            .total-row { display: flex; justify-content: space-between; padding: 12px 0 0; margin-top: 8px; border-top: 2px solid #D4A017; font-size: 16px; font-weight: bold; }
+            .address-box { background: #f9f9f9; padding: 16px; border-radius: 8px; font-size: 14px; line-height: 1.6; }
+            .address-box p { margin: 2px 0; }
+            .footer { text-align: center; margin-top: 32px; padding-top: 16px; border-top: 1px solid #eee; font-size: 11px; color: #999; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { padding: 10px 0; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+            th { color: #888; font-weight: normal; }
+            .text-right { text-align: right; }
+            @page { margin: 1.5cm; }
+            @media print { body { padding: 0; } }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Order Confirmation</h1>
+            <p>Smart Wear Pakistan</p>
+          </div>
+          <div class="order-id">
+            Order Number: <strong>${orderId}</strong>
+          </div>
+          ${printContent}
+          <div class="footer">
+            <p>Smart Wear Pakistan — Free Shipping | Cash on Delivery | 7-Day Replacement</p>
+            <p>Generated on ${new Date().toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+          </div>
+        </body>
+      </html>
+    `)
+    win.document.close()
+    setTimeout(() => { win.print(); win.close() }, 500)
   }
 
   return (
-    <>
-      <style>{`
-        @media print {
-          body { background: #fff !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-          .no-print { display: none !important; }
-          .print-only { display: block !important; }
-          @page { margin: 1.5cm; size: A4 portrait; }
-        }
-        .print-only { display: none; }
-      `}</style>
-      <div
-        ref={printRef}
-        className="min-h-screen bg-background flex flex-col items-center justify-start md:justify-center px-4 py-6 md:py-16 relative overflow-hidden"
+    <div className="min-h-screen bg-background flex flex-col items-center justify-start md:justify-center px-4 py-6 md:py-16 relative overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-lg relative z-10 mb-8"
       >
-        <GoldParticles active={showParticles} />
+        <SpotlightCard className="p-6 sm:p-8 text-center relative overflow-hidden">
 
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full blur-[150px] opacity-[0.15] bg-[#B8860B] pointer-events-none no-print" />
+          {/* Print Button */}
+          <button
+            onClick={handlePrint}
+            className="absolute top-4 right-4 z-20 w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-border transition-all sw-interactive"
+            title="Print or Download PDF"
+          >
+            <Printer className="w-4 h-4" />
+          </button>
 
-        {/* Print header - only visible when printing */}
-        <div className="print-only w-full max-w-2xl mx-auto mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Order Confirmation</h1>
-          <p className="text-gray-500 text-sm">Smart Wear Pakistan</p>
-        </div>
+          <div className="flex justify-center mb-5">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] p-1 flex items-center justify-center">
+              <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-[#B8860B]" />
+              </div>
+            </div>
+          </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-2xl relative z-10 mb-8"
-        >
-          <SpotlightCard className="p-6 sm:p-8 md:p-12 text-center relative overflow-hidden">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
+            Order Confirmed!
+          </h1>
 
-            {/* Print Button */}
+          <p className="text-foreground/60 text-sm mb-6">
+            Your order has been placed successfully.
+          </p>
+
+          <div className="inline-flex items-center gap-3 bg-card border border-border px-4 py-2.5 rounded-xl mb-6">
+            <span className="text-foreground/70 text-xs">Order #</span>
+            <span className="text-[#B8860B] font-mono font-bold tracking-wider text-sm">{orderId}</span>
+          </div>
+
+          {/* Order Items */}
+          {orderDetails?.items && orderDetails.items.length > 0 && (
+            <div className="bg-card border border-border rounded-2xl p-4 mb-4 text-left">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-3">Items</h3>
+              {orderDetails.items.map((item: any, idx: number) => (
+                <div key={idx} className="flex items-center justify-between gap-3 py-2 border-b border-border last:border-0">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
+                    {item.color && <p className="text-[11px] text-foreground/50">{item.color}</p>}
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-sm font-semibold text-foreground">{formatPrice(item.price)}</p>
+                    <p className="text-[11px] text-foreground/50">x{item.quantity}</p>
+                  </div>
+                </div>
+              ))}
+              <div className="flex items-center justify-between pt-3 mt-1 border-t border-border">
+                <span className="text-sm text-foreground/70">Total</span>
+                <span className="text-lg font-bold text-[#B8860B]">{formatPrice(orderDetails.total || totalFromQuery)}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs text-foreground/50 mt-1">
+                <span>Payment</span>
+                <span className="font-medium text-foreground/70">Cash on Delivery</span>
+              </div>
+            </div>
+          )}
+
+          {/* Delivery Address */}
+          {orderDetails?.shipping_address && (
+            <div className="bg-card border border-border rounded-2xl p-4 mb-4 text-left">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-2">Delivery Address</h3>
+              <div className="text-sm text-foreground/80 space-y-0.5">
+                <p className="text-foreground font-medium">{orderDetails.shipping_address.name}</p>
+                <p>{orderDetails.shipping_address.address_line1}</p>
+                <p>{orderDetails.shipping_address.city}</p>
+                <p>{orderDetails.shipping_address.phone}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Timeline */}
+          <div className="bg-card border border-border rounded-2xl p-4 mb-6 text-left">
+            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
+              <Calendar className="w-4 h-4 text-[#B8860B]" />
+              <span className="text-sm text-foreground font-medium">
+                Delivery: <span className="text-[#B8860B]">{deliveryDate}</span>
+              </span>
+            </div>
+            <div className="space-y-4">
+              {TIMELINE_STEPS.map((step, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${step.done ? 'bg-[#B8860B] text-black' : 'bg-card border border-border text-foreground/60'}`}>
+                    <step.icon className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="mt-0.5">
+                    <p className={`text-sm font-semibold ${step.done ? 'text-foreground' : 'text-foreground/70'}`}>{step.label}</p>
+                    <p className="text-xs text-foreground/60">{step.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/products"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl border border-border text-foreground hover:bg-card font-medium tracking-wide transition-all text-sm"
+            >
+              Continue Shopping
+            </Link>
             <button
               onClick={handlePrint}
-              className="no-print absolute top-4 right-4 z-20 w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-border transition-all sw-interactive"
-              title="Print or Download PDF"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl sw-btn-gold font-medium tracking-wide transition-all flex items-center justify-center gap-2 text-sm"
             >
               <Printer className="w-4 h-4" />
+              Print / Download PDF
             </button>
+          </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 1 }}
-              className="absolute inset-0 border border-[#B8860B]/20 rounded-[24px]"
-              style={{ boxShadow: "inset 0 0 40px rgba(184,134,11,0.05)" }}
-            />
+        </SpotlightCard>
+      </motion.div>
 
-            {/* Success Icon */}
-            <div className="relative mb-6 sm:mb-8 flex justify-center">
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.2 }}
-                className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] p-1 shadow-[0_0_40px_rgba(184,134,11,0.4)] flex items-center justify-center"
-              >
-                <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
-                  <CheckCircle className="w-10 h-10 sm:w-12 sm:h-12 text-[#B8860B]" />
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1.5, opacity: 0 }}
-                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                className="no-print absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#B8860B]"
-              />
-              <motion.div
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 2, opacity: 0 }}
-                transition={{ duration: 2.5, repeat: Infinity, delay: 1.5 }}
-                className="no-print absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 rounded-full border border-[#B8860B]/50"
-              />
+      {/* Hidden print content — only order details */}
+      <div ref={printRef} style={{ display: 'none' }}>
+        {orderDetails?.items && orderDetails.items.length > 0 && (
+          <div>
+            <h2>Order Items</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th style={{ textAlign: 'right' }}>Price</th>
+                  <th style={{ textAlign: 'right' }}>Qty</th>
+                  <th style={{ textAlign: 'right' }}>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orderDetails.items.map((item: any, idx: number) => (
+                  <tr key={idx}>
+                    <td>{item.name}{item.color ? ` (${item.color})` : ''}</td>
+                    <td style={{ textAlign: 'right' }}>{formatPrice(item.price)}</td>
+                    <td style={{ textAlign: 'right' }}>{item.quantity}</td>
+                    <td style={{ textAlign: 'right' }}>{formatPrice(item.price * item.quantity)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 12, marginTop: 8, borderTop: '2px solid #D4A017', fontSize: 16, fontWeight: 'bold' }}>
+              <span>Total</span>
+              <span>{formatPrice(orderDetails.total || totalFromQuery)}</span>
             </div>
+            <div style={{ marginTop: 8, fontSize: 13, color: '#666', display: 'flex', justifyContent: 'space-between' }}>
+              <span>Payment Method</span>
+              <span>Cash on Delivery</span>
+            </div>
+          </div>
+        )}
 
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2 sm:mb-3"
-              style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
-            >
-              Thank You for Your Order!
-            </motion.h1>
+        {orderDetails?.shipping_address && (
+          <div>
+            <h2>Delivery Address</h2>
+            <div style={{ background: '#f9f9f9', padding: 16, borderRadius: 8, fontSize: 14, lineHeight: 1.6 }}>
+              <p><strong>{orderDetails.shipping_address.name}</strong></p>
+              <p>{orderDetails.shipping_address.address_line1}</p>
+              <p>{orderDetails.shipping_address.city}</p>
+              <p>{orderDetails.shipping_address.phone}</p>
+            </div>
+          </div>
+        )}
 
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="text-foreground/60 text-sm sm:text-base mb-6 sm:mb-8"
-            >
-              Your premium timepiece experience begins here. We&apos;ve emailed your receipt to you.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="inline-flex items-center gap-3 sm:gap-4 bg-card border border-border px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl mb-8 sm:mb-10"
-            >
-              <span className="text-foreground/70 text-xs sm:text-sm">Order Number</span>
-              <span className="text-[#B8860B] font-mono font-bold tracking-wider text-sm sm:text-base">{orderId}</span>
-            </motion.div>
-
-            {/* Order Details Summary from API */}
-            {orderDetails?.items && orderDetails.items.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.65 }}
-                className="bg-card border border-border rounded-2xl p-4 sm:p-6 mb-6 text-left"
-              >
-                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-3 sm:mb-4">Order Items</h3>
-                <div className="space-y-3">
-                  {orderDetails.items.map((item: any, idx: number) => (
-                    <div key={idx} className="flex items-center justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
-                        {item.color && <p className="text-[11px] text-foreground/50">Color: {item.color}</p>}
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-sm font-semibold text-foreground">{formatPrice(item.price)}</p>
-                        <p className="text-[11px] text-foreground/50">Qty: {item.quantity}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
-                  <span className="text-sm text-foreground/70">Total</span>
-                  <span className="text-lg font-bold text-[#B8860B]">{formatPrice(orderDetails.total || totalFromQuery)}</span>
-                </div>
-                <div className="mt-2 flex items-center justify-between text-xs text-foreground/50">
-                  <span>Payment</span>
-                  <span className="font-medium text-foreground/70">Cash on Delivery</span>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Delivery Address from API */}
-            {orderDetails?.shipping_address && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.68 }}
-                className="bg-card border border-border rounded-2xl p-4 sm:p-6 mb-6 text-left"
-              >
-                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-2">Delivery Address</h3>
-                <p className="text-sm text-foreground">{orderDetails.shipping_address.name}</p>
-                <p className="text-sm text-foreground/70">{orderDetails.shipping_address.address_line1}</p>
-                <p className="text-sm text-foreground/70">{orderDetails.shipping_address.city}</p>
-                <p className="text-sm text-foreground/70">{orderDetails.shipping_address.phone}</p>
-              </motion.div>
-            )}
-
-            {/* Timeline */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="bg-card border border-border rounded-2xl p-4 sm:p-6 mb-8 sm:mb-10 text-left"
-            >
-              <div className="flex items-center gap-3 mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-border">
-                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
-                <span className="text-foreground font-medium text-sm sm:text-base">Estimated Delivery: <span className="text-[#B8860B]">{deliveryDate}</span></span>
-              </div>
-
-              <div className="relative">
-                <div className="absolute left-4 top-2 bottom-6 w-0.5 bg-card" />
-                <div className="space-y-5 sm:space-y-6">
-                  {TIMELINE_STEPS.map((step, idx) => (
-                    <div key={idx} className="relative flex items-start gap-4 z-10">
-                      <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${step.done ? 'bg-[#B8860B] text-black shadow-[0_0_15px_rgba(184,134,11,0.5)]' : 'bg-card border border-border text-foreground/60'}`}>
-                        <step.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </div>
-                      <div className="mt-0.5 sm:mt-1">
-                        <p className={`text-sm font-semibold ${step.done ? 'text-foreground' : 'text-foreground/70'}`}>{step.label}</p>
-                        <p className="text-xs text-foreground/60 mt-0.5">{step.sub}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 no-print"
-            >
-              <Link
-                href="/products"
-                className="w-full sm:w-auto px-6 sm:px-8 py-3 rounded-xl border border-border text-foreground hover:bg-card hover:border-border font-medium tracking-wide transition-all sw-interactive text-sm"
-              >
-                Continue Shopping
-              </Link>
-              <button
-                onClick={handlePrint}
-                className="w-full sm:w-auto px-6 sm:px-8 py-3 rounded-xl sw-btn-gold font-medium tracking-wide transition-all group sw-interactive flex items-center justify-center gap-2 text-sm"
-              >
-                <Printer className="w-4 h-4" />
-                Print / Download PDF
-              </button>
-            </motion.div>
-
-          </SpotlightCard>
-        </motion.div>
-
-        {/* Print footer */}
-        <div className="print-only w-full max-w-2xl mx-auto mt-6 text-center text-xs text-gray-400">
-          <p>Generated on {new Date().toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-          <p className="mt-1">Smart Wear Pakistan — Free Shipping | Cash on Delivery | 7-Day Replacement</p>
+        <div>
+          <h2>Delivery Timeline</h2>
+          <p>Estimated Delivery: <strong>{deliveryDate}</strong></p>
+          <ul>
+            {TIMELINE_STEPS.map((step, idx) => (
+              <li key={idx}>{step.label} — {step.sub}</li>
+            ))}
+          </ul>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
