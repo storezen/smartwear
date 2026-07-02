@@ -59,7 +59,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
           <div className="absolute inset-0 bg-gradient-to-b from-[#B8860B]/0 to-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
           {/* ── IMAGE ── */}
-          <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-card to-card shrink-0">
+          <div className="relative aspect-[4/3] overflow-hidden bg-card shrink-0">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] rounded-full bg-[#B8860B]/10 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
 
             {!imgErr ? (
@@ -69,7 +69,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
                   src={product.images[0]}
                   alt={product.name}
                   fill
-                  className="object-cover transition-all duration-700 ease-[0.25,0.46,0.45,0.94] group-hover:scale-105"
+                  className="object-contain p-2 transition-all duration-700 ease-[0.25,0.46,0.45,0.94]"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   onError={() => setImgErr(true)}
                 />

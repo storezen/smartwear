@@ -527,7 +527,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                       alt={product.name}
                       fill
                       priority
-                      className={cn("object-cover transition-all duration-1000", lumeMode && "drop-shadow-[0_0_20px_rgba(52,211,153,0.6)] saturate-150 brightness-110 contrast-125")}
+                      className={cn("object-contain p-4 transition-all duration-1000", lumeMode && "drop-shadow-[0_0_20px_rgba(52,211,153,0.6)] saturate-150 brightness-110 contrast-125")}
                       sizes="(max-width: 1024px) 100vw, 60vw"
                     />
                   </motion.div>
@@ -613,7 +613,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                         selectedImage === idx ? (lumeMode ? "ring-2 ring-emerald-500 ring-offset-2 ring-offset-black" : "ring-2 ring-[#B8860B] ring-offset-2 ring-offset-background") : "opacity-60 hover:opacity-100"
                       )}
                     >
-                      <Image src={img} alt={`Thumbnail ${idx + 1}`} fill sizes="80px" className="object-cover" />
+                      <Image src={img} alt={`Thumbnail ${idx + 1}`} fill sizes="80px" className="object-contain p-1" />
                     </button>
                   </SpotlightCard>
                 ))}
