@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import { useEffect, useState, Suspense, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -23,6 +23,7 @@ function SuccessContent() {
   const orderId = orderIdFromQuery || ''
 
   const [orderDetails, setOrderDetails] = useState<any>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
 
   useEffect(() => {
     const dedupKey = `tiktokPurchaseSent_${orderId}`
@@ -128,10 +129,13 @@ function SuccessContent() {
         </ul>
       </div>`
 
-    const win = window.open('', '', 'width=800,height=600')
-    if (!win) return
+    const iframe = iframeRef.current
+    if (!iframe) return
+    const doc = iframe.contentDocument || iframe.contentWindow?.document
+    if (!doc) return
 
-    win.document.write(`
+    doc.open()
+    doc.write(`
       <html>
         <head>
           <title>Order #${orderId}</title>
@@ -160,11 +164,14 @@ function SuccessContent() {
             <p>Smart Wear Pakistan — Free Shipping | Cash on Delivery | 7-Day Replacement</p>
             <p>Generated on ${new Date().toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
           </div>
-          <script>window.onload=function(){setTimeout(function(){window.print();window.close()},300)}<\/script>
         </body>
       </html>
     `)
-    win.document.close()
+    doc.close()
+
+    setTimeout(() => {
+      iframe.contentWindow?.print()
+    }, 400)
   }
 
   const name = orderDetails?.customer_name || orderDetails?.shipping_address?.name || ''
@@ -292,6 +299,8 @@ function SuccessContent() {
 
         </SpotlightCard>
       </motion.div>
+      {/* Hidden iframe for printing */}
+      <iframe ref={iframeRef} style={{ position: 'absolute', width: 0, height: 0, border: 'none', visibility: 'hidden' }} title="print-frame" />
     </div>
   )
 }

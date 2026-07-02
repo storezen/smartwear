@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from "react"
 import { createPortal } from "react-dom"
-import { getCitiesByProvince, getPostexCoverageStyle, isPostexServiceable } from "@/lib/address-validator"
-import { Search, ChevronDown } from "lucide-react"
+import { loadCities, getCitiesByProvinceSync, getPostexCoverageStyle, type CityEntry } from "@/lib/address-validator"
+import { Search, ChevronDown, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface CitySelectProps {
@@ -17,11 +17,18 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState("")
   const [pos, setPos] = useState({ top: 0, left: 0, width: 0 })
+  const [grouped, setGrouped] = useState<Record<string, CityEntry[]>>({})
+  const [loading, setLoading] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const portalRef = useRef<HTMLDivElement>(null)
 
-  const grouped = getCitiesByProvince()
+  useEffect(() => {
+    loadCities().then(() => {
+      setGrouped(getCitiesByProvinceSync())
+      setLoading(false)
+    })
+  }, [])
 
   const filtered = Object.entries(grouped).map(([province, cities]) => ({
     province,
@@ -73,25 +80,27 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
-        onClick={() => setOpen(!open)}
-        className={`w-full bg-background border border-white/10 rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] transition-colors flex items-center justify-between min-h-[44px] ${className}`}
+        onClick={() => !loading && setOpen(!open)}
+        disabled={loading}
+        className={`w-full bg-background border border-white/10 rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] transition-colors flex items-center justify-between min-h-[44px] disabled:opacity-60 ${className}`}
       >
-        <span className={cn("truncate mr-2 text-left", value ? "text-foreground" : "text-foreground/40")}>
-          {value || "Select a city..."}
+        <span className={cn("truncate mr-2 text-left flex items-center gap-2", value ? "text-foreground" : "text-foreground/40")}>
+          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />}
+          {loading ? "Loading cities..." : (value || "Select a city...")}
         </span>
         <div className="flex items-center gap-2 shrink-0">
           {showCoverage && selectedCity && (
             <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
-              getPostexCoverageStyle(selectedCity.postex).bg
-            } ${getPostexCoverageStyle(selectedCity.postex).color} ${getPostexCoverageStyle(selectedCity.postex).border}`}>
-              {getPostexCoverageStyle(selectedCity.postex).label}
+              getPostexCoverageStyle(true).bg
+            } ${getPostexCoverageStyle(true).color} ${getPostexCoverageStyle(true).border}`}>
+              {getPostexCoverageStyle(true).label}
             </span>
           )}
           <ChevronDown className={`w-4 h-4 text-foreground/40 transition-transform ${open ? "rotate-180" : ""}`} />
         </div>
       </button>
 
-      {open && typeof document !== 'undefined' && createPortal(
+      {open && !loading && typeof document !== 'undefined' && createPortal(
         <div
           ref={portalRef}
           style={{
@@ -134,17 +143,10 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
                         setSearch("")
                       }}
                       className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left hover:bg-white/5 transition-colors ${
-                        value === city.name ? "bg-white/5 text-[#B8860B]" : "text-foreground/&"
+                        value === city.name ? "bg-white/5 text-[#B8860B]" : "text-foreground/80"
                       }`}
                     >
                       <span>{city.name}</span>
-                      {showCoverage && (
-                        <span className={`text-[10px] ${
-                          city.postex ? "text-emerald-400" : "text-amber-400"
-                        }`}>
-                          {city.postex ? "✓" : "✗"}
-                        </span>
-                      )}
                     </button>
                   ))}
                 </div>

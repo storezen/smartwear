@@ -31,6 +31,8 @@ function isPublicApi(pathname: string, method: string): boolean {
   if (pathname.startsWith("/api/public")) return true
   // PostEx tracking — customer order tracking
   if (pathname.startsWith("/api/postex/track")) return true
+  // Cities — public city data from open API
+  if (pathname.startsWith("/api/cities")) return true
   return false
 }
 
