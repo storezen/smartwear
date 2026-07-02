@@ -211,7 +211,7 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
 
   if (error) {
     return (
-      <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden min-h-[280px] h-full flex flex-col items-center justify-center shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
+      <div className="bg-card rounded-xl border border-border overflow-hidden min-h-[280px] h-full flex flex-col items-center justify-center shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
         <div className="w-16 h-16 relative mb-4">
           <div className="absolute inset-0 rounded-full border border-[#B8860B]/20 animate-ping opacity-50" />
           <div className="absolute inset-2 rounded-full border border-[#B8860B]/40 animate-spin" style={{ animationDuration: '3s' }} />
@@ -221,7 +221,7 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
             </svg>
           </div>
         </div>
-        <p className="text-[14px] font-medium text-foreground/& mb-1 tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Premium 3D Globe</p>
+        <p className="text-[14px] font-medium text-foreground/80 mb-1 tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Premium 3D Globe</p>
         <p className="text-[11px] text-foreground/40 max-w-[200px] text-center leading-relaxed">
           Rendering advanced visualization...
         </p>
@@ -230,10 +230,10 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
   }
 
   return (
-    <div className="bg-gradient-to-b from-[#141B24] to-[#0F1923] rounded-xl border border-white/[0.06] overflow-hidden min-h-[280px] h-full flex flex-col relative group shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
+    <div className="bg-card rounded-xl border border-border overflow-hidden min-h-[280px] h-full flex flex-col relative group shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
 
       <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
-        <div className="flex items-center gap-1.5 bg-[#0A0D12]/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/[0.06]">
+        <div className="flex items-center gap-1.5 bg-background/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-border">
           <span className="relative flex h-1.5 w-1.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
@@ -241,23 +241,23 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
           <span className="text-[9px] font-medium text-emerald-400/70">3D Globe</span>
         </div>
         {autoRotate && (
-          <div className="bg-[#0A0D12]/70 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/[0.06]">
-            <span className="text-[7px] text-foreground/& tracking-wider uppercase">Auto</span>
+          <div className="bg-background/70 backdrop-blur-md px-2 py-0.5 rounded-full border border-border">
+            <span className="text-[7px] text-foreground/80 tracking-wider uppercase">Auto</span>
           </div>
         )}
       </div>
 
       <div className="absolute top-3 right-3 z-10">
-        <div className="bg-[#0A0D12]/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/[0.06]">
+        <div className="bg-background/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-border">
           <span className="text-[9px] text-foreground/40 tabular-nums font-mono">{locations.length} city{locations.length !== 1 ? "ies" : "y"}</span>
         </div>
       </div>
 
       {selectedCity && (
         <div className="absolute top-12 left-3 z-20">
-          <div className="bg-[#0A0D12]/90 backdrop-blur-xl px-4 py-2.5 rounded-xl border border-[#B8860B]/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)] min-w-[140px]">
+          <div className="bg-background/90 backdrop-blur-xl px-4 py-2.5 rounded-xl border border-[#B8860B]/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)] min-w-[140px]">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-foreground/&">{selectedCity.city}</span>
+              <span className="text-[11px] font-semibold text-foreground/80">{selectedCity.city}</span>
               <button onClick={dismissClick} className="text-foreground/20 hover:text-foreground/50 transition-colors ml-3" aria-label="Dismiss">
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -280,29 +280,29 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
 
       <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between">
         {hoveredCity ? (
-          <div className="bg-[#0A0D12]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#B8860B]/15">
+          <div className="bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#B8860B]/15">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.6)]" />
-              <span className="text-[10px] text-foreground/& font-medium">{hoveredCity}</span>
+              <span className="text-[10px] text-foreground/80 font-medium">{hoveredCity}</span>
               <span className="text-[8px] text-foreground/30">hover</span>
             </div>
           </div>
         ) : sorted.length > 0 ? (
-          <div className="bg-[#0A0D12]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/[0.06]">
+          <div className="bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-border">
             <div className="flex items-center gap-2">
               <span className="text-[9px] text-foreground/50">Top:</span>
-              <span className="text-[10px] text-foreground/& font-medium">{sorted[0].city}</span>
+              <span className="text-[10px] text-foreground/80 font-medium">{sorted[0].city}</span>
               <span className="text-[9px] text-[#B8860B] tabular-nums">{sorted[0].count}</span>
               <span className="text-[7px] text-foreground/20">·</span>
               <span className="text-[8px] text-foreground/30">{sorted.length} cities</span>
             </div>
           </div>
         ) : (
-          <div className="bg-[#0A0D12]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/[0.06]">
+          <div className="bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-border">
             <span className="text-[9px] text-foreground/30">No active cities</span>
           </div>
         )}
-        <div className="flex items-center gap-2 bg-[#0A0D12]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/[0.06]">
+        <div className="flex items-center gap-2 bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-border">
           <span className="relative flex h-1.5 w-1.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />

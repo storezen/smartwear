@@ -32,7 +32,7 @@ function RankBadge({ rank }: { rank: number }) {
       <div className="relative w-6 h-6 shrink-0">
         <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="12" r="11" fill="url(#g1)" stroke="rgba(184,134,11,0.4)" strokeWidth="0.5" />
-          <text x="12" y="15.5" textAnchor="middle" fill="#0C0F14" fontSize="12" fontWeight="900" fontFamily="system-ui">1</text>
+          <text x="12" y="15.5" textAnchor="middle" fill="black" fontSize="12" fontWeight="900" fontFamily="system-ui">1</text>
           <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#F5C842" /><stop offset="100%" stopColor="#B8860B" /></linearGradient></defs>
         </svg>
         <Flame className="absolute -top-1 -right-1 w-3 h-3 text-[#B8860B]" />
@@ -42,7 +42,7 @@ function RankBadge({ rank }: { rank: number }) {
     return (
       <svg className="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="12" r="11" fill="url(#g2)" stroke="rgba(180,180,190,0.3)" strokeWidth="0.5" />
-        <text x="12" y="15.5" textAnchor="middle" fill="#0C0F14" fontSize="12" fontWeight="900" fontFamily="system-ui">2</text>
+        <text x="12" y="15.5" textAnchor="middle" fill="black" fontSize="12" fontWeight="900" fontFamily="system-ui">2</text>
         <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#D1D5DB" /><stop offset="100%" stopColor="#9CA3AF" /></linearGradient></defs>
       </svg>
     )
@@ -50,7 +50,7 @@ function RankBadge({ rank }: { rank: number }) {
     return (
       <svg className="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="12" r="11" fill="url(#g3)" stroke="rgba(180,120,60,0.3)" strokeWidth="0.5" />
-        <text x="12" y="15.5" textAnchor="middle" fill="#0C0F14" fontSize="12" fontWeight="900" fontFamily="system-ui">3</text>
+        <text x="12" y="15.5" textAnchor="middle" fill="black" fontSize="12" fontWeight="900" fontFamily="system-ui">3</text>
         <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#D4875E" /><stop offset="100%" stopColor="#92400E" /></linearGradient></defs>
       </svg>
     )
@@ -62,13 +62,13 @@ function RankBadge({ rank }: { rank: number }) {
 export const HotProducts = memo(function HotProducts({ products }: HotProductsProps) {
   if (!products.length) {
     return (
-      <div className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col">
+      <div className="bg-card rounded-xl border border-border p-4 h-full flex flex-col">
         <div className="flex items-center gap-2.5 mb-5">
-          <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
+          <div className="w-0.5 h-3.5 bg-[#B8860B]/20 rounded-full" />
           <h3 className="text-[13px] font-semibold text-foreground/70">Hot Products</h3>
         </div>
         <div className="flex-1 flex items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--foreground)/0.03)_0%,transparent_70%)]" />
           <div className="text-center relative z-10">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#B8860B]/5 border border-[#B8860B]/20 flex items-center justify-center relative">
               <div className="absolute inset-0 rounded-full border border-[#B8860B]/20 animate-ping opacity-20" />
@@ -89,7 +89,7 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col"
+      className="bg-card rounded-xl border border-border p-4 h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
@@ -97,8 +97,8 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
           <h3 className="text-[13px] font-semibold text-foreground/70">Hot Products</h3>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[9px] text-foreground/& font-mono tabular-nums">{totalViews} views</span>
-          <div className="w-px h-3 bg-white/5" />
+          <span className="text-[9px] text-foreground/60 font-mono tabular-nums">{totalViews} views</span>
+          <div className="w-px h-3 bg-border" />
           <span className="text-[8px] text-foreground/20">Last 30 min</span>
         </div>
       </div>
@@ -122,20 +122,20 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
                 <RankBadge rank={product.rank} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[12px] font-medium text-foreground/& truncate group-hover:text-foreground transition-colors">
+                    <span className="text-[12px] font-medium text-foreground/60 truncate group-hover:text-foreground transition-colors">
                       {product.name}
                     </span>
                     <TrendBadge trend={product.trend} />
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="flex items-center gap-0.5 text-[8px] text-foreground/&">
+                    <span className="flex items-center gap-0.5 text-[8px] text-foreground/60">
                       <Eye className="w-2.5 h-2.5" /> {product.views}
                     </span>
-                    <span className="text-[8px] text-foreground/&">•</span>
-                    <span className="flex items-center gap-0.5 text-[8px] text-foreground/&">
+                    <span className="text-[8px] text-foreground/60">•</span>
+                    <span className="flex items-center gap-0.5 text-[8px] text-foreground/60">
                       <ShoppingCart className="w-2.5 h-2.5" /> ~{estCarts}
                     </span>
-                    <span className="text-[8px] text-foreground/&">•</span>
+                    <span className="text-[8px] text-foreground/60">•</span>
                     <span className="flex items-center gap-0.5 text-[8px] text-emerald-400/40">
                       <DollarSign className="w-2.5 h-2.5" /> ₨{estRevenue.toLocaleString()}
                     </span>
@@ -165,13 +165,13 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
       </div>
 
       {products.length > 0 && (
-        <div className="mt-auto pt-2.5 border-t border-white/[0.04] flex items-center justify-between text-[8px] text-foreground/20">
+        <div className="mt-auto pt-2.5 border-t border-border flex items-center justify-between text-[8px] text-foreground/20">
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1"><TrendingUp className="w-2.5 h-2.5 text-emerald-400" /> Rising</span>
             <span className="flex items-center gap-1"><TrendingDown className="w-2.5 h-2.5 text-red-400" /> Falling</span>
             <span className="flex items-center gap-1"><Minus className="w-2.5 h-2.5 text-foreground/20" /> Stable</span>
           </div>
-          <span className="text-foreground/&">{products.length} products tracked</span>
+          <span className="text-foreground/60">{products.length} products tracked</span>
         </div>
       )}
     </motion.div>

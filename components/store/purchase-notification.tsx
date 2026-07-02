@@ -48,20 +48,20 @@ export function PurchaseNotification({ productName }: { productName: string }) {
             exit={{ opacity: 0, x: 20, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 350, damping: 25 }}
             onAnimationComplete={() => setTimeout(() => removeItem(item.id), 6000)}
-            className="pointer-events-auto bg-gradient-to-br from-background to-[#141820] border border-[#B8860B]/25 rounded-xl p-3.5 shadow-[0_8px_32px_rgba(184,134,11,0.15)] flex items-center gap-3"
+            className="pointer-events-auto bg-gradient-to-br from-background to-card border border-[#B8860B]/25 rounded-xl p-3.5 shadow-[0_8px_32px_rgba(184,134,11,0.15)] flex items-center gap-3"
           >
             <div className="relative shrink-0">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center text-[11px] font-bold text-black">
                 {item.name.charAt(0)}
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#0C0F14] rounded-full" />
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-background rounded-full" />
             </div>
             <div className="min-w-0">
               <p className="text-foreground text-xs leading-tight">
                 <span className="font-bold text-[#D4A017]">{item.name}</span>
                 <span className="text-foreground/60 font-normal"> purchased</span>
               </p>
-              <p className="text-foreground/& text-xs font-medium truncate leading-tight mt-0.5">
+              <p className="text-foreground/80 text-xs font-medium truncate leading-tight mt-0.5">
                 {productName}
               </p>
               <p className="text-[10px] text-foreground/40 mt-0.5 flex items-center gap-1">

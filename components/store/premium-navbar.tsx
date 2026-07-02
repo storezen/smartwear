@@ -87,7 +87,7 @@ function NavBadge({ count }: { count: number }) {
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full font-bold bg-gradient-to-r from-[#B8860B] to-[#D4A017] text-black shadow-[0_0_10px_rgba(184,134,11,0.5)]"
-      style={{ fontSize: "0.6rem", border: "2px solid #0C0F14" }}
+      style={{ fontSize: "0.6rem", border: "2px solid hsl(var(--background))" }}
     >
       {count > 9 ? "9+" : count}
     </motion.span>

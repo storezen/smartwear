@@ -125,15 +125,11 @@ export default function CartPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.08 }}
-                  className="flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl transition-all duration-200 group hover:border-[#B8860B]/40 hover:shadow-[0_0_20px_rgba(184,134,11,0.08)]"
-                  style={{
-                    background: "rgba(255,255,255,0.02)",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                  }}
+                  className="flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl transition-all duration-200 group bg-card border border-border hover:border-[#B8860B]/40 hover:shadow-[0_0_20px_rgba(184,134,11,0.08)]"
                 >
                   {/* Image */}
                   <Link href={`/products/${item.product.slug}`} className="shrink-0">
-                    <div className="relative overflow-hidden rounded-xl border border-border w-[72px] h-[72px] sm:w-[88px] sm:h-[88px]" style={{ background: "#0F1923" }}>
+                    <div className="relative overflow-hidden rounded-xl border border-border w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] bg-card">
                       <Image
                         src={item.product.images[0]}
                         alt={item.product.name}

@@ -490,10 +490,10 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
 
       {open && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 sm:p-4">
-          <div className={`bg-[#0a0a0a] border border-white/10 rounded-none sm:rounded-2xl w-full max-w-3xl mx-0 sm:mx-4 overflow-hidden shadow-2xl flex flex-col ${isMobile ? 'h-full' : 'max-h-[95vh]'}`}>
+          <div className={`bg-background border border-border rounded-none sm:rounded-2xl w-full max-w-3xl mx-0 sm:mx-4 overflow-hidden shadow-2xl flex flex-col ${isMobile ? 'h-full' : 'max-h-[95vh]'}`}>
 
             {/* ===== HEADER ===== */}
-            <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-white/5 shrink-0">
+            <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-border shrink-0">
               <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <MapPinned className="w-4 h-4 text-[#B8860B]" /> Select Delivery Address
               </h3>
@@ -501,17 +501,17 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                 <button
                   type="button"
                   onClick={() => { setShowSaved(!showSaved); setShowDropdown(false) }}
-                  className="flex items-center gap-1.5 text-[10px] text-foreground/50 hover:text-[#B8860B] transition-colors bg-white/5 hover:bg-white/10 px-2.5 py-1.5 rounded-lg"
+                  className="flex items-center gap-1.5 text-[10px] text-foreground/50 hover:text-[#B8860B] transition-colors bg-accent/5 hover:bg-accent/10 px-2.5 py-1.5 rounded-lg"
                   title="Saved addresses"
                 ><Star className="w-3 h-3" /> Saved{savedAddresses.length > 0 && <span className="text-[9px] text-foreground/30">({savedAddresses.length})</span>}</button>
                 <button
                   type="button" onClick={() => setSatellite(!satellite)}
-                  className={`flex items-center gap-1.5 text-[10px] transition-colors px-2.5 py-1.5 rounded-lg ${satellite ? 'bg-[#B8860B]/20 text-[#B8860B]' : 'text-foreground/50 hover:text-foreground/70 bg-white/5 hover:bg-white/10'}`}
+                  className={`flex items-center gap-1.5 text-[10px] transition-colors px-2.5 py-1.5 rounded-lg ${satellite ? 'bg-[#B8860B]/20 text-[#B8860B]' : 'text-foreground/50 hover:text-foreground/70 bg-accent/5 hover:bg-accent/10'}`}
                   title={satellite ? "Street View" : "Satellite View"}
                 ><Layers className="w-3 h-3" />{satellite ? "Satellite" : "Map"}</button>
                 <button
                   type="button" onClick={handleUseMyLocation} disabled={geoLoading}
-                  className="flex items-center gap-1.5 text-[10px] text-foreground/50 hover:text-[#B8860B] transition-colors bg-white/5 hover:bg-white/10 px-2.5 py-1.5 rounded-lg disabled:opacity-40"
+                  className="flex items-center gap-1.5 text-[10px] text-foreground/50 hover:text-[#B8860B] transition-colors bg-accent/5 hover:bg-accent/10 px-2.5 py-1.5 rounded-lg disabled:opacity-40"
                   title="Use my current location"
                 ><Navigation className={`w-3 h-3 ${geoLoading ? 'animate-spin' : ''}`} />{geoLoading ? "Locating..." : "My Location"}</button>
                 <button onClick={closeModal} className="text-foreground/40 hover:text-foreground/70 transition-colors"><X className="w-5 h-5" /></button>
@@ -520,8 +520,8 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
 
             {/* ===== SEARCH BAR ===== */}
             <div className="shrink-0 relative" ref={searchRef}>
-              <div className="px-4 sm:px-5 py-3 border-b border-white/5">
-                <div className="flex items-center gap-2 bg-[#141414] border border-white/10 rounded-lg px-3 py-2.5 focus-within:border-[#B8860B] transition-colors">
+              <div className="px-4 sm:px-5 py-3 border-b border-border">
+                <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-2.5 focus-within:border-[#B8860B] transition-colors">
                   <Search className="w-4 h-4 text-foreground/40 shrink-0" />
                   <input
                     ref={inputRef} type="text" value={searchQuery}
@@ -529,7 +529,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                     onFocus={() => { if (!searchQuery && !results.length) setShowDropdown(true) }}
                     onKeyDown={handleSearchKeyDown}
                     placeholder="Search city, area, or street in Pakistan..."
-                    className="bg-transparent text-sm text-foreground placeholder-white/30 focus:outline-none w-full min-w-0"
+                    className="bg-transparent text-sm text-foreground placeholder-foreground/30 focus:outline-none w-full min-w-0"
                   />
                   {searching && <span className="text-[10px] text-foreground/30 animate-pulse shrink-0">Searching...</span>}
                   {searchQuery && (
@@ -539,18 +539,18 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
               </div>
 
               {((results.length > 0) || (showDropdown && !searchQuery)) && (
-                <div ref={resultsRef} className="absolute top-full left-0 right-0 z-[9999] bg-card border border-white/10 rounded-xl shadow-2xl mx-4 sm:mx-5 max-h-72 overflow-y-auto">
+                <div ref={resultsRef} className="absolute top-full left-0 right-0 z-[9999] bg-card border border-border rounded-xl shadow-2xl mx-4 sm:mx-5 max-h-72 overflow-y-auto">
                   {!searchQuery && recentAddresses.length > 0 && (
                     <>
                       <div className="px-3 py-2 text-[10px] uppercase tracking-wider text-foreground/30 flex items-center gap-1.5 sticky top-0 bg-card z-10"><Clock className="w-3 h-3" /> Recent</div>
                       {recentAddresses.map((addr, i) => (
                         <button key={`recent-${i}`} type="button" onClick={() => { selectRecentAddress(addr); setShowDropdown(false) }}
-                          className={`w-full text-left px-3 py-2 text-xs text-foreground/& hover:bg-white/5 transition-colors flex items-center justify-between truncate ${focusedIdx === i ? 'bg-white/5' : ''}`}>
+                          className={`w-full text-left px-3 py-2 text-xs text-foreground/60 hover:bg-accent/5 transition-colors flex items-center justify-between truncate ${focusedIdx === i ? 'bg-accent/5' : ''}`}>
                           <span className="truncate">{addr.formattedAddress.split(",")[0]}</span>
                           <span className="text-[10px] text-foreground/30 shrink-0 ml-2">{addr.city}</span>
                         </button>
                       ))}
-                      <div className="h-px bg-white/5 mx-3" />
+                      <div className="h-px bg-accent/5 mx-3" />
                     </>
                   )}
                   {!searchQuery && (
@@ -560,7 +560,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                         const idx = i + (recentAddresses.length > 0 ? recentAddresses.length + 1 : 0)
                         return (
                           <button key={i} type="button" onClick={() => { selectPopularCity(c.name, c.lat, c.lng); setShowDropdown(false) }}
-                            className={`w-full text-left px-3 py-2 text-xs text-foreground/& hover:bg-white/5 transition-colors flex items-center justify-between ${focusedIdx === idx ? 'bg-white/5' : ''}`}>
+                            className={`w-full text-left px-3 py-2 text-xs text-foreground/60 hover:bg-accent/5 transition-colors flex items-center justify-between ${focusedIdx === idx ? 'bg-accent/5' : ''}`}>
                             <span className="flex items-center gap-2">{c.name}{c.postex && <ShieldCheck className="w-2.5 h-2.5 text-emerald-500" />}</span>
                             <span className="text-[10px] text-foreground/30">{c.province}</span>
                           </button>
@@ -572,7 +572,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                     const px = isPostexServiceable(item.city)
                     return (
                       <button key={i} type="button" onClick={() => selectPlace(item)}
-                        className={`w-full text-left px-3 py-2.5 text-xs text-foreground/& hover:bg-white/5 transition-colors border-b border-white/5 last:border-0 flex items-start gap-2.5 ${focusedIdx === i ? 'bg-white/5' : ''}`}>
+                        className={`w-full text-left px-3 py-2.5 text-xs text-foreground/60 hover:bg-accent/5 transition-colors border-b border-border last:border-0 flex items-start gap-2.5 ${focusedIdx === i ? 'bg-accent/5' : ''}`}>
                         <span className={`mt-0.5 ${item.type === "city" ? "text-[#B8860B]" : "text-foreground/40"}`}>{typeIcon(item.type)}</span>
                         <div className="min-w-0 flex-1">
                           <span className="block truncate font-medium">{item.shortName}</span>
@@ -608,13 +608,13 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                 </MapContainer>
 
                 {postexStatus && (
-                  <div className={`absolute top-3 left-3 z-[1000] flex items-center gap-1.5 text-[10px] font-medium ${postexStatus.className} bg-background/80 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-white/10`}>
+                  <div className={`absolute top-3 left-3 z-[1000] flex items-center gap-1.5 text-[10px] font-medium ${postexStatus.className} bg-background/80 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-border`}>
                     {postexStatus.icon}{postexStatus.label}
                   </div>
                 )}
                 {!markerPos && (
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] whitespace-nowrap px-3">
-                    <p className="text-[10px] bg-background/80 backdrop-blur-sm text-foreground/50 px-3 py-1.5 rounded-lg border border-white/10 text-center">
+                    <p className="text-[10px] bg-background/80 backdrop-blur-sm text-foreground/50 px-3 py-1.5 rounded-lg border border-border text-center">
                       Search a place, click the map, or drag the pin
                     </p>
                   </div>
@@ -631,17 +631,17 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                   <div className="absolute top-3 right-3 z-[1000] text-[9px] text-foreground/30 bg-background/60 px-2 py-1 rounded">Satellite</div>
                 )}
                 {deliveryEta && (
-                  <div className="absolute bottom-3 right-3 z-[1000] flex items-center gap-1.5 text-[10px] text-blue-300 bg-background/80 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-white/10">
+                  <div className="absolute bottom-3 right-3 z-[1000] flex items-center gap-1.5 text-[10px] text-blue-300 bg-background/80 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-border">
                     <Truck className="w-3 h-3" /> {deliveryEta.min}-{deliveryEta.max} business days
                   </div>
                 )}
               </div>
 
               {/* ===== ADDRESS DETAIL PANEL ===== */}
-              <div className={`${isMobile ? 'flex-1 min-h-0 overflow-y-auto border-t border-white/5' : 'w-80 shrink-0 overflow-y-auto border-l border-white/5'}`}>
+              <div className={`${isMobile ? 'flex-1 min-h-0 overflow-y-auto border-t border-border' : 'w-80 shrink-0 overflow-y-auto border-l border-border'}`}>
                 {!markerPos ? (
                   <div className="flex flex-col items-center justify-center h-full text-center px-6 py-12">
-                    <MapPinned className="w-10 h-10 text-foreground/& mb-3" />
+                    <MapPinned className="w-10 h-10 text-foreground/60 mb-3" />
                     <p className="text-xs text-foreground/30">Search a location or click the map</p>
                     <p className="text-[10px] text-foreground/20 mt-1">Select a city first to zoom in, then drop a pin</p>
                   </div>
@@ -673,13 +673,13 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                         ref={streetRef} type="text" value={addressDetail.street}
                         onChange={e => handleStreetChange(e.target.value)}
                         placeholder="e.g. House #12, Street 5"
-                        className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground placeholder-white/20 focus:outline-none focus:border-[#B8860B] transition-colors"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-foreground/20 focus:outline-none focus:border-[#B8860B] transition-colors"
                       />
                       {activeSuggestionField === "street" && streetSuggestions.length > 0 && (
-                        <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-card border border-white/10 rounded-lg shadow-xl max-h-40 overflow-y-auto">
+                        <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-card border border-border rounded-lg shadow-xl max-h-40 overflow-y-auto">
                           {streetSuggestions.map((s, i) => (
                             <button key={i} type="button" onClick={() => applySuggestion(s, "street")}
-                              className="w-full text-left px-3 py-2 text-[11px] text-foreground/70 hover:bg-white/5 hover:text-foreground transition-colors truncate">
+                              className="w-full text-left px-3 py-2 text-[11px] text-foreground/70 hover:bg-accent/5 hover:text-foreground transition-colors truncate">
                               {s.text}
                             </button>
                           ))}
@@ -696,13 +696,13 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                         ref={areaRef} type="text" value={addressDetail.area}
                         onChange={e => handleAreaChange(e.target.value)}
                         placeholder="e.g. Gulshan-e-Maymar"
-                        className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground placeholder-white/20 focus:outline-none focus:border-[#B8860B] transition-colors"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-foreground/20 focus:outline-none focus:border-[#B8860B] transition-colors"
                       />
                       {activeSuggestionField === "area" && areaSuggestions.length > 0 && (
-                        <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-card border border-white/10 rounded-lg shadow-xl max-h-40 overflow-y-auto">
+                        <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-card border border-border rounded-lg shadow-xl max-h-40 overflow-y-auto">
                           {areaSuggestions.map((s, i) => (
                             <button key={i} type="button" onClick={() => applySuggestion(s, "area")}
-                              className="w-full text-left px-3 py-2 text-[11px] text-foreground/70 hover:bg-white/5 hover:text-foreground transition-colors truncate">
+                              className="w-full text-left px-3 py-2 text-[11px] text-foreground/70 hover:bg-accent/5 hover:text-foreground transition-colors truncate">
                               {s.text}
                             </button>
                           ))}
@@ -719,7 +719,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                         <div className="flex flex-wrap gap-1.5">
                           {nearbyLandmarks.map((s, i) => (
                             <button key={i} type="button" onClick={() => applyLandmark(s)}
-                              className="text-[10px] text-foreground/60 bg-white/5 hover:bg-[#B8860B]/10 hover:text-[#B8860B] border border-white/5 px-2 py-1 rounded-lg transition-colors truncate max-w-full">
+                              className="text-[10px] text-foreground/60 bg-accent/5 hover:bg-[#B8860B]/10 hover:text-[#B8860B] border border-border px-2 py-1 rounded-lg transition-colors truncate max-w-full">
                               {s.text}
                             </button>
                           ))}
@@ -746,7 +746,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                             }
                           }}
                           placeholder="City name"
-                          className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground placeholder-white/20 focus:outline-none focus:border-[#B8860B] transition-colors pr-8"
+                          className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-foreground/20 focus:outline-none focus:border-[#B8860B] transition-colors pr-8"
                         />
                         {postexStatus && (
                           <span className={`absolute right-3 top-1/2 -translate-y-1/2 ${postexStatus.className}`}>{postexStatus.icon}</span>
@@ -757,7 +757,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                         ><CircleHelp className="w-3.5 h-3.5" /></button>
                       </div>
                       {showCityHelp && (
-                        <div className="mt-1.5 text-[10px] text-foreground/30 bg-white/5 rounded-lg px-2.5 py-1.5 leading-relaxed">
+                        <div className="mt-1.5 text-[10px] text-foreground/30 bg-accent/5 rounded-lg px-2.5 py-1.5 leading-relaxed">
                           Common spellings work automatically: "karchi" → Karachi, "lhr" → Lahore, "isl" → Islamabad, "rwp" → Rawalpindi, "fsd" → Faisalabad
                         </div>
                       )}
@@ -768,7 +768,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                       <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 block">Province</label>
                       <input type="text" value={addressDetail.province}
                         onChange={e => setAddressDetail(p => ({ ...p, province: e.target.value }))}
-                        className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground/70 focus:outline-none focus:border-[#B8860B] transition-colors"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground/70 focus:outline-none focus:border-[#B8860B] transition-colors"
                       />
                     </div>
 
@@ -804,7 +804,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                         <div className="flex gap-2 mt-2">
                           {(["Home", "Office", "Other"] as const).map(label => (
                             <button key={label} type="button" onClick={() => setSaveLabel(label)}
-                              className={`flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-lg border transition-colors ${saveLabel === label ? 'border-[#B8860B] bg-[#B8860B]/10 text-[#B8860B]' : 'border-white/10 text-foreground/40 hover:border-border'}`}>
+                              className={`flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-lg border transition-colors ${saveLabel === label ? 'border-[#B8860B] bg-[#B8860B]/10 text-[#B8860B]' : 'border-border text-foreground/40 hover:border-border'}`}>
                               {label === "Home" ? <Home className="w-2.5 h-2.5" /> : label === "Office" ? <Briefcase className="w-2.5 h-2.5" /> : <MapPin className="w-2.5 h-2.5" />}{label}
                             </button>
                           ))}
@@ -829,8 +829,8 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
             {/* ===== SAVED ADDRESSES SIDEBAR ===== */}
             {showSaved && (
               <div className="absolute inset-0 z-[10000] bg-background/60 backdrop-blur-sm flex items-start justify-end p-4">
-                <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-sm max-h-[80vh] overflow-y-auto shadow-2xl">
-                  <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+                <div className="bg-background border border-border rounded-2xl w-full max-w-sm max-h-[80vh] overflow-y-auto shadow-2xl">
+                  <div className="flex items-center justify-between px-5 py-4 border-b border-border">
                     <h4 className="text-sm font-semibold text-foreground flex items-center gap-2"><Star className="w-4 h-4 text-[#B8860B]" /> Saved Addresses</h4>
                     <button onClick={() => setShowSaved(false)} className="text-foreground/40 hover:text-foreground/70"><X className="w-4 h-4" /></button>
                   </div>
@@ -840,7 +840,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
                     <div className="p-3 space-y-2">
                       {savedAddresses.map((s, i) => (
                         <button key={i} type="button" onClick={() => selectSavedAddress(s)}
-                          className="w-full text-left bg-[#141414] hover:bg-white/5 border border-white/5 rounded-xl px-4 py-3 transition-colors">
+                          className="w-full text-left bg-card hover:bg-accent/5 border border-border rounded-xl px-4 py-3 transition-colors">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-[10px] font-medium text-[#B8860B] flex items-center gap-1">
                               {s.label === "Home" ? <Home className="w-3 h-3" /> : s.label === "Office" ? <Briefcase className="w-3 h-3" /> : <MapPin className="w-3 h-3" />}{s.label}
@@ -857,7 +857,7 @@ export default function AddressMap({ onSelect, initialAddress, initialCity }: Ad
             )}
 
             {/* ===== FOOTER ===== */}
-            <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-t border-white/5 shrink-0">
+            <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-t border-border shrink-0">
               <div className="flex items-center gap-2">
                 {markerPos && quality && (
                   <span className={`text-[10px] ${quality.color} flex items-center gap-1`}>

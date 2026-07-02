@@ -46,7 +46,7 @@ export function WatchLoader({ text = "Synchronizing..." }: { text?: string }) {
         </motion.div>
 
         {/* Center Pin */}
-        <div className="absolute w-2.5 h-2.5 rounded-full bg-[#B8860B] border-[1.5px] border-[#0C0F14] shadow-sm z-10" />
+        <div className="absolute w-2.5 h-2.5 rounded-full bg-[#B8860B] border-[1.5px] border-background shadow-sm z-10" />
         
         {/* Subtle sweeping radar effect */}
         <motion.div
