@@ -161,7 +161,7 @@ export default function AdminSettingsPage() {
     return (
       <div className="space-y-1.5 group">
         <div className="flex justify-between items-end">
-          <label htmlFor={id} className="text-[10px] font-semibold tracking-widest uppercase text-white/70 group-focus-within:text-[#B8860B] transition-colors">
+          <label htmlFor={id} className="text-[10px] font-semibold tracking-widest uppercase text-foreground/70 group-focus-within:text-[#B8860B] transition-colors">
             {label}
           </label>
           {isConfigured && (
@@ -176,7 +176,7 @@ export default function AdminSettingsPage() {
           value={formData[id] as string || ''}
           onChange={(e) => update(id, e.target.value)}
           placeholder={placeholder}
-          className="w-full h-10 bg-white/[0.02] border border-white/10 rounded-lg px-3 text-white placeholder-white/20 focus:border-[#B8860B] focus:bg-white/[0.05] outline-none transition-all text-[12px]"
+          className="w-full h-10 bg-card border border-white/10 rounded-lg px-3 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px]"
         />
       </div>
     )
@@ -184,7 +184,7 @@ export default function AdminSettingsPage() {
 
   const renderTextarea = (id: keyof SettingsForm, label: string, placeholder = "") => (
     <div className="space-y-1.5 group">
-      <label htmlFor={id} className="text-[10px] font-semibold tracking-widest uppercase text-white/70 group-focus-within:text-[#B8860B] transition-colors">
+      <label htmlFor={id} className="text-[10px] font-semibold tracking-widest uppercase text-foreground/70 group-focus-within:text-[#B8860B] transition-colors">
         {label}
       </label>
       <textarea
@@ -193,7 +193,7 @@ export default function AdminSettingsPage() {
         onChange={(e) => update(id, e.target.value)}
         placeholder={placeholder}
         rows={3}
-        className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/20 focus:border-[#B8860B] focus:bg-white/[0.05] outline-none transition-all text-[12px] resize-none"
+        className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px] resize-none"
       />
     </div>
   )
@@ -210,7 +210,7 @@ export default function AdminSettingsPage() {
         <div className="w-9 h-5 rounded-full bg-white/10 peer-checked:bg-emerald-500 transition-colors" />
         <div className="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white peer-checked:translate-x-4 transition-transform shadow" />
       </div>
-      <span className="text-[12px] text-white/70 group-hover:text-white transition-colors">{label}</span>
+      <span className="text-[12px] text-foreground/70 group-hover:text-foreground transition-colors">{label}</span>
     </label>
   )
 
@@ -220,14 +220,14 @@ export default function AdminSettingsPage() {
         {icon}
       </div>
       <div>
-        <h2 className="text-sm font-bold text-white">{title}</h2>
-        <p className="text-[10px] text-white/50">{desc}</p>
+        <h2 className="text-sm font-bold text-foreground">{title}</h2>
+        <p className="text-[10px] text-foreground/50">{desc}</p>
       </div>
     </div>
   )
 
   if (loading) {
-    return <div className="text-center py-20 text-white/50">Loading settings...</div>
+    return <div className="text-center py-20 text-foreground/50">Loading settings...</div>
   }
 
   return (
@@ -235,8 +235,8 @@ export default function AdminSettingsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div>
-          <h1 className="text-lg font-bold text-white tracking-tight mb-1">Command Center</h1>
-          <p className="text-white/60 text-[12px]">Configure every aspect of your store — from branding to logistics.</p>
+          <h1 className="text-lg font-bold text-foreground tracking-tight mb-1">Command Center</h1>
+          <p className="text-foreground/60 text-[12px]">Configure every aspect of your store — from branding to logistics.</p>
         </div>
         <button
           onClick={handleSave}
@@ -261,15 +261,15 @@ export default function AdminSettingsPage() {
                 className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-all duration-300 ${
                   isActive
                     ? 'bg-gradient-to-r from-[#B8860B]/10 to-transparent border-l-2 border-[#B8860B]'
-                    : 'hover:bg-white/[0.02] border-l-2 border-transparent opacity-60 hover:opacity-100'
+                    : 'hover:bg-card border-l-2 border-transparent opacity-60 hover:opacity-100'
                 }`}
               >
-                <div className={`p-1.5 rounded-lg shrink-0 ${isActive ? 'bg-[#B8860B]/20 text-[#B8860B]' : 'bg-white/5 text-white/60'}`}>
+                <div className={`p-1.5 rounded-lg shrink-0 ${isActive ? 'bg-[#B8860B]/20 text-[#B8860B]' : 'bg-white/5 text-foreground/60'}`}>
                   <Icon className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className={`font-semibold text-[13px] ${isActive ? 'text-[#B8860B]' : 'text-white'}`}>{tab.label}</h3>
-                  <p className="text-[9px] text-white/40 uppercase tracking-wider mt-0.5 hidden md:block">{tab.desc}</p>
+                  <h3 className={`font-semibold text-[13px] ${isActive ? 'text-[#B8860B]' : 'text-foreground'}`}>{tab.label}</h3>
+                  <p className="text-[9px] text-foreground/40 uppercase tracking-wider mt-0.5 hidden md:block">{tab.desc}</p>
                 </div>
               </button>
             )
@@ -286,7 +286,7 @@ export default function AdminSettingsPage() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
             >
-              <SpotlightCard className="p-5 bg-white/[0.02] border-white/5">
+              <SpotlightCard className="p-5 bg-card border-white/5">
 
                 {/* ────────────── STORE IDENTITY ────────────── */}
                 {activeTab === "store" && (
@@ -302,7 +302,7 @@ export default function AdminSettingsPage() {
                     </div>
                     <hr className="border-white/5" />
                     <div>
-                      <h3 className="text-xs font-semibold text-white/80 mb-3 flex items-center gap-1.5">
+                      <h3 className="text-xs font-semibold text-foreground/& mb-3 flex items-center gap-1.5">
                         <Search className="w-3.5 h-3.5 text-[#B8860B]" /> SEO
                       </h3>
                       <div className="grid grid-cols-1 gap-4">
@@ -321,7 +321,7 @@ export default function AdminSettingsPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="md:col-span-2">
-                        <div className="p-3 bg-[#B8860B]/10 border border-[#B8860B]/20 rounded-lg text-[11px] text-white/70">
+                        <div className="p-3 bg-[#B8860B]/10 border border-[#B8860B]/20 rounded-lg text-[11px] text-foreground/70">
                           These values appear on the Contact page, Footer, Terms, Privacy Policy, and the WhatsApp button.
                         </div>
                       </div>
@@ -346,7 +346,7 @@ export default function AdminSettingsPage() {
                     </div>
 
                     <hr className="border-white/5" />
-                    <h3 className="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                    <h3 className="text-xs font-semibold text-foreground/& flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5 text-[#B8860B]" /> Physical Address
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -356,7 +356,7 @@ export default function AdminSettingsPage() {
                     </div>
 
                     <hr className="border-white/5" />
-                    <h3 className="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                    <h3 className="text-xs font-semibold text-foreground/& flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-[#B8860B]" /> Business Hours
                     </h3>
                     {renderInput('business_hours', 'Business Hours', 'text', 'Mon-Sat: 10am - 8pm PKT')}
@@ -402,7 +402,7 @@ export default function AdminSettingsPage() {
 
                     <hr className="border-white/5" />
 
-                    <h3 className="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                    <h3 className="text-xs font-semibold text-foreground/& flex items-center gap-1.5">
                       <BadgePercent className="w-3.5 h-3.5 text-[#B8860B]" /> Payment Methods
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -416,7 +416,7 @@ export default function AdminSettingsPage() {
                 {activeTab === "announcement" && (
                   <div className="space-y-5">
                     {renderSectionHeader(<Megaphone className="w-4 h-4" />, "Announcement Bar", "3 rotating messages at the top of every page")}
-                    <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-[11px] text-white/70">
+                    <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-[11px] text-foreground/70">
                       These messages scroll in the top bar on every page. Keep them short — they auto-rotate every 4 seconds.
                     </div>
                     <div className="grid grid-cols-1 gap-4">
@@ -424,8 +424,8 @@ export default function AdminSettingsPage() {
                       {renderInput('announcement_line2', 'Announcement 2', 'text', 'Open Box Delivery Available')}
                       {renderInput('announcement_line3', 'Announcement 3', 'text', '100% Cash on Delivery')}
                     </div>
-                    <div className="p-3 bg-white/[0.02] border border-white/10 rounded-lg">
-                      <p className="text-[11px] text-white/40 font-mono">
+                    <div className="p-3 bg-card border border-white/10 rounded-lg">
+                      <p className="text-[11px] text-foreground/40 font-mono">
                         Preview: &ldquo;{formData.announcement_line1 || 'Free Delivery on Orders Over Rs. 10,000'}&rdquo; → &ldquo;{formData.announcement_line2 || 'Open Box Delivery Available'}&rdquo; → &ldquo;{formData.announcement_line3 || '100% Cash on Delivery'}&rdquo;
                       </p>
                     </div>
@@ -453,21 +453,21 @@ export default function AdminSettingsPage() {
                   <div className="space-y-5">
                     {renderSectionHeader(<ShieldCheck className="w-4 h-4" />, "Trust & Security Badges", "Badges shown on homepage, footer, and checkout")}
 
-                    <h3 className="text-xs font-semibold text-white/80">Security Badges (Footer, Checkout) — JSON</h3>
+                    <h3 className="text-xs font-semibold text-foreground/&">Security Badges (Footer, Checkout) — JSON</h3>
                     <textarea
                       value={formData.security_badges as string || ''}
                       onChange={(e) => update('security_badges', e.target.value)}
                       rows={3}
-                      className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/20 focus:border-[#B8860B] focus:bg-white/[0.05] outline-none transition-all text-[12px] resize-none font-mono"
+                      className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px] resize-none font-mono"
                       placeholder='[{"label":"SSL Secure","icon":"Lock"},{"label":"100% COD","icon":"Banknote"}]'
                     />
 
-                    <h3 className="text-xs font-semibold text-white/80">Trust Badges (Homepage) — JSON</h3>
+                    <h3 className="text-xs font-semibold text-foreground/&">Trust Badges (Homepage) — JSON</h3>
                     <textarea
                       value={formData.trust_badges as string || ''}
                       onChange={(e) => update('trust_badges', e.target.value)}
                       rows={3}
-                      className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/20 focus:border-[#B8860B] focus:bg-white/[0.05] outline-none transition-all text-[12px] resize-none font-mono"
+                      className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px] resize-none font-mono"
                       placeholder='[{"label":"7-Day Replacement","icon":"RefreshCw"},{"label":"Cash on Delivery","icon":"Banknote"}]'
                     />
 
@@ -475,7 +475,7 @@ export default function AdminSettingsPage() {
                       <AlertCircle className="w-4 h-4 text-[#B8860B] shrink-0 mt-0.5" />
                       <div>
                         <p className="text-[12px] text-[#B8860B] font-medium">JSON Format Required</p>
-                        <p className="text-[11px] text-white/60 mt-0.5">Each item needs: <code className="text-[10px] bg-black/30 px-1 rounded">label</code> (display text), <code className="text-[10px] bg-black/30 px-1 rounded">icon</code> (Lucide icon name). Icons are mapped on the frontend.</p>
+                        <p className="text-[11px] text-foreground/60 mt-0.5">Each item needs: <code className="text-[10px] bg-black/30 px-1 rounded">label</code> (display text), <code className="text-[10px] bg-black/30 px-1 rounded">icon</code> (Lucide icon name). Icons are mapped on the frontend.</p>
                       </div>
                     </div>
                   </div>
@@ -488,12 +488,12 @@ export default function AdminSettingsPage() {
                     <div className="space-y-4">
                       {renderSectionHeader(<Truck className="w-4 h-4 text-blue-400" />, "PostEx Logistics", "Automated order booking and tracking")}
 
-                      <div className="bg-white/[0.02] border border-white/10 rounded-lg p-3 space-y-2">
-                        <p className="text-[10px] font-semibold tracking-widest uppercase text-white/70">Webhook URL</p>
+                      <div className="bg-card border border-white/10 rounded-lg p-3 space-y-2">
+                        <p className="text-[10px] font-semibold tracking-widest uppercase text-foreground/70">Webhook URL</p>
                         <p className="text-xs font-mono text-[#B8860B] break-all select-all">
                           {typeof window !== 'undefined' ? window.location.origin : ''}/api/webhooks/postex
                         </p>
-                        <p className="text-[10px] text-white/40">
+                        <p className="text-[10px] text-foreground/40">
                           Set this URL in your PostEx dashboard. It receives real-time order status updates.
                         </p>
                       </div>
@@ -513,7 +513,7 @@ export default function AdminSettingsPage() {
                       </div>
                       <div className="mt-2">
                         {renderInput('tiktok_test_event_code', 'Test Event Code (optional)', 'text', 'Leave empty in production')}
-                        <p className="text-[10px] text-white/30 mt-1 ml-1">Fill during testing to see events in TikTok Test Events panel. Leave empty for live events.</p>
+                        <p className="text-[10px] text-foreground/30 mt-1 ml-1">Fill during testing to see events in TikTok Test Events panel. Leave empty for live events.</p>
                       </div>
                     </div>
                   </div>

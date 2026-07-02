@@ -6,16 +6,16 @@ export default function TermsPage() {
   const [s, setS] = useState<any>(null)
   useEffect(() => { fetch('/api/public/settings').then(r => r.json()).then(setS).catch(() => {}) }, [])
   return (
-    <div className="min-h-screen bg-[#06080A]">
+    <div className="min-h-screen bg-background">
       <div className="sw-container max-w-4xl mx-auto px-4 py-16 md:py-24">
-        <h1 className="text-3xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
+        <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
           Terms of Service
         </h1>
-        <p className="text-white/50 text-sm mb-8 md:mb-12">Last updated: June 2026</p>
+        <p className="text-foreground/50 text-sm mb-8 md:mb-12">Last updated: June 2026</p>
 
-        <div className="space-y-8 md:space-y-10 text-white/70 leading-relaxed text-sm md:text-base">
+        <div className="space-y-8 md:space-y-10 text-foreground/70 leading-relaxed text-sm md:text-base">
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">1. Acceptance of Terms</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">1. Acceptance of Terms</h2>
             <p>
               By accessing or using Smartwear.pk, you agree to be bound by these Terms of Service. If you do not agree,
               please do not use our platform. We reserve the right to update these terms at any time.
@@ -23,7 +23,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">2. Eligibility</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">2. Eligibility</h2>
             <p>
               You must be at least 18 years old to make a purchase. By placing an order, you confirm that you
               are legally capable of entering into binding contracts and that all information provided is accurate.
@@ -31,7 +31,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">3. Orders &amp; Pricing</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">3. Orders &amp; Pricing</h2>
             <ul className="list-disc pl-5 space-y-1">
               <li>All prices are in Pakistani Rupees (PKR) and include applicable taxes</li>
               <li>We reserve the right to modify prices without prior notice</li>
@@ -42,7 +42,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">4. Payment</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">4. Payment</h2>
             <p>
               We accept Cash on Delivery (COD), JazzCash, Easypaisa, and Bank Transfer. Full payment is required
               before order dispatch for non-COD orders. COD orders are paid in full upon delivery.
@@ -50,7 +50,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">5. Shipping &amp; Delivery</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">5. Shipping &amp; Delivery</h2>
             <ul className="list-disc pl-5 space-y-1">
               <li>We deliver nationwide across Pakistan</li>
               <li>Standard delivery: 2-4 business days</li>
@@ -62,7 +62,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">6. Replacement Policy</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">6. Replacement Policy</h2>
             <ul className="list-disc pl-5 space-y-1">
               <li>7-day replacement window from delivery date</li>
               <li>Products must be unused, in original packaging</li>
@@ -73,7 +73,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">7. Warranty</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">7. Warranty</h2>
             <p>
               We offer a 7-day replacement warranty covering manufacturing defects. The warranty does not
               cover physical damage, water damage (beyond rated limits), or normal wear and tear.
@@ -81,7 +81,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">8. User Conduct</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">8. User Conduct</h2>
             <p>
               You agree not to use our platform for any unlawful purpose, to not attempt to gain unauthorized
               access to our systems, and to not engage in any activity that disrupts the platform's functionality.
@@ -89,7 +89,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">9. Limitation of Liability</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">9. Limitation of Liability</h2>
             <p>
               Smartwear.pk shall not be liable for any indirect, incidental, or consequential damages arising
               from the use of our products or platform. Our total liability is limited to the purchase price
@@ -98,7 +98,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">10. Contact</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">10. Contact</h2>
             <p>
               For questions about these terms, reach us at:
             </p>

@@ -18,7 +18,7 @@ interface HotProductsProps {
 function TrendBadge({ trend }: { trend: "up" | "down" | "stable" }) {
   return (
     <span className={`flex items-center gap-0.5 text-[10px] font-semibold ${
-      trend === "up" ? "text-emerald-400" : trend === "down" ? "text-red-400" : "text-white/20"
+      trend === "up" ? "text-emerald-400" : trend === "down" ? "text-red-400" : "text-foreground/20"
     }`}>
       {trend === "up" ? <TrendingUp className="w-3 h-3" /> : trend === "down" ? <TrendingDown className="w-3 h-3" /> : <Minus className="w-3 h-3" />}
       {trend === "up" ? "Rising" : trend === "down" ? "Falling" : "Flat"}
@@ -55,17 +55,17 @@ function RankBadge({ rank }: { rank: number }) {
       </svg>
     )
   return (
-    <span className="w-6 h-6 shrink-0 flex items-center justify-center text-[10px] font-bold text-white/20 bg-white/[0.02] rounded-full border border-white/5">#{rank}</span>
+    <span className="w-6 h-6 shrink-0 flex items-center justify-center text-[10px] font-bold text-foreground/20 bg-card rounded-full border border-white/5">#{rank}</span>
   )
 }
 
 export const HotProducts = memo(function HotProducts({ products }: HotProductsProps) {
   if (!products.length) {
     return (
-      <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 h-full flex flex-col">
+      <div className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
-          <h3 className="text-[13px] font-semibold text-white/70">Hot Products</h3>
+          <h3 className="text-[13px] font-semibold text-foreground/70">Hot Products</h3>
         </div>
         <div className="flex-1 flex items-center justify-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]" />
@@ -74,8 +74,8 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
               <div className="absolute inset-0 rounded-full border border-[#B8860B]/20 animate-ping opacity-20" />
               <TrendingUp className="w-6 h-6 text-[#B8860B]/60" />
             </div>
-            <p className="text-[12px] font-medium text-white/50 mb-1">No trending products yet</p>
-            <p className="text-[9px] text-white/30 max-w-[160px] mx-auto leading-relaxed">Products will appear here automatically as visitors view them.</p>
+            <p className="text-[12px] font-medium text-foreground/50 mb-1">No trending products yet</p>
+            <p className="text-[9px] text-foreground/30 max-w-[160px] mx-auto leading-relaxed">Products will appear here automatically as visitors view them.</p>
           </div>
         </div>
       </div>
@@ -89,17 +89,17 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#0F1923] rounded-xl border border-white/5 p-4 h-full flex flex-col"
+      className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
           <div className="w-0.5 h-3.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.3)]" />
-          <h3 className="text-[13px] font-semibold text-white/70">Hot Products</h3>
+          <h3 className="text-[13px] font-semibold text-foreground/70">Hot Products</h3>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[9px] text-white/25 font-mono tabular-nums">{totalViews} views</span>
+          <span className="text-[9px] text-foreground/& font-mono tabular-nums">{totalViews} views</span>
           <div className="w-px h-3 bg-white/5" />
-          <span className="text-[8px] text-white/20">Last 30 min</span>
+          <span className="text-[8px] text-foreground/20">Last 30 min</span>
         </div>
       </div>
 
@@ -122,28 +122,28 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
                 <RankBadge rank={product.rank} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[12px] font-medium text-white/80 truncate group-hover:text-white transition-colors">
+                    <span className="text-[12px] font-medium text-foreground/& truncate group-hover:text-foreground transition-colors">
                       {product.name}
                     </span>
                     <TrendBadge trend={product.trend} />
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="flex items-center gap-0.5 text-[8px] text-white/25">
+                    <span className="flex items-center gap-0.5 text-[8px] text-foreground/&">
                       <Eye className="w-2.5 h-2.5" /> {product.views}
                     </span>
-                    <span className="text-[8px] text-white/25">•</span>
-                    <span className="flex items-center gap-0.5 text-[8px] text-white/25">
+                    <span className="text-[8px] text-foreground/&">•</span>
+                    <span className="flex items-center gap-0.5 text-[8px] text-foreground/&">
                       <ShoppingCart className="w-2.5 h-2.5" /> ~{estCarts}
                     </span>
-                    <span className="text-[8px] text-white/25">•</span>
+                    <span className="text-[8px] text-foreground/&">•</span>
                     <span className="flex items-center gap-0.5 text-[8px] text-emerald-400/40">
                       <DollarSign className="w-2.5 h-2.5" /> ₨{estRevenue.toLocaleString()}
                     </span>
                   </div>
                 </div>
-                <span className="text-[10px] text-white/40 font-mono tabular-nums shrink-0">{sharePct}%</span>
+                <span className="text-[10px] text-foreground/40 font-mono tabular-nums shrink-0">{sharePct}%</span>
               </div>
-              <div className="relative h-2 bg-white/[0.04] rounded-full overflow-hidden ml-[34px]">
+              <div className="relative h-2 bg-card rounded-full overflow-hidden ml-[34px]">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${barPct}%` }}
@@ -155,7 +155,7 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
                         ? "bg-gradient-to-r from-[#6B7280] to-[#9CA3AF]"
                         : product.rank === 3
                           ? "bg-gradient-to-r from-[#92400E] to-[#D4875E]"
-                          : "bg-white/15"
+                          : "bg-card"
                   }`}
                 />
               </div>
@@ -165,13 +165,13 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
       </div>
 
       {products.length > 0 && (
-        <div className="mt-auto pt-2.5 border-t border-white/[0.04] flex items-center justify-between text-[8px] text-white/20">
+        <div className="mt-auto pt-2.5 border-t border-white/[0.04] flex items-center justify-between text-[8px] text-foreground/20">
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1"><TrendingUp className="w-2.5 h-2.5 text-emerald-400" /> Rising</span>
             <span className="flex items-center gap-1"><TrendingDown className="w-2.5 h-2.5 text-red-400" /> Falling</span>
-            <span className="flex items-center gap-1"><Minus className="w-2.5 h-2.5 text-white/20" /> Stable</span>
+            <span className="flex items-center gap-1"><Minus className="w-2.5 h-2.5 text-foreground/20" /> Stable</span>
           </div>
-          <span className="text-white/15">{products.length} products tracked</span>
+          <span className="text-foreground/&">{products.length} products tracked</span>
         </div>
       )}
     </motion.div>

@@ -6,16 +6,16 @@ export default function PrivacyPolicyPage() {
   const [s, setS] = useState<any>(null)
   useEffect(() => { fetch('/api/public/settings').then(r => r.json()).then(setS).catch(() => {}) }, [])
   return (
-    <div className="min-h-screen bg-[#06080A]">
+    <div className="min-h-screen bg-background">
       <div className="sw-container max-w-4xl mx-auto px-4 py-16 md:py-24">
-        <h1 className="text-3xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
+        <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
           Privacy Policy
         </h1>
-        <p className="text-white/50 text-sm mb-8 md:mb-12">Last updated: June 2026</p>
+        <p className="text-foreground/50 text-sm mb-8 md:mb-12">Last updated: June 2026</p>
 
-        <div className="space-y-8 md:space-y-10 text-white/70 leading-relaxed text-sm md:text-base">
+        <div className="space-y-8 md:space-y-10 text-foreground/70 leading-relaxed text-sm md:text-base">
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">1. Introduction</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">1. Introduction</h2>
             <p>
               Smartwear.pk ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains
               how we collect, use, disclose, and safeguard your information when you visit our website or make a purchase.
@@ -26,15 +26,15 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">2. Information We Collect</h2>
-            <h3 className="text-white/90 font-medium mb-2">Personal Data</h3>
+            <h2 className="text-xl font-semibold text-foreground mb-3">2. Information We Collect</h2>
+            <h3 className="text-foreground/& font-medium mb-2">Personal Data</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Full name, email address, phone number</li>
               <li>Shipping and billing address</li>
               <li>Order history and preferences</li>
               <li>Payment information (processed securely through third-party gateways)</li>
             </ul>
-            <h3 className="text-white/90 font-medium mt-4 mb-2">Automatically Collected Data</h3>
+            <h3 className="text-foreground/& font-medium mt-4 mb-2">Automatically Collected Data</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>IP address, browser type, device information</li>
               <li>Pages visited, time spent, and navigation patterns</li>
@@ -43,7 +43,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">3. How We Use Your Information</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">3. How We Use Your Information</h2>
             <ul className="list-disc pl-5 space-y-1">
               <li>Process and fulfill your orders</li>
               <li>Communicate order updates, delivery tracking, and customer support</li>
@@ -55,7 +55,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">4. Information Sharing</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">4. Information Sharing</h2>
             <p>We do not sell your personal information. We may share data with:</p>
             <ul className="list-disc pl-5 space-y-1 mt-2">
               <li><strong>Delivery partners</strong> (PostEx, courier services) for order fulfillment</li>
@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">5. Data Security</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">5. Data Security</h2>
             <p>
               We implement industry-standard security measures including SSL encryption, secure servers,
               and restricted data access. Your payment information is encrypted and never stored on our servers.
@@ -74,7 +74,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">6. Your Rights</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">6. Your Rights</h2>
             <ul className="list-disc pl-5 space-y-1">
               <li>Access your personal data held by us</li>
               <li>Request correction of inaccurate information</li>
@@ -85,7 +85,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">7. Cookies</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">7. Cookies</h2>
             <p>
               We use cookies to enhance your browsing experience, analyze site traffic, and personalize content.
               You can control cookie preferences through your browser settings. Essential cookies are required
@@ -94,7 +94,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">8. Contact Us</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-3">8. Contact Us</h2>
             <p>
               For privacy-related inquiries, please contact us:
             </p>

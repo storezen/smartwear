@@ -120,8 +120,8 @@ export default function AdminHomepagePage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Homepage Product Picks</h1>
-          <p className="text-white/50 text-sm mt-1">Choose which products appear in each section. Leave empty for auto-picks.</p>
+          <h1 className="text-2xl font-bold text-foreground">Homepage Product Picks</h1>
+          <p className="text-foreground/50 text-sm mt-1">Choose which products appear in each section. Leave empty for auto-picks.</p>
         </div>
         <button
           onClick={save}
@@ -145,7 +145,7 @@ export default function AdminHomepagePage() {
             className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
               activeSection === s.key
                 ? "bg-[#B8860B] text-black"
-                : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+                : "bg-white/5 text-foreground/60 hover:bg-white/10 hover:text-foreground"
             }`}
           >
             {s.label}
@@ -165,14 +165,14 @@ export default function AdminHomepagePage() {
             {picks[currentSection.key]?.length > 0 && (
               <button
                 onClick={() => setPicks(prev => ({ ...prev, [activeSection]: [] }))}
-                className="text-white/40 hover:text-red-400 text-xs transition-colors"
+                className="text-foreground/40 hover:text-red-400 text-xs transition-colors"
               >
                 Clear all
               </button>
             )}
           </div>
           {(!picks[currentSection.key] || picks[currentSection.key].length === 0) ? (
-            <p className="text-white/30 text-sm py-8 text-center">No picks — auto algorithm will be used</p>
+            <p className="text-foreground/30 text-sm py-8 text-center">No picks — auto algorithm will be used</p>
           ) : (
             <div className="space-y-1.5 max-h-[500px] overflow-y-auto">
               {picks[currentSection.key].map((pid, i) => {
@@ -180,17 +180,17 @@ export default function AdminHomepagePage() {
                 return (
                   <div key={pid} className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2 group">
                     <div className="flex flex-col gap-0.5">
-                      <button onClick={() => moveProduct(pid, -1)} className="text-white/20 hover:text-white/60 transition-colors"><ArrowUpDown className="w-3 h-3 rotate-90" /></button>
-                      <button onClick={() => moveProduct(pid, 1)} className="text-white/20 hover:text-white/60 transition-colors"><ArrowUpDown className="w-3 h-3 -rotate-90" /></button>
+                      <button onClick={() => moveProduct(pid, -1)} className="text-foreground/20 hover:text-foreground/60 transition-colors"><ArrowUpDown className="w-3 h-3 rotate-90" /></button>
+                      <button onClick={() => moveProduct(pid, 1)} className="text-foreground/20 hover:text-foreground/60 transition-colors"><ArrowUpDown className="w-3 h-3 -rotate-90" /></button>
                     </div>
                     {prod?.images?.[0] && (
                       <img src={prod.images[0]} alt="" className="w-8 h-8 rounded object-cover" />
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-xs font-medium truncate">{prod?.name || pid}</p>
-                      <p className="text-white/40 text-[10px]">{prod?.category_slug || ""} · Rs.{prod?.price?.toLocaleString() || ""}</p>
+                      <p className="text-foreground/40 text-[10px]">{prod?.category_slug || ""} · Rs.{prod?.price?.toLocaleString() || ""}</p>
                     </div>
-                    <button onClick={() => toggleProduct(pid)} className="text-white/30 hover:text-red-400 transition-colors shrink-0">
+                    <button onClick={() => toggleProduct(pid)} className="text-foreground/30 hover:text-red-400 transition-colors shrink-0">
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -198,23 +198,23 @@ export default function AdminHomepagePage() {
               })}
             </div>
           )}
-          <p className="text-white/30 text-[10px] mt-3">
+          <p className="text-foreground/30 text-[10px] mt-3">
             Picked: {picks[currentSection.key]?.length || 0}/{currentSection.limit} max
           </p>
         </SpotlightCard>
 
         <SpotlightCard className="p-5">
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
             <input
               ref={searchRef}
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search products by name, brand, or category..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#B8860B] transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-foreground text-sm placeholder-white/30 focus:outline-none focus:border-[#B8860B] transition-all"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60">
+              <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/60">
                 <X className="w-4 h-4" />
               </button>
             )}
@@ -222,7 +222,7 @@ export default function AdminHomepagePage() {
 
           <div className="space-y-1 max-h-[500px] overflow-y-auto">
             {filtered.length === 0 ? (
-              <p className="text-white/30 text-sm py-8 text-center">No products found</p>
+              <p className="text-foreground/30 text-sm py-8 text-center">No products found</p>
             ) : (
               filtered.map(prod => {
                 const isPicked = picks[activeSection]?.includes(prod.id) || picks[activeSection]?.includes(prod.slug)
@@ -231,7 +231,7 @@ export default function AdminHomepagePage() {
                     key={prod.id}
                     onClick={() => toggleProduct(prod.id)}
                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-left ${
-                      isPicked ? "bg-[#B8860B]/10 border border-[#B8860B]/30" : "bg-white/[0.02] border border-transparent hover:bg-white/5"
+                      isPicked ? "bg-[#B8860B]/10 border border-[#B8860B]/30" : "bg-card border border-transparent hover:bg-white/5"
                     }`}
                   >
                     {prod.images?.[0] && (
@@ -239,7 +239,7 @@ export default function AdminHomepagePage() {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-xs font-medium truncate">{prod.name}</p>
-                      <p className="text-white/40 text-[10px]">{prod.brand} · {prod.category_slug} · Rs.{prod.price?.toLocaleString()}</p>
+                      <p className="text-foreground/40 text-[10px]">{prod.brand} · {prod.category_slug} · Rs.{prod.price?.toLocaleString()}</p>
                     </div>
                     {isPicked && <CheckCircle2 className="w-4 h-4 text-[#B8860B] shrink-0" />}
                   </button>

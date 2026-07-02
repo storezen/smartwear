@@ -14,7 +14,7 @@ export function WatchLoader({ text = "Synchronizing..." }: { text?: string }) {
         <div className="absolute inset-[2px] rounded-full border border-[#B8860B]/30" />
         
         {/* Inner Dial */}
-        <div className="absolute inset-[6px] rounded-full bg-[#0C0F14] shadow-[inset_0_4px_12px_rgba(0,0,0,0.5)] border border-white/5" />
+        <div className="absolute inset-[6px] rounded-full bg-background shadow-[inset_0_4px_12px_rgba(0,0,0,0.5)] border border-white/5" />
 
         {/* Dial Markings */}
         {[...Array(12)].map((_, i) => (
@@ -23,7 +23,7 @@ export function WatchLoader({ text = "Synchronizing..." }: { text?: string }) {
             className="absolute w-full h-full flex justify-center py-[8px]"
             style={{ transform: `rotate(${i * 30}deg)` }}
           >
-            <div className={`w-[1px] ${i % 3 === 0 ? 'h-2 bg-[#B8860B]/60' : 'h-1.5 bg-white/20'}`} />
+            <div className={`w-[1px] ${i % 3 === 0 ? 'h-2 bg-[#B8860B]/60' : 'h-1.5 bg-card'}`} />
           </div>
         ))}
 
@@ -65,7 +65,7 @@ export function WatchLoader({ text = "Synchronizing..." }: { text?: string }) {
           className="flex flex-col items-center gap-1.5"
         >
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#B8860B]">{text}</span>
-          <span className="text-[10px] text-white/40 tracking-wider">Premium Experience</span>
+          <span className="text-[10px] text-foreground/40 tracking-wider">Premium Experience</span>
         </motion.div>
       )}
     </div>

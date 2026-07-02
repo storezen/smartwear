@@ -4,9 +4,9 @@ import { ChevronRight, RefreshCw, RotateCcw, ShieldCheck } from "lucide-react"
 
 export default function WarrantyPage() {
   return (
-    <div className="min-h-screen bg-[#0C0F14] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="relative overflow-hidden text-white  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -18,18 +18,18 @@ export default function WarrantyPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-foreground/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B]" />
             <span className="text-[#B8860B]">Warranty</span>
           </div>
           <h1
-            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            className="font-bold text-foreground leading-tight mb-2 sm:mb-4"
             style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             7-Day Replacement Warranty
           </h1>
-          <p className="text-white/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-foreground/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
             Hassle-free replacement if anything is not right with your product.
           </p>
         </div>
@@ -39,30 +39,30 @@ export default function WarrantyPage() {
         <div className="max-w-4xl mx-auto">
           {/* Info Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 md:mb-12">
-            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
+            <div className="p-6 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <RotateCcw className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>7 Days</h3>
-              <p className="text-xs text-white/60">Replacement Window</p>
+              <p className="text-xs text-foreground/60">Replacement Window</p>
             </div>
-            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
+            <div className="p-6 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <RefreshCw className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Replacement</h3>
-              <p className="text-xs text-white/60">Defective items replaced</p>
+              <p className="text-xs text-foreground/60">Defective items replaced</p>
             </div>
-            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
+            <div className="p-6 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <ShieldCheck className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-1" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Hassle-Free</h3>
-              <p className="text-xs text-white/60">Simple process</p>
+              <p className="text-xs text-foreground/60">Simple process</p>
             </div>
           </div>
 
-          <div className="prose prose-invert max-w-none prose-p:text-white/70 prose-headings:font-normal prose-headings:text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
+          <div className="prose max-w-none prose-p:text-foreground/70 prose-headings:font-normal prose-headings:text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
             <h2 className="text-2xl mb-4">Our Replacement Policy</h2>
             <p className="font-sans mb-8 leading-relaxed">
               Every Smartwear timepiece is carefully packed and quality-checked before dispatch. If you receive a product

@@ -27,7 +27,7 @@ function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null
   return (
     <div className="bg-[#141B24]/98 backdrop-blur-md border border-white/10 rounded-xl px-3.5 py-2.5 shadow-2xl">
-      <p className="text-[10px] text-white/40 mb-1.5 font-medium">{label}</p>
+      <p className="text-[10px] text-foreground/40 mb-1.5 font-medium">{label}</p>
       {payload.map((p: any, i: number) => (
         <p key={i} className="text-[13px] font-bold tabular-nums" style={{ color: p.color }}>
           {p.name}: {p.value}
@@ -47,22 +47,22 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-[#0F1923] rounded-xl border border-white/5 p-4 h-full flex flex-col"
+        className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col"
       >
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
           <div>
-            <h3 className="text-[13px] font-semibold text-white/70">Traffic Timeline</h3>
-            <p className="text-[9px] text-white/25 mt-0.5">Last 2 hours · per minute</p>
+            <h3 className="text-[13px] font-semibold text-foreground/70">Traffic Timeline</h3>
+            <p className="text-[9px] text-foreground/& mt-0.5">Last 2 hours · per minute</p>
           </div>
         </div>
         <div className="flex-1 min-h-0 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-white/15" />
+            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-card border border-white/5 flex items-center justify-center">
+              <BarChart3 className="w-5 h-5 text-foreground/&" />
             </div>
-            <p className="text-[11px] text-white/25">Waiting for traffic data</p>
-            <p className="text-[8px] text-white/15 mt-1">Real-time chart updates as events arrive</p>
+            <p className="text-[11px] text-foreground/&">Waiting for traffic data</p>
+            <p className="text-[8px] text-foreground/& mt-1">Real-time chart updates as events arrive</p>
           </div>
         </div>
       </motion.div>
@@ -73,18 +73,18 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#0F1923] rounded-xl border border-white/5 p-4 h-full flex flex-col"
+      className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-4">
         <div>
           <div className="flex items-center gap-3">
             <div className="w-0.5 h-3.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.3)]" />
-            <h3 className="text-[13px] font-semibold text-white/70">Traffic Timeline</h3>
-            <div className="bg-[#0C0F14] rounded-lg border border-white/5 p-0.5 flex">
+            <h3 className="text-[13px] font-semibold text-foreground/70">Traffic Timeline</h3>
+            <div className="bg-background rounded-lg border border-white/5 p-0.5 flex">
               <button
                 onClick={() => setMetric("count")}
                 className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-all ${
-                  metric === "count" ? "bg-[#B8860B]/15 text-[#B8860B] shadow-sm" : "text-white/40 hover:text-white/60"
+                  metric === "count" ? "bg-[#B8860B]/15 text-[#B8860B] shadow-sm" : "text-foreground/40 hover:text-foreground/60"
                 }`}
               >
                 Events
@@ -92,14 +92,14 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
               <button
                 onClick={() => setMetric("sessions")}
                 className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-all ${
-                  metric === "sessions" ? "bg-[#B8860B]/15 text-[#B8860B] shadow-sm" : "text-white/40 hover:text-white/60"
+                  metric === "sessions" ? "bg-[#B8860B]/15 text-[#B8860B] shadow-sm" : "text-foreground/40 hover:text-foreground/60"
                 }`}
               >
                 Sessions
               </button>
             </div>
           </div>
-          <p className="text-[9px] text-white/25 mt-1 ml-3.5">Last 2 hours · per minute</p>
+          <p className="text-[9px] text-foreground/& mt-1 ml-3.5">Last 2 hours · per minute</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 bg-emerald-500/8 border border-emerald-500/15 px-2 py-1 rounded-full">
@@ -182,16 +182,16 @@ export const TimelineChart = memo(function TimelineChart({ data }: TimelineChart
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.4)]" />
-            <span className="text-[9px] text-white/30">Events</span>
+            <span className="text-[9px] text-foreground/30">Events</span>
           </div>
           {metric === "sessions" && (
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#6366F1] shadow-[0_0_6px_rgba(99,102,241,0.4)]" />
-              <span className="text-[9px] text-white/30">Sessions</span>
+              <span className="text-[9px] text-foreground/30">Sessions</span>
             </div>
           )}
         </div>
-        <span className="text-[9px] text-white/20 font-medium tabular-nums">Peak: {peak} /min</span>
+        <span className="text-[9px] text-foreground/20 font-medium tabular-nums">Peak: {peak} /min</span>
       </div>
     </motion.div>
   )

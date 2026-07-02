@@ -31,12 +31,12 @@ function EmptyCart() {
   return (
     <div className="py-16 md:py-24 text-center max-w-xs mx-auto">
       <div className="w-20 h-20 rounded-[24px] border border-white/10 bg-white/5 flex items-center justify-center mx-auto mb-5">
-        <ShoppingBag className="w-9 h-9 text-white/60" />
+        <ShoppingBag className="w-9 h-9 text-foreground/60" />
       </div>
-      <h1 className="text-xl font-semibold mb-2 text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
+      <h1 className="text-xl font-semibold mb-2 text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
         Your cart is empty
       </h1>
-      <p className="text-sm text-white/60 leading-relaxed mb-7">
+      <p className="text-sm text-foreground/60 leading-relaxed mb-7">
         You haven't added any watches yet. Explore our premium collection.
       </p>
       <Link href="/products">
@@ -72,10 +72,10 @@ export default function CartPage() {
   const total = subtotal
 
   return (
-    <div className="min-h-screen bg-[#0C0F14] text-white">
+    <div className="min-h-screen bg-background text-foreground">
 
       {/* Header */}
-      <div className="relative overflow-hidden text-white  pb-6 md:pt-28 md:pb-16 border-b border-white/5">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -87,7 +87,7 @@ export default function CartPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest flex-wrap">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-foreground/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest flex-wrap">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B] shrink-0" />
             <span className="text-[#B8860B]">Shopping Cart</span>
@@ -96,13 +96,13 @@ export default function CartPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            className="font-bold text-foreground leading-tight mb-2 sm:mb-4"
             style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Your Cart
           </motion.h1>
           {items.length > 0 && (
-            <p className="text-white/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
+            <p className="text-foreground/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
               You have {itemCount} {itemCount === 1 ? "timepiece" : "timepieces"} carefully selected.
             </p>
           )}
@@ -155,7 +155,7 @@ export default function CartPage() {
                       </h3>
                     </Link>
                     {item.selectedColor && (
-                      <p className="text-xs text-white/50 mt-1 flex items-center gap-1">
+                      <p className="text-xs text-foreground/50 mt-1 flex items-center gap-1">
                         <span className="w-2 h-2 rounded-full bg-[#B8860B]" />
                         {item.selectedColor}
                       </p>
@@ -167,7 +167,7 @@ export default function CartPage() {
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           disabled={item.quantity <= 1}
-                          className="w-10 sm:w-11 h-10 sm:h-11 flex items-center justify-center text-white/60 hover:text-white transition-colors disabled:opacity-30 sw-interactive"
+                          className="w-10 sm:w-11 h-10 sm:h-11 flex items-center justify-center text-foreground/60 hover:text-foreground transition-colors disabled:opacity-30 sw-interactive"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-3 h-3" />
@@ -175,13 +175,13 @@ export default function CartPage() {
                         <span className="w-7 sm:w-8 text-center text-sm font-semibold">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-10 sm:w-11 h-10 sm:h-11 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive"
+                          className="w-10 sm:w-11 h-10 sm:h-11 flex items-center justify-center text-foreground/60 hover:text-foreground transition-colors sw-interactive"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
                       </div>
-                      <span className="font-bold text-white" style={{ fontSize: "1rem" }}>
+                      <span className="font-bold text-foreground" style={{ fontSize: "1rem" }}>
                         {formatPrice(item.product.price * item.quantity)}
                       </span>
                     </div>
@@ -190,7 +190,7 @@ export default function CartPage() {
                   {/* Remove */}
                   <button
                     onClick={() => setItemToDelete(item.id)}
-                    className="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center transition-all text-white/60 hover:text-red-400 hover:bg-red-500/10 sw-interactive"
+                    className="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center transition-all text-foreground/60 hover:text-red-400 hover:bg-red-500/10 sw-interactive"
                     aria-label="Remove item"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -198,7 +198,7 @@ export default function CartPage() {
                 </motion.div>
               ))}
 
-              <Link href="/products" className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors mt-1">
+              <Link href="/products" className="inline-flex items-center gap-1.5 text-sm text-foreground/60 hover:text-foreground transition-colors mt-1">
                 ← Continue Shopping
               </Link>
             </div>
@@ -221,23 +221,23 @@ export default function CartPage() {
 
                 <div className="space-y-4 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-white/60">Subtotal ({itemCount} items)</span>
+                    <span className="text-foreground/60">Subtotal ({itemCount} items)</span>
                     <span className="font-semibold">{formatPrice(subtotal)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-white/60">Shipping</span>
+                    <span className="text-foreground/60">Shipping</span>
                     <span className={`font-semibold ${shipping === 0 ? "text-[#4ADE80]" : ""}`}>
                       {shipping === 0 ? "FREE" : formatPrice(shipping)}
                     </span>
                   </div>
-                  <div className="flex justify-between text-xs text-white/60">
+                  <div className="flex justify-between text-xs text-foreground/60">
                     <span>COD Fee</span>
                     <span>Calculated at checkout</span>
                   </div>
 
                   <div className="pt-4 mt-2 border-t border-white/5 flex items-end justify-between">
                     <div>
-                      <p className="text-xs text-white/60 mb-0.5">Total</p>
+                      <p className="text-xs text-foreground/60 mb-0.5">Total</p>
                       <p className="font-bold text-2xl" style={{ color: "#B8860B" }}>{formatPrice(total)}</p>
                     </div>
                   </div>
@@ -267,12 +267,12 @@ export default function CartPage() {
                     </p>
                   </div>
                   )}
-                  <p className="text-[10px] sm:text-[9px] text-white/60 uppercase tracking-widest text-center mb-2.5 font-semibold">Accepted Payments</p>
+                  <p className="text-[10px] sm:text-[9px] text-foreground/60 uppercase tracking-widest text-center mb-2.5 font-semibold">Accepted Payments</p>
                   <div className="flex flex-wrap gap-1.5 justify-center">
                     {paymentMethods.filter(m => m !== 'COD').map(m => (
                       <span
                         key={m}
-                        className="text-[11px] sm:text-[10px] font-medium text-white/60 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10"
+                        className="text-[11px] sm:text-[10px] font-medium text-foreground/60 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10"
                       >
                         {m}
                       </span>
@@ -288,20 +288,20 @@ export default function CartPage() {
 
       {/* Delete Confirmation Modal */}
       {itemToDelete && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm min-h-screen min-h-[100dvh]">
+        <div className="fixed top-0 left-0 right-0 bottom-0 z-[60] flex items-center justify-center bg-background/80 backdrop-blur-sm min-h-screen min-h-[100dvh]">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-[90%] max-w-sm bg-[#0F1923] border border-white/10 rounded-2xl shadow-2xl p-6 text-center mx-auto"
+            className="w-[90%] max-w-sm bg-card border border-white/10 rounded-2xl shadow-2xl p-6 text-center mx-auto"
           >
             <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-8 h-8 text-red-500" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Remove Item?</h3>
-            <p className="text-white/60 text-sm mb-8">Are you sure you want to remove this beautiful timepiece from your cart?</p>
+            <h3 className="text-xl font-bold text-foreground mb-2">Remove Item?</h3>
+            <p className="text-foreground/60 text-sm mb-8">Are you sure you want to remove this beautiful timepiece from your cart?</p>
             <div className="flex gap-3 justify-center">
-              <button onClick={() => setItemToDelete(null)} className="flex-1 py-3.5 rounded-xl text-sm font-medium text-white/60 hover:bg-white/5 border border-transparent transition-colors">Keep It</button>
-              <button onClick={() => { removeFromCart(itemToDelete); setItemToDelete(null); }} className="flex-1 py-3.5 rounded-xl text-sm font-bold bg-red-500 text-white hover:bg-red-600 transition-colors">Remove</button>
+              <button onClick={() => setItemToDelete(null)} className="flex-1 py-3.5 rounded-xl text-sm font-medium text-foreground/60 hover:bg-white/5 border border-transparent transition-colors">Keep It</button>
+              <button onClick={() => { removeFromCart(itemToDelete); setItemToDelete(null); }} className="flex-1 py-3.5 rounded-xl text-sm font-bold bg-red-500 text-foreground hover:bg-red-600 transition-colors">Remove</button>
             </div>
           </motion.div>
         </div>

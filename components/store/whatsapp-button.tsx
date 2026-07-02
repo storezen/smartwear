@@ -32,7 +32,7 @@ export function WhatsAppButton() {
       animate={{ scale: 1 }}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] shadow-[0_8px_32px_rgba(37,211,102,0.35)] flex items-center justify-center text-white hover:bg-[#20BD5A] active:bg-[#1DA851] transition-colors"
+      className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] shadow-[0_8px_32px_rgba(37,211,102,0.35)] flex items-center justify-center text-foreground hover:bg-[#20BD5A] active:bg-[#1DA851] transition-colors"
       aria-label="Chat on WhatsApp"
     >
       <svg className="w-7 h-7 pointer-events-none" viewBox="0 0 24 24" fill="currentColor">

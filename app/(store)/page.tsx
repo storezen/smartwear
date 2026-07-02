@@ -71,7 +71,7 @@ function SectionLabel({ text }: { text: string }) {
 
 function SectionTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <h2 className={`text-3xl md:text-4xl lg:text-5xl font-bold text-white ${className}`} style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
+    <h2 className={`text-3xl md:text-4xl lg:text-5xl font-bold text-foreground ${className}`} style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
       {children}
     </h2>
   )
@@ -93,7 +93,7 @@ function HeroBanner() {
   ]
 
   return (
-    <section className="relative min-h-[80svh] flex items-center overflow-hidden bg-[#06080A]">
+    <section className="relative min-h-[80svh] flex items-center overflow-hidden bg-background">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[60%] h-full bg-gradient-to-bl from-[#B8860B]/10 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-gradient-to-tr from-[#B8860B]/5 via-transparent to-transparent" />
@@ -133,16 +133,16 @@ function HeroBanner() {
 
               <div className="mb-3">
                 <div className="flex items-center gap-2 justify-center lg:justify-start mb-1">
-                  <span className="text-white/60 text-[11px] tracking-[0.3em] uppercase font-semibold">Smartwear</span>
+                  <span className="text-foreground/60 text-[11px] tracking-[0.3em] uppercase font-semibold">Smartwear</span>
                   <span className="w-6 h-[1px] bg-[#B8860B]/30" />
                   <span className="flex items-center gap-0.5">
                     {[1,2,3,4,5].map(i => (
                       <svg key={i} className="w-3 h-3 text-[#F0C75A]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                     ))}
                   </span>
-                  <span className="text-white/50 text-[10px] font-bold">4.9</span>
+                  <span className="text-foreground/50 text-[10px] font-bold">4.9</span>
                 </div>
-                <h1 className="text-[2.8rem] sm:text-[4.8rem] md:text-[5.8rem] lg:text-[6.2rem] font-bold text-white leading-[0.95] tracking-tight" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
+                <h1 className="text-[2.8rem] sm:text-[4.8rem] md:text-[5.8rem] lg:text-[6.2rem] font-bold text-foreground leading-[0.95] tracking-tight" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
                   Series{" "}
                   <span className="bg-gradient-to-r from-[#B8860B] via-[#F0C75A] to-[#B8860B] bg-clip-text text-transparent">
                     11
@@ -150,16 +150,16 @@ function HeroBanner() {
                 </h1>
               </div>
 
-              <p className="text-white/65 text-sm md:text-[15px] max-w-sm mx-auto lg:mx-0 mb-5 leading-relaxed font-medium">
+              <p className="text-foreground/& text-sm md:text-[15px] max-w-sm mx-auto lg:mx-0 mb-5 leading-relaxed font-medium">
                 Ultra-slim design meets powerhouse performance — AMOLED display, Bluetooth calling, AI health tracking with 7-day battery.
               </p>
 
               <div className="flex items-center justify-center lg:justify-start gap-3 mb-5">
-                <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/5">
-                  <span className="text-2xl md:text-3xl font-bold text-white tracking-tight" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
+                <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-card border border-white/5">
+                  <span className="text-2xl md:text-3xl font-bold text-foreground tracking-tight" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
                     Rs. 5,500
                   </span>
-                  <span className="text-sm md:text-base text-white/20 line-through">Rs. 8,500</span>
+                  <span className="text-sm md:text-base text-foreground/20 line-through">Rs. 8,500</span>
                 </div>
                 <div className="px-3 py-2 rounded-xl bg-gradient-to-br from-[#B8860B]/20 to-[#B8860B]/10 border border-[#B8860B]/25 shadow-[0_0_15px_rgba(184,134,11,0.1)]">
                   <span className="text-[#F0C75A] text-xs font-extrabold tracking-wider">-35% OFF</span>
@@ -174,7 +174,7 @@ function HeroBanner() {
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Link>
-                <Link href="/products" className="group px-8 py-3.5 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[48px] border border-white/12 text-white/50 hover:text-white hover:border-white/25 transition-all">
+                <Link href="/products" className="group px-8 py-3.5 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 rounded-xl min-h-[48px] border border-border text-foreground/50 hover:text-foreground hover:border-border transition-all">
                   View All
                 </Link>
               </div>
@@ -190,7 +190,7 @@ function HeroBanner() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8 + i * 0.1 }}
-                    className="flex items-center gap-1.5 text-white/15 text-[9px] uppercase tracking-wider"
+                    className="flex items-center gap-1.5 text-foreground/& text-[9px] uppercase tracking-wider"
                   >
                     <item.icon className="w-2.5 h-2.5 text-[#B8860B]/40" />
                     {item.label}
@@ -236,7 +236,7 @@ function HeroBanner() {
                 <motion.div
                   animate={{ scale: [1, 1.08, 1] }}
                   transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                  className="absolute bottom-[8%] left-[2%] px-3 py-1.5 rounded-full bg-black/50 border border-[#B8860B]/20 text-[#B8860B] text-[8px] font-extrabold uppercase tracking-wider backdrop-blur-md shadow-[0_0_12px_rgba(184,134,11,0.08)]"
+                  className="absolute bottom-[8%] left-[2%] px-3 py-1.5 rounded-full bg-background/50 border border-[#B8860B]/20 text-[#B8860B] text-[8px] font-extrabold uppercase tracking-wider backdrop-blur-md shadow-[0_0_12px_rgba(184,134,11,0.08)]"
                 >
                   ★ Best Seller
                 </motion.div>
@@ -252,7 +252,7 @@ function HeroBanner() {
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.4, delay: 0.7 + i * 0.08, ease: "backOut" }}
-                      className="absolute hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 border border-white/12 text-white/70 text-[9px] font-semibold tracking-wider whitespace-nowrap backdrop-blur-md shadow-lg hover:border-[#B8860B]/30 hover:text-[#B8860B] hover:bg-black/70 transition-all cursor-default"
+                      className="absolute hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/60 border border-border text-foreground/70 text-[9px] font-semibold tracking-wider whitespace-nowrap backdrop-blur-md shadow-lg hover:border-[#B8860B]/30 hover:text-[#B8860B] hover:bg-background/70 transition-all cursor-default"
                       style={{
                         left: `${x}%`,
                         top: `${y}%`,
@@ -344,7 +344,7 @@ function TrustBadges() {
                 </div>
                 <div>
                   <p className="text-white text-xs font-bold">{b.label}</p>
-                  <p className="text-white/40 text-[11px]">{b.desc}</p>
+                  <p className="text-foreground/40 text-[11px]">{b.desc}</p>
                 </div>
             </motion.div>
           )
@@ -382,10 +382,10 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
   if (!items.length) return null
 
   const carouselNavClass =
-    "hidden md:flex h-10 w-10 border-white/10 bg-[#0C0F14]/95 text-white hover:bg-[#B8860B] hover:text-[#0C0F14] hover:border-[#B8860B] disabled:opacity-30"
+    "hidden md:flex h-10 w-10 border-white/10 bg-background/95 text-foreground hover:bg-[#B8860B] hover:text-[#0C0F14] hover:border-[#B8860B] disabled:opacity-30"
 
   return (
-    <section className={`${SECTION_PAD} bg-[#0C0F14]`}>
+    <section className={`${SECTION_PAD} bg-background`}>
       <div className="sw-container">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
@@ -438,7 +438,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
                           <h3 className="text-white text-sm font-bold" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
                             {cat.name}
                           </h3>
-                          <p className="text-white/40 text-[10px] line-clamp-1">{cat.description}</p>
+                          <p className="text-foreground/40 text-[10px] line-clamp-1">{cat.description}</p>
                         </div>
                       </div>
 
@@ -448,7 +448,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
                             <Link
                               key={p.id || p.slug}
                               href={`/products/${p.slug}`}
-                              className="group/prod relative aspect-square rounded-xl overflow-hidden bg-white/[0.02] border border-white/5 hover:border-[#B8860B]/20 transition-all"
+                              className="group/prod relative aspect-square rounded-xl overflow-hidden bg-card border border-white/5 hover:border-[#B8860B]/20 transition-all"
                             >
                               {p.images?.[0] && (
                                 <Image
@@ -461,7 +461,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
                               )}
                               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/prod:opacity-100 transition-opacity" />
                               <div className="absolute bottom-1 left-1 right-1">
-                                <p className="text-[9px] text-white font-medium truncate opacity-0 group-hover/prod:opacity-100 transition-opacity drop-shadow-lg">
+                                <p className="text-[9px] text-foreground font-medium truncate opacity-0 group-hover/prod:opacity-100 transition-opacity drop-shadow-lg">
                                   Rs. {p.price?.toLocaleString()}
                                 </p>
                               </div>
@@ -472,7 +472,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
 
                       <Link
                         href={`/products?category=${cat.slug}`}
-                        className="group flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-white/8 text-white/40 hover:text-white hover:border-white/20 text-[10px] font-bold uppercase tracking-widest transition-all"
+                        className="group flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-border text-foreground/40 hover:text-foreground hover:border-border text-[10px] font-bold uppercase tracking-widest transition-all"
                       >
                         Shop {cat.name}
                         <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
@@ -514,7 +514,7 @@ function ProductSection({
   if (!products?.length) return null
 
   return (
-    <section className={`${SECTION_PAD} bg-[#0C0F14]`}>
+    <section className={`${SECTION_PAD} bg-background`}>
       <div className="sw-container">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
@@ -526,7 +526,7 @@ function ProductSection({
             <motion.div variants={staggerItem}><SectionTitle>{title}</SectionTitle></motion.div>
           </div>
           <motion.div variants={staggerItem}>
-            <Link href={viewAllHref} className="text-white/50 hover:text-[#B8860B] text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 shrink-0">
+            <Link href={viewAllHref} className="text-foreground/50 hover:text-[#B8860B] text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 shrink-0">
               View All <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
@@ -555,7 +555,7 @@ function ProductSection({
           >
             <button
               onClick={() => setShowAll(true)}
-              className="group px-10 py-3.5 rounded-xl border border-white/10 text-white/60 hover:text-white hover:border-white/25 text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-white/[0.03]"
+              className="group px-10 py-3.5 rounded-xl border border-white/10 text-foreground/60 hover:text-foreground hover:border-border text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-card"
             >
               Load More ({products.length - initialCount})
             </button>
@@ -586,7 +586,7 @@ function WhyChooseUs() {
         >
           <motion.div variants={staggerItem}><SectionLabel text="Our Promise" /></motion.div>
           <motion.div variants={staggerItem}><SectionTitle>Why Choose Smartwear?</SectionTitle></motion.div>
-          <motion.p variants={staggerItem} className="text-white/50 mt-4 max-w-2xl text-sm md:text-base">
+          <motion.p variants={staggerItem} className="text-foreground/50 mt-4 max-w-2xl text-sm md:text-base">
             We&apos;re not just selling watches — we&apos;re delivering confidence, reliability, and premium experiences to every customer.
           </motion.p>
         </motion.div>
@@ -599,13 +599,13 @@ function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="group p-6 rounded-[24px] bg-white/[0.02] border border-white/5 hover:border-[#B8860B]/20 hover:bg-white/[0.04] transition-all duration-500"
+              className="group p-6 rounded-[24px] bg-card border border-white/5 hover:border-[#B8860B]/20 hover:bg-card transition-all duration-500"
             >
               <div className="w-14 h-14 rounded-2xl bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center text-[#B8860B] mb-5 group-hover:bg-[#B8860B] group-hover:text-black transition-all duration-300">
                 <f.icon className="w-6 h-6" />
               </div>
               <h3 className="text-white text-lg font-bold mb-2" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{f.title}</h3>
-              <p className="text-white/50 text-sm leading-relaxed">{f.desc}</p>
+              <p className="text-foreground/50 text-sm leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -634,7 +634,7 @@ function CollectionsBanner({
     products: collectionProducts[col.slug] || [],
   }))
   return (
-    <section className={`${SECTION_PAD} bg-[#0C0F14]`}>
+    <section className={`${SECTION_PAD} bg-background`}>
       <div className="sw-container">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
@@ -666,7 +666,7 @@ function CollectionsBanner({
 
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <h3 className="text-white text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{col.name}</h3>
-                    <p className="text-white/50 text-sm mb-3">{col.desc}</p>
+                    <p className="text-foreground/50 text-sm mb-3">{col.desc}</p>
                     <span className="inline-flex items-center gap-2 text-[#B8860B] text-xs font-bold uppercase tracking-widest group-hover:gap-3 transition-all">
                       Explore <ArrowRight className="w-3.5 h-3.5" />
                     </span>
@@ -683,7 +683,7 @@ function CollectionsBanner({
                   className="mt-6"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-white/70 text-sm font-semibold uppercase tracking-widest">
+                    <h4 className="text-foreground/70 text-sm font-semibold uppercase tracking-widest">
                       From this collection
                     </h4>
                     <Link href={col.href} className="text-[#B8860B]/70 hover:text-[#B8860B] text-xs font-bold uppercase tracking-widest transition-colors">
@@ -735,12 +735,12 @@ function CategoryShowcase({
           <div>
             <motion.div variants={staggerItem}><SectionLabel text="Every Collection" /></motion.div>
             <motion.div variants={staggerItem}><SectionTitle>Shop All Categories</SectionTitle></motion.div>
-            <motion.p variants={staggerItem} className="text-white/50 mt-3 text-sm max-w-lg">
+            <motion.p variants={staggerItem} className="text-foreground/50 mt-3 text-sm max-w-lg">
               Top picks from our most popular lines — explore the full catalog anytime.
             </motion.p>
           </div>
           <motion.div variants={staggerItem}>
-            <Link href="/products" className="text-white/50 hover:text-[#B8860B] text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 shrink-0">
+            <Link href="/products" className="text-foreground/50 hover:text-[#B8860B] text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 shrink-0">
               Browse Full Catalog <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
@@ -818,7 +818,7 @@ const testimonials = [
 
 function CustomerTestimonials() {
   return (
-    <section className={`${SECTION_PAD} bg-[#0C0F14]`}>
+    <section className={`${SECTION_PAD} bg-background`}>
       <div className="sw-container">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
@@ -837,17 +837,17 @@ function CustomerTestimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="group p-6 rounded-[24px] bg-white/[0.02] border border-white/5 hover:border-[#B8860B]/20 transition-all duration-500 flex flex-col snap-start shrink-0 w-[280px] sm:w-[320px] md:w-auto"
+              className="group p-6 rounded-[24px] bg-card border border-white/5 hover:border-[#B8860B]/20 transition-all duration-500 flex flex-col snap-start shrink-0 w-[280px] sm:w-[320px] md:w-auto"
             >
               <Quote className="w-8 h-8 text-[#B8860B]/30 mb-4 shrink-0" />
 
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: 5 }).map((_, s) => (
-                  <Star key={s} className={`w-3.5 h-3.5 ${s < t.rating ? "fill-[#B8860B] text-[#B8860B]" : "text-white/20"}`} />
+                  <Star key={s} className={`w-3.5 h-3.5 ${s < t.rating ? "fill-[#B8860B] text-[#B8860B]" : "text-foreground/20"}`} />
                 ))}
               </div>
 
-              <p className="text-white/70 text-sm leading-relaxed flex-1 mb-6">&ldquo;{t.text}&rdquo;</p>
+              <p className="text-foreground/70 text-sm leading-relaxed flex-1 mb-6">&ldquo;{t.text}&rdquo;</p>
 
               <div className="flex items-center gap-3 pt-4 border-t border-white/5">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center text-black text-xs font-bold shrink-0">
@@ -855,7 +855,7 @@ function CustomerTestimonials() {
                 </div>
                 <div>
                   <p className="text-white text-sm font-semibold">{t.name}</p>
-                  <p className="text-white/40 text-xs">{t.city}, Pakistan</p>
+                  <p className="text-foreground/40 text-xs">{t.city}, Pakistan</p>
                 </div>
               </div>
             </motion.div>
@@ -900,7 +900,7 @@ function NewsletterSignup() {
           <motion.div variants={staggerItem}>
             <SectionTitle>Stay Updated with New Drops & Offers</SectionTitle>
           </motion.div>
-          <motion.p variants={staggerItem} className="text-white/50 mt-4 mb-8 text-sm md:text-base">
+          <motion.p variants={staggerItem} className="text-foreground/50 mt-4 mb-8 text-sm md:text-base">
             Get early access to new arrivals, exclusive discounts, and smartwatch tips delivered to your inbox.
           </motion.p>
 
@@ -915,7 +915,7 @@ function NewsletterSignup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email address"
-              className="flex-1 px-5 py-3.5 sm:py-4 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-all min-h-[44px]"
+              className="flex-1 px-5 py-3.5 sm:py-4 rounded-xl bg-white/5 border border-white/10 text-foreground text-sm placeholder-white/30 focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-all min-h-[44px]"
             />
             <button
               type="submit"
@@ -929,7 +929,7 @@ function NewsletterSignup() {
             </button>
           </motion.form>
 
-          <motion.p variants={staggerItem} className="text-white/30 text-xs mt-4">
+          <motion.p variants={staggerItem} className="text-foreground/30 text-xs mt-4">
             No spam. Unsubscribe anytime. We respect your privacy.
           </motion.p>
         </motion.div>
@@ -1060,7 +1060,7 @@ export default function HomePage() {
   )
 
   return (
-    <main className="min-h-screen bg-[#06080A]">
+    <main className="min-h-screen bg-background">
       <HeroBanner />
       <TrustBadges />
       <ShopByCategory items={shopCategoryCards} />

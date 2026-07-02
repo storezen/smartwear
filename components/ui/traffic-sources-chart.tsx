@@ -36,17 +36,17 @@ export const TrafficSourcesChart = memo(function TrafficSourcesChart({ sources }
 
   if (!sources.length) {
     return (
-      <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 h-full flex flex-col">
+      <div className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
-          <h3 className="text-[13px] font-semibold text-white/70">Traffic Sources</h3>
+          <h3 className="text-[13px] font-semibold text-foreground/70">Traffic Sources</h3>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-white/15" />
+            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-card border border-white/5 flex items-center justify-center">
+              <BarChart3 className="w-5 h-5 text-foreground/&" />
             </div>
-            <p className="text-[11px] text-white/25">No traffic data yet</p>
+            <p className="text-[11px] text-foreground/&">No traffic data yet</p>
           </div>
         </div>
       </div>
@@ -57,15 +57,15 @@ export const TrafficSourcesChart = memo(function TrafficSourcesChart({ sources }
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#0F1923] rounded-xl border border-white/5 p-4 h-full flex flex-col"
+      className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
           <div className="w-0.5 h-3.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.3)]" />
-          <h3 className="text-[13px] font-semibold text-white/70">Traffic Sources</h3>
+          <h3 className="text-[13px] font-semibold text-foreground/70">Traffic Sources</h3>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[9px] text-white/25 font-mono tabular-nums">{total} events</span>
+          <span className="text-[9px] text-foreground/& font-mono tabular-nums">{total} events</span>
           <div className="w-px h-3 bg-white/5" />
           <span className="text-[9px] font-medium" style={{ color: top1?.color || "#888" }}>{top1?.name} {top1Pct}%</span>
         </div>
@@ -81,7 +81,7 @@ export const TrafficSourcesChart = memo(function TrafficSourcesChart({ sources }
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: source.color }} />
-                  <span className={`text-[11px] truncate ${isTop ? 'text-white font-semibold' : 'text-white/60 group-hover:text-white/90'} transition-colors`}>
+                  <span className={`text-[11px] truncate ${isTop ? 'text-white font-semibold' : 'text-foreground/60 group-hover:text-foreground/&'} transition-colors`}>
                     {source.name}
                   </span>
                   {isTop && (
@@ -89,13 +89,13 @@ export const TrafficSourcesChart = memo(function TrafficSourcesChart({ sources }
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className={`text-[12px] font-bold tabular-nums ${isTop ? 'text-white' : 'text-white/80'}`}>
+                  <span className={`text-[12px] font-bold tabular-nums ${isTop ? 'text-foreground' : 'text-foreground/&'}`}>
                     {source.count.toLocaleString()}
                   </span>
-                  <span className="text-[9px] text-white/30 w-9 text-right tabular-nums">{source.percentage}%</span>
+                  <span className="text-[9px] text-foreground/30 w-9 text-right tabular-nums">{source.percentage}%</span>
                 </div>
               </div>
-              <div className="relative h-[3px] bg-white/[0.04] rounded-full overflow-hidden">
+              <div className="relative h-[3px] bg-card rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${barPct}%` }}
@@ -112,12 +112,12 @@ export const TrafficSourcesChart = memo(function TrafficSourcesChart({ sources }
           <div className="space-y-1 opacity-50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-white/20 shrink-0" />
-                <span className="text-[11px] text-white/40">Other ({sources.length - MAX_VISIBLE} sources)</span>
+                <span className="w-2 h-2 rounded-full bg-card shrink-0" />
+                <span className="text-[11px] text-foreground/40">Other ({sources.length - MAX_VISIBLE} sources)</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[12px] font-bold text-white/40 tabular-nums">{otherCount.toLocaleString()}</span>
-                <span className="text-[9px] text-white/20 w-9 text-right tabular-nums">{Math.round(otherPct)}%</span>
+                <span className="text-[12px] font-bold text-foreground/40 tabular-nums">{otherCount.toLocaleString()}</span>
+                <span className="text-[9px] text-foreground/20 w-9 text-right tabular-nums">{Math.round(otherPct)}%</span>
               </div>
             </div>
           </div>
@@ -125,9 +125,9 @@ export const TrafficSourcesChart = memo(function TrafficSourcesChart({ sources }
       </div>
 
       {topSources.length > 0 && (
-        <div className="mt-2 pt-2.5 border-t border-white/[0.04] flex items-center gap-2 text-[8px] text-white/20">
+        <div className="mt-2 pt-2.5 border-t border-white/[0.04] flex items-center gap-2 text-[8px] text-foreground/20">
           <Globe className="w-2.5 h-2.5" />
-          <span>Top source: <span className="text-white/40 font-medium">{top1?.name}</span></span>
+          <span>Top source: <span className="text-foreground/40 font-medium">{top1?.name}</span></span>
           <span className="ml-auto">{sources.length} channels</span>
         </div>
       )}

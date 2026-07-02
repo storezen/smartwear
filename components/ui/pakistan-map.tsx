@@ -59,17 +59,17 @@ export function PakistanMap({ locations }: PakistanMapProps) {
 
   if (!locations.length) {
     return (
-      <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4">
+      <div className="bg-card rounded-xl border border-white/5 p-4">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
-          <h3 className="text-[13px] font-semibold text-white/70">Traffic by City</h3>
+          <h3 className="text-[13px] font-semibold text-foreground/70">Traffic by City</h3>
         </div>
         <div className="h-48 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-white/15" />
+            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-card border border-white/5 flex items-center justify-center">
+              <MapPin className="w-5 h-5 text-foreground/&" />
             </div>
-            <p className="text-[11px] text-white/25">No location data yet</p>
+            <p className="text-[11px] text-foreground/&">No location data yet</p>
           </div>
         </div>
       </div>
@@ -80,17 +80,17 @@ export function PakistanMap({ locations }: PakistanMapProps) {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#0F1923] rounded-xl border border-white/5 p-4"
+      className="bg-card rounded-xl border border-white/5 p-4"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
           <div className="w-0.5 h-3.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.3)]" />
-          <h3 className="text-[13px] font-semibold text-white/70">Traffic by City</h3>
+          <h3 className="text-[13px] font-semibold text-foreground/70">Traffic by City</h3>
         </div>
-        <span className="text-[9px] text-white/25">Last 2 hours</span>
+        <span className="text-[9px] text-foreground/&">Last 2 hours</span>
       </div>
 
-      <div className="relative w-full aspect-[340/520] max-h-[300px] overflow-hidden rounded-lg bg-white/[0.01]">
+      <div className="relative w-full aspect-[340/520] max-h-[300px] overflow-hidden rounded-lg bg-card">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_45%_55%,rgba(184,134,11,0.03)_0%,transparent_60%)] pointer-events-none" />
         <PakistanOutline />
 
@@ -151,7 +151,7 @@ export function PakistanMap({ locations }: PakistanMapProps) {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  <p className="text-[9px] font-semibold text-white/90 leading-none drop-shadow-lg">
+                  <p className="text-[9px] font-semibold text-foreground/& leading-none drop-shadow-lg">
                     {city.name}
                   </p>
                   <p className="text-[8px] text-[#B8860B]/80 leading-none mt-0.5 font-medium">

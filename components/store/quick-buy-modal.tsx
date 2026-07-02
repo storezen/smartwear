@@ -95,7 +95,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-[#0F1923] border-[#B8860B]/20 text-white overflow-hidden rounded-[24px] [animation-duration:0ms!important]" showCloseButton={true}>
+      <DialogContent className="sm:max-w-md bg-card border-[#B8860B]/20 text-foreground overflow-hidden rounded-[24px] [animation-duration:0ms!important]" showCloseButton={true}>
         {/* Glow effect */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#B8860B] to-[#D4A017]" />
         
@@ -108,13 +108,13 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
           </DialogTitle>
         </DialogHeader>
 
-        <div className="bg-[#0C0F14] rounded-xl p-4 flex gap-4 items-center mb-6 mt-2 border border-white/5">
-          <div className="w-16 h-16 rounded-lg bg-[#0F1923] overflow-hidden shrink-0 relative border border-white/5 protected-img">
+        <div className="bg-background rounded-xl p-4 flex gap-4 items-center mb-6 mt-2 border border-white/5">
+          <div className="w-16 h-16 rounded-lg bg-card overflow-hidden shrink-0 relative border border-white/5 protected-img">
             <Image src={product.images[0]} alt={product.name} fill sizes="64px" className="object-cover" />
           </div>
           <div className="flex-1">
             <p className="font-medium text-sm line-clamp-1">{product.name}</p>
-            <p className="text-white/70 text-xs mt-1">Qty: {quantity}</p>
+            <p className="text-foreground/70 text-xs mt-1">Qty: {quantity}</p>
           </div>
           <div className="text-right">
             <p className="font-bold text-[#B8860B]">{formatPrice(total)}</p>
@@ -124,47 +124,47 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-xs text-white/70 uppercase tracking-widest mb-1.5 block">Full Name</label>
+            <label className="text-xs text-foreground/70 uppercase tracking-widest mb-1.5 block">Full Name</label>
             <input
               required
               type="text"
               value={formData.name}
               onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
-              className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-white focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
+              className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
               placeholder="e.g. Ali Khan"
             />
           </div>
           <div>
-            <label className="text-xs text-white/70 uppercase tracking-widest mb-1.5 block">Phone Number</label>
+            <label className="text-xs text-foreground/70 uppercase tracking-widest mb-1.5 block">Phone Number</label>
             <input
               required
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData(p => ({ ...p, phone: e.target.value }))}
-              className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-white focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
+              className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
               placeholder="0300 1234567"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="text-xs text-white/70 uppercase tracking-widest mb-1.5 block">Delivery Address</label>
+              <label className="text-xs text-foreground/70 uppercase tracking-widest mb-1.5 block">Delivery Address</label>
               <input
                 required
                 type="text"
                 value={formData.address}
                 onChange={(e) => setFormData(p => ({ ...p, address: e.target.value }))}
-                className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-white focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
+                className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
                 placeholder="House, Street, Area"
               />
             </div>
             <div className="col-span-2">
-              <label className="text-xs text-white/70 uppercase tracking-widest mb-1.5 block">City</label>
+              <label className="text-xs text-foreground/70 uppercase tracking-widest mb-1.5 block">City</label>
               <input
                 required
                 type="text"
                 value={formData.city}
                 onChange={(e) => setFormData(p => ({ ...p, city: e.target.value }))}
-                className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-white focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
+                className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all"
                 placeholder="Karachi, Lahore, Islamabad..."
               />
             </div>

@@ -166,9 +166,9 @@ export default function LiveAnalyticsPage() {
           <StatusBadge status={status} reconnecting={reconnecting} error={error} retry={retry} />
           {lastUpdated && (
             <>
-              <span className="text-[8px] text-white/20">|</span>
-              <Clock className="w-3 h-3 text-white/30" />
-              <span className="text-[9px] text-white/30 tabular-nums font-mono">
+              <span className="text-[8px] text-foreground/20">|</span>
+              <Clock className="w-3 h-3 text-foreground/30" />
+              <span className="text-[9px] text-foreground/30 tabular-nums font-mono">
                 {now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false })}
               </span>
             </>
@@ -177,12 +177,12 @@ export default function LiveAnalyticsPage() {
         </div>
 
         <div className="flex items-center gap-1.5">
-          <div className="bg-[#0F1923] rounded-lg border border-white/[0.06] p-0.5 flex">
+          <div className="bg-card rounded-lg border border-white/[0.06] p-0.5 flex">
             <button
               onClick={() => { setViewMode("globe"); setGlobeEngine("premium") }}
               className={`p-1 rounded-md transition-all ${
                 viewMode === "globe" && globeEngine === "premium"
-                  ? "bg-[#B8860B]/20 text-[#B8860B]" : "text-white/25 hover:text-white/50"
+                  ? "bg-[#B8860B]/20 text-[#B8860B]" : "text-foreground/& hover:text-foreground/50"
               }`}
               aria-label="Premium 3D globe"
               title="Premium 3D Globe"
@@ -193,7 +193,7 @@ export default function LiveAnalyticsPage() {
               onClick={() => { setViewMode("globe"); setGlobeEngine("classic") }}
               className={`p-1 rounded-md transition-all ${
                 viewMode === "globe" && globeEngine === "classic"
-                  ? "bg-white/10 text-white" : "text-white/25 hover:text-white/50"
+                  ? "bg-white/10 text-foreground" : "text-foreground/& hover:text-foreground/50"
               }`}
               title="Classic Globe"
             >
@@ -202,7 +202,7 @@ export default function LiveAnalyticsPage() {
             <button
               onClick={() => setViewMode("map")}
               className={`p-1 rounded-md transition-all ${
-                viewMode === "map" ? "bg-white/10 text-white" : "text-white/25 hover:text-white/50"
+                viewMode === "map" ? "bg-white/10 text-foreground" : "text-foreground/& hover:text-foreground/50"
               }`}
               aria-label="Pakistan map"
               title="Pakistan Map"
@@ -227,7 +227,7 @@ export default function LiveAnalyticsPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="bg-[#0F1923] rounded-xl border border-white/5 p-4">
+              <div key={i} className="bg-card rounded-xl border border-white/5 p-4">
                 <div className="w-14 h-2 skeleton rounded mb-2" />
                 <div className="w-20 h-6 skeleton rounded mb-1.5" />
                 <div className="w-10 h-2 skeleton rounded" />
@@ -235,13 +235,13 @@ export default function LiveAnalyticsPage() {
             ))}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
-            <div className="lg:col-span-3 h-48 bg-[#0F1923] rounded-xl border border-white/5">
+            <div className="lg:col-span-3 h-48 bg-card rounded-xl border border-white/5">
               <div className="p-4 space-y-3">
                 <div className="w-28 h-2.5 skeleton rounded" />
                 <div className="w-full h-36 skeleton rounded" />
               </div>
             </div>
-            <div className="lg:col-span-2 h-48 bg-[#0F1923] rounded-xl border border-white/5">
+            <div className="lg:col-span-2 h-48 bg-card rounded-xl border border-white/5">
               <div className="p-4 space-y-3">
                 <div className="w-20 h-2.5 skeleton rounded" />
                 <div className="w-full h-36 skeleton rounded" />
@@ -271,7 +271,7 @@ export default function LiveAnalyticsPage() {
           </AnimatePresence>
 
             {/* ── Overview Stats ── */}
-            <div className="text-[9px] tracking-[1.5px] text-white/60 mb-3">REAL-TIME METRICS</div>
+            <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-3">REAL-TIME METRICS</div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
               <div className="h-full">
                 <LiveStatsCard
@@ -349,10 +349,10 @@ export default function LiveAnalyticsPage() {
                   globeEngine === "premium" ? (
                     <PremiumGlobe locations={globeLocations} autoRotate />
                   ) : (
-                    <div className="bg-[#0F1923] rounded-xl border border-white/5 overflow-hidden relative h-full flex flex-col">
+                    <div className="bg-card rounded-xl border border-white/5 overflow-hidden relative h-full flex flex-col">
                       <div className="absolute top-3 left-3 z-10">
-                        <div className="bg-[#0A0D12]/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/5">
-                          <span className="text-[9px] font-medium text-white/50">Classic Globe</span>
+                        <div className="bg-background/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/5">
+                          <span className="text-[9px] font-medium text-foreground/50">Classic Globe</span>
                         </div>
                       </div>
                       <LiveGlobe locations={globeLocations} />
@@ -368,7 +368,7 @@ export default function LiveAnalyticsPage() {
             <LiveEventsFeed events={recentEvents} />
           </>
         )}
-      <p className="text-[10px] text-white/60 text-center mt-4">Real-time analytics with Supabase Realtime and heartbeat presence.</p>
+      <p className="text-[10px] text-foreground/60 text-center mt-4">Real-time analytics with Supabase Realtime and heartbeat presence.</p>
     </div>
   )
 }

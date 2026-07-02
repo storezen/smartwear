@@ -65,8 +65,8 @@ function getRange(key: string): DateRange {
 
 export function DateRangeSelector({ value, onChange }: DateRangeSelectorProps) {
   return (
-    <div className="flex items-center gap-1 bg-[#0F1923] rounded-lg border border-white/[0.06] p-0.5">
-      <CalendarDays className="w-3 h-3 text-white/30 ml-1.5" />
+    <div className="flex items-center gap-1 bg-card rounded-lg border border-white/[0.06] p-0.5">
+      <CalendarDays className="w-3 h-3 text-foreground/30 ml-1.5" />
       {PRESETS.map((preset) => (
         <button
           key={preset.key}
@@ -74,7 +74,7 @@ export function DateRangeSelector({ value, onChange }: DateRangeSelectorProps) {
           className={`px-2 py-1 rounded-md text-[9px] font-medium transition-all ${
             value === preset.key
               ? "bg-[#B8860B]/15 text-[#B8860B]"
-              : "text-white/25 hover:text-white/50"
+              : "text-foreground/& hover:text-foreground/50"
           }`}
         >
           {preset.label}

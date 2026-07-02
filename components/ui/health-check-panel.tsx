@@ -35,13 +35,13 @@ function StatusIcon({ status }: { status: "ok" | "warning" | "error" | "offline"
 
 function HealthRow({ label, status, detail, latency }: { label: string; status: "ok" | "warning" | "error" | "offline" | "checking"; detail: string; latency?: number | null }) {
   return (
-    <div className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-white/[0.02] transition-colors">
+    <div className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-card transition-colors">
       <div className="flex items-center gap-2.5 min-w-0">
         <StatusIcon status={status} />
-        <span className="text-[11px] text-white/70 font-medium">{label}</span>
+        <span className="text-[11px] text-foreground/70 font-medium">{label}</span>
       </div>
       <div className="flex items-center gap-3 shrink-0">
-        <span className="text-[9px] text-white/40">{detail}</span>
+        <span className="text-[9px] text-foreground/40">{detail}</span>
         {latency !== undefined && latency !== null && (
           <span className={`text-[9px] font-mono tabular-nums ${latency < 200 ? "text-emerald-400/60" : latency < 500 ? "text-amber-400/60" : "text-red-400/60"}`}>
             {latency}ms
@@ -148,7 +148,7 @@ export function HealthCheckPanel({ connectionStatus, error, eventCount, lastUpda
               ? "bg-emerald-500/8 border-emerald-500/15 text-emerald-400/60 hover:bg-emerald-500/15"
               : health
                 ? "bg-amber-500/8 border-amber-500/15 text-amber-400/60 hover:bg-amber-500/15"
-                : "bg-white/[0.03] border-white/5 text-white/30 hover:text-white/50"
+                : "bg-card border-white/5 text-foreground/30 hover:text-foreground/50"
         }`}
         aria-label="System health"
         title="System Health"
@@ -168,13 +168,13 @@ export function HealthCheckPanel({ connectionStatus, error, eventCount, lastUpda
             <div className="bg-gradient-to-b from-[#1a1f2e] to-[#141B24] border border-white/10 rounded-xl shadow-2xl overflow-hidden">
               <div className="px-4 py-3 border-b border-white/[0.06] flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Activity className="w-3.5 h-3.5 text-white/50" />
-                  <span className="text-[11px] font-semibold text-white/70">System Health</span>
+                  <Activity className="w-3.5 h-3.5 text-foreground/50" />
+                  <span className="text-[11px] font-semibold text-foreground/70">System Health</span>
                 </div>
                 <button
                   onClick={runCheck}
                   disabled={checking}
-                  className="text-[9px] text-white/30 hover:text-white/50 transition-colors disabled:opacity-40"
+                  className="text-[9px] text-foreground/30 hover:text-foreground/50 transition-colors disabled:opacity-40"
                   aria-label="Run health check"
                 >
                   <RefreshCw className={`w-3 h-3 ${checking ? "animate-spin" : ""}`} />
@@ -213,10 +213,10 @@ export function HealthCheckPanel({ connectionStatus, error, eventCount, lastUpda
 
               {health?.endpoints && health.endpoints.length > 0 && (
                 <div className="border-t border-white/[0.04] px-4 py-2">
-                  <p className="text-[8px] text-white/20 font-mono mb-1.5 tracking-wider uppercase">Endpoint Latency</p>
+                  <p className="text-[8px] text-foreground/20 font-mono mb-1.5 tracking-wider uppercase">Endpoint Latency</p>
                   {health.endpoints.map((ep) => (
                     <div key={ep.name} className="flex items-center justify-between py-0.5">
-                      <span className="text-[8px] text-white/30 font-mono truncate max-w-[180px]">{ep.name}</span>
+                      <span className="text-[8px] text-foreground/30 font-mono truncate max-w-[180px]">{ep.name}</span>
                       <div className="flex items-center gap-2">
                         <StatusIcon status={ep.status} />
                         <span className={`text-[8px] font-mono tabular-nums ${ep.latency < 200 ? "text-emerald-400/50" : ep.latency < 500 ? "text-amber-400/50" : "text-red-400/50"}`}>
@@ -228,16 +228,16 @@ export function HealthCheckPanel({ connectionStatus, error, eventCount, lastUpda
                 </div>
               )}
 
-              <div className="px-4 py-2.5 border-t border-white/[0.04] bg-white/[0.01]">
+              <div className="px-4 py-2.5 border-t border-white/[0.04] bg-card">
                 {health ? (
                   <div className="flex items-center gap-2">
                     <div className={`w-1.5 h-1.5 rounded-full ${isAllGood ? "bg-emerald-400" : "bg-amber-400"}`} />
-                    <span className="text-[9px] text-white/40">
+                    <span className="text-[9px] text-foreground/40">
                       {isAllGood ? "All systems operational" : "Issues detected — see above"}
                     </span>
                   </div>
                 ) : (
-                  <span className="text-[9px] text-white/30">Click refresh to run diagnostics</span>
+                  <span className="text-[9px] text-foreground/30">Click refresh to run diagnostics</span>
                 )}
               </div>
             </div>

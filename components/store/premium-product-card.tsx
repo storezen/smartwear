@@ -55,7 +55,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
   return (
     <>
       <div className={cn("group block cursor-pointer", className)} onClick={handleNavigate}>
-        <SpotlightCard className="h-full relative overflow-hidden bg-white/[0.02] rounded-2xl border-white/[0.06] transition-colors duration-500 hover:border-[#B8860B]/25 flex flex-col">
+        <SpotlightCard className="h-full relative overflow-hidden bg-card rounded-2xl border-white/[0.06] transition-colors duration-500 hover:border-[#B8860B]/25 flex flex-col">
           <div className="absolute inset-0 bg-gradient-to-b from-[#B8860B]/0 to-[#B8860B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
           {/* ── IMAGE ── */}
@@ -97,7 +97,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
                   </span>
                 )}
                 {product.is_featured && (
-                  <span className="bg-white/10 backdrop-blur-md text-white border border-white/20 text-[9px] font-semibold px-2.5 py-0.5 rounded-md uppercase tracking-wider self-start">
+                  <span className="bg-white/10 backdrop-blur-md text-foreground border border-border text-[9px] font-semibold px-2.5 py-0.5 rounded-md uppercase tracking-wider self-start">
                     Featured
                   </span>
                 )}
@@ -105,7 +105,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
 
               <button
                 onClick={handleWishlist}
-                className="pointer-events-auto w-11 h-11 rounded-full flex items-center justify-center bg-black/30 backdrop-blur-md border border-white/10 text-white hover:bg-[#B8860B]/20 hover:border-[#B8860B]/50 transition-all sw-interactive group/heart"
+                className="pointer-events-auto w-11 h-11 rounded-full flex items-center justify-center bg-black/30 backdrop-blur-md border border-white/10 text-foreground hover:bg-[#B8860B]/20 hover:border-[#B8860B]/50 transition-all sw-interactive group/heart"
                 aria-label="Toggle wishlist"
               >
                 <Heart
@@ -131,10 +131,10 @@ export function ProductCard({ product, className }: { product: Product; classNam
             
             <div className="flex items-center justify-between gap-2 mb-2">
               <span className="text-[#B8860B] text-[9px] font-bold uppercase tracking-[0.2em] truncate">{product.brand}</span>
-              <div className="flex items-center gap-1 text-[10px] font-medium text-white/60 shrink-0">
+              <div className="flex items-center gap-1 text-[10px] font-medium text-foreground/60 shrink-0">
                 <Star className="w-3 h-3 fill-[#B8860B] text-[#B8860B]" />
                 {product.rating}
-                <span className="text-white/30">({product.reviews_count || 0})</span>
+                <span className="text-foreground/30">({product.reviews_count || 0})</span>
               </div>
             </div>
 
@@ -151,7 +151,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
                   <span className="text-white font-semibold text-[15px] tracking-wide">
                     {formatPrice(product.price)}
                   </span>
-                  <span className="text-white/40 text-[10px] line-through decoration-white/20">
+                  <span className="text-foreground/40 text-[10px] line-through decoration-white/20">
                     {formatPrice(product.compare_price)}
                   </span>
                 </>
@@ -180,7 +180,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
               <button
                 onClick={handleCart}
                 disabled={!inStock}
-                className="col-span-1 h-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors sw-interactive disabled:opacity-50"
+                className="col-span-1 h-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-foreground hover:bg-white/10 transition-colors sw-interactive disabled:opacity-50"
                 aria-label="Add to cart"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />

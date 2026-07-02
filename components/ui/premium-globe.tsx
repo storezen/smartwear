@@ -88,7 +88,7 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
             const glow = isHighlighted ? "0 0 20px rgba(184,134,11,0.3)" : "0 4px 20px rgba(0,0,0,0.5)"
             return `
               <div style="
-                background:#0C0F14;
+                background:hsl(var(--background));
                 border:1px solid ${borderColor};
                 border-radius:10px;
                 padding:6px 12px;
@@ -99,9 +99,9 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
                 transition:all 0.2s;
               ">
                 <div style="display:flex;align-items:center;gap:8px;">
-                  <span style="color:#fff;font-size:12px;font-weight:600;">${d.city}</span>
+                  <span style="color:hsl(var(--foreground));font-size:12px;font-weight:600;">${d.city}</span>
                   <span style="color:rgba(184,134,11,0.9);font-size:11px;font-weight:500;">${d.count}</span>
-                  <span style="color:rgba(255,255,255,0.3);font-size:9px;">visitors</span>
+                  <span style="color:hsl(var(--foreground)/0.3);font-size:9px;">visitors</span>
                 </div>
               </div>
             `
@@ -221,8 +221,8 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
             </svg>
           </div>
         </div>
-        <p className="text-[14px] font-medium text-white/80 mb-1 tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Premium 3D Globe</p>
-        <p className="text-[11px] text-white/40 max-w-[200px] text-center leading-relaxed">
+        <p className="text-[14px] font-medium text-foreground/& mb-1 tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Premium 3D Globe</p>
+        <p className="text-[11px] text-foreground/40 max-w-[200px] text-center leading-relaxed">
           Rendering advanced visualization...
         </p>
       </div>
@@ -242,14 +242,14 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
         </div>
         {autoRotate && (
           <div className="bg-[#0A0D12]/70 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/[0.06]">
-            <span className="text-[7px] text-white/25 tracking-wider uppercase">Auto</span>
+            <span className="text-[7px] text-foreground/& tracking-wider uppercase">Auto</span>
           </div>
         )}
       </div>
 
       <div className="absolute top-3 right-3 z-10">
         <div className="bg-[#0A0D12]/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/[0.06]">
-          <span className="text-[9px] text-white/40 tabular-nums font-mono">{locations.length} city{locations.length !== 1 ? "ies" : "y"}</span>
+          <span className="text-[9px] text-foreground/40 tabular-nums font-mono">{locations.length} city{locations.length !== 1 ? "ies" : "y"}</span>
         </div>
       </div>
 
@@ -257,8 +257,8 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
         <div className="absolute top-12 left-3 z-20">
           <div className="bg-[#0A0D12]/90 backdrop-blur-xl px-4 py-2.5 rounded-xl border border-[#B8860B]/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)] min-w-[140px]">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-white/90">{selectedCity.city}</span>
-              <button onClick={dismissClick} className="text-white/20 hover:text-white/50 transition-colors ml-3" aria-label="Dismiss">
+              <span className="text-[11px] font-semibold text-foreground/&">{selectedCity.city}</span>
+              <button onClick={dismissClick} className="text-foreground/20 hover:text-foreground/50 transition-colors ml-3" aria-label="Dismiss">
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -266,10 +266,10 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
             </div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg font-bold text-[#B8860B] tabular-nums">{selectedCity.count}</span>
-              <span className="text-[8px] text-white/30 uppercase tracking-wider">Visitors</span>
+              <span className="text-[8px] text-foreground/30 uppercase tracking-wider">Visitors</span>
             </div>
             <div className="mt-1.5 h-px bg-gradient-to-r from-[#B8860B]/30 via-[#B8860B]/10 to-transparent" />
-            <div className="flex gap-3 mt-1.5 text-[8px] text-white/20">
+            <div className="flex gap-3 mt-1.5 text-[8px] text-foreground/20">
               <span>Click globe to dismiss</span>
             </div>
           </div>
@@ -283,23 +283,23 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
           <div className="bg-[#0A0D12]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#B8860B]/15">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.6)]" />
-              <span className="text-[10px] text-white/80 font-medium">{hoveredCity}</span>
-              <span className="text-[8px] text-white/30">hover</span>
+              <span className="text-[10px] text-foreground/& font-medium">{hoveredCity}</span>
+              <span className="text-[8px] text-foreground/30">hover</span>
             </div>
           </div>
         ) : sorted.length > 0 ? (
           <div className="bg-[#0A0D12]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/[0.06]">
             <div className="flex items-center gap-2">
-              <span className="text-[9px] text-white/50">Top:</span>
-              <span className="text-[10px] text-white/80 font-medium">{sorted[0].city}</span>
+              <span className="text-[9px] text-foreground/50">Top:</span>
+              <span className="text-[10px] text-foreground/& font-medium">{sorted[0].city}</span>
               <span className="text-[9px] text-[#B8860B] tabular-nums">{sorted[0].count}</span>
-              <span className="text-[7px] text-white/20">·</span>
-              <span className="text-[8px] text-white/30">{sorted.length} cities</span>
+              <span className="text-[7px] text-foreground/20">·</span>
+              <span className="text-[8px] text-foreground/30">{sorted.length} cities</span>
             </div>
           </div>
         ) : (
           <div className="bg-[#0A0D12]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/[0.06]">
-            <span className="text-[9px] text-white/30">No active cities</span>
+            <span className="text-[9px] text-foreground/30">No active cities</span>
           </div>
         )}
         <div className="flex items-center gap-2 bg-[#0A0D12]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/[0.06]">
@@ -312,10 +312,10 @@ export function PremiumGlobe({ locations, autoRotate = true }: PremiumGlobeProps
       </div>
 
       {!ready && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[#0F1923] z-5">
+        <div className="absolute inset-0 flex items-center justify-center bg-card z-5">
           <div className="flex flex-col items-center gap-3">
             <div className="w-7 h-7 border-2 border-[#B8860B] border-t-transparent rounded-full animate-spin" />
-            <span className="text-[10px] text-white/30">Loading 3D globe...</span>
+            <span className="text-[10px] text-foreground/30">Loading 3D globe...</span>
           </div>
         </div>
       )}

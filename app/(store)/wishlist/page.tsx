@@ -32,8 +32,8 @@ export default function PremiumWishlistPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#0C0F14] text-white flex items-center justify-center px-4">
-        <div className="fixed inset-0 bg-[#0C0F14] opacity-30 pointer-events-none" />
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
+        <div className="fixed inset-0 bg-background opacity-30 pointer-events-none" />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -49,8 +49,8 @@ export default function PremiumWishlistPage() {
               <Heart className="w-12 h-12 text-[#B8860B]" />
             </div>
           </motion.div>
-          <h1 className="text-3xl font-bold mb-3 text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Your Wishlist is Empty</h1>
-          <p className="text-white/60 mb-8 text-lg max-w-md mx-auto">
+          <h1 className="text-3xl font-bold mb-3 text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Your Wishlist is Empty</h1>
+          <p className="text-foreground/60 mb-8 text-lg max-w-md mx-auto">
             Save items you love to your wishlist and find them here anytime.
           </p>
           <Link href="/products">
@@ -66,12 +66,12 @@ export default function PremiumWishlistPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0C0F14] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Background */}
-      <div className="fixed inset-0 bg-[#0C0F14] opacity-30 pointer-events-none" />
+      <div className="fixed inset-0 bg-background opacity-30 pointer-events-none" />
 
       {/* Header */}
-      <div className="relative overflow-hidden text-white  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -83,13 +83,13 @@ export default function PremiumWishlistPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-foreground/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B]" />
             <span className="text-[#B8860B]">Wishlist</span>
           </div>
           <h1
-            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            className="font-bold text-foreground leading-tight mb-2 sm:mb-4"
             style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             My Wishlist
@@ -126,14 +126,14 @@ export default function PremiumWishlistPage() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="group rounded-[24px] border border-white/5 bg-[#0F1923] p-3 hover:border-white/20 transition-all duration-300 flex flex-col h-full">
+                  <div className="group rounded-[24px] border border-white/5 bg-card p-3 hover:border-border transition-all duration-300 flex flex-col h-full">
                     <Link href={`/products/${item.product.slug}`} className="block relative aspect-[4/5] rounded-[16px] overflow-hidden mb-4">
                       <motion.div
                         className="w-full h-full"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
                       >
-                        <div className="absolute inset-0 bg-[#0C0F14]/10 z-10" />
+                        <div className="absolute inset-0 bg-background/10 z-10" />
                         <Image
                           src={item.product.images[0]}
                           alt={item.product.name}
@@ -146,7 +146,7 @@ export default function PremiumWishlistPage() {
                       {/* Badges */}
                       <div className="absolute top-3 left-3 z-20 flex gap-2">
                         {discount > 0 && (
-                          <div className="bg-[#B8860B] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded">
+                          <div className="bg-[#B8860B] text-foreground text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded">
                             -{discount}%
                           </div>
                         )}
@@ -154,7 +154,7 @@ export default function PremiumWishlistPage() {
 
                       {/* Remove Button */}
                       <button
-                        className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/10 hover:bg-red-500/80 hover:border-red-500 text-white/70 hover:text-white transition-all"
+                        className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-background/50 backdrop-blur-md flex items-center justify-center border border-white/10 hover:bg-red-500/80 hover:border-red-500 text-foreground/70 hover:text-foreground transition-all"
                         onClick={(e) => {
                           e.preventDefault()
                           removeFromWishlist(item.product.id)
@@ -166,7 +166,7 @@ export default function PremiumWishlistPage() {
                       {/* Quick Add on Hover */}
                       <div className="absolute inset-x-3 bottom-3 z-20 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                         <button
-                          className="w-full h-11 rounded-xl bg-white/10 hover:bg-[#B8860B] backdrop-blur-md border border-white/20 hover:border-[#B8860B] text-white text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+                          className="w-full h-11 rounded-xl bg-white/10 hover:bg-[#B8860B] backdrop-blur-md border border-border hover:border-[#B8860B] text-foreground text-sm font-medium flex items-center justify-center gap-2 transition-colors"
                           onClick={(e) => {
                             e.preventDefault()
                             addToCart(item.product)
@@ -180,20 +180,20 @@ export default function PremiumWishlistPage() {
 
                     <div className="flex-1 flex flex-col px-1">
                       <Link href={`/products/${item.product.slug}`}>
-                        <p className="text-[11px] sm:text-[10px] text-white/60 uppercase tracking-widest mb-1.5">
+                        <p className="text-[11px] sm:text-[10px] text-foreground/60 uppercase tracking-widest mb-1.5">
                           {item.product.brand}
                         </p>
-                        <h3 className="font-medium text-white line-clamp-2 group-hover:text-[#B8860B] transition-colors leading-snug">
+                        <h3 className="font-medium text-foreground line-clamp-2 group-hover:text-[#B8860B] transition-colors leading-snug">
                           {item.product.name}
                         </h3>
                       </Link>
 
                       <div className="mt-auto pt-3 flex items-center gap-2">
-                        <span className="font-bold text-white">
+                        <span className="font-bold text-foreground">
                           {formatPrice(item.product.price)}
                         </span>
                         {item.product.compare_price && (
-                          <span className="text-sm text-white/60 line-through">
+                          <span className="text-sm text-foreground/60 line-through">
                             {formatPrice(item.product.compare_price)}
                           </span>
                         )}

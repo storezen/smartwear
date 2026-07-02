@@ -15,7 +15,7 @@ export default function StoreTemplate({ children }: { children: React.ReactNode 
       
       {/* Page Transition Loader */}
       <motion.div
-        className="fixed inset-0 z-[9998] bg-[#0C0F14] pointer-events-none flex items-center justify-center"
+        className="fixed inset-0 z-[9998] bg-background pointer-events-none flex items-center justify-center"
         initial={{ opacity: 1 }}
         animate={{ opacity: 0 }}
         transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}

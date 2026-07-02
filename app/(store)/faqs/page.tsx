@@ -30,9 +30,9 @@ const faqs = [
 
 export default function FAQsPage() {
   return (
-    <div className="min-h-screen bg-[#0C0F14] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="relative overflow-hidden text-white  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -44,18 +44,18 @@ export default function FAQsPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-foreground/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B]" />
             <span className="text-[#B8860B]">FAQs</span>
           </div>
           <h1
-            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            className="font-bold text-foreground leading-tight mb-2 sm:mb-4"
             style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Frequently Asked Questions
           </h1>
-          <p className="text-white/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-foreground/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
             Find quick answers to common questions about our products, shipping, returns, and more.
           </p>
         </div>
@@ -71,14 +71,14 @@ export default function FAQsPage() {
                 </div>
                 {section.category}
               </h2>
-              <div className="rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl p-6 md:p-8">
+              <div className="rounded-[24px] border border-white/5 bg-card backdrop-blur-xl p-6 md:p-8">
                 <Accordion type="single" collapsible className="w-full">
                   {section.items.map((item, i) => (
                     <AccordionItem key={i} value={`item-${index}-${i}`} className="border-white/5 py-2">
                       <AccordionTrigger className="text-left text-base md:text-lg font-medium hover:text-[#B8860B] transition-colors hover:no-underline">
                         {item.q}
                       </AccordionTrigger>
-                      <AccordionContent className="text-white/60 leading-relaxed pt-2">
+                      <AccordionContent className="text-foreground/60 leading-relaxed pt-2">
                         {item.a}
                       </AccordionContent>
                     </AccordionItem>

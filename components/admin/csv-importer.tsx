@@ -218,25 +218,25 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
       style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
     >
       <motion.div
           initial={{ scale: 0.95, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#0C0F14] border border-white/10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-background border border-white/10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)]"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/[0.02]">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-card">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
                 <FileSpreadsheet className="w-5 h-5" />
               </div>
-              <h2 className="text-xl font-bold text-white">Import Products (CSV)</h2>
+              <h2 className="text-xl font-bold text-foreground">Import Products (CSV)</h2>
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-white/50 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+              className="p-2 text-foreground/50 hover:text-foreground transition-colors rounded-lg hover:bg-white/5"
             >
               <X className="w-5 h-5" />
             </button>
@@ -246,13 +246,13 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
             {!file ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-white/10 hover:border-gold/50 bg-white/[0.01] rounded-xl p-12 flex flex-col items-center justify-center text-center cursor-pointer transition-colors group"
+                className="border-2 border-dashed border-white/10 hover:border-gold/50 bg-card rounded-xl p-12 flex flex-col items-center justify-center text-center cursor-pointer transition-colors group"
               >
                 <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4 group-hover:bg-gold/10 group-hover:text-gold transition-colors">
-                  <Upload className="w-8 h-8 text-white/40 group-hover:text-gold" />
+                  <Upload className="w-8 h-8 text-foreground/40 group-hover:text-gold" />
                 </div>
-                <h3 className="text-lg font-medium text-white mb-2">Click to upload CSV</h3>
-                <p className="text-sm text-white/40 max-w-sm">
+                <h3 className="text-lg font-medium text-foreground mb-2">Click to upload CSV</h3>
+                <p className="text-sm text-foreground/40 max-w-sm">
                   Upload a Shopify-formatted CSV file. We will extract Titles, Prices, Images, and Categories automatically.
                 </p>
                 <input
@@ -270,7 +270,7 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
                     <FileSpreadsheet className="w-8 h-8 text-emerald-400" />
                     <div>
                       <p className="text-white font-medium">{file.name}</p>
-                      <p className="text-sm text-white/40">
+                      <p className="text-sm text-foreground/40">
                         {(file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
@@ -286,14 +286,14 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
                 {isParsing ? (
                   <div className="flex flex-col items-center justify-center py-8">
                     <Loader2 className="w-8 h-8 text-gold animate-spin mb-4" />
-                    <p className="text-white/60">Parsing CSV rows...</p>
+                    <p className="text-foreground/60">Parsing CSV rows...</p>
                   </div>
                 ) : previewData.length > 0 ? (
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                        <p className="text-sm text-white/40 mb-1">Rows Parsed</p>
-                        <p className="text-2xl font-bold text-white">{stats.totalRows}</p>
+                        <p className="text-sm text-foreground/40 mb-1">Rows Parsed</p>
+                        <p className="text-2xl font-bold text-foreground">{stats.totalRows}</p>
                       </div>
                       <div className="p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
                         <p className="text-sm text-emerald-400/60 mb-1">Unique Products</p>
@@ -302,7 +302,7 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
                     </div>
 
                     <div className="p-4 bg-white/5 rounded-xl border border-white/10 max-h-48 overflow-y-auto">
-                      <p className="text-sm text-white/60 mb-2 font-medium">Preview (First 3 products)</p>
+                      <p className="text-sm text-foreground/60 mb-2 font-medium">Preview (First 3 products)</p>
                       <div className="space-y-2">
                         {previewData.slice(0, 3).map((p, i) => (
                           <div key={i} className="flex items-center justify-between text-sm">
@@ -311,7 +311,7 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
                           </div>
                         ))}
                         {previewData.length > 3 && (
-                          <p className="text-xs text-white/40 pt-2 text-center border-t border-white/10 mt-2">
+                          <p className="text-xs text-foreground/40 pt-2 text-center border-t border-white/10 mt-2">
                             + {previewData.length - 3} more products
                           </p>
                         )}
@@ -321,29 +321,29 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Category Selector */}
                       <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-                        <label className="text-xs text-white/40 uppercase tracking-widest font-semibold mb-2 block">
+                        <label className="text-xs text-foreground/40 uppercase tracking-widest font-semibold mb-2 block">
                           Default Category
                         </label>
                         <select
                           value={defaultCategory}
                           onChange={(e) => setDefaultCategory(e.target.value)}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-white text-sm focus:outline-none focus:border-gold"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-foreground text-sm focus:outline-none focus:border-gold"
                         >
                           <option value="Smartwatches">Smartwatches</option>
                           <option value="Accessories">Accessories</option>
                           <option value="Straps">Straps</option>
                           <option value="Audio">Audio</option>
                         </select>
-                        <p className="text-[10px] text-white/40 mt-2">Applied if CSV category is missing.</p>
+                        <p className="text-[10px] text-foreground/40 mt-2">Applied if CSV category is missing.</p>
                       </div>
 
                       {/* Overwrite Toggle */}
                       <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col justify-between">
                         <div>
-                          <label className="text-xs text-white/40 uppercase tracking-widest font-semibold mb-2 block">
+                          <label className="text-xs text-foreground/40 uppercase tracking-widest font-semibold mb-2 block">
                             Handling Duplicates
                           </label>
-                          <p className="text-[10px] text-white/40 mb-3">
+                          <p className="text-[10px] text-foreground/40 mb-3">
                             Should we overwrite products that already exist?
                           </p>
                         </div>
@@ -355,10 +355,10 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
                               checked={overwriteExisting}
                               onChange={() => setOverwriteExisting(!overwriteExisting)}
                             />
-                            <div className={`block w-10 h-6 rounded-full transition-colors ${overwriteExisting ? 'bg-gold' : 'bg-white/20'}`}></div>
+                            <div className={`block w-10 h-6 rounded-full transition-colors ${overwriteExisting ? 'bg-gold' : 'bg-card'}`}></div>
                             <div className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${overwriteExisting ? 'transform translate-x-4' : ''}`}></div>
                           </div>
-                          <div className="ml-3 text-sm font-medium text-white">
+                          <div className="ml-3 text-sm font-medium text-foreground">
                             {overwriteExisting ? 'Overwrite' : 'Skip Existing'}
                           </div>
                         </label>
@@ -375,7 +375,7 @@ export function CsvImporter({ isOpen, onClose, onSuccess }: CsvImporterProps) {
                 <div className="flex gap-3 justify-end pt-4 border-t border-white/10">
                   <button
                     onClick={onClose}
-                    className="px-6 py-2.5 rounded-xl font-medium text-white/60 hover:text-white bg-white/5 hover:bg-white/10 transition-colors"
+                    className="px-6 py-2.5 rounded-xl font-medium text-foreground/60 hover:text-foreground bg-white/5 hover:bg-white/10 transition-colors"
                   >
                     Cancel
                   </button>

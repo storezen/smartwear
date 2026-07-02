@@ -52,10 +52,10 @@ function StatCard({ title, rawValue, prefix, value, change, trend, icon: Icon, a
     <SpotlightCard className="p-4" style={{ borderLeft: `2px solid ${accentColor}` }}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-[9px] tracking-[1.5px] text-white/60 font-medium uppercase mb-1">
+          <p className="text-[9px] tracking-[1.5px] text-foreground/60 font-medium uppercase mb-1">
             {title}
           </p>
-          <p className="text-xl font-bold tracking-tight text-white leading-none">
+          <p className="text-xl font-bold tracking-tight text-foreground leading-none">
             {rawValue !== undefined ? <AnimatedCounter value={rawValue} prefix={prefix} /> : value}
           </p>
           <div className={`flex items-center gap-1 mt-1.5 text-[10px] font-semibold ${trend === "up" ? "text-[#4ADE80]" : "text-red-500"}`}>
@@ -89,12 +89,12 @@ function OrderStatusBadge({ status }: { status: string }) {
     "out for return": { bg: "bg-orange-500/10 border-orange-500/20", text: "text-orange-500" },
     returned: { bg: "bg-orange-500/10 border-orange-500/20", text: "text-orange-500" },
     "delivery under review": { bg: "bg-pink-500/10 border-pink-500/20", text: "text-pink-500" },
-    "un-assigned by me": { bg: "bg-white/10 border-white/10", text: "text-white/40" },
+    "un-assigned by me": { bg: "bg-white/10 border-white/10", text: "text-foreground/40" },
     lost: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
     stolen: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
     damage: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
   }
-  const c = palette[s] || { bg: "bg-white/10 border-white/20", text: "text-white/70" }
+  const c = palette[s] || { bg: "bg-white/10 border-border", text: "text-foreground/70" }
   return (
     <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md border text-[8px] font-semibold tracking-wide ${c.bg} ${c.text}`}>
       {status}
@@ -105,8 +105,8 @@ function OrderStatusBadge({ status }: { status: string }) {
 function CustomTooltip({ active, payload, label }: any) {
   if (active && payload?.length) {
     return (
-      <div className="bg-[#0F1923] border border-white/10 rounded-xl px-4 py-2.5 shadow-xl text-sm">
-        <p className="text-white/60 text-xs mb-1.5">{label}</p>
+      <div className="bg-card border border-white/10 rounded-xl px-4 py-2.5 shadow-xl text-sm">
+        <p className="text-foreground/60 text-xs mb-1.5">{label}</p>
         <p className="font-bold text-[#C8972A]">Revenue: {formatPrice(payload[0]?.value || 0)}</p>
         {payload[1] && <p className="font-bold text-[#10B981] text-xs mt-0.5">Profit: {formatPrice(payload[1]?.value || 0)}</p>}
       </div>
@@ -226,11 +226,11 @@ export default function AdminDashboard() {
       <div className="flex items-start justify-between mb-4">
         <div>
           <h1
-            className="text-lg font-semibold tracking-tight text-white"
+            className="text-lg font-semibold tracking-tight text-foreground"
           >
             Operations Overview
           </h1>
-          <p className="text-[11px] text-white/60 mt-0.5">
+          <p className="text-[11px] text-foreground/60 mt-0.5">
             Smartwear Pakistan • {new Date().toLocaleDateString("en-PK", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </p>
         </div>
@@ -258,11 +258,11 @@ export default function AdminDashboard() {
       {/* ── Charts Row ── */}
       <div className="grid lg:grid-cols-2 gap-3 mb-4">
         {/* Revenue Chart */}
-        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl h-full flex flex-col">
+        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl h-full flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">REVENUE & PROFIT</div>
-              <h3 className="text-[13px] font-semibold text-white">Monthly Overview</h3>
+              <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">REVENUE & PROFIT</div>
+              <h3 className="text-[13px] font-semibold text-foreground">Monthly Overview</h3>
             </div>
             <div className="flex items-center gap-2">
               <span className="flex items-center gap-1 text-[10px] text-[#C8972A]"><span className="w-2 h-2 rounded-full bg-[#C8972A]" /> Revenue</span>
@@ -322,11 +322,11 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Orders */}
-        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl h-full flex flex-col">
+        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl h-full flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">LATEST</div>
-              <h3 className="text-[13px] font-semibold text-white">Recent Orders</h3>
+              <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">LATEST</div>
+              <h3 className="text-[13px] font-semibold text-foreground">Recent Orders</h3>
             </div>
             <Link href="/admin/orders">
               <button className="sw-btn-ghost-white h-7 px-2.5 rounded-lg text-[10px] flex items-center gap-1">
@@ -360,23 +360,23 @@ export default function AdminDashboard() {
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[12px] font-semibold truncate text-white">
+                    <p className="text-[12px] font-semibold truncate text-foreground">
                       {order.customer_name || "Guest Customer"}
                     </p>
-                    <p className="text-[10px] text-white/50">
+                    <p className="text-[10px] text-foreground/50">
                       {(order.items || []).length} item{(order.items || []).length !== 1 ? "s" : ""}
                     </p>
                   </div>
                   <div className="text-right shrink-0 space-y-0.5">
-                    <p className="text-[12px] font-bold text-white">{formatPrice(order.total)}</p>
+                    <p className="text-[12px] font-bold text-foreground">{formatPrice(order.total)}</p>
                     <OrderStatusBadge status={order.status} />
                   </div>
                 </div>
               ))
             ) : (
               <div className="text-center py-6">
-                <p className="text-[12px] text-white/60">No orders yet.</p>
-                <p className="text-[10px] text-white/60 mt-0.5">Place a test order from the store.</p>
+                <p className="text-[12px] text-foreground/60">No orders yet.</p>
+                <p className="text-[10px] text-foreground/60 mt-0.5">Place a test order from the store.</p>
               </div>
             )}
           </div>
@@ -386,11 +386,11 @@ export default function AdminDashboard() {
       {/* ── Bottom Row: Top Products + Quick Actions ── */}
       <div className="grid lg:grid-cols-3 gap-3">
         {/* Top Products */}
-        <div className="lg:col-span-2 bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="lg:col-span-2 bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">INVENTORY</div>
-              <h3 className="text-[13px] font-semibold text-white">Top Products</h3>
+              <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">INVENTORY</div>
+              <h3 className="text-[13px] font-semibold text-foreground">Top Products</h3>
             </div>
             <Link href="/admin/products">
               <button className="sw-btn-ghost-white h-7 px-3 rounded-lg text-[10px]">
@@ -401,38 +401,38 @@ export default function AdminDashboard() {
 
           <div className="space-y-1.5">
             {loading ? (
-              <div className="text-center py-3 text-white/50 text-[12px]">Loading...</div>
+              <div className="text-center py-3 text-foreground/50 text-[12px]">Loading...</div>
             ) : topProducts.length === 0 ? (
-              <div className="text-center py-3 text-white/50 text-[12px]">No products added yet.</div>
+              <div className="text-center py-3 text-foreground/50 text-[12px]">No products added yet.</div>
             ) : topProducts.map((product: any, index: number) => (
               <div
                 key={product.id}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors"
               >
-                <span className="text-[10px] font-bold text-white/60 w-3 shrink-0">
+                <span className="text-[10px] font-bold text-foreground/60 w-3 shrink-0">
                   {index + 1}
                 </span>
-                <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-[#0C0F14] border border-white/10 shrink-0">
+                <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-background border border-white/10 shrink-0">
                   {product.images && product.images.length > 0 ? (
                     <Image src={product.images[0]} alt={product.name} fill sizes="36px" className="object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Package className="w-4 h-4 text-white/30" />
+                      <Package className="w-4 h-4 text-foreground/30" />
                     </div>
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[12px] font-semibold truncate text-white">{product.name}</p>
+                  <p className="text-[12px] font-semibold truncate text-foreground">{product.name}</p>
                   <p className="text-[10px] text-[#C8972A] font-medium">{product.brand}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-[12px] font-bold text-white">{formatPrice(product.price)}</p>
+                  <p className="text-[12px] font-bold text-foreground">{formatPrice(product.price)}</p>
                   {product.cost_price ? (
                     <p className="text-[9px] text-[#10B981] mt-0.5">
                       {formatPrice(product.price - product.cost_price)} profit/unit
                     </p>
                   ) : (
-                    <p className="text-[9px] text-white/40 mt-0.5">
+                    <p className="text-[9px] text-foreground/40 mt-0.5">
                       {product.stock} in stock
                     </p>
                   )}
@@ -443,9 +443,9 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
-          <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">SHORTCUTS</div>
-          <h3 className="text-[13px] font-semibold mb-3 text-white">Quick Actions</h3>
+        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+          <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">SHORTCUTS</div>
+          <h3 className="text-[13px] font-semibold mb-3 text-foreground">Quick Actions</h3>
 
           <div className="space-y-1">
             {[
@@ -491,10 +491,10 @@ export default function AdminDashboard() {
                     <Icon className="w-4 h-4" style={{ color }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[12px] font-semibold text-white">{label}</p>
-                    <p className="text-[10px] text-white/50">{desc}</p>
+                    <p className="text-[12px] font-semibold text-foreground">{label}</p>
+                    <p className="text-[10px] text-foreground/50">{desc}</p>
                   </div>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-white/60 group-hover:text-white transition-colors" />
+                  <ArrowUpRight className="w-3.5 h-3.5 text-foreground/60 group-hover:text-foreground transition-colors" />
                 </div>
               </Link>
             ))}
@@ -502,11 +502,11 @@ export default function AdminDashboard() {
         </div>
 
         {/* System Health */}
-        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">MONITORING</div>
-              <h3 className="text-[13px] font-semibold text-white">System Health</h3>
+              <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">MONITORING</div>
+              <h3 className="text-[13px] font-semibold text-foreground">System Health</h3>
             </div>
             {healthData?.supabaseConnection ? (
               <Badge className="bg-[#4ADE80]/10 text-[#4ADE80] border-[#4ADE80]/20 gap-1 px-2 py-0.5 text-[9px]">
@@ -521,25 +521,25 @@ export default function AdminDashboard() {
           
           {healthData && (
             <div className="space-y-3">
-              <div className="p-2.5 bg-white/5 border border-white/5 rounded-lg text-[11px] text-white/70 leading-relaxed">
+              <div className="p-2.5 bg-white/5 border border-white/5 rounded-lg text-[11px] text-foreground/70 leading-relaxed">
                 {healthData.message}
               </div>
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-[12px]">
-                  <div className="flex items-center gap-1.5 text-white/80">
+                  <div className="flex items-center gap-1.5 text-foreground/&">
                     <Database className="w-3.5 h-3.5 text-blue-400" />
                     Supabase Configured
                   </div>
                   {healthData.supabaseConfigured ? (
                     <span className="text-[#4ADE80] text-[11px]">Yes</span>
                   ) : (
-                    <span className="text-white/40 text-[11px]">No</span>
+                    <span className="text-foreground/40 text-[11px]">No</span>
                   )}
                 </div>
                 
                 <div className="flex items-center justify-between text-[12px]">
-                  <div className="flex items-center gap-1.5 text-white/80">
+                  <div className="flex items-center gap-1.5 text-foreground/&">
                     <Server className="w-3.5 h-3.5 text-purple-400" />
                     Tables Sync Status
                   </div>
@@ -556,7 +556,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Demo note */}
-      <p className="text-[10px] text-white/60 text-center mt-4">
+      <p className="text-[10px] text-foreground/60 text-center mt-4">
         Revenue and customer figures are demonstration data. Real tracking is enabled via Supabase.
       </p>
     </div>

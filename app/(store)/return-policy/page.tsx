@@ -4,9 +4,9 @@ import { ChevronRight, RefreshCcw, ShieldCheck, Box } from "lucide-react"
 
 export default function ReturnPolicyPage() {
   return (
-    <div className="min-h-screen bg-[#0C0F14] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="relative overflow-hidden text-white  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -18,18 +18,18 @@ export default function ReturnPolicyPage() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-foreground/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B]" />
             <span className="text-[#B8860B]">Replacement Policy</span>
           </div>
           <h1
-            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            className="font-bold text-foreground leading-tight mb-2 sm:mb-4"
             style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Replacement Policy
           </h1>
-          <p className="text-white/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-foreground/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
             Hassle-free replacement for defective or damaged items within 7 days of delivery.
           </p>
         </div>
@@ -39,30 +39,30 @@ export default function ReturnPolicyPage() {
         <div className="max-w-4xl mx-auto">
           {/* Info Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 md:mb-12">
-            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
+            <div className="p-6 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <RefreshCcw className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>7-Day Replacement</h3>
-              <p className="text-sm text-white/60">Request replacement within 7 days of receiving your order.</p>
+              <p className="text-sm text-foreground/60">Request replacement within 7 days of receiving your order.</p>
             </div>
-            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
+            <div className="p-6 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <Box className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Original Packaging</h3>
-              <p className="text-sm text-white/60">Items must be returned with all original packaging and accessories.</p>
+              <p className="text-sm text-foreground/60">Items must be returned with all original packaging and accessories.</p>
             </div>
-            <div className="p-6 rounded-[24px] border border-white/5 bg-white/[0.02] backdrop-blur-xl text-center">
+            <div className="p-6 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <ShieldCheck className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Quality Inspected</h3>
-              <p className="text-sm text-white/60">Replacement is processed after passing quality checks.</p>
+              <p className="text-sm text-foreground/60">Replacement is processed after passing quality checks.</p>
             </div>
           </div>
 
-          <div className="prose prose-invert max-w-none prose-p:text-white/70 prose-headings:font-normal prose-headings:text-white" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
+          <div className="prose max-w-none prose-p:text-foreground/70 prose-headings:font-normal prose-headings:text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
             <h2 className="text-2xl mb-4">1. Eligibility for Replacement</h2>
             <p className="font-sans mb-8 leading-relaxed">
               We offer replacement within <strong>7 days</strong> of delivery for defective or damaged items. To be eligible,

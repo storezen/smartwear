@@ -27,8 +27,8 @@ import { AnimatedCounter } from "@/components/ui/animated-counter"
 function CustomTooltip({ active, payload, label }: any) {
   if (active && payload?.length) {
     return (
-      <div className="bg-[#0F1923] border border-white/10 rounded-xl px-4 py-2.5 shadow-xl text-sm">
-        <p className="text-white/60 text-xs mb-1">{label}</p>
+      <div className="bg-card border border-white/10 rounded-xl px-4 py-2.5 shadow-xl text-sm">
+        <p className="text-foreground/60 text-xs mb-1">{label}</p>
         <p className="font-bold text-[#C8972A]">{payload[0].value} messages</p>
       </div>
     )
@@ -71,8 +71,8 @@ export default function AdminChatAnalytics() {
     <div>
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h1 className="text-lg font-semibold tracking-tight text-white">Chat Analytics</h1>
-          <p className="text-[11px] text-white/60 mt-0.5">
+          <h1 className="text-lg font-semibold tracking-tight text-foreground">Chat Analytics</h1>
+          <p className="text-[11px] text-foreground/60 mt-0.5">
             AI Chatbot performance, engagement & conversion metrics
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function AdminChatAnalytics() {
       <div className="grid grid-cols-2 lg:grid-cols-7 gap-3 mb-4">
         {loading
           ? Array.from({ length: 7 }).map((_, i) => (
-              <div key={i} className="bg-[#0F1923] rounded-xl border border-white/5 p-4">
+              <div key={i} className="bg-card rounded-xl border border-white/5 p-4">
                 <div className="h-3 w-20 skeleton rounded mb-2" />
                 <div className="h-6 w-16 skeleton rounded mb-1.5" />
                 <div className="h-2.5 w-12 skeleton rounded" />
@@ -100,13 +100,13 @@ export default function AdminChatAnalytics() {
               <SpotlightCard key={i} className="p-4" style={{ borderLeft: `2px solid ${s.accentColor}` }}>
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-[9px] tracking-[1.5px] text-white/60 font-medium uppercase mb-1">
+                    <p className="text-[9px] tracking-[1.5px] text-foreground/60 font-medium uppercase mb-1">
                       {s.title}
                     </p>
-                    <p className="text-xl font-bold tracking-tight text-white leading-none">
+                    <p className="text-xl font-bold tracking-tight text-foreground leading-none">
                       {s.rawValue !== undefined ? (
                         s.suffix === "%" ? (
-                          <span>{s.rawValue}<span className="text-sm text-white/60">%</span></span>
+                          <span>{s.rawValue}<span className="text-sm text-foreground/60">%</span></span>
                         ) : (
                           <AnimatedCounter value={s.rawValue} />
                         )
@@ -123,11 +123,11 @@ export default function AdminChatAnalytics() {
 
       <div className="grid lg:grid-cols-3 gap-3 mb-4">
         {/* Message Volume Chart */}
-        <div className="lg:col-span-2 bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="lg:col-span-2 bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">MESSAGE VOLUME</div>
-              <h3 className="text-[13px] font-semibold text-white">Last 7 Days</h3>
+              <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">MESSAGE VOLUME</div>
+              <h3 className="text-[13px] font-semibold text-foreground">Last 7 Days</h3>
             </div>
           </div>
           <div className="h-64">
@@ -160,10 +160,10 @@ export default function AdminChatAnalytics() {
         </div>
 
         {/* Satisfaction Score */}
-        <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
           <div className="mb-3">
-            <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">SATISFACTION</div>
-            <h3 className="text-[13px] font-semibold text-white">Feedback Score</h3>
+            <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">SATISFACTION</div>
+            <h3 className="text-[13px] font-semibold text-foreground">Feedback Score</h3>
           </div>
           <div className="flex flex-col items-center justify-center h-48">
             {totalFeedback > 0 ? (
@@ -180,7 +180,7 @@ export default function AdminChatAnalytics() {
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-white">{satisfactionRate}%</span>
+                    <span className="text-2xl font-bold text-foreground">{satisfactionRate}%</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-[11px]">
@@ -190,9 +190,9 @@ export default function AdminChatAnalytics() {
               </>
             ) : (
               <div className="text-center">
-                <MessageCircle className="w-8 h-8 mx-auto mb-2 text-white/15" />
-                <p className="text-[12px] text-white/60">No feedback yet</p>
-                <p className="text-[10px] text-white/60 mt-0.5">Feedback appears after users rate responses</p>
+                <MessageCircle className="w-8 h-8 mx-auto mb-2 text-foreground/&" />
+                <p className="text-[12px] text-foreground/60">No feedback yet</p>
+                <p className="text-[10px] text-foreground/60 mt-0.5">Feedback appears after users rate responses</p>
               </div>
             )}
           </div>
@@ -200,33 +200,33 @@ export default function AdminChatAnalytics() {
       </div>
 
       {/* Top Questions */}
-      <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 backdrop-blur-xl mb-4">
+      <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl mb-4">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <div className="text-[9px] tracking-[1.5px] text-white/60 mb-0.5">INSIGHTS</div>
-            <h3 className="text-[13px] font-semibold text-white">Most Asked Topics</h3>
+            <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">INSIGHTS</div>
+            <h3 className="text-[13px] font-semibold text-foreground">Most Asked Topics</h3>
           </div>
         </div>
         <div className="space-y-1">
           {stats?.topQuestions?.length > 0 ? (
             stats.topQuestions.map((q: any, i: number) => (
               <div key={q.question} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors">
-                <span className="text-[10px] font-bold text-white/60 w-4 shrink-0">{i + 1}</span>
+                <span className="text-[10px] font-bold text-foreground/60 w-4 shrink-0">{i + 1}</span>
                 <HelpCircle className="w-3.5 h-3.5 text-[#C8972A] shrink-0" />
-                <span className="flex-1 text-[12px] text-white font-medium capitalize">{q.question}</span>
-                <span className="text-[11px] text-white/50">{q.count}×</span>
+                <span className="flex-1 text-[12px] text-foreground font-medium capitalize">{q.question}</span>
+                <span className="text-[11px] text-foreground/50">{q.count}×</span>
               </div>
             ))
           ) : (
             <div className="text-center py-6">
-              <p className="text-[12px] text-white/60">No questions tracked yet</p>
-              <p className="text-[10px] text-white/60 mt-0.5">Data appears as customers interact with the AI</p>
+              <p className="text-[12px] text-foreground/60">No questions tracked yet</p>
+              <p className="text-[10px] text-foreground/60 mt-0.5">Data appears as customers interact with the AI</p>
             </div>
           )}
         </div>
       </div>
 
-      <p className="text-[10px] text-white/60 text-center mt-2">
+      <p className="text-[10px] text-foreground/60 text-center mt-2">
         Chat analytics are sourced from Supabase. Data updates in real-time as customers interact with the AI assistant.
       </p>
     </div>

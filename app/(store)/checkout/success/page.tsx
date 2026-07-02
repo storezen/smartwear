@@ -112,7 +112,7 @@ function SuccessContent() {
   })
 
   return (
-    <div className="min-h-screen bg-[#0C0F14] flex flex-col items-center justify-center px-4 py-16 md:py-24 relative overflow-hidden">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-16 md:py-24 relative overflow-hidden">
       <GoldParticles active={showParticles} />
 
       {/* Ambient glows */}
@@ -143,7 +143,7 @@ function SuccessContent() {
               transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.2 }}
               className="relative z-10 w-24 h-24 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] p-1 shadow-[0_0_40px_rgba(184,134,11,0.4)] flex items-center justify-center"
             >
-              <div className="w-full h-full rounded-full bg-[#0C0F14] flex items-center justify-center">
+              <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
                 <CheckCircle className="w-12 h-12 text-[#B8860B]" />
               </div>
             </motion.div>
@@ -167,7 +167,7 @@ function SuccessContent() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-3xl md:text-4xl font-bold text-white mb-3" 
+            className="text-3xl md:text-4xl font-bold text-foreground mb-3" 
             style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
           >
             Thank You for Your Order!
@@ -177,7 +177,7 @@ function SuccessContent() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-white/60 mb-8"
+            className="text-foreground/60 mb-8"
           >
             Your premium timepiece experience begins here. We've emailed your receipt to you.
           </motion.p>
@@ -186,9 +186,9 @@ function SuccessContent() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="inline-flex items-center gap-4 bg-[#0F1923] border border-white/10 px-6 py-3 rounded-xl mb-10"
+            className="inline-flex items-center gap-4 bg-card border border-white/10 px-6 py-3 rounded-xl mb-10"
           >
-            <span className="text-white/70 text-sm">Order Number</span>
+            <span className="text-foreground/70 text-sm">Order Number</span>
             <span className="text-[#B8860B] font-mono font-bold tracking-wider">{orderId}</span>
           </motion.div>
 
@@ -211,12 +211,12 @@ function SuccessContent() {
               <div className="space-y-6">
                 {TIMELINE_STEPS.map((step, idx) => (
                   <div key={idx} className="relative flex items-start gap-4 z-10">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${step.done ? 'bg-[#B8860B] text-[#0C0F14] shadow-[0_0_15px_rgba(184,134,11,0.5)]' : 'bg-[#0F1923] border border-white/20 text-white/60'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${step.done ? 'bg-[#B8860B] text-[#0C0F14] shadow-[0_0_15px_rgba(184,134,11,0.5)]' : 'bg-card border border-border text-foreground/60'}`}>
                       <step.icon className="w-4 h-4" />
                     </div>
                     <div className="mt-1">
-                      <p className={`text-sm font-semibold ${step.done ? 'text-white' : 'text-white/70'}`}>{step.label}</p>
-                      <p className="text-xs text-white/60 mt-0.5">{step.sub}</p>
+                      <p className={`text-sm font-semibold ${step.done ? 'text-foreground' : 'text-foreground/70'}`}>{step.label}</p>
+                      <p className="text-xs text-foreground/60 mt-0.5">{step.sub}</p>
                     </div>
                   </div>
                 ))}
@@ -232,7 +232,7 @@ function SuccessContent() {
           >
             <Link
               href="/account/orders"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-white/10 text-white hover:bg-white/5 hover:border-white/20 font-medium tracking-wide transition-all sw-interactive"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-white/10 text-foreground hover:bg-white/5 hover:border-border font-medium tracking-wide transition-all sw-interactive"
             >
               View Order Details
             </Link>
@@ -253,7 +253,7 @@ function SuccessContent() {
 
 export default function SuccessPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0C0F14]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <SuccessContent />
     </Suspense>
   )

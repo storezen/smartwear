@@ -49,18 +49,18 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
 
   if (!funnel.length) {
     return (
-      <div className="bg-[#0F1923] rounded-xl border border-white/5 p-4 h-full flex flex-col">
+      <div className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-0.5 h-3.5 bg-white/10 rounded-full" />
-          <h3 className="text-[13px] font-semibold text-white/70">Conversion Funnel</h3>
+          <h3 className="text-[13px] font-semibold text-foreground/70">Conversion Funnel</h3>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center">
-              <AlertCircle className="w-5 h-5 text-white/15" />
+            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-card border border-white/5 flex items-center justify-center">
+              <AlertCircle className="w-5 h-5 text-foreground/&" />
             </div>
-            <p className="text-[11px] text-white/25">Funnel data will appear here</p>
-            <p className="text-[8px] text-white/15 mt-1">as visitors move through checkout</p>
+            <p className="text-[11px] text-foreground/&">Funnel data will appear here</p>
+            <p className="text-[8px] text-foreground/& mt-1">as visitors move through checkout</p>
           </div>
         </div>
       </div>
@@ -74,17 +74,17 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#0F1923] rounded-xl border border-white/5 p-4 h-full flex flex-col"
+      className="bg-card rounded-xl border border-white/5 p-4 h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
           <div className="w-0.5 h-3.5 rounded-full bg-[#B8860B] shadow-[0_0_6px_rgba(184,134,11,0.3)]" />
-          <h3 className="text-[13px] font-semibold text-white/70">Conversion Funnel</h3>
+          <h3 className="text-[13px] font-semibold text-foreground/70">Conversion Funnel</h3>
         </div>
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <div className="text-[18px] font-bold text-white tabular-nums leading-none">{overallConversion}%</div>
-            <div className="text-[8px] text-white/25 tracking-wider uppercase mt-0.5">Overall CR</div>
+            <div className="text-[18px] font-bold text-foreground tabular-nums leading-none">{overallConversion}%</div>
+            <div className="text-[8px] text-foreground/& tracking-wider uppercase mt-0.5">Overall CR</div>
           </div>
           <div className="w-px h-8 bg-white/5" />
           <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border ${
@@ -124,7 +124,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
                     className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[8px] font-semibold ${
                       isBiggestLeak
                         ? 'bg-red-500/15 text-red-300 border border-red-500/20'
-                        : 'text-white/20'
+                        : 'text-foreground/20'
                     }`}
                   >
                     {isBiggestLeak && <TrendingDown className="w-2.5 h-2.5" />}
@@ -142,7 +142,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
                   w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300
                   ${isBiggestLeak
                     ? 'bg-red-500/15 border border-red-500/20 text-red-300'
-                    : 'bg-white/[0.03] border border-white/5 text-white/40 group-hover:border-white/10 group-hover:text-white/60'
+                    : 'bg-card border border-white/5 text-foreground/40 group-hover:border-white/10 group-hover:text-foreground/60'
                   }`}
                 >
                   <meta.Icon className="w-3.5 h-3.5" />
@@ -152,18 +152,18 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
                   <div className="flex items-center justify-between mb-1">
                     <span className={`
                       text-[11px] font-semibold tracking-wide
-                      ${isBiggestLeak ? 'text-red-200' : 'text-white/70 group-hover:text-white/90'}
+                      ${isBiggestLeak ? 'text-red-200' : 'text-foreground/70 group-hover:text-foreground/&'}
                     `}>{stage.label}</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-bold text-white tabular-nums">{stage.count.toLocaleString()}</span>
-                      <span className="text-[9px] text-white/30 font-mono w-10 text-right">
+                      <span className="text-[13px] font-bold text-foreground tabular-nums">{stage.count.toLocaleString()}</span>
+                      <span className="text-[9px] text-foreground/30 font-mono w-10 text-right">
                         {stage.conversionRate}%
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    <div className="flex-1 h-[3px] bg-white/[0.04] rounded-full overflow-hidden">
+                    <div className="flex-1 h-[3px] bg-card rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${widthPct}%` }}
@@ -188,8 +188,8 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
 
                   <div className="flex items-center justify-between mt-1">
                     <div className="flex items-center gap-1">
-                      <meta.Icon className="w-2 h-2 text-white/15" />
-                      <span className="text-[7px] text-white/15">{meta.desc}</span>
+                      <meta.Icon className="w-2 h-2 text-foreground/&" />
+                      <span className="text-[7px] text-foreground/&">{meta.desc}</span>
                     </div>
                     {isBiggestLeak && (
                       <span className="text-[7px] text-red-400/60 truncate max-w-[140px]">
@@ -206,7 +206,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
 
       <div className="mt-2 pt-2.5 border-t border-white/[0.04] space-y-1">
         <div className="flex items-center justify-between text-[9px]">
-          <span className="text-white/25">Abandonment Rate</span>
+          <span className="text-foreground/&">Abandonment Rate</span>
           <div className="flex items-center gap-2">
             <div className={`
               w-1.5 h-1.5 rounded-full animate-pulse
@@ -220,7 +220,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
             `}>{abandonmentRate}%</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-[8px] text-white/15">
+        <div className="flex items-center gap-2 text-[8px] text-foreground/&">
           <span className="flex items-center gap-1">
             <FirstIcon className="w-2.5 h-2.5" />
             {funnel[0]?.count.toLocaleString()} entered
@@ -230,7 +230,7 @@ export const ConversionFunnel = memo(function ConversionFunnel({ funnel, abandon
             <LastIcon className="w-2.5 h-2.5" />
             {funnel[funnel.length - 1]?.count.toLocaleString()} converted
           </span>
-          <span className="text-white/25 ml-auto">• {overallConversion}% overall</span>
+          <span className="text-foreground/& ml-auto">• {overallConversion}% overall</span>
         </div>
       </div>
     </motion.div>

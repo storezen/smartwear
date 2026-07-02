@@ -74,9 +74,9 @@ function FilterPanel({
           min={0} max={500000} step={5000}
           className="mb-3"
         />
-        <div className="flex items-center justify-between text-sm font-semibold text-white">
+        <div className="flex items-center justify-between text-sm font-semibold text-foreground">
           <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-lg text-xs">{formatPrice(priceRange[0])}</span>
-          <span className="text-white/35 text-xs">—</span>
+          <span className="text-foreground/& text-xs">—</span>
           <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-lg text-xs">{formatPrice(priceRange[1])}</span>
         </div>
       </div>
@@ -164,10 +164,10 @@ function ProductsContent() {
   const pageTitle = q ? `"${q}"` : activeCat ? activeCat.name : saleOnly === "true" ? "Sale" : "All Watches"
 
   return (
-    <div className="min-h-screen bg-[#0C0F14] text-white">
+    <div className="min-h-screen bg-background text-foreground">
 
       {/* Hero */}
-      <div className="relative overflow-hidden text-white  pb-8 md:pt-32 md:pb-24">
+      <div className="relative overflow-hidden text-foreground  pb-8 md:pt-32 md:pb-24">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -179,7 +179,7 @@ function ProductsContent() {
           style={{ background: "radial-gradient(circle, #B8860B, transparent)" }}
         />
         <div className="sw-container relative z-10 text-center">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-foreground/70 mb-4 sm:mb-6 justify-center uppercase tracking-wide sm:tracking-widest">
             <span>Home</span>
             <ChevronRight className="w-3 h-3 text-[#B8860B]" />
             <span>Products</span>
@@ -191,12 +191,12 @@ function ProductsContent() {
             )}
           </div>
           <h1
-            className="font-bold text-white leading-tight mb-2 sm:mb-4"
+            className="font-bold text-foreground leading-tight mb-2 sm:mb-4"
             style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             {pageTitle}
           </h1>
-          <p className="text-white/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-foreground/60 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
             {!loading 
               ? `Explore our curated collection of ${products.length} exquisite ${products.length === 1 ? "timepiece" : "timepieces"}.`
               : "Discovering exceptional timepieces..."}
@@ -205,13 +205,13 @@ function ProductsContent() {
       </div>
 
       {/* Toolbar */}
-      <div className="relative z-30 bg-[#0C0F14] border-b border-white/5 py-2">
+      <div className="relative z-30 bg-background border-b border-white/5 py-2">
         <div className="sw-container">
           <div className="flex items-center gap-3 min-h-[52px]">
             {/* Mobile filter */}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="flex items-center lg:hidden h-11 px-3 rounded-xl gap-1.5 text-xs font-medium border border-white/10 bg-white/5 text-white">
+                <button className="flex items-center lg:hidden h-11 px-3 rounded-xl gap-1.5 text-xs font-medium border border-white/10 bg-white/5 text-foreground">
                   <SlidersHorizontal className="w-3.5 h-3.5" />
                   Filter
                   {selected.length > 0 && (
@@ -221,9 +221,9 @@ function ProductsContent() {
                   )}
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-72 p-0 bg-[#0F1923] border-r border-white/5 text-white">
+              <SheetContent side="left" className="w-72 p-0 bg-card border-r border-white/5 text-foreground">
                 <SheetHeader className="p-5 border-b border-white/5">
-                  <SheetTitle className="text-base text-white">Filter Products</SheetTitle>
+                  <SheetTitle className="text-base text-foreground">Filter Products</SheetTitle>
                 </SheetHeader>
                 <div className="p-5 overflow-y-auto" style={{ height: "calc(100% - 72px)" }}>
                   <FilterPanel {...filterProps} />
@@ -304,7 +304,7 @@ function ProductsContent() {
             <select
               value={sort}
               onChange={e => setSort(e.target.value)}
-              className="sm:hidden h-11 px-3 rounded-xl text-xs outline-none border border-white/10 bg-[#0F1923] text-white"
+              className="sm:hidden h-11 px-3 rounded-xl text-xs outline-none border border-white/10 bg-card text-foreground"
             >
               {sortOpts.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
@@ -317,7 +317,7 @@ function ProductsContent() {
         <div className="flex gap-8">
           {/* Sidebar */}
           <aside className="hidden lg:block shrink-0" style={{ width: 260 }}>
-            <div className="sticky top-[calc(60px+52px+24px)] rounded-[24px] border border-white/5 p-6 bg-white/[0.02] backdrop-blur-xl">
+            <div className="sticky top-[calc(60px+52px+24px)] rounded-[24px] border border-white/5 p-6 bg-card backdrop-blur-xl">
               <h2 className="sw-label text-[10px] text-[#B8860B] mb-5">Filter By</h2>
               <FilterPanel {...filterProps} />
             </div>
@@ -340,7 +340,7 @@ function ProductsContent() {
                     <div className="flex justify-center mt-6">
                       <button
                         onClick={() => setMobilePage(p => p + 1)}
-                        className="px-10 py-3.5 rounded-xl border border-white/10 text-white/60 hover:text-white hover:border-white/25 text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-white/[0.03]"
+                        className="px-10 py-3.5 rounded-xl border border-white/10 text-foreground/60 hover:text-foreground hover:border-border text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-card"
                       >
                         Load More ({products.length - (mobilePage * MOBILE_INCREMENT + (MOBILE_INITIAL - MOBILE_INCREMENT))})
                       </button>
@@ -359,7 +359,7 @@ function ProductsContent() {
                     <button
                       onClick={() => setPage(p => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-white/60 hover:bg-white/5 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                      className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-foreground/60 hover:bg-white/5 hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent transition-all"
                     >
                       <ChevronRight className="w-4 h-4 rotate-180" />
                     </button>
@@ -371,14 +371,14 @@ function ProductsContent() {
                         .map((p, index, array) => (
                           <div key={p} className="flex items-center gap-1">
                             {index > 0 && array[index - 1] !== p - 1 && (
-                              <span className="text-white/30 px-1">...</span>
+                              <span className="text-foreground/30 px-1">...</span>
                             )}
                             <button
                               onClick={() => setPage(p)}
                               className={`w-10 h-10 rounded-xl text-sm font-medium transition-all shrink-0 ${
                                 page === p 
                                   ? 'bg-[#B8860B] text-black border-transparent' 
-                                  : 'border border-white/10 text-white/60 hover:bg-white/5 hover:text-white'
+                                  : 'border border-white/10 text-foreground/60 hover:bg-white/5 hover:text-foreground'
                               }`}
                             >
                               {p}
@@ -390,7 +390,7 @@ function ProductsContent() {
                     <button
                       onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
-                      className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-white/60 hover:bg-white/5 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                      className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-foreground/60 hover:bg-white/5 hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent transition-all"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </button>
@@ -400,10 +400,10 @@ function ProductsContent() {
             ) : (
               <div className="text-center py-16 md:py-24">
                 <div className="w-14 h-14 rounded-2xl border border-white/10 bg-white/5 flex items-center justify-center mx-auto mb-4">
-                  <Search className="w-6 h-6 text-white/60" />
+                  <Search className="w-6 h-6 text-foreground/60" />
                 </div>
-                <h3 className="text-base font-semibold text-white mb-1.5">No watches found</h3>
-                <p className="text-sm text-white/60 mb-6">Try adjusting your filters.</p>
+                <h3 className="text-base font-semibold text-foreground mb-1.5">No watches found</h3>
+                <p className="text-sm text-foreground/60 mb-6">Try adjusting your filters.</p>
                 <button onClick={clearFilters} className="sw-btn-ghost-white rounded-xl h-10 px-6 text-sm">Clear Filters</button>
               </div>
             )}

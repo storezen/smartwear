@@ -58,7 +58,7 @@ function AdminLogo({ collapsed }: { collapsed?: boolean }) {
             className="leading-none overflow-hidden whitespace-nowrap"
           >
             <span
-              className="block text-white text-[14px] font-bold tracking-tight"
+              className="block text-foreground text-[14px] font-bold tracking-tight"
               style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
             >
               Smartwear
@@ -76,7 +76,7 @@ function AdminLogo({ collapsed }: { collapsed?: boolean }) {
 function Breadcrumb({ pathname }: { pathname: string }) {
   const segments = pathname.split("/").filter(Boolean)
   return (
-    <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/60">
+    <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-foreground/60">
       {segments.map((segment, i) => (
         <span key={i} className="flex items-center gap-2">
           {i > 0 && <ChevronRight className="w-3 h-3 text-[#B8860B]" />}
@@ -128,13 +128,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const dateStr = now?.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) || "---"
 
   return (
-    <div className="min-h-screen bg-[#0C0F14] text-white flex overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
       
       {/* ── DESKTOP SIDEBAR ── */}
       <motion.aside
         initial={false}
         animate={{ width: sidebarCollapsed ? 72 : 240 }}
-        className="hidden lg:flex flex-col bg-[#0F1923] border-r border-white/5 relative z-20 shrink-0"
+        className="hidden lg:flex flex-col bg-card border-r border-white/5 relative z-20 shrink-0"
       >
         <div className="h-[56px] flex items-center px-4 border-b border-white/5">
           <AdminLogo collapsed={sidebarCollapsed} />
@@ -142,7 +142,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="absolute -right-3 top-[60px] w-5 h-5 rounded-full bg-[#1A2530] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors z-30 sw-interactive"
+          className="absolute -right-3 top-[60px] w-5 h-5 rounded-full bg-card border border-white/10 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors z-30 sw-interactive"
           aria-label="Toggle sidebar"
         >
           <motion.div animate={{ rotate: sidebarCollapsed ? 180 : 0 }}>
@@ -179,7 +179,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div className={cn(
                   "relative z-10 flex items-center h-9 px-3 rounded-lg transition-colors text-[13px]",
                   sidebarCollapsed ? "justify-center w-full" : "w-full",
-                  isActive ? "text-[#B8860B]" : "text-white/60 group-hover:text-white"
+                  isActive ? "text-[#B8860B]" : "text-foreground/60 group-hover:text-foreground"
                 )}>
                   <item.icon className={cn("w-4 h-4 shrink-0 transition-transform duration-300", isActive ? "scale-110" : "group-hover:scale-110", sidebarCollapsed ? "" : "mr-2.5")} />
                   <AnimatePresence>
@@ -222,20 +222,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] lg:hidden bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] lg:hidden bg-background/60 backdrop-blur-sm"
           >
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className="absolute left-0 top-0 bottom-0 w-[240px] bg-[#0F1923] border-r border-white/5 flex flex-col"
+              className="absolute left-0 top-0 bottom-0 w-[240px] bg-card border-r border-white/5 flex flex-col"
             >
               <div className="h-[56px] flex items-center justify-between px-4 border-b border-white/5">
                 <AdminLogo />
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="w-7 h-7 flex items-center justify-center rounded-full bg-white/5 text-white/60 hover:text-white sw-interactive"
+                  className="w-7 h-7 flex items-center justify-center rounded-full bg-white/5 text-foreground/60 hover:text-foreground sw-interactive"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -251,7 +251,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       onClick={() => setSidebarOpen(false)}
                       className={cn(
                         "flex items-center h-9 px-3 rounded-lg font-medium transition-all sw-interactive text-[13px]",
-                        isActive ? "bg-white/5 border border-white/10 text-[#B8860B] shadow-[inset_3px_0_0_#B8860B]" : "text-white/60 hover:text-white hover:bg-white/[0.02]"
+                        isActive ? "bg-white/5 border border-white/10 text-[#B8860B] shadow-[inset_3px_0_0_#B8860B]" : "text-foreground/60 hover:text-foreground hover:bg-card"
                       )}
                     >
                       <item.icon className="w-4 h-4 mr-2.5" />
@@ -282,11 +282,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[150px] opacity-[0.05] bg-[#B8860B] pointer-events-none" />
 
         {/* Top Header */}
-        <header className="h-[56px] shrink-0 border-b border-white/5 bg-[#0C0F14]/80 backdrop-blur-xl flex items-center justify-between px-4 sticky top-0 z-10">
+        <header className="h-[56px] shrink-0 border-b border-white/5 bg-background/80 backdrop-blur-xl flex items-center justify-between px-4 sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-1.5 -ml-1.5 text-white/60 hover:text-white sw-interactive"
+              className="lg:hidden p-1.5 -ml-1.5 text-foreground/60 hover:text-foreground sw-interactive"
               aria-label="Open sidebar"
             >
               <Menu className="w-5 h-5" />
@@ -297,13 +297,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex flex-col items-end mr-2">
               <span className="text-white font-medium text-xs">{timeStr}</span>
-              <span className="text-white/60 text-[9px] uppercase tracking-wider">{dateStr}</span>
+              <span className="text-foreground/60 text-[9px] uppercase tracking-wider">{dateStr}</span>
             </div>
 
             <div className="relative" ref={notifRef}>
               <button
                 onClick={() => setShowNotifs(!showNotifs)}
-                className="relative w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors sw-interactive"
+                className="relative w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-foreground/60 hover:text-foreground transition-colors sw-interactive"
                 aria-label="Notifications"
               >
                 <Bell className="w-3.5 h-3.5" />
@@ -323,9 +323,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     transition={{ duration: 0.12 }}
                     className="absolute right-0 top-full mt-2 w-80 z-50"
                   >
-                  <div className="bg-[#0F1923] border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+                  <div className="bg-card border border-white/10 rounded-xl shadow-2xl overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
-                      <span className="text-[11px] font-semibold text-white/70">Notifications</span>
+                      <span className="text-[11px] font-semibold text-foreground/70">Notifications</span>
                       {unreadCount > 0 && (
                         <button
                           onClick={markAllRead}
@@ -338,8 +338,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div className="max-h-80 overflow-y-auto custom-scrollbar">
                       {notifications.length === 0 ? (
                         <div className="px-4 py-8 text-center">
-                          <Bell className="w-5 h-5 mx-auto mb-2 text-white/15" />
-                          <p className="text-[11px] text-white/30">No notifications yet</p>
+                          <Bell className="w-5 h-5 mx-auto mb-2 text-foreground/&" />
+                          <p className="text-[11px] text-foreground/30">No notifications yet</p>
                         </div>
                       ) : (
                         notifications.map((n) => (
@@ -347,7 +347,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             key={n.id}
                             href="/admin/orders"
                             onClick={() => setShowNotifs(false)}
-                            className={`flex items-start gap-3 px-4 py-3 transition-colors hover:bg-white/[0.02] border-b border-white/[0.02] last:border-0 ${
+                            className={`flex items-start gap-3 px-4 py-3 transition-colors hover:bg-card border-b border-white/[0.02] last:border-0 ${
                               !n.read ? "bg-[#B8860B]/[0.03]" : ""
                             }`}
                           >
@@ -356,14 +356,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
-                                <span className="text-[12px] font-medium text-white truncate">
+                                <span className="text-[12px] font-medium text-foreground truncate">
                                   {n.customer_name}
                                 </span>
                                 {!n.read && (
                                   <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B] shrink-0" />
                                 )}
                               </div>
-                              <p className="text-[10px] text-white/50 mt-0.5">
+                              <p className="text-[10px] text-foreground/50 mt-0.5">
                                 Order {formatPrice(n.total)}
                               </p>
                             </div>

@@ -74,9 +74,9 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`w-full bg-[#0C0F14] border border-white/10 rounded-xl px-4 py-3 text-white text-base md:text-sm focus:outline-none focus:border-[#B8860B] transition-colors flex items-center justify-between min-h-[44px] ${className}`}
+        className={`w-full bg-background border border-white/10 rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] transition-colors flex items-center justify-between min-h-[44px] ${className}`}
       >
-        <span className={cn("truncate mr-2 text-left", value ? "text-white" : "text-white/40")}>
+        <span className={cn("truncate mr-2 text-left", value ? "text-foreground" : "text-foreground/40")}>
           {value || "Select a city..."}
         </span>
         <div className="flex items-center gap-2 shrink-0">
@@ -87,7 +87,7 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
               {getPostexCoverageStyle(selectedCity.postex).label}
             </span>
           )}
-          <ChevronDown className={`w-4 h-4 text-white/40 transition-transform ${open ? "rotate-180" : ""}`} />
+          <ChevronDown className={`w-4 h-4 text-foreground/40 transition-transform ${open ? "rotate-180" : ""}`} />
         </div>
       </button>
 
@@ -100,28 +100,28 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
             left: pos.left,
             width: pos.width,
           }}
-          className="bg-[#0F1923] border border-white/10 rounded-xl shadow-2xl z-[9999] max-h-72 overflow-hidden flex flex-col"
+          className="bg-card border border-white/10 rounded-xl shadow-2xl z-[9999] max-h-72 overflow-hidden flex flex-col"
         >
           <div className="p-2 border-b border-white/5">
             <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2">
-              <Search className="w-4 h-4 text-white/40 shrink-0" />
+              <Search className="w-4 h-4 text-foreground/40 shrink-0" />
               <input
                 ref={inputRef}
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search city..."
-                className="bg-transparent text-sm text-white placeholder-white/30 focus:outline-none w-full"
+                className="bg-transparent text-sm text-foreground placeholder-white/30 focus:outline-none w-full"
               />
             </div>
           </div>
           <div className="overflow-y-auto flex-1 custom-scrollbar">
             {filtered.length === 0 ? (
-              <div className="px-4 py-8 text-center text-sm text-white/30">No cities found</div>
+              <div className="px-4 py-8 text-center text-sm text-foreground/30">No cities found</div>
             ) : (
               filtered.map(({ province, cities }) => (
                 <div key={province}>
-                  <div className="px-4 py-2 text-[10px] uppercase tracking-wider text-white/30 bg-white/[0.02] font-semibold">
+                  <div className="px-4 py-2 text-[10px] uppercase tracking-wider text-foreground/30 bg-card font-semibold">
                     {province}
                   </div>
                   {cities.map(city => (
@@ -134,7 +134,7 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
                         setSearch("")
                       }}
                       className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left hover:bg-white/5 transition-colors ${
-                        value === city.name ? "bg-white/5 text-[#B8860B]" : "text-white/80"
+                        value === city.name ? "bg-white/5 text-[#B8860B]" : "text-foreground/&"
                       }`}
                     >
                       <span>{city.name}</span>

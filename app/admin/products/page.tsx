@@ -272,8 +272,8 @@ export default function AdminProductsPage() {
     <div className="space-y-4">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div>
-          <h1 className="text-lg font-bold text-white tracking-tight mb-1">Products Catalog</h1>
-          <p className="text-white/60 text-[12px]">Manage inventory, pricing, and statuses.</p>
+          <h1 className="text-lg font-bold text-foreground tracking-tight mb-1">Products Catalog</h1>
+          <p className="text-foreground/60 text-[12px]">Manage inventory, pricing, and statuses.</p>
         </div>
         <div className="flex items-center gap-2">
           <button 
@@ -284,13 +284,13 @@ export default function AdminProductsPage() {
           </button>
           <button 
             onClick={() => setShowImporter(true)}
-            className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 transition-colors"
+            className="bg-white/5 hover:bg-white/10 text-foreground border border-white/10 px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 transition-colors"
           >
             <FileSpreadsheet className="w-3.5 h-3.5" /> Import CSV
           </button>
           <button 
             onClick={openAdd}
-            className="flex items-center gap-1.5 bg-[#B8860B] hover:bg-[#D4A017] text-white px-4 py-1.5 rounded-lg font-medium transition-colors shadow-[0_0_16px_rgba(184,134,11,0.2)] text-[11px]"
+            className="flex items-center gap-1.5 bg-[#B8860B] hover:bg-[#D4A017] text-foreground px-4 py-1.5 rounded-lg font-medium transition-colors shadow-[0_0_16px_rgba(184,134,11,0.2)] text-[11px]"
           >
             <Plus className="w-3.5 h-3.5" /> Add Product
           </button>
@@ -308,7 +308,7 @@ export default function AdminProductsPage() {
               className={`px-3 py-1.5 rounded-full text-[10px] font-medium whitespace-nowrap transition-colors ${
                 filterCategory === cat 
                   ? 'bg-[#B8860B]/20 text-[#B8860B] border border-[#B8860B]/30' 
-                  : 'bg-white/5 text-white/60 hover:bg-white/10 border border-transparent'
+                  : 'bg-white/5 text-foreground/60 hover:bg-white/10 border border-transparent'
               }`}
             >
               {cat === 'All' ? 'All Categories' : cat.replace('-', ' ').toUpperCase()}
@@ -319,19 +319,19 @@ export default function AdminProductsPage() {
         {/* Search & Status */}
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="w-4 h-4 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-foreground/40 absolute left-3 top-1/2 -translate-y-1/2" />
             <input 
               type="text" 
               placeholder="Search products..." 
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="bg-white/5 border border-white/10 text-white rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-[#B8860B] transition-colors w-[200px]"
+              className="bg-white/5 border border-white/10 text-foreground rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-[#B8860B] transition-colors w-[200px]"
             />
           </div>
           <select 
             value={filterStatus}
             onChange={e => setFilterStatus(e.target.value)}
-            className="bg-white/5 border border-white/10 text-white rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-[#B8860B]"
+            className="bg-white/5 border border-white/10 text-foreground rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-[#B8860B]"
           >
             <option value="All">All Status</option>
             {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -344,20 +344,20 @@ export default function AdminProductsPage() {
         <div className="bg-[#B8860B]/20 border border-[#B8860B]/30 rounded-xl p-3 flex items-center justify-between animate-in fade-in slide-in-from-top-4">
           <div className="flex items-center gap-3">
             <span className="text-white font-medium text-sm">{selectedProducts.length} products selected</span>
-            <button onClick={() => setSelectedProducts([])} className="text-white/60 hover:text-white text-xs underline">Clear</button>
+            <button onClick={() => setSelectedProducts([])} className="text-foreground/60 hover:text-foreground text-xs underline">Clear</button>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-white/60 text-xs mr-2">Change status to:</span>
+            <span className="text-foreground/60 text-xs mr-2">Change status to:</span>
             {['Active', 'Draft', 'Out of Stock'].map(status => (
               <button 
                 key={status}
                 onClick={() => handleBulkStatusUpdate(status)}
-                className="bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-1.5 rounded-lg transition-colors"
+                className="bg-white/10 hover:bg-card text-foreground text-xs px-3 py-1.5 rounded-lg transition-colors"
               >
                 {status}
               </button>
             ))}
-            <div className="w-px h-4 bg-white/20 mx-2"></div>
+            <div className="w-px h-4 bg-card mx-2"></div>
             <button 
               onClick={handleBulkDelete}
               className="flex items-center gap-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 text-xs px-3 py-1.5 rounded-lg transition-colors"
@@ -370,24 +370,24 @@ export default function AdminProductsPage() {
 
       {/* Product List View */}
       {loading ? (
-        <div className="text-center py-12 text-white/50">Loading products...</div>
+        <div className="text-center py-12 text-foreground/50">Loading products...</div>
       ) : filteredProducts.length === 0 ? (
-        <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-8 text-center mt-6">
-          <PackageIcon className="w-12 h-12 text-white/20 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-white mb-2">No Products Found</h3>
-          <p className="text-white/50 text-sm max-w-md mx-auto">Adjust filters or add a new product.</p>
+        <div className="bg-card border border-white/5 rounded-2xl p-8 text-center mt-6">
+          <PackageIcon className="w-12 h-12 text-foreground/20 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">No Products Found</h3>
+          <p className="text-foreground/50 text-sm max-w-md mx-auto">Adjust filters or add a new product.</p>
         </div>
       ) : (
-        <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden">
+        <div className="bg-card border border-white/5 rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-white/40 bg-white/5">
+                <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-foreground/40 bg-white/5">
                   <th className="p-4 w-12 text-center">
                     <button onClick={() => {
                       if (selectedProducts.length === filteredProducts.length) setSelectedProducts([])
                       else setSelectedProducts(filteredProducts.map(p => p.id))
-                    }} className="text-white/40 hover:text-white">
+                    }} className="text-foreground/40 hover:text-foreground">
                       <CheckSquare className="w-4 h-4 mx-auto" />
                     </button>
                   </th>
@@ -405,36 +405,36 @@ export default function AdminProductsPage() {
                     key={product.id} 
                     onClick={() => toggleProductSelection({ stopPropagation: () => {} } as any, product.id)}
                     className={`border-b border-white/5 transition-colors cursor-pointer ${
-                      selectedProducts.includes(product.id) ? 'bg-[#B8860B]/10' : 'hover:bg-white/[0.02]'
+                      selectedProducts.includes(product.id) ? 'bg-[#B8860B]/10' : 'hover:bg-card'
                     }`}
                   >
                     <td className="p-4 text-center">
                       <div className={`w-4 h-4 rounded border flex items-center justify-center mx-auto transition-colors ${
-                        selectedProducts.includes(product.id) ? 'bg-[#B8860B] border-[#B8860B] text-black' : 'border-white/20 text-transparent'
+                        selectedProducts.includes(product.id) ? 'bg-[#B8860B] border-[#B8860B] text-black' : 'border-border text-transparent'
                       }`}>
                         <CheckSquare className="w-3 h-3" />
                       </div>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="relative w-10 h-10 rounded bg-[#0F1923] border border-white/5 overflow-hidden shrink-0">
+                        <div className="relative w-10 h-10 rounded bg-card border border-white/5 overflow-hidden shrink-0">
                           <Image src={product.images[0]} alt={product.name} fill sizes="40px" className="object-cover" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-white group-hover:text-[#B8860B] transition-colors">{product.name}</p>
-                          <p className="text-[10px] text-white/40 font-mono mt-0.5">{product.id.split('-')[0]}</p>
+                          <p className="text-sm font-medium text-foreground group-hover:text-[#B8860B] transition-colors">{product.name}</p>
+                          <p className="text-[10px] text-foreground/40 font-mono mt-0.5">{product.id.split('-')[0]}</p>
                         </div>
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="bg-white/5 text-white/60 text-xs px-2.5 py-1 rounded-md border border-white/10 uppercase tracking-wider">
+                      <span className="bg-white/5 text-foreground/60 text-xs px-2.5 py-1 rounded-md border border-white/10 uppercase tracking-wider">
                         {product.category_slug}
                       </span>
                     </td>
                     <td className="p-4 text-right">
                       <p className="text-sm font-medium text-[#D4A017]">₨ {product.price?.toLocaleString()}</p>
                       {product.compare_price && (
-                        <p className="text-[10px] text-white/40 line-through">₨ {product.compare_price.toLocaleString()}</p>
+                        <p className="text-[10px] text-foreground/40 line-through">₨ {product.compare_price.toLocaleString()}</p>
                       )}
                     </td>
                     <td className="p-4 text-center">
@@ -449,7 +449,7 @@ export default function AdminProductsPage() {
                     <td className="p-4 text-center">
                       <span className={`inline-flex px-2 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase border ${
                         product.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                        product.status === 'Draft' ? 'bg-white/10 text-white/60 border-white/20' :
+                        product.status === 'Draft' ? 'bg-white/10 text-foreground/60 border-border' :
                         'bg-rose-500/10 text-rose-400 border-rose-500/20'
                       }`}>
                         {product.status || 'Draft'}
@@ -459,13 +459,13 @@ export default function AdminProductsPage() {
                       <div className="flex justify-end gap-2">
                         <button 
                           onClick={(e) => { e.stopPropagation(); openEdit(product); }} 
-                          className="w-8 h-8 rounded hover:bg-white/10 text-white/60 hover:text-white flex items-center justify-center transition-colors"
+                          className="w-8 h-8 rounded hover:bg-white/10 text-foreground/60 hover:text-foreground flex items-center justify-center transition-colors"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); window.open(`/products/${product.slug}`, '_blank'); }} 
-                          className="w-8 h-8 rounded hover:bg-white/10 text-white/60 hover:text-white flex items-center justify-center transition-colors"
+                          className="w-8 h-8 rounded hover:bg-white/10 text-foreground/60 hover:text-foreground flex items-center justify-center transition-colors"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
@@ -487,18 +487,18 @@ export default function AdminProductsPage() {
 
       {/* Quick Edit Sheet */}
       <Sheet open={showAddModal} onOpenChange={setShowAddModal}>
-        <SheetContent className="bg-[#0C0F14] border-l border-white/10 w-full sm:max-w-2xl overflow-y-auto p-0">
+        <SheetContent className="bg-background border-l border-white/10 w-full sm:max-w-2xl overflow-y-auto p-0">
           {/* Animated top gradient border */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#B8860B] to-transparent opacity-50" />
 
-          <div className="p-6 md:p-8 border-b border-white/5 sticky top-0 bg-[#0C0F14]/90 backdrop-blur-xl z-10 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+          <div className="p-6 md:p-8 border-b border-white/5 sticky top-0 bg-background/90 backdrop-blur-xl z-10 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
-              <SheetTitle className="text-2xl font-bold text-white font-heading">{editingId ? 'Edit Product' : 'New Product'}</SheetTitle>
-              <p className="text-sm text-white/50 mt-1">{editingId ? 'Update details and pricing.' : 'Add a new masterpiece.'}</p>
+              <SheetTitle className="text-2xl font-bold text-foreground font-heading">{editingId ? 'Edit Product' : 'New Product'}</SheetTitle>
+              <p className="text-sm text-foreground/50 mt-1">{editingId ? 'Update details and pricing.' : 'Add a new masterpiece.'}</p>
             </div>
             
             <div className="flex items-center gap-3">
-              <SheetClose className="px-5 py-2.5 rounded-xl font-medium text-white/60 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm">
+              <SheetClose className="px-5 py-2.5 rounded-xl font-medium text-foreground/60 hover:text-foreground hover:bg-white/5 transition-all duration-300 text-sm">
                 Cancel
               </SheetClose>
               <button onClick={handleSaveProduct} className="bg-gradient-to-r from-[#B8860B] to-[#D4A017] hover:to-[#E5B83B] text-black px-6 py-2.5 rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(184,134,11,0.2)] hover:shadow-[0_0_30px_rgba(184,134,11,0.4)] text-sm">
@@ -511,14 +511,14 @@ export default function AdminProductsPage() {
             {/* Import from URL */}
             {!editingId && (
               <div className="bg-gradient-to-r from-[#B8860B]/5 to-transparent border border-[#B8860B]/10 rounded-2xl p-5">
-                <h4 className="text-sm font-medium text-white flex items-center gap-2 mb-3">
+                <h4 className="text-sm font-medium text-foreground flex items-center gap-2 mb-3">
                   <Globe className="w-4 h-4 text-[#B8860B]" /> Import from URL
                 </h4>
-                <p className="text-[11px] text-white/40 mb-3">Paste any product URL — title, image, and price will auto-fetch via Open Graph tags.</p>
+                <p className="text-[11px] text-foreground/40 mb-3">Paste any product URL — title, image, and price will auto-fetch via Open Graph tags.</p>
                 <div className="flex gap-2">
                   <input type="text" value={importUrl} onChange={e => setImportUrl(e.target.value)}
                     placeholder="https://example.com/product/123"
-                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#B8860B] transition-all"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder-white/20 focus:outline-none focus:border-[#B8860B] transition-all"
                     onKeyDown={e => e.key === 'Enter' && handleImportUrl()}
                   />
                   <button onClick={handleImportUrl} disabled={importingUrl}
@@ -531,92 +531,92 @@ export default function AdminProductsPage() {
             )}
             {/* General Info */}
             <div className="space-y-6">
-              <h3 className="text-lg font-medium text-white flex items-center gap-2"><Tag className="w-4 h-4 text-[#B8860B]" /> General Information</h3>
+              <h3 className="text-lg font-medium text-foreground flex items-center gap-2"><Tag className="w-4 h-4 text-[#B8860B]" /> General Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 group">
-                  <label className="text-xs font-semibold text-white/40 uppercase tracking-widest">Product Name</label>
-                  <input type="text" placeholder="e.g. Apple Watch Ultra" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner" />
+                  <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Product Name</label>
+                  <input type="text" placeholder="e.g. Apple Watch Ultra" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner" />
                 </div>
                 <div className="space-y-2 group">
-                  <label className="text-xs font-semibold text-white/40 uppercase tracking-widest">Category</label>
+                  <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Category</label>
                   <div className="relative">
-                    <select value={formData.category_slug} onChange={e => setFormData({...formData, category_slug: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all appearance-none shadow-inner">
+                    <select value={formData.category_slug} onChange={e => setFormData({...formData, category_slug: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all appearance-none shadow-inner">
                       {CATEGORIES.filter(c => c !== 'All').map(c => (
-                        <option key={c} value={c} className="bg-[#0C0F14]">{c.replace('-', ' ').toUpperCase()}</option>
+                        <option key={c} value={c} className="bg-background">{c.replace('-', ' ').toUpperCase()}</option>
                       ))}
                     </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">▼</div>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-foreground/40">▼</div>
                   </div>
                 </div>
               </div>
               
               <div className="space-y-2 group">
-                <label className="text-xs font-semibold text-white/40 uppercase tracking-widest flex items-center gap-2">
+                <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest flex items-center gap-2">
                   <Tag className="w-3.5 h-3.5" /> Colors (Comma separated)
                 </label>
-                <input type="text" placeholder="e.g. Space Black, Silver, Gold" value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner" />
+                <input type="text" placeholder="e.g. Space Black, Silver, Gold" value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner" />
               </div>
             </div>
 
             {/* Pricing & Stock */}
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-white flex items-center gap-2"><Tag className="w-4 h-4 text-[#B8860B]" /> Description</h3>
+              <h3 className="text-lg font-medium text-foreground flex items-center gap-2"><Tag className="w-4 h-4 text-[#B8860B]" /> Description</h3>
               <textarea
                 value={formData.description}
                 onChange={e => setFormData({...formData, description: e.target.value})}
                 placeholder="Product description (HTML supported — tables, lists, images)"
                 rows={6}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner font-mono text-sm resize-y min-h-[120px]"
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner font-mono text-sm resize-y min-h-[120px]"
               />
             </div>
 
             <div className="space-y-6">
-              <h3 className="text-lg font-medium text-white flex items-center gap-2"><DollarSign className="w-4 h-4 text-[#B8860B]" /> Pricing & Inventory</h3>
+              <h3 className="text-lg font-medium text-foreground flex items-center gap-2"><DollarSign className="w-4 h-4 text-[#B8860B]" /> Pricing & Inventory</h3>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 bg-black/20 p-6 rounded-2xl border border-white/5">
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-[#D4A017] uppercase tracking-widest">Selling Price (PKR)</label>
-                  <input type="number" placeholder="185000" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono shadow-inner" />
+                  <input type="number" placeholder="185000" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono shadow-inner" />
                 </div>
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Cost Price (PKR)</label>
-                  <input type="number" placeholder="100000" value={formData.cost_price} onChange={e => setFormData({...formData, cost_price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-emerald-500 transition-all font-mono shadow-inner" />
+                  <input type="number" placeholder="100000" value={formData.cost_price} onChange={e => setFormData({...formData, cost_price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-emerald-500 transition-all font-mono shadow-inner" />
                 </div>
                 <div className="space-y-2 group">
-                  <label className="text-xs font-semibold text-white/40 uppercase tracking-widest">Compare Price</label>
-                  <input type="number" placeholder="200000" value={formData.compare_price} onChange={e => setFormData({...formData, compare_price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white/60 placeholder:text-white/20 focus:outline-none focus:border-white/30 transition-all font-mono shadow-inner line-through" />
+                  <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Compare Price</label>
+                  <input type="number" placeholder="200000" value={formData.compare_price} onChange={e => setFormData({...formData, compare_price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground/60 placeholder:text-foreground/20 focus:outline-none focus:border-border transition-all font-mono shadow-inner line-through" />
                 </div>
                 <div className="space-y-2 group">
-                  <label className="text-xs font-semibold text-white/40 uppercase tracking-widest">Stock</label>
-                  <input type="number" placeholder="10" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono shadow-inner" />
+                  <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Stock</label>
+                  <input type="number" placeholder="10" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono shadow-inner" />
                 </div>
               </div>
             </div>
 
             {/* Status & Media */}
             <div className="space-y-6">
-              <h3 className="text-lg font-medium text-white flex items-center gap-2"><ImageIcon className="w-4 h-4 text-[#B8860B]" /> Status & Media</h3>
+              <h3 className="text-lg font-medium text-foreground flex items-center gap-2"><ImageIcon className="w-4 h-4 text-[#B8860B]" /> Status & Media</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 group">
-                  <label className="text-xs font-semibold text-white/40 uppercase tracking-widest">Visibility Status</label>
+                  <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Visibility Status</label>
                   <div className="relative">
-                    <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all appearance-none shadow-inner font-semibold">
-                      {STATUSES.map(s => <option key={s} value={s} className="bg-[#0C0F14]">{s}</option>)}
+                    <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all appearance-none shadow-inner font-semibold">
+                      {STATUSES.map(s => <option key={s} value={s} className="bg-background">{s}</option>)}
                     </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">▼</div>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-foreground/40">▼</div>
                   </div>
                 </div>
 
                 <div className="space-y-2 group">
-                  <label className="text-xs font-semibold text-white/40 uppercase tracking-widest">Primary Image URL</label>
+                  <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Primary Image URL</label>
                   <div className="flex gap-4 items-center">
-                    <div className="relative w-12 h-12 rounded-lg bg-black/40 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
+                    <div className="relative w-12 h-12 rounded-lg bg-background/40 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
                       {formData.images[0] ? (
                         <Image src={formData.images[0]} alt="Preview" fill sizes="48px" className="object-cover" />
                       ) : (
-                        <ImageIcon className="w-4 h-4 text-white/20" />
+                        <ImageIcon className="w-4 h-4 text-foreground/20" />
                       )}
                     </div>
-                    <input type="text" placeholder="https://..." value={formData.images[0] || ''} onChange={e => setFormData({...formData, images: [e.target.value]})} className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono text-sm" />
+                    <input type="text" placeholder="https://..." value={formData.images[0] || ''} onChange={e => setFormData({...formData, images: [e.target.value]})} className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono text-sm" />
                   </div>
                 </div>
               </div>

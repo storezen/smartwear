@@ -41,7 +41,7 @@ export function LiveStatsCard({
 }: LiveStatsCardProps) {
   const trendColor =
     trend === undefined || trend === 0
-      ? "text-white/40"
+      ? "text-foreground/40"
       : (trend > 0 && !isInverseTrend) || (trend < 0 && isInverseTrend)
         ? "text-emerald-400"
         : "text-red-400"
@@ -51,9 +51,9 @@ export function LiveStatsCard({
       <div className="flex items-start justify-between h-full">
         <div className="flex flex-col justify-between h-full min-h-[72px]">
           <div>
-            <p className="text-[9px] tracking-[1.5px] text-white/60 font-medium uppercase mb-1">{title}</p>
+            <p className="text-[9px] tracking-[1.5px] text-foreground/60 font-medium uppercase mb-1">{title}</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-xl font-bold tracking-tight text-white leading-none tabular-nums">
+              <span className="text-xl font-bold tracking-tight text-foreground leading-none tabular-nums">
                 {prefix}<AnimatedCounter value={value} decimals={decimals} />{suffix}
               </span>
               {trend !== undefined && (
@@ -65,7 +65,7 @@ export function LiveStatsCard({
             </div>
           </div>
           {trendLabel && (
-            <p className="text-[9px] text-white/40 mt-1.5">{trendLabel}</p>
+            <p className="text-[9px] text-foreground/40 mt-1.5">{trendLabel}</p>
           )}
         </div>
         {icon && (
