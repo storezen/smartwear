@@ -701,9 +701,9 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   <div>
                     <p className="text-xs text-foreground/70">Delivery</p>
                     <p className="text-sm font-semibold text-foreground">
-                      3–5 Business Days
+                      2–5 Business Days
                     </p>
-                    <p className="text-[10px] text-foreground/50 mt-0.5">Free — All Pakistan</p>
+                    <p className="text-[11px] text-emerald-400 font-semibold mt-0.5">FREE Shipping — All Pakistan</p>
                   </div>
                 </div>
               </motion.div>
