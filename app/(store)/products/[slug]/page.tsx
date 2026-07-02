@@ -132,22 +132,22 @@ function SkeletonPDP() {
       <div className="sw-container pt-12 md:pt-16 pb-8 md:pb-12">
         <div className="grid lg:grid-cols-12 gap-6 lg:gap-10">
           <div className="lg:col-span-7 space-y-6">
-            <Skeleton className="aspect-[4/3] lg:aspect-auto lg:h-[600px] xl:h-[700px] w-full rounded-[24px] md:rounded-[32px] bg-white/5" />
+            <Skeleton className="aspect-[4/3] lg:aspect-auto lg:h-[600px] xl:h-[700px] w-full rounded-[24px] md:rounded-[32px] bg-card" />
             <div className="flex gap-3">
               {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="w-20 md:w-28 aspect-square rounded-[12px] bg-white/5" />
+                <Skeleton key={i} className="w-20 md:w-28 aspect-square rounded-[12px] bg-card" />
               ))}
             </div>
           </div>
           <div className="lg:col-span-5 space-y-6">
-            <Skeleton className="h-4 w-20 bg-white/5 rounded" />
-            <Skeleton className="h-8 w-3/4 bg-white/5 rounded" />
-            <Skeleton className="h-6 w-1/3 bg-white/5 rounded mt-2" />
-            <Skeleton className="h-12 w-full bg-white/5 rounded-xl mt-4" />
-            <Skeleton className="h-12 w-full bg-white/5 rounded-xl" />
-            <Skeleton className="h-16 w-full bg-white/5 rounded-xl" />
-            <Skeleton className="h-16 w-full bg-white/5 rounded-xl" />
-            <Skeleton className="h-48 w-full bg-white/5 rounded-xl" />
+            <Skeleton className="h-4 w-20 bg-card rounded" />
+            <Skeleton className="h-8 w-3/4 bg-card rounded" />
+            <Skeleton className="h-6 w-1/3 bg-card rounded mt-2" />
+            <Skeleton className="h-12 w-full bg-card rounded-xl mt-4" />
+            <Skeleton className="h-12 w-full bg-card rounded-xl" />
+            <Skeleton className="h-16 w-full bg-card rounded-xl" />
+            <Skeleton className="h-16 w-full bg-card rounded-xl" />
+            <Skeleton className="h-48 w-full bg-card rounded-xl" />
           </div>
         </div>
       </div>
@@ -184,7 +184,7 @@ function RecentlyViewed({ currentId, currentSlug }: { currentId: string; current
 
   return (
     <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-6 md:mt-12">
-      <div className="flex items-center justify-between mb-4 md:mb-6 border-b border-white/5 pb-3">
+      <div className="flex items-center justify-between mb-4 md:mb-6 border-b border-border pb-3">
         <div className="flex items-center gap-2">
           <Clock className="w-5 h-5 text-[#B8860B]" />
           <h3 className="text-2xl font-bold text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Recently Viewed</h3>
@@ -465,7 +465,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
           <ChevronRight className="w-3 h-3 text-[#B8860B] shrink-0" />
           <Link href="/products" className="hover:text-[#B8860B] transition-colors shrink-0">Shop</Link>
           <ChevronRight className="w-3 h-3 text-[#B8860B] shrink-0" />
-          <span className="text-white truncate max-w-[150px] sm:max-w-xs md:max-w-md" title={product.name}>{product.name}</span>
+          <span className="text-foreground truncate max-w-[150px] sm:max-w-xs md:max-w-md" title={product.name}>{product.name}</span>
         </motion.div>
       </div>
 
@@ -477,7 +477,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
           </h1>
           <div className="flex items-center justify-between">
             <span className="text-[#B8860B] text-xs font-bold uppercase tracking-[0.2em]">{product.brand}</span>
-            <div className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-full border border-white/10">
+            <div className="flex items-center gap-1 bg-card px-2 py-1 rounded-full border border-border">
               <Star className="w-3 h-3 fill-[#B8860B] text-[#B8860B]" />
               <span className="text-xs font-semibold text-foreground">{product.rating}</span>
               <span className="text-xs text-foreground/60">({product.reviews_count})</span>
@@ -493,7 +493,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
             className="lg:col-span-7 flex flex-col gap-6 perspective-[2000px] min-w-0 w-full"
           >
             {/* Main Image with Zoom */}
-            <SpotlightCard className={cn("aspect-[4/3] md:aspect-square lg:aspect-auto lg:h-[600px] xl:h-[700px] relative w-full rounded-[24px] md:rounded-[32px] overflow-hidden p-1 transition-colors duration-1000", lumeMode ? "bg-background/50 border border-emerald-500/20" : "bg-card border-white/5")}>
+            <SpotlightCard className={cn("aspect-[4/3] md:aspect-square lg:aspect-auto lg:h-[600px] xl:h-[700px] relative w-full rounded-[24px] md:rounded-[32px] overflow-hidden p-1 transition-colors duration-1000", lumeMode ? "bg-background/50 border border-emerald-500/20" : "bg-card border-border")}>
               <motion.div
                 ref={imageRef}
                 style={{ y: imageY, scale: imageScale }}
@@ -506,7 +506,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
               >
                 <button
                   onClick={() => setLumeMode(!lumeMode)}
-                  className="absolute top-6 right-6 z-50 bg-background/40 backdrop-blur-md border border-white/10 p-3 rounded-full hover:bg-background/60 hover:scale-110 transition-all group"
+                  className="absolute top-6 right-6 z-50 bg-background/40 backdrop-blur-md border border-border p-3 rounded-full hover:bg-background/60 hover:scale-110 transition-all group"
                   title="Toggle Lume Mode (Night Glow)"
                 >
                   <Zap className={cn("w-5 h-5 transition-all duration-700", lumeMode ? "fill-emerald-400 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]" : "text-foreground/70 group-hover:text-foreground")} />
@@ -574,7 +574,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                     </motion.div>
                   )}
                   {product.is_featured && (
-                    <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.6 }} className="bg-white/10 backdrop-blur-md border border-border text-foreground text-xs font-semibold px-3 py-1.5 rounded-lg uppercase tracking-wider">
+                    <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.6 }} className="bg-card backdrop-blur-md border border-border text-foreground text-xs font-semibold px-3 py-1.5 rounded-lg uppercase tracking-wider">
                       Premium
                     </motion.div>
                   )}
@@ -591,7 +591,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                           "w-2 h-2 rounded-full transition-all",
                           idx === selectedImage
                             ? "bg-[#B8860B] w-4"
-                            : "bg-white/40 hover:bg-white/70"
+                            : "bg-accent/40 hover:bg-accent/70"
                         )}
                       />
                     ))}
@@ -627,14 +627,14 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
               <motion.div initial="hidden" animate="show" variants={fadeUp} custom={1}>
                 <div className="hidden md:flex items-center justify-between mb-3">
                   <span className="text-[#B8860B] text-xs font-bold uppercase tracking-[0.2em]">{product.brand}</span>
-                  <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full border border-white/10">
+                  <div className="flex items-center gap-1.5 bg-card px-2.5 py-1 rounded-full border border-border">
                     <Star className="w-3 h-3 fill-[#B8860B] text-[#B8860B]" />
                     <span className="text-xs font-semibold text-foreground">{product.rating}</span>
                     <span className="text-xs text-foreground/60">({product.reviews_count})</span>
                   </div>
                 </div>
 
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="hidden md:flex items-center gap-2 text-foreground/& bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-4">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="hidden md:flex items-center gap-2 text-foreground/& bg-card border border-border w-fit px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-4">
                   <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
                   <span className="font-bold text-foreground mr-0.5">{viewers}</span>
                   <span className="whitespace-nowrap">people are viewing this right now</span>
@@ -685,7 +685,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
 
               {/* Status / Shipping mini banner (from settings) */}
               <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3} className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-3 bg-card border border-white/5 rounded-2xl p-4">
+                <div className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4">
                   <div className="w-8 h-8 rounded-full bg-[#B8860B]/20 flex items-center justify-center shrink-0">
                     <Zap className="w-4 h-4 text-[#B8860B]" />
                   </div>
@@ -694,7 +694,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                     <p className="text-sm font-semibold text-foreground">{product.stock > 0 ? 'In Stock' : 'Out of Stock'}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 bg-card border border-white/5 rounded-2xl p-4">
+                <div className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4">
                   <div className="w-8 h-8 rounded-full bg-[#B8860B]/20 flex items-center justify-center shrink-0">
                     <Truck className="w-4 h-4 text-[#B8860B]" />
                   </div>
@@ -708,7 +708,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
               </motion.div>
 
               {/* Trust & Guarantees (from settings) */}
-              <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3} className="grid grid-cols-2 gap-y-5 gap-x-2 bg-card border border-white/5 rounded-2xl p-5">
+              <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3} className="grid grid-cols-2 gap-y-5 gap-x-2 bg-card border border-border rounded-2xl p-5">
                 {trustBadges.filter((b: any) => b.label === '7-Day Replacement' || b.label === 'Cash on Delivery').map((badge: any, i: number) => (
                   <div key={i} className="flex flex-col gap-1">
                     <div className="flex items-center gap-2 text-foreground">
@@ -723,7 +723,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
               {/* Color, Quantity & Wishlist — all in one row */}
               <motion.div initial="hidden" animate="show" variants={fadeUp} custom={3.5} className="flex items-center gap-3 flex-wrap">
                 {productColors.length > 0 && (
-                  <div className="flex items-center gap-1.5 bg-card border border-white/10 rounded-xl px-3 py-2 h-12">
+                  <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-3 py-2 h-12">
                     <span className="text-[10px] text-foreground/50 uppercase tracking-widest font-semibold mr-1">Color</span>
                     {productColors.map((color: string) => {
                       const hex = resolveColorHex(color)
@@ -734,7 +734,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                           onClick={() => setSelectedColor(color)}
                           className={cn(
                             "w-7 h-7 rounded-full border-2 shrink-0 transition-all sw-interactive",
-                            isSelected ? "border-[#B8860B] scale-110 shadow-[0_0_10px_rgba(184,134,11,0.4)]" : "border-border hover:border-white/50"
+                            isSelected ? "border-[#B8860B] scale-110 shadow-[0_0_10px_rgba(184,134,11,0.4)]" : "border-border hover:border-border0"
                           )}
                           style={{ backgroundColor: hex }}
                           aria-label={color}
@@ -745,12 +745,12 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   </div>
                 )}
 
-                <div className="flex items-center bg-card border border-white/10 rounded-xl p-1 h-12">
-                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-foreground/60 hover:text-foreground hover:bg-white/5 rounded-lg transition-colors sw-interactive" aria-label="Decrease quantity">
+                <div className="flex items-center bg-card border border-border rounded-xl p-1 h-12">
+                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-foreground/60 hover:text-foreground hover:bg-card rounded-lg transition-colors sw-interactive" aria-label="Decrease quantity">
                     <Minus className="w-4 h-4" />
                   </button>
                   <span className="w-10 text-center font-semibold text-foreground">{quantity}</span>
-                  <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="w-10 h-full flex items-center justify-center text-foreground/60 hover:text-foreground hover:bg-white/5 rounded-lg transition-colors sw-interactive" aria-label="Increase quantity">
+                  <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="w-10 h-full flex items-center justify-center text-foreground/60 hover:text-foreground hover:bg-card rounded-lg transition-colors sw-interactive" aria-label="Increase quantity">
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
@@ -759,7 +759,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   onClick={() => isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)}
                   className={cn(
                     "w-12 h-12 rounded-xl border flex items-center justify-center transition-all sw-interactive shrink-0",
-                    isWishlisted ? "bg-[#B8860B]/10 border-[#B8860B] text-[#B8860B]" : "bg-card border-white/10 text-foreground/60 hover:text-foreground hover:bg-white/5 hover:border-border"
+                    isWishlisted ? "bg-[#B8860B]/10 border-[#B8860B] text-[#B8860B]" : "bg-card border-border text-foreground/60 hover:text-foreground hover:bg-card hover:border-border"
                   )}
                   aria-label="Toggle wishlist"
                 >
@@ -794,7 +794,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
         {/* Product Details Tabs (with Reviews integrated) */}
         <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-8 lg:mt-12 pb-12 md:pb-0">
           {/* Tab Navigation */}
-          <div className="p-1 rounded-2xl bg-card border border-white/10 w-fit mb-3 md:mb-4 overflow-x-auto hide-scrollbar">
+          <div className="p-1 rounded-2xl bg-card border border-border w-fit mb-3 md:mb-4 overflow-x-auto hide-scrollbar">
             <div className="flex items-center gap-1">
               {[
                 { key: 'description' as const, label: 'Description' },
@@ -808,7 +808,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                     "relative px-4 sm:px-6 py-3 text-xs font-semibold tracking-widest uppercase rounded-xl transition-all whitespace-nowrap sw-interactive",
                     activeTab === tab.key
                       ? "text-[#0C0F14] bg-gradient-to-r from-[#B8860B] to-[#D4A017] shadow-[0_4px_16px_rgba(184,134,11,0.3)]"
-                      : "text-foreground/50 hover:text-foreground hover:bg-white/5"
+                      : "text-foreground/50 hover:text-foreground hover:bg-card"
                   )}
                 >
                   {tab.label}
@@ -825,7 +825,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                     {specs.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-8">
                         {specs.slice(0, 4).map(([k, v]) => (
-                          <span key={k} className="px-3 py-1.5 rounded-lg bg-card border border-white/10 text-foreground/70 text-xs font-medium">
+                          <span key={k} className="px-3 py-1.5 rounded-lg bg-card border border-border text-foreground/70 text-xs font-medium">
                             <span className="text-foreground/40 capitalize">{k.replace(/_/g, ' ')}: </span>
                             {String(v)}
                           </span>
@@ -845,13 +845,13 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                       [&_ul_li]:relative [&_ul_li]:pl-4
                       [&_ul_li:before]:content-['—'] [&_ul_li:before]:absolute [&_ul_li:before]:left-0 [&_ul_li:before]:text-foreground/30
                       [&_strong]:text-foreground/& [&_strong]:font-medium
-                      [&_a]:text-[#B8860B] [&_a]:hover:text-[#D4A017] [&_a]:no-underline [&_a]:border-b [&_a]:border-white/10 [&_a]:hover:border-[#D4A017]/50 [&_a]:transition-colors
+                      [&_a]:text-[#B8860B] [&_a]:hover:text-[#D4A017] [&_a]:no-underline [&_a]:border-b [&_a]:border-border [&_a]:hover:border-[#D4A017]/50 [&_a]:transition-colors
 [&_.img-grid]:columns-2 [&_.img-grid]:md:columns-3 [&_.img-grid]:gap-4 [&_.img-grid]:my-6 [&_.img-grid]:space-y-2 [&_.img-grid]:md:space-y-3
-[&_.img-grid_img]:!my-0 [&_.img-grid_img]:!rounded-lg [&_.img-grid_img]:!shadow-sm [&_.img-grid_img]:!border [&_.img-grid_img]:!border-white/[0.06] [&_.img-grid_img]:!w-full [&_.img-grid_img]:!h-auto [&_.img-grid_img]:!object-contain [&_.img-grid_img]:break-inside-avoid [&_.img-grid>*]:break-inside-avoid [&_.img-grid_p]:!mb-0 [&_.img-grid_p]:!mt-0
-                      [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-6 [&_img]:shadow-sm [&_img]:border [&_img]:border-white/[0.06] [&_img]:opacity-95 [&_img]:hover:opacity-100 [&_img]:transition-opacity
+[&_.img-grid_img]:!my-0 [&_.img-grid_img]:!rounded-lg [&_.img-grid_img]:!shadow-sm [&_.img-grid_img]:!border [&_.img-grid_img]:!border-border [&_.img-grid_img]:!w-full [&_.img-grid_img]:!h-auto [&_.img-grid_img]:!object-contain [&_.img-grid_img]:break-inside-avoid [&_.img-grid>*]:break-inside-avoid [&_.img-grid_p]:!mb-0 [&_.img-grid_p]:!mt-0
+                      [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-6 [&_img]:shadow-sm [&_img]:border [&_img]:border-border [&_img]:opacity-95 [&_img]:hover:opacity-100 [&_img]:transition-opacity
                       [&_table]:w-full [&_table]:border-collapse [&_table]:my-8 [&_table]:text-sm
-                      [&_table_td]:border-b [&_table_td]:border-white/[0.06] [&_table_td]:px-4 [&_table_td]:py-3.5 [&_table_td]:text-foreground/& [&_table_td]:align-top
-                      [&_table_th]:border-b [&_table_th]:border-white/[0.08] [&_table_th]:px-4 [&_table_th]:py-3.5 [&_table_th]:text-left [&_table_th]:text-xs [&_table_th]:font-medium [&_table_th]:tracking-widest [&_table_th]:uppercase [&_table_th]:text-foreground/40
+                      [&_table_td]:border-b [&_table_td]:border-border [&_table_td]:px-4 [&_table_td]:py-3.5 [&_table_td]:text-foreground/& [&_table_td]:align-top
+                      [&_table_th]:border-b [&_table_th]:border-border [&_table_th]:px-4 [&_table_th]:py-3.5 [&_table_th]:text-left [&_table_th]:text-xs [&_table_th]:font-medium [&_table_th]:tracking-widest [&_table_th]:uppercase [&_table_th]:text-foreground/40
                       [&_tr]:border-none
                       [&_table_td:first-child]:text-foreground/& [&_table_td:first-child]:font-medium
                       [&_div.product-description]:space-y-3
@@ -864,7 +864,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
               {activeTab === 'specs' && (
                 <motion.div key="specs" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
                   {specs.length > 0 ? (
-                    <div className="max-w-3xl rounded-2xl border border-white/10 overflow-hidden divide-y divide-white/5">
+                    <div className="max-w-3xl rounded-2xl border border-border overflow-hidden divide-y divide-white/5">
                       {specs.map(([k, v], i) => (
                         <div
                           key={k}
@@ -874,12 +874,12 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                           )}
                         >
                           <span className="text-foreground/50 text-sm capitalize">{k.replace(/_/g, ' ')}</span>
-                          <span className="text-white font-medium text-sm text-right ml-4">{String(v)}</span>
+                          <span className="text-foreground font-medium text-sm text-right ml-4">{String(v)}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="max-w-3xl p-10 rounded-2xl border border-white/10 bg-card text-center">
+                    <div className="max-w-3xl p-10 rounded-2xl border border-border bg-card text-center">
                       <p className="text-foreground/50 text-sm">No specifications available for this product.</p>
                     </div>
                   )}
@@ -889,7 +889,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                 <motion.div key="reviews" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
                   <div className="max-w-3xl space-y-5">
                     {/* Reviews Summary */}
-                    <div className="flex items-center justify-between flex-wrap gap-3 bg-card border border-white/5 rounded-2xl p-5">
+                    <div className="flex items-center justify-between flex-wrap gap-3 bg-card border border-border rounded-2xl p-5">
                       <div className="flex items-center gap-4">
                         <div className="text-center">
                           <div className="text-3xl font-bold text-[#B8860B]">{product.rating}</div>
@@ -900,7 +900,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                           </div>
                           <span className="text-[11px] text-foreground/50 mt-1 block">{allReviews.length} reviews</span>
                         </div>
-                        <div className="hidden sm:block w-px h-12 bg-white/10" />
+                        <div className="hidden sm:block w-px h-12 bg-card" />
                         <div className="hidden sm:block">
                           <span className="text-[11px] text-emerald-400 font-medium bg-emerald-500/10 px-2.5 py-1 rounded-full">{recommendPct}% of customers recommend this</span>
                         </div>
@@ -909,7 +909,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                         <select
                           value={sortBy}
                           onChange={(e) => setSortBy(e.target.value as any)}
-                          className="bg-white/5 border border-white/10 text-[10px] text-foreground/70 rounded-lg px-2 h-8 outline-none focus:border-[#B8860B] transition-colors"
+                          className="bg-card border border-border text-[10px] text-foreground/70 rounded-lg px-2 h-8 outline-none focus:border-[#B8860B] transition-colors"
                         >
                           <option value="recent" className="bg-background">Most Recent</option>
                           <option value="highest" className="bg-background">Highest Rated</option>
@@ -927,7 +927,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                     {/* Review List */}
                     <div className="space-y-3">
                       {displayedReviews.slice(0, showAllReviews ? 50 : 5).map((rev) => (
-                        <div key={rev.id} className="flex items-start gap-3 bg-card border border-white/5 rounded-xl p-4 hover:border-white/10 transition-all">
+                        <div key={rev.id} className="flex items-start gap-3 bg-card border border-border rounded-xl p-4 hover:border-border transition-all">
                           <div className="w-9 h-9 rounded-full bg-[#B8860B]/20 flex items-center justify-center text-[#B8860B] font-bold text-sm shrink-0">
                             {rev.user_name.charAt(0).toUpperCase()}
                           </div>
@@ -956,7 +956,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                     {allReviews.length > 5 && (
                       <button
                         onClick={() => setShowAllReviews(!showAllReviews)}
-                        className="w-full py-3 text-xs font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-white/10 rounded-xl hover:bg-white/5"
+                        className="w-full py-3 text-xs font-semibold text-[#B8860B] hover:text-[#D4A017] transition-colors border border-border rounded-xl hover:bg-card"
                       >
                         {showAllReviews ? "Show Less" : `View All ${allReviews.length} Reviews`}
                       </button>
@@ -964,7 +964,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
 
                     {/* Write Review Form */}
                     {showReviewForm && (
-                      <div className="bg-card border border-white/10 rounded-xl p-5 space-y-4">
+                      <div className="bg-card border border-border rounded-xl p-5 space-y-4">
                         <div className="flex items-center justify-between">
                           <p className="text-sm font-semibold text-foreground">Share Your Experience</p>
                           <button
@@ -979,7 +979,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                           value={reviewForm.user_name}
                           onChange={(e) => setReviewForm(prev => ({ ...prev, user_name: e.target.value }))}
                           placeholder="Your name"
-                          className="w-full h-10 px-3 text-sm rounded-lg bg-white/5 border border-white/10 text-foreground placeholder-white/30 focus:border-[#B8860B] outline-none transition-all"
+                          className="w-full h-10 px-3 text-sm rounded-lg bg-card border border-border text-foreground placeholder-white/30 focus:border-[#B8860B] outline-none transition-all"
                         />
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-foreground/50">Rating:</span>
@@ -996,7 +996,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                           onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
                           placeholder={reviewForm.rating >= 4 ? "Apna experience share karein..." : "Kya improve kar sakte hain?"}
                           rows={3}
-                          className="w-full px-3 py-2 text-sm rounded-lg bg-white/5 border border-white/10 text-foreground placeholder-white/30 focus:border-[#B8860B] outline-none transition-all resize-none"
+                          className="w-full px-3 py-2 text-sm rounded-lg bg-card border border-border text-foreground placeholder-white/30 focus:border-[#B8860B] outline-none transition-all resize-none"
                         />
                         <button
                           onClick={handleSubmitReview}
@@ -1016,7 +1016,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
         {/* Related Products (from API) */}
         {relatedProducts.length > 0 && (
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="mt-8 md:mt-16">
-            <div className="flex items-center justify-between mb-4 md:mb-6 border-b border-white/5 pb-3">
+            <div className="flex items-center justify-between mb-4 md:mb-6 border-b border-border pb-3">
               <h3 className="text-2xl font-bold text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Complete Your Collection</h3>
               <Link href={`/products?category=${product.category_slug}`} className="text-sm text-[#B8860B] hover:text-[#D4A017] transition-colors sw-interactive font-medium flex items-center gap-1">
                 View All <ChevronRight className="w-4 h-4" />
@@ -1037,7 +1037,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
       <PurchaseNotification productName={product.name} />
 
       {/* Mobile Sticky Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-t border-white/10 p-4 md:hidden pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-t border-border p-4 md:hidden pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <button
           onClick={handleQuickBuy}
           disabled={product.stock === 0 || isAddingToCart}

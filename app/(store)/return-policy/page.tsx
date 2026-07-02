@@ -6,7 +6,7 @@ export default function ReturnPolicyPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-border mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -39,21 +39,21 @@ export default function ReturnPolicyPage() {
         <div className="max-w-4xl mx-auto">
           {/* Info Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 md:mb-12">
-            <div className="p-6 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl text-center">
+            <div className="p-6 rounded-[24px] border border-border bg-card backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <RefreshCcw className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>7-Day Replacement</h3>
               <p className="text-sm text-foreground/60">Request replacement within 7 days of receiving your order.</p>
             </div>
-            <div className="p-6 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl text-center">
+            <div className="p-6 rounded-[24px] border border-border bg-card backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <Box className="w-5 h-5 text-[#B8860B]" />
               </div>
               <h3 className="font-semibold mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Original Packaging</h3>
               <p className="text-sm text-foreground/60">Items must be returned with all original packaging and accessories.</p>
             </div>
-            <div className="p-6 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl text-center">
+            <div className="p-6 rounded-[24px] border border-border bg-card backdrop-blur-xl text-center">
               <div className="w-12 h-12 mx-auto bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-4 border border-[#B8860B]/20">
                 <ShieldCheck className="w-5 h-5 text-[#B8860B]" />
               </div>

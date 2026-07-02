@@ -89,12 +89,12 @@ function OrderStatusBadge({ status }: { status: string }) {
     "out for return": { bg: "bg-orange-500/10 border-orange-500/20", text: "text-orange-500" },
     returned: { bg: "bg-orange-500/10 border-orange-500/20", text: "text-orange-500" },
     "delivery under review": { bg: "bg-pink-500/10 border-pink-500/20", text: "text-pink-500" },
-    "un-assigned by me": { bg: "bg-white/10 border-white/10", text: "text-foreground/40" },
+    "un-assigned by me": { bg: "bg-card border-border", text: "text-foreground/40" },
     lost: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
     stolen: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
     damage: { bg: "bg-red-500/10 border-red-500/20", text: "text-red-500" },
   }
-  const c = palette[s] || { bg: "bg-white/10 border-border", text: "text-foreground/70" }
+  const c = palette[s] || { bg: "bg-card border-border", text: "text-foreground/70" }
   return (
     <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md border text-[8px] font-semibold tracking-wide ${c.bg} ${c.text}`}>
       {status}
@@ -105,7 +105,7 @@ function OrderStatusBadge({ status }: { status: string }) {
 function CustomTooltip({ active, payload, label }: any) {
   if (active && payload?.length) {
     return (
-      <div className="bg-card border border-white/10 rounded-xl px-4 py-2.5 shadow-xl text-sm">
+      <div className="bg-card border border-border rounded-xl px-4 py-2.5 shadow-xl text-sm">
         <p className="text-foreground/60 text-xs mb-1.5">{label}</p>
         <p className="font-bold text-[#C8972A]">Revenue: {formatPrice(payload[0]?.value || 0)}</p>
         {payload[1] && <p className="font-bold text-[#10B981] text-xs mt-0.5">Profit: {formatPrice(payload[1]?.value || 0)}</p>}
@@ -258,7 +258,7 @@ export default function AdminDashboard() {
       {/* ── Charts Row ── */}
       <div className="grid lg:grid-cols-2 gap-3 mb-4">
         {/* Revenue Chart */}
-        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl h-full flex flex-col">
+        <div className="bg-card rounded-xl border border-border p-4 backdrop-blur-xl h-full flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">REVENUE & PROFIT</div>
@@ -322,7 +322,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Orders */}
-        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl h-full flex flex-col">
+        <div className="bg-card rounded-xl border border-border p-4 backdrop-blur-xl h-full flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">LATEST</div>
@@ -340,19 +340,19 @@ export default function AdminDashboard() {
             {loading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="flex items-center gap-2 p-2">
-                  <div className="w-7 h-7 bg-white/5 rounded-lg animate-pulse" />
+                  <div className="w-7 h-7 bg-card rounded-lg animate-pulse" />
                   <div className="flex-1 space-y-1">
-                    <div className="h-3 w-24 bg-white/5 rounded animate-pulse" />
-                    <div className="h-2.5 w-12 bg-white/5 rounded animate-pulse" />
+                    <div className="h-3 w-24 bg-card rounded animate-pulse" />
+                    <div className="h-2.5 w-12 bg-card rounded animate-pulse" />
                   </div>
-                  <div className="h-3 w-14 bg-white/5 rounded animate-pulse" />
+                  <div className="h-3 w-14 bg-card rounded animate-pulse" />
                 </div>
               ))
             ) : recentOrders.length > 0 ? (
               recentOrders.map((order) => (
                 <div
                   key={order.id}
-                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 transition-colors"
+                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-card transition-colors"
                 >
                   <div className="w-7 h-7 rounded-lg bg-[#C8972A]/10 flex items-center justify-center shrink-0">
                     <span className="text-[9px] font-bold text-[#C8972A]">
@@ -386,7 +386,7 @@ export default function AdminDashboard() {
       {/* ── Bottom Row: Top Products + Quick Actions ── */}
       <div className="grid lg:grid-cols-3 gap-3">
         {/* Top Products */}
-        <div className="lg:col-span-2 bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="lg:col-span-2 bg-card rounded-xl border border-border p-4 backdrop-blur-xl">
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">INVENTORY</div>
@@ -407,12 +407,12 @@ export default function AdminDashboard() {
             ) : topProducts.map((product: any, index: number) => (
               <div
                 key={product.id}
-                className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-card transition-colors"
               >
                 <span className="text-[10px] font-bold text-foreground/60 w-3 shrink-0">
                   {index + 1}
                 </span>
-                <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-background border border-white/10 shrink-0">
+                <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-background border border-border shrink-0">
                   {product.images && product.images.length > 0 ? (
                     <Image src={product.images[0]} alt={product.name} fill sizes="36px" className="object-cover" />
                   ) : (
@@ -443,7 +443,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="bg-card rounded-xl border border-border p-4 backdrop-blur-xl">
           <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">SHORTCUTS</div>
           <h3 className="text-[13px] font-semibold mb-3 text-foreground">Quick Actions</h3>
 
@@ -483,7 +483,7 @@ export default function AdminDashboard() {
               },
             ].map(({ label, desc, href, icon: Icon, color, bg }) => (
               <Link key={href} href={href}>
-                <div className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer group">
+                <div className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-card transition-colors cursor-pointer group">
                   <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
                     style={{ background: bg }}
@@ -502,7 +502,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* System Health */}
-        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="bg-card rounded-xl border border-border p-4 backdrop-blur-xl">
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">MONITORING</div>
@@ -521,7 +521,7 @@ export default function AdminDashboard() {
           
           {healthData && (
             <div className="space-y-3">
-              <div className="p-2.5 bg-white/5 border border-white/5 rounded-lg text-[11px] text-foreground/70 leading-relaxed">
+              <div className="p-2.5 bg-card border border-border rounded-lg text-[11px] text-foreground/70 leading-relaxed">
                 {healthData.message}
               </div>
               

@@ -158,7 +158,7 @@ export default function AdminLoginPage() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 disabled={isLoading}
-                className="w-full h-14 bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 text-foreground placeholder-white/30 focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all text-sm font-medium tracking-wide"
+                className="w-full h-14 bg-card border border-border rounded-xl pl-12 pr-4 text-foreground placeholder-white/30 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-sm font-medium tracking-wide"
               />
             </motion.div>
 
@@ -174,7 +174,7 @@ export default function AdminLoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={isLoading}
-                className="w-full h-14 bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 text-foreground placeholder-white/30 focus:border-[#B8860B] focus:bg-white/10 outline-none transition-all text-sm font-medium tracking-wide"
+                className="w-full h-14 bg-card border border-border rounded-xl pl-12 pr-4 text-foreground placeholder-white/30 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-sm font-medium tracking-wide"
               />
             </motion.div>
 
@@ -199,7 +199,7 @@ export default function AdminLoginPage() {
             </motion.div>
           </form>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-8 pt-6 border-t border-white/10 text-center">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-8 pt-6 border-t border-border text-center">
             <p className="text-[10px] text-foreground/60 uppercase tracking-[0.2em]">Demo Access</p>
             <p className="text-[10px] text-[#B8860B] font-mono mt-1 tracking-wider">admin / smartwear123</p>
           </motion.div>

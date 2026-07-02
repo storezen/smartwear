@@ -38,11 +38,11 @@ export default function MarketTrendsPage() {
   if (loading && !data) {
     return (
       <div className="space-y-4 animate-pulse">
-        <div className="h-6 w-48 bg-white/5 rounded-lg" />
+        <div className="h-6 w-48 bg-card rounded-lg" />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {[1,2,3,4].map(i => <SpotlightCard key={i} className="p-4"><div className="h-9 w-20 bg-white/5 rounded" /></SpotlightCard>)}
+          {[1,2,3,4].map(i => <SpotlightCard key={i} className="p-4"><div className="h-9 w-20 bg-card rounded" /></SpotlightCard>)}
         </div>
-        <SpotlightCard className="p-4"><div className="h-[200px] bg-white/5 rounded" /></SpotlightCard>
+        <SpotlightCard className="p-4"><div className="h-[200px] bg-card rounded" /></SpotlightCard>
       </div>
     )
   }

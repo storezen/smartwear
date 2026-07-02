@@ -176,7 +176,7 @@ export default function AdminSettingsPage() {
           value={formData[id] as string || ''}
           onChange={(e) => update(id, e.target.value)}
           placeholder={placeholder}
-          className="w-full h-10 bg-card border border-white/10 rounded-lg px-3 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px]"
+          className="w-full h-10 bg-card border border-border rounded-lg px-3 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px]"
         />
       </div>
     )
@@ -193,7 +193,7 @@ export default function AdminSettingsPage() {
         onChange={(e) => update(id, e.target.value)}
         placeholder={placeholder}
         rows={3}
-        className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px] resize-none"
+        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px] resize-none"
       />
     </div>
   )
@@ -207,7 +207,7 @@ export default function AdminSettingsPage() {
           onChange={(e) => update(id, e.target.checked)}
           className="sr-only peer"
         />
-        <div className="w-9 h-5 rounded-full bg-white/10 peer-checked:bg-emerald-500 transition-colors" />
+        <div className="w-9 h-5 rounded-full bg-card peer-checked:bg-emerald-500 transition-colors" />
         <div className="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white peer-checked:translate-x-4 transition-transform shadow" />
       </div>
       <span className="text-[12px] text-foreground/70 group-hover:text-foreground transition-colors">{label}</span>
@@ -215,7 +215,7 @@ export default function AdminSettingsPage() {
   )
 
   const renderSectionHeader = (icon: React.ReactNode, title: string, desc: string) => (
-    <div className="flex items-center gap-2.5 border-b border-white/10 pb-3 mb-5">
+    <div className="flex items-center gap-2.5 border-b border-border pb-3 mb-5">
       <div className="p-1.5 bg-[#B8860B]/10 rounded-lg text-[#B8860B]">
         {icon}
       </div>
@@ -264,7 +264,7 @@ export default function AdminSettingsPage() {
                     : 'hover:bg-card border-l-2 border-transparent opacity-60 hover:opacity-100'
                 }`}
               >
-                <div className={`p-1.5 rounded-lg shrink-0 ${isActive ? 'bg-[#B8860B]/20 text-[#B8860B]' : 'bg-white/5 text-foreground/60'}`}>
+                <div className={`p-1.5 rounded-lg shrink-0 ${isActive ? 'bg-[#B8860B]/20 text-[#B8860B]' : 'bg-card text-foreground/60'}`}>
                   <Icon className="w-4 h-4" />
                 </div>
                 <div>
@@ -286,7 +286,7 @@ export default function AdminSettingsPage() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
             >
-              <SpotlightCard className="p-5 bg-card border-white/5">
+              <SpotlightCard className="p-5 bg-card border-border">
 
                 {/* ────────────── STORE IDENTITY ────────────── */}
                 {activeTab === "store" && (
@@ -300,7 +300,7 @@ export default function AdminSettingsPage() {
                         {renderInput('store_tagline', 'Store Tagline', 'text', 'Premium Watches & Accessories')}
                       </div>
                     </div>
-                    <hr className="border-white/5" />
+                    <hr className="border-border" />
                     <div>
                       <h3 className="text-xs font-semibold text-foreground/& mb-3 flex items-center gap-1.5">
                         <Search className="w-3.5 h-3.5 text-[#B8860B]" /> SEO
@@ -345,7 +345,7 @@ export default function AdminSettingsPage() {
                       {renderInput('privacy_email', 'Privacy Email (for Privacy Policy)', 'email', 'privacy@smartwear.pk')}
                     </div>
 
-                    <hr className="border-white/5" />
+                    <hr className="border-border" />
                     <h3 className="text-xs font-semibold text-foreground/& flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5 text-[#B8860B]" /> Physical Address
                     </h3>
@@ -355,7 +355,7 @@ export default function AdminSettingsPage() {
                       {renderInput('store_city', 'City / Region', 'text', 'Lahore, Pakistan')}
                     </div>
 
-                    <hr className="border-white/5" />
+                    <hr className="border-border" />
                     <h3 className="text-xs font-semibold text-foreground/& flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-[#B8860B]" /> Business Hours
                     </h3>
@@ -400,7 +400,7 @@ export default function AdminSettingsPage() {
                       {renderInput('shipping_express_rate', 'Express Shipping (PKR)', 'number', '500')}
                     </div>
 
-                    <hr className="border-white/5" />
+                    <hr className="border-border" />
 
                     <h3 className="text-xs font-semibold text-foreground/& flex items-center gap-1.5">
                       <BadgePercent className="w-3.5 h-3.5 text-[#B8860B]" /> Payment Methods
@@ -424,7 +424,7 @@ export default function AdminSettingsPage() {
                       {renderInput('announcement_line2', 'Announcement 2', 'text', 'Open Box Delivery Available')}
                       {renderInput('announcement_line3', 'Announcement 3', 'text', '100% Cash on Delivery')}
                     </div>
-                    <div className="p-3 bg-card border border-white/10 rounded-lg">
+                    <div className="p-3 bg-card border border-border rounded-lg">
                       <p className="text-[11px] text-foreground/40 font-mono">
                         Preview: &ldquo;{formData.announcement_line1 || 'Free Delivery on Orders Over Rs. 10,000'}&rdquo; → &ldquo;{formData.announcement_line2 || 'Open Box Delivery Available'}&rdquo; → &ldquo;{formData.announcement_line3 || '100% Cash on Delivery'}&rdquo;
                       </p>
@@ -458,7 +458,7 @@ export default function AdminSettingsPage() {
                       value={formData.security_badges as string || ''}
                       onChange={(e) => update('security_badges', e.target.value)}
                       rows={3}
-                      className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px] resize-none font-mono"
+                      className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px] resize-none font-mono"
                       placeholder='[{"label":"SSL Secure","icon":"Lock"},{"label":"100% COD","icon":"Banknote"}]'
                     />
 
@@ -467,7 +467,7 @@ export default function AdminSettingsPage() {
                       value={formData.trust_badges as string || ''}
                       onChange={(e) => update('trust_badges', e.target.value)}
                       rows={3}
-                      className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px] resize-none font-mono"
+                      className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground placeholder-white/20 focus:border-[#B8860B] focus:bg-card outline-none transition-all text-[12px] resize-none font-mono"
                       placeholder='[{"label":"7-Day Replacement","icon":"RefreshCw"},{"label":"Cash on Delivery","icon":"Banknote"}]'
                     />
 
@@ -488,7 +488,7 @@ export default function AdminSettingsPage() {
                     <div className="space-y-4">
                       {renderSectionHeader(<Truck className="w-4 h-4 text-blue-400" />, "PostEx Logistics", "Automated order booking and tracking")}
 
-                      <div className="bg-card border border-white/10 rounded-lg p-3 space-y-2">
+                      <div className="bg-card border border-border rounded-lg p-3 space-y-2">
                         <p className="text-[10px] font-semibold tracking-widest uppercase text-foreground/70">Webhook URL</p>
                         <p className="text-xs font-mono text-[#B8860B] break-all select-all">
                           {typeof window !== 'undefined' ? window.location.origin : ''}/api/webhooks/postex

@@ -57,7 +57,7 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#B8860B]/10 to-transparent flex items-center justify-center">
+          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-border bg-gradient-to-br from-[#B8860B]/10 to-transparent flex items-center justify-center">
             <div className="text-center p-6 md:p-8">
               <span className="text-6xl md:text-8xl font-bold text-[#B8860B] opacity-30" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>2024</span>
               <p className="text-foreground/40 text-sm mt-2">Founded in Lahore, Pakistan</p>
@@ -73,7 +73,7 @@ export default function AboutPage() {
             { label: "Customer Rating", value: "4.8 ★" },
             { label: "Happy Customers", value: "15,000+" },
           ].map((stat) => (
-            <div key={stat.label} className="text-center p-6 rounded-xl bg-card border border-white/5">
+            <div key={stat.label} className="text-center p-6 rounded-xl bg-card border border-border">
               <p className="text-2xl md:text-3xl font-bold text-[#B8860B] mb-1">{stat.value}</p>
               <p className="text-foreground/50 text-xs md:text-sm">{stat.label}</p>
             </div>
@@ -86,16 +86,16 @@ export default function AboutPage() {
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-20">
           {values.map((v) => (
-            <div key={v.label} className="p-6 rounded-xl bg-card border border-white/5 hover:border-[#B8860B]/20 transition-colors">
+            <div key={v.label} className="p-6 rounded-xl bg-card border border-border hover:border-[#B8860B]/20 transition-colors">
               <v.icon className="w-6 h-6 text-[#B8860B] mb-3" />
-              <h3 className="text-white font-semibold mb-1">{v.label}</h3>
+              <h3 className="text-foreground font-semibold mb-1">{v.label}</h3>
               <p className="text-foreground/50 text-sm">{v.desc}</p>
             </div>
           ))}
         </div>
 
         {/* Physical Presence */}
-        <div className="text-center p-8 md:p-12 rounded-2xl border border-white/10 bg-gradient-to-br from-[#B8860B]/5 to-transparent">
+        <div className="text-center p-8 md:p-12 rounded-2xl border border-border bg-gradient-to-br from-[#B8860B]/5 to-transparent">
           <Store className="w-8 h-8 text-[#B8860B] mx-auto mb-4" />
           <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
             Visit Our Store

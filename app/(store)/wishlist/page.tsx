@@ -71,7 +71,7 @@ export default function PremiumWishlistPage() {
       <div className="fixed inset-0 bg-background opacity-30 pointer-events-none" />
 
       {/* Header */}
-      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-border mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -126,7 +126,7 @@ export default function PremiumWishlistPage() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="group rounded-[24px] border border-white/5 bg-card p-3 hover:border-border transition-all duration-300 flex flex-col h-full">
+                  <div className="group rounded-[24px] border border-border bg-card p-3 hover:border-border transition-all duration-300 flex flex-col h-full">
                     <Link href={`/products/${item.product.slug}`} className="block relative aspect-[4/5] rounded-[16px] overflow-hidden mb-4">
                       <motion.div
                         className="w-full h-full"
@@ -154,7 +154,7 @@ export default function PremiumWishlistPage() {
 
                       {/* Remove Button */}
                       <button
-                        className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-background/50 backdrop-blur-md flex items-center justify-center border border-white/10 hover:bg-red-500/80 hover:border-red-500 text-foreground/70 hover:text-foreground transition-all"
+                        className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-background/50 backdrop-blur-md flex items-center justify-center border border-border hover:bg-red-500/80 hover:border-red-500 text-foreground/70 hover:text-foreground transition-all"
                         onClick={(e) => {
                           e.preventDefault()
                           removeFromWishlist(item.product.id)
@@ -166,7 +166,7 @@ export default function PremiumWishlistPage() {
                       {/* Quick Add on Hover */}
                       <div className="absolute inset-x-3 bottom-3 z-20 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                         <button
-                          className="w-full h-11 rounded-xl bg-white/10 hover:bg-[#B8860B] backdrop-blur-md border border-border hover:border-[#B8860B] text-foreground text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+                          className="w-full h-11 rounded-xl bg-card hover:bg-[#B8860B] backdrop-blur-md border border-border hover:border-[#B8860B] text-foreground text-sm font-medium flex items-center justify-center gap-2 transition-colors"
                           onClick={(e) => {
                             e.preventDefault()
                             addToCart(item.product)

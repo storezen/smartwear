@@ -193,7 +193,7 @@ export default function LiveAnalyticsPage() {
               onClick={() => { setViewMode("globe"); setGlobeEngine("classic") }}
               className={`p-1 rounded-md transition-all ${
                 viewMode === "globe" && globeEngine === "classic"
-                  ? "bg-white/10 text-foreground" : "text-foreground/& hover:text-foreground/50"
+                  ? "bg-card text-foreground" : "text-foreground/& hover:text-foreground/50"
               }`}
               title="Classic Globe"
             >
@@ -202,7 +202,7 @@ export default function LiveAnalyticsPage() {
             <button
               onClick={() => setViewMode("map")}
               className={`p-1 rounded-md transition-all ${
-                viewMode === "map" ? "bg-white/10 text-foreground" : "text-foreground/& hover:text-foreground/50"
+                viewMode === "map" ? "bg-card text-foreground" : "text-foreground/& hover:text-foreground/50"
               }`}
               aria-label="Pakistan map"
               title="Pakistan Map"
@@ -227,7 +227,7 @@ export default function LiveAnalyticsPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="bg-card rounded-xl border border-white/5 p-4">
+              <div key={i} className="bg-card rounded-xl border border-border p-4">
                 <div className="w-14 h-2 skeleton rounded mb-2" />
                 <div className="w-20 h-6 skeleton rounded mb-1.5" />
                 <div className="w-10 h-2 skeleton rounded" />
@@ -235,13 +235,13 @@ export default function LiveAnalyticsPage() {
             ))}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
-            <div className="lg:col-span-3 h-48 bg-card rounded-xl border border-white/5">
+            <div className="lg:col-span-3 h-48 bg-card rounded-xl border border-border">
               <div className="p-4 space-y-3">
                 <div className="w-28 h-2.5 skeleton rounded" />
                 <div className="w-full h-36 skeleton rounded" />
               </div>
             </div>
-            <div className="lg:col-span-2 h-48 bg-card rounded-xl border border-white/5">
+            <div className="lg:col-span-2 h-48 bg-card rounded-xl border border-border">
               <div className="p-4 space-y-3">
                 <div className="w-20 h-2.5 skeleton rounded" />
                 <div className="w-full h-36 skeleton rounded" />
@@ -349,9 +349,9 @@ export default function LiveAnalyticsPage() {
                   globeEngine === "premium" ? (
                     <PremiumGlobe locations={globeLocations} autoRotate />
                   ) : (
-                    <div className="bg-card rounded-xl border border-white/5 overflow-hidden relative h-full flex flex-col">
+                    <div className="bg-card rounded-xl border border-border overflow-hidden relative h-full flex flex-col">
                       <div className="absolute top-3 left-3 z-10">
-                        <div className="bg-background/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/5">
+                        <div className="bg-background/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-border">
                           <span className="text-[9px] font-medium text-foreground/50">Classic Globe</span>
                         </div>
                       </div>

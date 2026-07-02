@@ -260,7 +260,7 @@ export default function CheckoutPage() {
       <>
         <div className="min-h-screen bg-background text-foreground py-10 md:py-16">
           <div className="max-w-sm mx-auto text-center px-5">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-5 sm:mb-6 rounded-[24px] bg-white/5 border border-white/10 flex items-center justify-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-5 sm:mb-6 rounded-[24px] bg-card border border-border flex items-center justify-center">
               <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 text-foreground/60" />
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-2" style={{ fontFamily: 'var(--font-heading),"Poppins",system-ui,sans-serif' }}>Your cart is empty</h1>
@@ -285,7 +285,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-border mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -318,7 +318,7 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
           {/* Left: Delivery Form */}
           <div className="lg:col-span-2 min-w-0">
-            <div className="rounded-2xl sm:rounded-[24px] border border-white/5 bg-card backdrop-blur-xl p-5 sm:p-8 w-full">
+            <div className="rounded-2xl sm:rounded-[24px] border border-border bg-card backdrop-blur-xl p-5 sm:p-8 w-full">
               <h2 className="text-base sm:text-xl font-bold text-foreground mb-4 sm:mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading),"Poppins",system-ui,sans-serif' }}>
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#B8860B]" />
                 Delivery Details
@@ -332,7 +332,7 @@ export default function CheckoutPage() {
                     value={guestAddress.name}
                     onChange={(e) => setGuestAddress({ ...guestAddress, name: e.target.value })}
                     placeholder="e.g. Ahmad Raza"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
+                    className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
                   />
                 </div>
 
@@ -346,7 +346,7 @@ export default function CheckoutPage() {
                       sessionStorage.setItem('sw_phone', e.target.value)
                     }}
                     placeholder="0300 1234567"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
+                    className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
                   />
                   <p className="text-[11px] sm:text-[10px] text-foreground/40 mt-1.5 flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
@@ -364,7 +364,7 @@ export default function CheckoutPage() {
                       sessionStorage.setItem('sw_email', e.target.value)
                     }}
                     placeholder="ahmad@example.com"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
+                    className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
                   />
                   <p className="text-[11px] sm:text-[10px] text-foreground/40 mt-1.5 flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
@@ -379,7 +379,7 @@ export default function CheckoutPage() {
                     onChange={(e) => setGuestAddress({ ...guestAddress, address_line1: e.target.value })}
                     placeholder="House 4, Street 5, Phase 6, DHA"
                     rows={3}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px] resize-none"
+                    className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px] resize-none"
                   />
                   <p className="text-[11px] sm:text-[10px] text-foreground/40 mt-1.5 flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
@@ -472,7 +472,7 @@ export default function CheckoutPage() {
 
           {/* Right: Order Summary */}
           <div className="lg:col-span-1 min-w-0">
-            <div className="sticky top-24 rounded-2xl sm:rounded-[24px] border border-white/5 bg-card backdrop-blur-xl w-full">
+            <div className="sticky top-24 rounded-2xl sm:rounded-[24px] border border-border bg-card backdrop-blur-xl w-full">
               <div className="p-5 sm:p-8">
                 <h3 className="font-bold text-sm sm:text-lg text-foreground mb-4 sm:mb-6" style={{ fontFamily: 'var(--font-heading),"Poppins",system-ui,sans-serif' }}>
                   Order Summary
@@ -481,7 +481,7 @@ export default function CheckoutPage() {
                 <div className="space-y-3 sm:space-y-4 mb-5 sm:mb-6">
                   {items.map((item) => (
                     <div key={item.id} className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 sm:w-14 sm:h-14 bg-card border border-white/5 rounded-xl overflow-hidden shrink-0">
+                      <div className="relative w-12 h-12 sm:w-14 sm:h-14 bg-card border border-border rounded-xl overflow-hidden shrink-0">
                         <Image src={item.product.images[0]} alt={item.product.name} fill sizes="(max-width: 640px) 48px, 56px" className="object-cover" />
                         <span className="absolute top-0 right-0 w-5 h-5 bg-[#B8860B] text-black font-bold text-[10px] flex items-center justify-center rounded-bl-lg">
                           {item.quantity}
@@ -498,14 +498,14 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
-                <div className="border-t border-white/10 pt-3 sm:pt-4 space-y-2.5 sm:space-y-3">
+                <div className="border-t border-border pt-3 sm:pt-4 space-y-2.5 sm:space-y-3">
                   <div className="flex justify-between text-[13px] sm:text-sm">
                     <span className="text-foreground/70">Subtotal</span>
-                    <span className="text-white font-medium">{formatPrice(subtotal)}</span>
+                    <span className="text-foreground font-medium">{formatPrice(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-[13px] sm:text-sm">
                     <span className="text-foreground/70">Shipping</span>
-                    <span className={shippingCost === 0 ? 'text-emerald-400 font-medium' : 'text-white font-medium'}>
+                    <span className={shippingCost === 0 ? 'text-emerald-400 font-medium' : 'text-foreground font-medium'}>
                       {shippingCost === 0 ? 'Free' : formatPrice(shippingCost)}
                     </span>
                   </div>
@@ -515,14 +515,14 @@ export default function CheckoutPage() {
                       <span className="text-emerald-400 font-medium">-{formatPrice(appliedPromo.discount)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between items-end pt-2.5 sm:pt-3 border-t border-white/5">
+                  <div className="flex justify-between items-end pt-2.5 sm:pt-3 border-t border-border">
                     <span className="text-foreground/70 text-[13px] sm:text-sm">Total</span>
                     <span className="font-bold text-xl sm:text-2xl text-[#B8860B]">{formatPrice(total)}</span>
                   </div>
                 </div>
 
                 {/* Trust & Security */}
-                <div className="mt-6 p-3 sm:p-4 rounded-xl bg-card border border-white/5">
+                <div className="mt-6 p-3 sm:p-4 rounded-xl bg-card border border-border">
                   <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-wider mb-2.5 text-center">Secure & Trusted</p>
                   <div className="grid grid-cols-2 gap-2 sm:gap-3">
                     <div className="flex items-center gap-1.5 sm:gap-2 text-foreground/50">
@@ -559,11 +559,11 @@ export default function CheckoutPage() {
                         value={promoCodeInput}
                         onChange={(e) => setPromoCodeInput(e.target.value)}
                         placeholder="Enter code"
-                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-foreground text-[13px] sm:text-sm placeholder-white/40 focus:outline-none focus:border-[#B8860B] transition-colors"
+                        className="flex-1 bg-card border border-border rounded-xl px-3 py-2.5 text-foreground text-[13px] sm:text-sm placeholder-white/40 focus:outline-none focus:border-[#B8860B] transition-colors"
                       />
                       <button
                         onClick={handleApplyPromo}
-                        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-card text-foreground text-[11px] sm:text-xs font-semibold transition-colors"
+                        className="px-4 py-2.5 rounded-xl bg-card hover:bg-card text-foreground text-[11px] sm:text-xs font-semibold transition-colors"
                       >
                         Apply
                       </button>
@@ -576,9 +576,9 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Upsell */}
-                <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-white/10">
+                <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-border">
                   <p className="text-[11px] sm:text-xs font-bold text-[#B8860B] uppercase tracking-wider mb-2.5 sm:mb-3">Complete Your Look</p>
-                  <div className="bg-card border border-white/5 rounded-xl p-2.5 sm:p-4 flex gap-2.5 sm:gap-4 items-center">
+                  <div className="bg-card border border-border rounded-xl p-2.5 sm:p-4 flex gap-2.5 sm:gap-4 items-center">
                     <div className="w-10 h-10 sm:w-16 sm:h-16 bg-card rounded-lg overflow-hidden shrink-0">
                       <Image src="https://images.unsplash.com/photo-1546868871-7041f2a55e12" alt="Premium Watch Box" width={40} height={40} className="object-cover sm:w-16 sm:h-16" />
                     </div>
@@ -756,7 +756,7 @@ function SuccessModal({ orderId, total, onClose }: { orderId: string; total: num
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="inline-flex items-center gap-4 bg-card border border-white/10 px-6 py-3 rounded-xl mb-10"
+            className="inline-flex items-center gap-4 bg-card border border-border px-6 py-3 rounded-xl mb-10"
           >
             <span className="text-foreground/70 text-sm">Order Number</span>
             <span className="text-[#B8860B] font-mono font-bold tracking-wider">{orderId}</span>
@@ -766,15 +766,15 @@ function SuccessModal({ orderId, total, onClose }: { orderId: string; total: num
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-10 text-left"
+            className="bg-card border border-border rounded-2xl p-6 mb-10 text-left"
           >
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
               <Calendar className="w-5 h-5 text-[#B8860B]" />
-              <span className="text-white font-medium">Estimated Delivery: <span className="text-[#B8860B]">{deliveryDate}</span></span>
+              <span className="text-foreground font-medium">Estimated Delivery: <span className="text-[#B8860B]">{deliveryDate}</span></span>
             </div>
 
             <div className="relative">
-              <div className="absolute left-4 top-2 bottom-6 w-0.5 bg-white/10" />
+              <div className="absolute left-4 top-2 bottom-6 w-0.5 bg-card" />
               <div className="space-y-6">
                 {TIMELINE_STEPS.map((step, idx) => (
                   <div key={idx} className="relative flex items-start gap-4 z-10">
@@ -800,7 +800,7 @@ function SuccessModal({ orderId, total, onClose }: { orderId: string; total: num
             <Link
               href="/account/orders"
               onClick={onClose}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-white/10 text-foreground hover:bg-white/5 hover:border-border font-medium tracking-wide transition-all"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-border text-foreground hover:bg-card hover:border-border font-medium tracking-wide transition-all"
             >
               View Order Details
             </Link>

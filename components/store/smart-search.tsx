@@ -128,12 +128,12 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="relative w-full max-w-3xl bg-background border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[70vh] md:h-[500px]"
+            className="relative w-full max-w-3xl bg-background border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[70vh] md:h-[500px]"
           >
             {/* Left/Main Column: Search & List */}
-            <div className="flex-1 flex flex-col border-r border-white/5 relative">
+            <div className="flex-1 flex flex-col border-r border-border relative">
               {/* Search Header */}
-              <div className="flex items-center px-4 py-4 border-b border-white/5 relative z-10">
+              <div className="flex items-center px-4 py-4 border-b border-border relative z-10">
                 <Search className="w-5 h-5 text-foreground/40 mr-3 shrink-0" />
                 <input
                   ref={inputRef}
@@ -148,7 +148,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                     <X className="w-4 h-4" />
                   </button>
                 )}
-                <div className="hidden md:flex items-center gap-1 text-[10px] text-foreground/40 font-mono tracking-widest bg-white/5 px-2 py-1 rounded border border-white/10">
+                <div className="hidden md:flex items-center gap-1 text-[10px] text-foreground/40 font-mono tracking-widest bg-card px-2 py-1 rounded border border-border">
                   <span>ESC</span>
                 </div>
               </div>
@@ -178,15 +178,15 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                           "flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all duration-200 group",
                           selectedIndex === idx 
                             ? "bg-white/10" 
-                            : "hover:bg-white/5"
+                            : "hover:bg-card"
                         )}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-background border border-white/10 overflow-hidden shrink-0 relative protected-img">
+                          <div className="w-10 h-10 rounded-lg bg-background border border-border overflow-hidden shrink-0 relative protected-img">
                             {product.images && product.images[0] ? (
                               <Image src={product.images[0]} alt={product.name} fill sizes="40px" className="object-cover" />
                             ) : (
-                              <div className="w-full h-full bg-white/5" />
+                              <div className="w-full h-full bg-card" />
                             )}
                           </div>
                           <div className="flex flex-col">
@@ -216,7 +216,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
               </div>
               
               {/* Footer Actions */}
-              <div className="hidden md:flex items-center gap-4 px-4 py-3 border-t border-white/5 text-[10px] text-foreground/40">
+              <div className="hidden md:flex items-center gap-4 px-4 py-3 border-t border-border text-[10px] text-foreground/40">
                 <div className="flex items-center gap-1.5">
                   <span className="flex items-center justify-center w-5 h-5 rounded bg-white/10 border border-border">↵</span> to select
                 </div>
@@ -232,7 +232,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
               {selectedProduct ? (
                 <div className="p-6 h-full flex flex-col relative z-10">
                   <div className="flex-1">
-                    <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-background border border-white/5 mb-6 group protected-img">
+                    <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-background border border-border mb-6 group protected-img">
                       {selectedProduct.images && selectedProduct.images[0] ? (
                         <Image 
                           src={selectedProduct.images[0]} 
@@ -265,7 +265,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                         <p className="text-[10px] text-foreground/40 uppercase tracking-widest mb-2">Available Colors</p>
                         <div className="flex gap-1.5 flex-wrap">
                           {selectedProduct.colors.slice(0, 4).map((c: string) => (
-                            <span key={c} className="text-xs bg-white/5 border border-white/10 px-2 py-1 rounded text-foreground/70">{c}</span>
+                            <span key={c} className="text-xs bg-card border border-border px-2 py-1 rounded text-foreground/70">{c}</span>
                           ))}
                           {selectedProduct.colors.length > 4 && <span className="text-xs text-foreground/40">+{selectedProduct.colors.length - 4}</span>}
                         </div>
@@ -278,7 +278,7 @@ export function SmartSearch({ isOpen, onClose }: SmartSearchProps) {
                       router.push(`/products/${selectedProduct.slug}`)
                       onClose()
                     }}
-                    className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-semibold flex items-center justify-center gap-2 transition-colors mt-auto group"
+                    className="w-full py-3 rounded-xl bg-card hover:bg-white/10 border border-border text-sm font-semibold flex items-center justify-center gap-2 transition-colors mt-auto group"
                   >
                     View Details <ArrowUpRight className="w-4 h-4 text-foreground/40 group-hover:text-foreground transition-colors" />
                   </button>

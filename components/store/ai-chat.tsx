@@ -142,7 +142,7 @@ function OrderCard({ data }: { data: OrderInfoData }) {
       {data.items.map((item, i) => (
         <p key={i} className="text-foreground/50 text-[11px]">{item.name} x{item.qty}</p>
       ))}
-      <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+      <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
         <span className="text-white text-xs font-bold">Rs. {data.total?.toLocaleString()}</span>
         {data.daysLeft !== undefined && (
           <span className="text-foreground/40 text-[10px] flex items-center gap-1">
@@ -673,7 +673,7 @@ export function AIChat() {
 
             {/* Input */}
             {!isMinimized && (
-              <div className="border-t border-white/5 bg-[#0A0D11]">
+              <div className="border-t border-border bg-[#0A0D11]">
                 {messages.length <= 1 && (
                   <div className="px-3 pt-2 pb-1 flex flex-wrap gap-1.5">
                     {quickReplies.map((qr) => (

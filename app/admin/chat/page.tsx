@@ -27,7 +27,7 @@ import { AnimatedCounter } from "@/components/ui/animated-counter"
 function CustomTooltip({ active, payload, label }: any) {
   if (active && payload?.length) {
     return (
-      <div className="bg-card border border-white/10 rounded-xl px-4 py-2.5 shadow-xl text-sm">
+      <div className="bg-card border border-border rounded-xl px-4 py-2.5 shadow-xl text-sm">
         <p className="text-foreground/60 text-xs mb-1">{label}</p>
         <p className="font-bold text-[#C8972A]">{payload[0].value} messages</p>
       </div>
@@ -90,7 +90,7 @@ export default function AdminChatAnalytics() {
       <div className="grid grid-cols-2 lg:grid-cols-7 gap-3 mb-4">
         {loading
           ? Array.from({ length: 7 }).map((_, i) => (
-              <div key={i} className="bg-card rounded-xl border border-white/5 p-4">
+              <div key={i} className="bg-card rounded-xl border border-border p-4">
                 <div className="h-3 w-20 skeleton rounded mb-2" />
                 <div className="h-6 w-16 skeleton rounded mb-1.5" />
                 <div className="h-2.5 w-12 skeleton rounded" />
@@ -123,7 +123,7 @@ export default function AdminChatAnalytics() {
 
       <div className="grid lg:grid-cols-3 gap-3 mb-4">
         {/* Message Volume Chart */}
-        <div className="lg:col-span-2 bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="lg:col-span-2 bg-card rounded-xl border border-border p-4 backdrop-blur-xl">
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">MESSAGE VOLUME</div>
@@ -160,7 +160,7 @@ export default function AdminChatAnalytics() {
         </div>
 
         {/* Satisfaction Score */}
-        <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl">
+        <div className="bg-card rounded-xl border border-border p-4 backdrop-blur-xl">
           <div className="mb-3">
             <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">SATISFACTION</div>
             <h3 className="text-[13px] font-semibold text-foreground">Feedback Score</h3>
@@ -200,7 +200,7 @@ export default function AdminChatAnalytics() {
       </div>
 
       {/* Top Questions */}
-      <div className="bg-card rounded-xl border border-white/5 p-4 backdrop-blur-xl mb-4">
+      <div className="bg-card rounded-xl border border-border p-4 backdrop-blur-xl mb-4">
         <div className="flex items-center justify-between mb-3">
           <div>
             <div className="text-[9px] tracking-[1.5px] text-foreground/60 mb-0.5">INSIGHTS</div>
@@ -210,7 +210,7 @@ export default function AdminChatAnalytics() {
         <div className="space-y-1">
           {stats?.topQuestions?.length > 0 ? (
             stats.topQuestions.map((q: any, i: number) => (
-              <div key={q.question} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors">
+              <div key={q.question} className="flex items-center gap-3 p-2 rounded-lg hover:bg-card transition-colors">
                 <span className="text-[10px] font-bold text-foreground/60 w-4 shrink-0">{i + 1}</span>
                 <HelpCircle className="w-3.5 h-3.5 text-[#C8972A] shrink-0" />
                 <span className="flex-1 text-[12px] text-foreground font-medium capitalize">{q.question}</span>

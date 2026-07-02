@@ -25,7 +25,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-border mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -61,7 +61,7 @@ export default function ContactPage() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-6 md:p-8 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl hover:bg-card transition-all"
+              className="p-6 md:p-8 rounded-[24px] border border-border bg-card backdrop-blur-xl hover:bg-card transition-all"
             >
               <div className="w-12 h-12 bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-6 border border-[#B8860B]/20">
                 <MapPin className="w-5 h-5 text-[#B8860B]" />
@@ -78,7 +78,7 @@ export default function ContactPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="p-6 md:p-8 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl hover:bg-card transition-all"
+              className="p-6 md:p-8 rounded-[24px] border border-border bg-card backdrop-blur-xl hover:bg-card transition-all"
             >
               <div className="w-12 h-12 bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-6 border border-[#B8860B]/20">
                 <Phone className="w-5 h-5 text-[#B8860B]" />
@@ -92,7 +92,7 @@ export default function ContactPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="p-6 md:p-8 rounded-[24px] border border-white/5 bg-card backdrop-blur-xl hover:bg-card transition-all"
+              className="p-6 md:p-8 rounded-[24px] border border-border bg-card backdrop-blur-xl hover:bg-card transition-all"
             >
               <div className="w-12 h-12 bg-[#B8860B]/10 rounded-full flex items-center justify-center mb-6 border border-[#B8860B]/20">
                 <Mail className="w-5 h-5 text-[#B8860B]" />
@@ -106,7 +106,7 @@ export default function ContactPage() {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="p-6 md:p-10 rounded-[32px] border border-white/5 bg-card backdrop-blur-xl"
+            className="p-6 md:p-10 rounded-[32px] border border-border bg-card backdrop-blur-xl"
           >
             <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Send a Message</h2>
             {sent ? (
@@ -122,20 +122,20 @@ export default function ContactPage() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-xs uppercase tracking-wider text-foreground/70 font-medium">First Name</label>
-                    <input required type="text" className="w-full bg-card border border-white/10 rounded-xl px-4 py-3 text-foreground focus:border-[#B8860B] outline-none transition-colors" placeholder="John" />
+                    <input required type="text" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground focus:border-[#B8860B] outline-none transition-colors" placeholder="John" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs uppercase tracking-wider text-foreground/70 font-medium">Last Name</label>
-                    <input required type="text" className="w-full bg-card border border-white/10 rounded-xl px-4 py-3 text-foreground focus:border-[#B8860B] outline-none transition-colors" placeholder="Doe" />
+                    <input required type="text" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground focus:border-[#B8860B] outline-none transition-colors" placeholder="Doe" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs uppercase tracking-wider text-foreground/70 font-medium">Email Address</label>
-                  <input required type="email" className="w-full bg-card border border-white/10 rounded-xl px-4 py-3 text-foreground focus:border-[#B8860B] outline-none transition-colors" placeholder="john@example.com" />
+                  <input required type="email" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground focus:border-[#B8860B] outline-none transition-colors" placeholder="john@example.com" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs uppercase tracking-wider text-foreground/70 font-medium">Message</label>
-                  <textarea required rows={5} className="w-full bg-card border border-white/10 rounded-xl px-4 py-3 text-foreground focus:border-[#B8860B] outline-none transition-colors resize-none" placeholder="How can we help you today?" />
+                  <textarea required rows={5} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground focus:border-[#B8860B] outline-none transition-colors resize-none" placeholder="How can we help you today?" />
                 </div>
                 <button type="submit" disabled={loading} className="sw-btn-gold w-full h-14 text-base font-semibold">
                   {loading ? 'Sending...' : 'Send Message'}

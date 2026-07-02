@@ -134,15 +134,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <motion.aside
         initial={false}
         animate={{ width: sidebarCollapsed ? 72 : 240 }}
-        className="hidden lg:flex flex-col bg-card border-r border-white/5 relative z-20 shrink-0"
+        className="hidden lg:flex flex-col bg-card border-r border-border relative z-20 shrink-0"
       >
-        <div className="h-[56px] flex items-center px-4 border-b border-white/5">
+        <div className="h-[56px] flex items-center px-4 border-b border-border">
           <AdminLogo collapsed={sidebarCollapsed} />
         </div>
 
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="absolute -right-3 top-[60px] w-5 h-5 rounded-full bg-card border border-white/10 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors z-30 sw-interactive"
+          className="absolute -right-3 top-[60px] w-5 h-5 rounded-full bg-card border border-border flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors z-30 sw-interactive"
           aria-label="Toggle sidebar"
         >
           <motion.div animate={{ rotate: sidebarCollapsed ? 180 : 0 }}>
@@ -162,7 +162,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {isActive && (
                   <motion.div
                     layoutId="activeNavBg"
-                    className="absolute inset-0 bg-white/5 rounded-xl border border-white/10"
+                    className="absolute inset-0 bg-card rounded-xl border border-border"
                     initial={false}
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
@@ -200,7 +200,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="p-3 border-t border-white/5">
+        <div className="p-3 border-t border-border">
           <button
             onClick={handleLogout}
             className={cn(
@@ -229,13 +229,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className="absolute left-0 top-0 bottom-0 w-[240px] bg-card border-r border-white/5 flex flex-col"
+              className="absolute left-0 top-0 bottom-0 w-[240px] bg-card border-r border-border flex flex-col"
             >
-              <div className="h-[56px] flex items-center justify-between px-4 border-b border-white/5">
+              <div className="h-[56px] flex items-center justify-between px-4 border-b border-border">
                 <AdminLogo />
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="w-7 h-7 flex items-center justify-center rounded-full bg-white/5 text-foreground/60 hover:text-foreground sw-interactive"
+                  className="w-7 h-7 flex items-center justify-center rounded-full bg-card text-foreground/60 hover:text-foreground sw-interactive"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -251,7 +251,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       onClick={() => setSidebarOpen(false)}
                       className={cn(
                         "flex items-center h-9 px-3 rounded-lg font-medium transition-all sw-interactive text-[13px]",
-                        isActive ? "bg-white/5 border border-white/10 text-[#B8860B] shadow-[inset_3px_0_0_#B8860B]" : "text-foreground/60 hover:text-foreground hover:bg-card"
+                        isActive ? "bg-card border border-border text-[#B8860B] shadow-[inset_3px_0_0_#B8860B]" : "text-foreground/60 hover:text-foreground hover:bg-card"
                       )}
                     >
                       <item.icon className="w-4 h-4 mr-2.5" />
@@ -261,7 +261,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 })}
               </nav>
 
-              <div className="p-3 border-t border-white/5">
+              <div className="p-3 border-t border-border">
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center h-9 px-3 rounded-lg text-red-400/80 hover:bg-red-400/10 transition-colors font-medium sw-interactive text-[13px]"
@@ -282,7 +282,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[150px] opacity-[0.05] bg-[#B8860B] pointer-events-none" />
 
         {/* Top Header */}
-        <header className="h-[56px] shrink-0 border-b border-white/5 bg-background/80 backdrop-blur-xl flex items-center justify-between px-4 sticky top-0 z-10">
+        <header className="h-[56px] shrink-0 border-b border-border bg-background/80 backdrop-blur-xl flex items-center justify-between px-4 sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -303,7 +303,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="relative" ref={notifRef}>
               <button
                 onClick={() => setShowNotifs(!showNotifs)}
-                className="relative w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-foreground/60 hover:text-foreground transition-colors sw-interactive"
+                className="relative w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-foreground/60 hover:text-foreground transition-colors sw-interactive"
                 aria-label="Notifications"
               >
                 <Bell className="w-3.5 h-3.5" />
@@ -323,7 +323,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     transition={{ duration: 0.12 }}
                     className="absolute right-0 top-full mt-2 w-80 z-50"
                   >
-                  <div className="bg-card border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+                  <div className="bg-card border border-border rounded-xl shadow-2xl overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
                       <span className="text-[11px] font-semibold text-foreground/70">Notifications</span>
                       {unreadCount > 0 && (
@@ -377,7 +377,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </AnimatePresence>
             </div>
 
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0F1923] to-[#1A2530] border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0F1923] to-[#1A2530] border border-border flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
               <span className="text-[#B8860B] font-bold text-xs">A</span>
             </div>
           </div>

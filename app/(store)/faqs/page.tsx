@@ -32,7 +32,7 @@ export default function FAQsPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-border mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -71,10 +71,10 @@ export default function FAQsPage() {
                 </div>
                 {section.category}
               </h2>
-              <div className="rounded-[24px] border border-white/5 bg-card backdrop-blur-xl p-6 md:p-8">
+              <div className="rounded-[24px] border border-border bg-card backdrop-blur-xl p-6 md:p-8">
                 <Accordion type="single" collapsible className="w-full">
                   {section.items.map((item, i) => (
-                    <AccordionItem key={i} value={`item-${index}-${i}`} className="border-white/5 py-2">
+                    <AccordionItem key={i} value={`item-${index}-${i}`} className="border-border py-2">
                       <AccordionTrigger className="text-left text-base md:text-lg font-medium hover:text-[#B8860B] transition-colors hover:no-underline">
                         {item.q}
                       </AccordionTrigger>

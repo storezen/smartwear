@@ -105,7 +105,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
 
               <button
                 onClick={handleWishlist}
-                className="pointer-events-auto w-11 h-11 rounded-full flex items-center justify-center bg-black/30 backdrop-blur-md border border-white/10 text-foreground hover:bg-[#B8860B]/20 hover:border-[#B8860B]/50 transition-all sw-interactive group/heart"
+                className="pointer-events-auto w-11 h-11 rounded-full flex items-center justify-center bg-black/30 backdrop-blur-md border border-border text-foreground hover:bg-[#B8860B]/20 hover:border-[#B8860B]/50 transition-all sw-interactive group/heart"
                 aria-label="Toggle wishlist"
               >
                 <Heart
@@ -127,7 +127,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
           </div>
 
           {/* ── INFO ── */}
-          <div className="relative p-4 bg-gradient-to-b from-transparent to-[#0C0F14] z-20 border-t border-white/5 group-hover:border-[#B8860B]/20 transition-colors duration-500 flex-1 flex flex-col justify-between">
+          <div className="relative p-4 bg-gradient-to-b from-transparent to-[#0C0F14] z-20 border-t border-border group-hover:border-[#B8860B]/20 transition-colors duration-500 flex-1 flex flex-col justify-between">
             
             <div className="flex items-center justify-between gap-2 mb-2">
               <span className="text-[#B8860B] text-[9px] font-bold uppercase tracking-[0.2em] truncate">{product.brand}</span>
@@ -180,7 +180,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
               <button
                 onClick={handleCart}
                 disabled={!inStock}
-                className="col-span-1 h-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-foreground hover:bg-white/10 transition-colors sw-interactive disabled:opacity-50"
+                className="col-span-1 h-11 rounded-lg bg-white/5 border border-border flex items-center justify-center text-foreground hover:bg-white/10 transition-colors sw-interactive disabled:opacity-50"
                 aria-label="Add to cart"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />

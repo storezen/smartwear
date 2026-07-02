@@ -23,7 +23,7 @@ export default function StoreTemplate({ children }: { children: React.ReactNode 
         <motion.div 
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-          className="w-16 h-16 rounded-full border-2 border-white/10 border-t-[#B8860B]" 
+          className="w-16 h-16 rounded-full border-2 border-border border-t-[#B8860B]" 
         />
       </motion.div>
     </>

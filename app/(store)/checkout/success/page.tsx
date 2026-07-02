@@ -186,7 +186,7 @@ function SuccessContent() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="inline-flex items-center gap-4 bg-card border border-white/10 px-6 py-3 rounded-xl mb-10"
+            className="inline-flex items-center gap-4 bg-card border border-border px-6 py-3 rounded-xl mb-10"
           >
             <span className="text-foreground/70 text-sm">Order Number</span>
             <span className="text-[#B8860B] font-mono font-bold tracking-wider">{orderId}</span>
@@ -197,16 +197,16 @@ function SuccessContent() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-10 text-left"
+            className="bg-card border border-border rounded-2xl p-6 mb-10 text-left"
           >
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
               <Calendar className="w-5 h-5 text-[#B8860B]" />
-              <span className="text-white font-medium">Estimated Delivery: <span className="text-[#B8860B]">{deliveryDate}</span></span>
+              <span className="text-foreground font-medium">Estimated Delivery: <span className="text-[#B8860B]">{deliveryDate}</span></span>
             </div>
 
             <div className="relative">
               {/* Connecting line */}
-              <div className="absolute left-4 top-2 bottom-6 w-0.5 bg-white/10" />
+              <div className="absolute left-4 top-2 bottom-6 w-0.5 bg-card" />
 
               <div className="space-y-6">
                 {TIMELINE_STEPS.map((step, idx) => (
@@ -232,7 +232,7 @@ function SuccessContent() {
           >
             <Link
               href="/account/orders"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-white/10 text-foreground hover:bg-white/5 hover:border-border font-medium tracking-wide transition-all sw-interactive"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-border text-foreground hover:bg-card hover:border-border font-medium tracking-wide transition-all sw-interactive"
             >
               View Order Details
             </Link>

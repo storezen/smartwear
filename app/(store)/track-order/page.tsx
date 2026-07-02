@@ -64,7 +64,7 @@ export default function TrackOrderPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5 mb-4 sm:mb-6">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-border mb-4 sm:mb-6">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -99,7 +99,7 @@ export default function TrackOrderPage() {
         <div className="max-w-2xl mx-auto">
 
         {/* Search Form */}
-        <div className="rounded-[24px] border border-white/5 bg-card backdrop-blur-xl mb-8">
+        <div className="rounded-[24px] border border-border bg-card backdrop-blur-xl mb-8">
           <div className="p-6 md:p-8">
             <form onSubmit={handleSearch} className="flex gap-3">
               <div className="relative flex-1">
@@ -107,7 +107,7 @@ export default function TrackOrderPage() {
                 <input
                   type="text"
                   placeholder="Enter Order ID (e.g., ORD-2024-001)"
-                  className="w-full h-12 pl-11 pr-4 bg-card border border-white/10 rounded-xl text-foreground placeholder-white/40 outline-none focus:border-[#B8860B] transition-colors"
+                  className="w-full h-12 pl-11 pr-4 bg-card border border-border rounded-xl text-foreground placeholder-white/40 outline-none focus:border-[#B8860B] transition-colors"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
                 />
@@ -124,9 +124,9 @@ export default function TrackOrderPage() {
 
         {/* Order Not Found */}
         {notFound && (
-          <div className="rounded-[24px] border border-white/5 bg-card backdrop-blur-xl">
+          <div className="rounded-[24px] border border-border bg-card backdrop-blur-xl">
             <div className="p-8 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-2xl bg-card border border-border flex items-center justify-center mx-auto mb-4">
                 <Package className="w-8 h-8 text-foreground/60" />
               </div>
               <h3 className="font-semibold text-foreground mb-2" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Order Not Found</h3>
@@ -140,10 +140,10 @@ export default function TrackOrderPage() {
         {/* Order Found */}
         {searchedOrder && (
           <div className="space-y-6">
-            <div className="rounded-[24px] border border-white/5 bg-card backdrop-blur-xl">
-              <div className="p-6 border-b border-white/5 flex items-center justify-between">
+            <div className="rounded-[24px] border border-border bg-card backdrop-blur-xl">
+              <div className="p-6 border-b border-border flex items-center justify-between">
                 <h3 className="text-lg font-bold text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Order #{searchedOrder.id}</h3>
-                <span className={cn("px-3 py-1 rounded-full text-xs font-semibold", statusColors[searchedOrder.status.toLowerCase()] || 'bg-white/10 text-foreground/70 border border-border')}>
+                <span className={cn("px-3 py-1 rounded-full text-xs font-semibold", statusColors[searchedOrder.status.toLowerCase()] || 'bg-card text-foreground/70 border border-border')}>
                   {searchedOrder.status}
                 </span>
               </div>
@@ -152,7 +152,7 @@ export default function TrackOrderPage() {
                   Placed on {new Date(searchedOrder.created_at).toLocaleDateString('en-PK')}
                 </p>
                 {(searchedOrder.tracking_number || searchedOrder.postex) && (
-                  <div className="mt-4 p-4 bg-card border border-white/5 rounded-xl">
+                  <div className="mt-4 p-4 bg-card border border-border rounded-xl">
                     <div className="flex items-center gap-3 mb-3">
                       <Truck className="w-5 h-5 text-[#B8860B]" />
                       <span className="text-sm text-foreground/60">PostEx Tracking:</span>
@@ -166,10 +166,10 @@ export default function TrackOrderPage() {
                           <div key={i} className="flex gap-3">
                             <div className="flex flex-col items-center">
                               <div className={`w-2 h-2 rounded-full mt-1.5 ${i === 0 ? 'bg-[#B8860B]' : 'bg-card'}`} />
-                              {i < postexTracking.timeline.length - 1 && <div className="w-px flex-1 bg-white/10" />}
+                              {i < postexTracking.timeline.length - 1 && <div className="w-px flex-1 bg-card" />}
                             </div>
                             <div className={`pb-4 ${i === 0 ? '' : ''}`}>
-                              <p className={`text-sm ${i === 0 ? 'text-white font-medium' : 'text-foreground/60'}`}>{event.status}</p>
+                              <p className={`text-sm ${i === 0 ? 'text-foreground font-medium' : 'text-foreground/60'}`}>{event.status}</p>
                               {event.date && <p className="text-xs text-foreground/40 mt-0.5">{new Date(event.date).toLocaleString('en-PK')}</p>}
                             </div>
                           </div>
@@ -179,7 +179,7 @@ export default function TrackOrderPage() {
 
                     {/* Current PostEx Status Badge */}
                     {postexTracking?.status && (
-                      <div className="mt-3 pt-3 border-t border-white/5 flex items-center gap-2 text-xs text-foreground/50">
+                      <div className="mt-3 pt-3 border-t border-border flex items-center gap-2 text-xs text-foreground/50">
                         <Clock className="w-3 h-3" />
                         Current: <span className="text-[#B8860B] font-medium">{postexTracking.status}</span>
                       </div>
@@ -189,15 +189,15 @@ export default function TrackOrderPage() {
               </div>
             </div>
 
-            <div className="rounded-[24px] border border-white/5 bg-card backdrop-blur-xl">
-              <div className="p-6 border-b border-white/5">
+            <div className="rounded-[24px] border border-border bg-card backdrop-blur-xl">
+              <div className="p-6 border-b border-border">
                 <h3 className="text-lg font-bold text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Order Items</h3>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
                   {(searchedOrder.items || []).map((item: any, idx: number) => (
-                    <div key={idx} className="flex items-center gap-4 bg-card/50 p-3 rounded-xl border border-white/5">
-                      <div className="relative w-16 h-16 bg-card rounded-lg border border-white/10 overflow-hidden shrink-0">
+                    <div key={idx} className="flex items-center gap-4 bg-card/50 p-3 rounded-xl border border-border">
+                      <div className="relative w-16 h-16 bg-card rounded-lg border border-border overflow-hidden shrink-0">
                         <Image
                           src={item.product_image || ''}
                           alt={item.product_name || 'Item'}
@@ -216,7 +216,7 @@ export default function TrackOrderPage() {
                 </div>
 
                 {postexTracking?.transactionFee != null && (
-                  <div className="mt-4 p-3 bg-card border border-white/5 rounded-xl">
+                  <div className="mt-4 p-3 bg-card border border-border rounded-xl">
                     <p className="text-xs text-foreground/40 uppercase tracking-wider mb-2">PostEx Charges</p>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <span className="text-foreground/60">Shipping Fee:</span>
@@ -231,7 +231,7 @@ export default function TrackOrderPage() {
                   </div>
                 )}
 
-                <div className="mt-6 pt-4 border-t border-white/10">
+                <div className="mt-6 pt-4 border-t border-border">
                   <div className="flex justify-between font-bold text-lg">
                     <span className="text-foreground">Total</span>
                     <span className="text-[#B8860B]">{formatPrice(searchedOrder.total)}</span>
@@ -241,8 +241,8 @@ export default function TrackOrderPage() {
             </div>
 
             {searchedOrder.shipping_address && (
-              <div className="rounded-[24px] border border-white/5 bg-card backdrop-blur-xl">
-                <div className="p-6 border-b border-white/5">
+              <div className="rounded-[24px] border border-border bg-card backdrop-blur-xl">
+                <div className="p-6 border-b border-border">
                   <h3 className="text-lg font-bold text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>Shipping Address</h3>
                 </div>
                 <div className="p-6">

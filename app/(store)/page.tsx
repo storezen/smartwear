@@ -98,7 +98,7 @@ function HeroBanner() {
         <div className="absolute top-0 right-0 w-[60%] h-full bg-gradient-to-bl from-[#B8860B]/10 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-gradient-to-tr from-[#B8860B]/5 via-transparent to-transparent" />
         <div className="absolute top-[10%] right-[5%] w-[500px] md:w-[700px] aspect-square rounded-full bg-[#B8860B]/6 blur-[180px]" />
-        <div className="absolute bottom-[15%] left-[10%] w-[350px] aspect-square rounded-full bg-white/[0.015] blur-[120px]" />
+        <div className="absolute bottom-[15%] left-[10%] w-[350px] aspect-square rounded-full bg-foreground/[0.015] blur-[120px]" />
         <div className="absolute top-[40%] left-[40%] w-[200px] aspect-square rounded-full bg-[#F0C75A]/3 blur-[100px]" />
         <div className="absolute inset-0 opacity-[0.012]" style={{ backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.4) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
         <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: "radial-gradient(ellipse at 80% 50%, rgba(184,134,11,0.06) 0%, transparent 70%)" }} />
@@ -155,7 +155,7 @@ function HeroBanner() {
               </p>
 
               <div className="flex items-center justify-center lg:justify-start gap-3 mb-5">
-                <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-card border border-white/5">
+                <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-card border border-border">
                   <span className="text-2xl md:text-3xl font-bold text-foreground tracking-tight" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
                     Rs. 5,500
                   </span>
@@ -283,7 +283,7 @@ function HeroBanner() {
                   </motion.div>
                 </div>
 
-                <div className="absolute -bottom-6 left-[10%] right-[10%] h-16 bg-gradient-to-t from-[#06080A] via-[#06080A]/50 to-transparent blur-md" />
+                <div className="absolute -bottom-6 left-[10%] right-[10%] h-16 bg-gradient-to-t from-background via-background/50 to-transparent blur-md" />
               </div>
             </motion.div>
           </div>
@@ -325,7 +325,7 @@ function TrustBadges() {
   const items: any[] = badges || trustBadgesFallback
 
   return (
-    <section className="py-6 sm:py-8 bg-[#0A0D11] border-y border-white/5 overflow-hidden">
+    <section className="py-6 sm:py-8 bg-background border-y border-border overflow-hidden">
       <div className="sw-container">
         <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 sm:gap-x-8 sm:gap-y-6 md:gap-x-12 lg:gap-x-16 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0 md:flex-wrap md:justify-center">
           {items.map((b: any, i: number) => {
@@ -343,7 +343,7 @@ function TrustBadges() {
                   {Icon ? <Icon className="w-4 h-4" /> : <Shield className="w-4 h-4" />}
                 </div>
                 <div>
-                  <p className="text-white text-xs font-bold">{b.label}</p>
+                  <p className="text-foreground text-xs font-bold">{b.label}</p>
                   <p className="text-foreground/40 text-[11px]">{b.desc}</p>
                 </div>
             </motion.div>
@@ -382,7 +382,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
   if (!items.length) return null
 
   const carouselNavClass =
-    "hidden md:flex h-10 w-10 border-white/10 bg-background/95 text-foreground hover:bg-[#B8860B] hover:text-[#0C0F14] hover:border-[#B8860B] disabled:opacity-30"
+    "hidden md:flex h-10 w-10 border-border bg-background/95 text-foreground hover:bg-[#B8860B] hover:text-[#0C0F14] hover:border-[#B8860B] disabled:opacity-30"
 
   return (
     <section className={`${SECTION_PAD} bg-background`}>
@@ -409,7 +409,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.06, duration: 0.5 }}
                 >
-                  <div className="rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 bg-[#080A0D] h-full">
+                  <div className="rounded-[24px] overflow-hidden border border-border hover:border-[#B8860B]/30 transition-all duration-500 bg-background h-full">
                     <Link
                       href={`/products?category=${cat.slug}`}
                       className="group block relative aspect-[4/3] overflow-hidden"
@@ -421,7 +421,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
                         sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#080A0D] via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
                       <div className="absolute bottom-3 left-3">
                         <span className="px-3 py-1 rounded-full bg-[#B8860B]/15 border border-[#B8860B]/25 text-[#B8860B] text-[9px] font-bold uppercase tracking-widest backdrop-blur-sm">
                           {cat.products.length} Items
@@ -435,7 +435,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
                           <cat.icon className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                          <h3 className="text-white text-sm font-bold" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
+                          <h3 className="text-foreground text-sm font-bold" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>
                             {cat.name}
                           </h3>
                           <p className="text-foreground/40 text-[10px] line-clamp-1">{cat.description}</p>
@@ -448,7 +448,7 @@ function ShopByCategory({ items }: { items: ShopCategoryCard[] }) {
                             <Link
                               key={p.id || p.slug}
                               href={`/products/${p.slug}`}
-                              className="group/prod relative aspect-square rounded-xl overflow-hidden bg-card border border-white/5 hover:border-[#B8860B]/20 transition-all"
+                              className="group/prod relative aspect-square rounded-xl overflow-hidden bg-card border border-border hover:border-[#B8860B]/20 transition-all"
                             >
                               {p.images?.[0] && (
                                 <Image
@@ -555,7 +555,7 @@ function ProductSection({
           >
             <button
               onClick={() => setShowAll(true)}
-              className="group px-10 py-3.5 rounded-xl border border-white/10 text-foreground/60 hover:text-foreground hover:border-border text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-card"
+              className="group px-10 py-3.5 rounded-xl border border-border text-foreground/60 hover:text-foreground hover:border-border text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-card"
             >
               Load More ({products.length - initialCount})
             </button>
@@ -577,7 +577,7 @@ const features = [
 
 function WhyChooseUs() {
   return (
-    <section className={`${SECTION_PAD} bg-[#080A0D] border-y border-white/5`}>
+    <section className={`${SECTION_PAD} bg-background border-y border-border`}>
       <div className="sw-container">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
@@ -599,12 +599,12 @@ function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="group p-6 rounded-[24px] bg-card border border-white/5 hover:border-[#B8860B]/20 hover:bg-card transition-all duration-500"
+              className="group p-6 rounded-[24px] bg-card border border-border hover:border-[#B8860B]/20 hover:bg-card transition-all duration-500"
             >
               <div className="w-14 h-14 rounded-2xl bg-[#B8860B]/10 border border-[#B8860B]/20 flex items-center justify-center text-[#B8860B] mb-5 group-hover:bg-[#B8860B] group-hover:text-black transition-all duration-300">
                 <f.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-white text-lg font-bold mb-2" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{f.title}</h3>
+              <h3 className="text-foreground text-lg font-bold mb-2" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{f.title}</h3>
               <p className="text-foreground/50 text-sm leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
@@ -654,7 +654,7 @@ function CollectionsBanner({
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12 }}
               >
-                <Link href={col.href} className="group block relative rounded-[24px] overflow-hidden border border-white/5 hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/3] md:aspect-[5/2]">
+                <Link href={col.href} className="group block relative rounded-[24px] overflow-hidden border border-border hover:border-[#B8860B]/30 transition-all duration-500 aspect-[4/3] md:aspect-[5/2]">
                   <Image src={col.image} alt={col.name} fill sizes="100vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
@@ -665,7 +665,7 @@ function CollectionsBanner({
                   </div>
 
                   <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="text-white text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{col.name}</h3>
+                    <h3 className="text-foreground text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}>{col.name}</h3>
                     <p className="text-foreground/50 text-sm mb-3">{col.desc}</p>
                     <span className="inline-flex items-center gap-2 text-[#B8860B] text-xs font-bold uppercase tracking-widest group-hover:gap-3 transition-all">
                       Explore <ArrowRight className="w-3.5 h-3.5" />
@@ -725,7 +725,7 @@ function CategoryShowcase({
   if (!rows.length) return null
 
   return (
-    <section className={`${SECTION_PAD} bg-[#080A0D] border-y border-white/5`}>
+    <section className={`${SECTION_PAD} bg-background border-y border-border`}>
       <div className="sw-container">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
@@ -751,7 +751,7 @@ function CategoryShowcase({
             <div key={cat.slug}>
               <div className="flex items-center justify-between gap-4 mb-4">
                 <h3
-                  className="text-white text-xl md:text-2xl font-bold"
+                  className="text-foreground text-xl md:text-2xl font-bold"
                   style={{ fontFamily: "var(--font-heading), 'Poppins', system-ui, sans-serif" }}
                 >
                   {cat.name}
@@ -837,7 +837,7 @@ function CustomerTestimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="group p-6 rounded-[24px] bg-card border border-white/5 hover:border-[#B8860B]/20 transition-all duration-500 flex flex-col snap-start shrink-0 w-[280px] sm:w-[320px] md:w-auto"
+              className="group p-6 rounded-[24px] bg-card border border-border hover:border-[#B8860B]/20 transition-all duration-500 flex flex-col snap-start shrink-0 w-[280px] sm:w-[320px] md:w-auto"
             >
               <Quote className="w-8 h-8 text-[#B8860B]/30 mb-4 shrink-0" />
 
@@ -849,12 +849,12 @@ function CustomerTestimonials() {
 
               <p className="text-foreground/70 text-sm leading-relaxed flex-1 mb-6">&ldquo;{t.text}&rdquo;</p>
 
-              <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+              <div className="flex items-center gap-3 pt-4 border-t border-border">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center text-black text-xs font-bold shrink-0">
                   {t.avatar}
                 </div>
                 <div>
-                  <p className="text-white text-sm font-semibold">{t.name}</p>
+                  <p className="text-foreground text-sm font-semibold">{t.name}</p>
                   <p className="text-foreground/40 text-xs">{t.city}, Pakistan</p>
                 </div>
               </div>
@@ -887,7 +887,7 @@ function NewsletterSignup() {
   }
 
   return (
-    <section className={`${SECTION_PAD} bg-[#080A0D] border-t border-white/5 relative overflow-hidden`}>
+    <section className={`${SECTION_PAD} bg-background border-t border-border relative overflow-hidden`}>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#B8860B]/[0.04] blur-[100px] pointer-events-none" />
 
       <div className="sw-container relative z-10">
@@ -915,7 +915,7 @@ function NewsletterSignup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email address"
-              className="flex-1 px-5 py-3.5 sm:py-4 rounded-xl bg-white/5 border border-white/10 text-foreground text-sm placeholder-white/30 focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-all min-h-[44px]"
+              className="flex-1 px-5 py-3.5 sm:py-4 rounded-xl bg-card border border-border text-foreground text-sm placeholder-foreground/30 focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-all min-h-[44px]"
             />
             <button
               type="submit"

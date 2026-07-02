@@ -284,7 +284,7 @@ export default function AdminProductsPage() {
           </button>
           <button 
             onClick={() => setShowImporter(true)}
-            className="bg-white/5 hover:bg-white/10 text-foreground border border-white/10 px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 transition-colors"
+            className="bg-card hover:bg-card text-foreground border border-border px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 transition-colors"
           >
             <FileSpreadsheet className="w-3.5 h-3.5" /> Import CSV
           </button>
@@ -298,7 +298,7 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Filters and Tabs */}
-      <div className="flex flex-col md:flex-row justify-between gap-3 border-b border-white/10 pb-3">
+      <div className="flex flex-col md:flex-row justify-between gap-3 border-b border-border pb-3">
         {/* Category Tabs */}
         <div className="flex gap-1.5 overflow-x-auto hide-scrollbar">
           {CATEGORIES.map(cat => (
@@ -308,7 +308,7 @@ export default function AdminProductsPage() {
               className={`px-3 py-1.5 rounded-full text-[10px] font-medium whitespace-nowrap transition-colors ${
                 filterCategory === cat 
                   ? 'bg-[#B8860B]/20 text-[#B8860B] border border-[#B8860B]/30' 
-                  : 'bg-white/5 text-foreground/60 hover:bg-white/10 border border-transparent'
+                  : 'bg-card text-foreground/60 hover:bg-card border border-transparent'
               }`}
             >
               {cat === 'All' ? 'All Categories' : cat.replace('-', ' ').toUpperCase()}
@@ -325,13 +325,13 @@ export default function AdminProductsPage() {
               placeholder="Search products..." 
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="bg-white/5 border border-white/10 text-foreground rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-[#B8860B] transition-colors w-[200px]"
+              className="bg-card border border-border text-foreground rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-[#B8860B] transition-colors w-[200px]"
             />
           </div>
           <select 
             value={filterStatus}
             onChange={e => setFilterStatus(e.target.value)}
-            className="bg-white/5 border border-white/10 text-foreground rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-[#B8860B]"
+            className="bg-card border border-border text-foreground rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-[#B8860B]"
           >
             <option value="All">All Status</option>
             {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -352,7 +352,7 @@ export default function AdminProductsPage() {
               <button 
                 key={status}
                 onClick={() => handleBulkStatusUpdate(status)}
-                className="bg-white/10 hover:bg-card text-foreground text-xs px-3 py-1.5 rounded-lg transition-colors"
+                className="bg-card hover:bg-card text-foreground text-xs px-3 py-1.5 rounded-lg transition-colors"
               >
                 {status}
               </button>
@@ -372,17 +372,17 @@ export default function AdminProductsPage() {
       {loading ? (
         <div className="text-center py-12 text-foreground/50">Loading products...</div>
       ) : filteredProducts.length === 0 ? (
-        <div className="bg-card border border-white/5 rounded-2xl p-8 text-center mt-6">
+        <div className="bg-card border border-border rounded-2xl p-8 text-center mt-6">
           <PackageIcon className="w-12 h-12 text-foreground/20 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">No Products Found</h3>
           <p className="text-foreground/50 text-sm max-w-md mx-auto">Adjust filters or add a new product.</p>
         </div>
       ) : (
-        <div className="bg-card border border-white/5 rounded-2xl overflow-hidden">
+        <div className="bg-card border border-border rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-foreground/40 bg-white/5">
+                <tr className="border-b border-border text-xs uppercase tracking-wider text-foreground/40 bg-card">
                   <th className="p-4 w-12 text-center">
                     <button onClick={() => {
                       if (selectedProducts.length === filteredProducts.length) setSelectedProducts([])
@@ -404,7 +404,7 @@ export default function AdminProductsPage() {
                   <tr 
                     key={product.id} 
                     onClick={() => toggleProductSelection({ stopPropagation: () => {} } as any, product.id)}
-                    className={`border-b border-white/5 transition-colors cursor-pointer ${
+                    className={`border-b border-border transition-colors cursor-pointer ${
                       selectedProducts.includes(product.id) ? 'bg-[#B8860B]/10' : 'hover:bg-card'
                     }`}
                   >
@@ -417,7 +417,7 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="relative w-10 h-10 rounded bg-card border border-white/5 overflow-hidden shrink-0">
+                        <div className="relative w-10 h-10 rounded bg-card border border-border overflow-hidden shrink-0">
                           <Image src={product.images[0]} alt={product.name} fill sizes="40px" className="object-cover" />
                         </div>
                         <div>
@@ -427,7 +427,7 @@ export default function AdminProductsPage() {
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="bg-white/5 text-foreground/60 text-xs px-2.5 py-1 rounded-md border border-white/10 uppercase tracking-wider">
+                      <span className="bg-card text-foreground/60 text-xs px-2.5 py-1 rounded-md border border-border uppercase tracking-wider">
                         {product.category_slug}
                       </span>
                     </td>
@@ -449,7 +449,7 @@ export default function AdminProductsPage() {
                     <td className="p-4 text-center">
                       <span className={`inline-flex px-2 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase border ${
                         product.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                        product.status === 'Draft' ? 'bg-white/10 text-foreground/60 border-border' :
+                        product.status === 'Draft' ? 'bg-card text-foreground/60 border-border' :
                         'bg-rose-500/10 text-rose-400 border-rose-500/20'
                       }`}>
                         {product.status || 'Draft'}
@@ -459,13 +459,13 @@ export default function AdminProductsPage() {
                       <div className="flex justify-end gap-2">
                         <button 
                           onClick={(e) => { e.stopPropagation(); openEdit(product); }} 
-                          className="w-8 h-8 rounded hover:bg-white/10 text-foreground/60 hover:text-foreground flex items-center justify-center transition-colors"
+                          className="w-8 h-8 rounded hover:bg-card text-foreground/60 hover:text-foreground flex items-center justify-center transition-colors"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); window.open(`/products/${product.slug}`, '_blank'); }} 
-                          className="w-8 h-8 rounded hover:bg-white/10 text-foreground/60 hover:text-foreground flex items-center justify-center transition-colors"
+                          className="w-8 h-8 rounded hover:bg-card text-foreground/60 hover:text-foreground flex items-center justify-center transition-colors"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
@@ -487,18 +487,18 @@ export default function AdminProductsPage() {
 
       {/* Quick Edit Sheet */}
       <Sheet open={showAddModal} onOpenChange={setShowAddModal}>
-        <SheetContent className="bg-background border-l border-white/10 w-full sm:max-w-2xl overflow-y-auto p-0">
+        <SheetContent className="bg-background border-l border-border w-full sm:max-w-2xl overflow-y-auto p-0">
           {/* Animated top gradient border */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#B8860B] to-transparent opacity-50" />
 
-          <div className="p-6 md:p-8 border-b border-white/5 sticky top-0 bg-background/90 backdrop-blur-xl z-10 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+          <div className="p-6 md:p-8 border-b border-border sticky top-0 bg-background/90 backdrop-blur-xl z-10 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
               <SheetTitle className="text-2xl font-bold text-foreground font-heading">{editingId ? 'Edit Product' : 'New Product'}</SheetTitle>
               <p className="text-sm text-foreground/50 mt-1">{editingId ? 'Update details and pricing.' : 'Add a new masterpiece.'}</p>
             </div>
             
             <div className="flex items-center gap-3">
-              <SheetClose className="px-5 py-2.5 rounded-xl font-medium text-foreground/60 hover:text-foreground hover:bg-white/5 transition-all duration-300 text-sm">
+              <SheetClose className="px-5 py-2.5 rounded-xl font-medium text-foreground/60 hover:text-foreground hover:bg-card transition-all duration-300 text-sm">
                 Cancel
               </SheetClose>
               <button onClick={handleSaveProduct} className="bg-gradient-to-r from-[#B8860B] to-[#D4A017] hover:to-[#E5B83B] text-black px-6 py-2.5 rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(184,134,11,0.2)] hover:shadow-[0_0_30px_rgba(184,134,11,0.4)] text-sm">
@@ -518,7 +518,7 @@ export default function AdminProductsPage() {
                 <div className="flex gap-2">
                   <input type="text" value={importUrl} onChange={e => setImportUrl(e.target.value)}
                     placeholder="https://example.com/product/123"
-                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder-white/20 focus:outline-none focus:border-[#B8860B] transition-all"
+                    className="flex-1 bg-card border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder-white/20 focus:outline-none focus:border-[#B8860B] transition-all"
                     onKeyDown={e => e.key === 'Enter' && handleImportUrl()}
                   />
                   <button onClick={handleImportUrl} disabled={importingUrl}
@@ -535,12 +535,12 @@ export default function AdminProductsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Product Name</label>
-                  <input type="text" placeholder="e.g. Apple Watch Ultra" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner" />
+                  <input type="text" placeholder="e.g. Apple Watch Ultra" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-card border border-border rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] focus:bg-card transition-all shadow-inner" />
                 </div>
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Category</label>
                   <div className="relative">
-                    <select value={formData.category_slug} onChange={e => setFormData({...formData, category_slug: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all appearance-none shadow-inner">
+                    <select value={formData.category_slug} onChange={e => setFormData({...formData, category_slug: e.target.value})} className="w-full bg-card border border-border rounded-xl p-3 text-foreground focus:outline-none focus:border-[#B8860B] focus:bg-card transition-all appearance-none shadow-inner">
                       {CATEGORIES.filter(c => c !== 'All').map(c => (
                         <option key={c} value={c} className="bg-background">{c.replace('-', ' ').toUpperCase()}</option>
                       ))}
@@ -554,7 +554,7 @@ export default function AdminProductsPage() {
                 <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest flex items-center gap-2">
                   <Tag className="w-3.5 h-3.5" /> Colors (Comma separated)
                 </label>
-                <input type="text" placeholder="e.g. Space Black, Silver, Gold" value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner" />
+                <input type="text" placeholder="e.g. Space Black, Silver, Gold" value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} className="w-full bg-card border border-border rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] focus:bg-card transition-all shadow-inner" />
               </div>
             </div>
 
@@ -566,28 +566,28 @@ export default function AdminProductsPage() {
                 onChange={e => setFormData({...formData, description: e.target.value})}
                 placeholder="Product description (HTML supported — tables, lists, images)"
                 rows={6}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all shadow-inner font-mono text-sm resize-y min-h-[120px]"
+                className="w-full bg-card border border-border rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] focus:bg-card transition-all shadow-inner font-mono text-sm resize-y min-h-[120px]"
               />
             </div>
 
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-foreground flex items-center gap-2"><DollarSign className="w-4 h-4 text-[#B8860B]" /> Pricing & Inventory</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 bg-black/20 p-6 rounded-2xl border border-white/5">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 bg-black/20 p-6 rounded-2xl border border-border">
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-[#D4A017] uppercase tracking-widest">Selling Price (PKR)</label>
-                  <input type="number" placeholder="185000" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono shadow-inner" />
+                  <input type="number" placeholder="185000" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full bg-card border border-border rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono shadow-inner" />
                 </div>
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Cost Price (PKR)</label>
-                  <input type="number" placeholder="100000" value={formData.cost_price} onChange={e => setFormData({...formData, cost_price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-emerald-500 transition-all font-mono shadow-inner" />
+                  <input type="number" placeholder="100000" value={formData.cost_price} onChange={e => setFormData({...formData, cost_price: e.target.value})} className="w-full bg-card border border-border rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-emerald-500 transition-all font-mono shadow-inner" />
                 </div>
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Compare Price</label>
-                  <input type="number" placeholder="200000" value={formData.compare_price} onChange={e => setFormData({...formData, compare_price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground/60 placeholder:text-foreground/20 focus:outline-none focus:border-border transition-all font-mono shadow-inner line-through" />
+                  <input type="number" placeholder="200000" value={formData.compare_price} onChange={e => setFormData({...formData, compare_price: e.target.value})} className="w-full bg-card border border-border rounded-xl p-3 text-foreground/60 placeholder:text-foreground/20 focus:outline-none focus:border-border transition-all font-mono shadow-inner line-through" />
                 </div>
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Stock</label>
-                  <input type="number" placeholder="10" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono shadow-inner" />
+                  <input type="number" placeholder="10" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} className="w-full bg-card border border-border rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono shadow-inner" />
                 </div>
               </div>
             </div>
@@ -599,7 +599,7 @@ export default function AdminProductsPage() {
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Visibility Status</label>
                   <div className="relative">
-                    <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-foreground focus:outline-none focus:border-[#B8860B] focus:bg-white/10 transition-all appearance-none shadow-inner font-semibold">
+                    <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-card border border-border rounded-xl p-3 text-foreground focus:outline-none focus:border-[#B8860B] focus:bg-card transition-all appearance-none shadow-inner font-semibold">
                       {STATUSES.map(s => <option key={s} value={s} className="bg-background">{s}</option>)}
                     </select>
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-foreground/40">▼</div>
@@ -609,14 +609,14 @@ export default function AdminProductsPage() {
                 <div className="space-y-2 group">
                   <label className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">Primary Image URL</label>
                   <div className="flex gap-4 items-center">
-                    <div className="relative w-12 h-12 rounded-lg bg-background/40 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
+                    <div className="relative w-12 h-12 rounded-lg bg-background/40 border border-border overflow-hidden shrink-0 flex items-center justify-center">
                       {formData.images[0] ? (
                         <Image src={formData.images[0]} alt="Preview" fill sizes="48px" className="object-cover" />
                       ) : (
                         <ImageIcon className="w-4 h-4 text-foreground/20" />
                       )}
                     </div>
-                    <input type="text" placeholder="https://..." value={formData.images[0] || ''} onChange={e => setFormData({...formData, images: [e.target.value]})} className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono text-sm" />
+                    <input type="text" placeholder="https://..." value={formData.images[0] || ''} onChange={e => setFormData({...formData, images: [e.target.value]})} className="flex-1 bg-card border border-border rounded-xl p-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-[#B8860B] transition-all font-mono text-sm" />
                   </div>
                 </div>
               </div>

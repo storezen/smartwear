@@ -75,9 +75,9 @@ function FilterPanel({
           className="mb-3"
         />
         <div className="flex items-center justify-between text-sm font-semibold text-foreground">
-          <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-lg text-xs">{formatPrice(priceRange[0])}</span>
+          <span className="bg-card border border-border px-3 py-1 rounded-lg text-xs">{formatPrice(priceRange[0])}</span>
           <span className="text-foreground/& text-xs">—</span>
-          <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-lg text-xs">{formatPrice(priceRange[1])}</span>
+          <span className="bg-card border border-border px-3 py-1 rounded-lg text-xs">{formatPrice(priceRange[1])}</span>
         </div>
       </div>
 
@@ -205,13 +205,13 @@ function ProductsContent() {
       </div>
 
       {/* Toolbar */}
-      <div className="relative z-30 bg-background border-b border-white/5 py-2">
+      <div className="relative z-30 bg-background border-b border-border py-2">
         <div className="sw-container">
           <div className="flex items-center gap-3 min-h-[52px]">
             {/* Mobile filter */}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="flex items-center lg:hidden h-11 px-3 rounded-xl gap-1.5 text-xs font-medium border border-white/10 bg-white/5 text-foreground">
+                <button className="flex items-center lg:hidden h-11 px-3 rounded-xl gap-1.5 text-xs font-medium border border-border bg-card text-foreground">
                   <SlidersHorizontal className="w-3.5 h-3.5" />
                   Filter
                   {selected.length > 0 && (
@@ -221,8 +221,8 @@ function ProductsContent() {
                   )}
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-72 p-0 bg-card border-r border-white/5 text-foreground">
-                <SheetHeader className="p-5 border-b border-white/5">
+              <SheetContent side="left" className="w-72 p-0 bg-card border-r border-border text-foreground">
+                <SheetHeader className="p-5 border-b border-border">
                   <SheetTitle className="text-base text-foreground">Filter Products</SheetTitle>
                 </SheetHeader>
                 <div className="p-5 overflow-y-auto" style={{ height: "calc(100% - 72px)" }}>
@@ -304,7 +304,7 @@ function ProductsContent() {
             <select
               value={sort}
               onChange={e => setSort(e.target.value)}
-              className="sm:hidden h-11 px-3 rounded-xl text-xs outline-none border border-white/10 bg-card text-foreground"
+              className="sm:hidden h-11 px-3 rounded-xl text-xs outline-none border border-border bg-card text-foreground"
             >
               {sortOpts.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
@@ -317,7 +317,7 @@ function ProductsContent() {
         <div className="flex gap-8">
           {/* Sidebar */}
           <aside className="hidden lg:block shrink-0" style={{ width: 260 }}>
-            <div className="sticky top-[calc(60px+52px+24px)] rounded-[24px] border border-white/5 p-6 bg-card backdrop-blur-xl">
+            <div className="sticky top-[calc(60px+52px+24px)] rounded-[24px] border border-border p-6 bg-card backdrop-blur-xl">
               <h2 className="sw-label text-[10px] text-[#B8860B] mb-5">Filter By</h2>
               <FilterPanel {...filterProps} />
             </div>
@@ -340,7 +340,7 @@ function ProductsContent() {
                     <div className="flex justify-center mt-6">
                       <button
                         onClick={() => setMobilePage(p => p + 1)}
-                        className="px-10 py-3.5 rounded-xl border border-white/10 text-foreground/60 hover:text-foreground hover:border-border text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-card"
+                        className="px-10 py-3.5 rounded-xl border border-border text-foreground/60 hover:text-foreground hover:border-border text-sm font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-card"
                       >
                         Load More ({products.length - (mobilePage * MOBILE_INCREMENT + (MOBILE_INITIAL - MOBILE_INCREMENT))})
                       </button>
@@ -359,7 +359,7 @@ function ProductsContent() {
                     <button
                       onClick={() => setPage(p => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-foreground/60 hover:bg-white/5 hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                      className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-foreground/60 hover:bg-card hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent transition-all"
                     >
                       <ChevronRight className="w-4 h-4 rotate-180" />
                     </button>
@@ -378,7 +378,7 @@ function ProductsContent() {
                               className={`w-10 h-10 rounded-xl text-sm font-medium transition-all shrink-0 ${
                                 page === p 
                                   ? 'bg-[#B8860B] text-black border-transparent' 
-                                  : 'border border-white/10 text-foreground/60 hover:bg-white/5 hover:text-foreground'
+                                  : 'border border-border text-foreground/60 hover:bg-card hover:text-foreground'
                               }`}
                             >
                               {p}
@@ -390,7 +390,7 @@ function ProductsContent() {
                     <button
                       onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
-                      className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-foreground/60 hover:bg-white/5 hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                      className="w-10 h-10 rounded-xl border border-border flex items-center justify-center text-foreground/60 hover:bg-card hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent transition-all"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </button>
@@ -399,7 +399,7 @@ function ProductsContent() {
               </>
             ) : (
               <div className="text-center py-16 md:py-24">
-                <div className="w-14 h-14 rounded-2xl border border-white/10 bg-white/5 flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 rounded-2xl border border-border bg-card flex items-center justify-center mx-auto mb-4">
                   <Search className="w-6 h-6 text-foreground/60" />
                 </div>
                 <h3 className="text-base font-semibold text-foreground mb-1.5">No watches found</h3>

@@ -101,7 +101,7 @@ export default function MarketingPage() {
         </button>
       </div>
 
-      <div className="flex gap-3 border-b border-white/10 overflow-x-auto pb-2">
+      <div className="flex gap-3 border-b border-border overflow-x-auto pb-2">
         {[
           { id: 'banners', label: 'Store Banners', icon: ImageIcon },
           { id: 'promos', label: 'Promo Codes', icon: Tag },
@@ -112,8 +112,8 @@ export default function MarketingPage() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors whitespace-nowrap ${
               activeTab === tab.id 
-              ? 'bg-white/10 text-foreground' 
-              : 'text-foreground/50 hover:text-foreground hover:bg-white/5'
+              ? 'bg-card text-foreground' 
+              : 'text-foreground/50 hover:text-foreground hover:bg-card'
             }`}
           >
             <tab.icon className="w-3.5 h-3.5" />
@@ -134,7 +134,7 @@ export default function MarketingPage() {
             </div>
             <h3 className="text-xl font-bold text-foreground mb-2">Eid Mega Sale Hero</h3>
             <p className="text-sm text-foreground/60 mb-4">Replaces the main homepage banner with the Eid promotional graphics and 20% off CTA.</p>
-            <div className="aspect-video rounded-lg bg-background border border-white/10 flex items-center justify-center overflow-hidden relative">
+            <div className="aspect-video rounded-lg bg-background border border-border flex items-center justify-center overflow-hidden relative">
                <div className="absolute inset-0 bg-gradient-to-tr from-[#B8860B]/20 to-transparent" />
                <span className="text-foreground/40 font-heading text-lg">Eid Hero Preview</span>
             </div>
@@ -142,14 +142,14 @@ export default function MarketingPage() {
 
           <SpotlightCard className="p-6">
             <div className="flex justify-between items-start mb-4">
-              <span className="bg-white/10 text-foreground/60 text-xs px-2 py-1 rounded font-medium flex items-center gap-1">
+              <span className="bg-card text-foreground/60 text-xs px-2 py-1 rounded font-medium flex items-center gap-1">
                 <Clock className="w-3 h-3" /> Scheduled
               </span>
               <button onClick={() => handleSave('Top Bar Announcement')} className="text-foreground/40 hover:text-foreground text-sm">Save</button>
             </div>
             <h3 className="text-xl font-bold text-foreground mb-2">Top Bar Announcement</h3>
             <p className="text-sm text-foreground/60 mb-4">"Free Shipping all over Pakistan this weekend!"</p>
-            <div className="w-full py-3 rounded-lg bg-background border border-white/10 flex items-center justify-center relative overflow-hidden">
+            <div className="w-full py-3 rounded-lg bg-background border border-border flex items-center justify-center relative overflow-hidden">
                <span className="text-foreground/& text-xs">Free Shipping all over Pakistan...</span>
             </div>
           </SpotlightCard>
@@ -158,13 +158,13 @@ export default function MarketingPage() {
 
       {/* Promos Section */}
       {activeTab === 'promos' && (
-        <div className="bg-card border border-white/5 rounded-2xl overflow-hidden">
+        <div className="bg-card border border-border rounded-2xl overflow-hidden">
           {loading ? (
             <div className="p-8 text-center text-foreground/50">Loading promos...</div>
           ) : (
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/10 text-sm text-foreground/50">
+                <tr className="border-b border-border text-sm text-foreground/50">
                   <th className="p-4 font-medium">Code</th>
                   <th className="p-4 font-medium">Discount</th>
                   <th className="p-4 font-medium">Usage</th>
@@ -179,7 +179,7 @@ export default function MarketingPage() {
                   </tr>
                 ) : (
                   promos.map(promo => (
-                    <tr key={promo.id} className="border-b border-white/5 hover:bg-card">
+                    <tr key={promo.id} className="border-b border-border hover:bg-card">
                       <td className="p-4 font-bold text-foreground">{promo.code}</td>
                       <td className="p-4 text-[#D4A017] font-medium">
                         {promo.discount_type === 'percentage' && `${promo.discount_value}% OFF`}
@@ -192,7 +192,7 @@ export default function MarketingPage() {
                           {promo.is_active ? (
                             <span className="text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded text-xs">Active</span>
                           ) : (
-                            <span className="text-foreground/40 bg-white/10 px-2 py-1 rounded text-xs">Expired</span>
+                            <span className="text-foreground/40 bg-card px-2 py-1 rounded text-xs">Expired</span>
                           )}
                         </button>
                       </td>
@@ -212,7 +212,7 @@ export default function MarketingPage() {
 
       {/* Upsells Section */}
       {activeTab === 'upsells' && (
-        <div className="p-8 text-center text-foreground/50 bg-card border border-white/5 rounded-2xl">
+        <div className="p-8 text-center text-foreground/50 bg-card border border-border rounded-2xl">
           Upsell features coming soon.
         </div>
       )}
@@ -230,7 +230,7 @@ export default function MarketingPage() {
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
-              className="bg-background border border-white/10 p-6 rounded-2xl w-full max-w-md"
+              className="bg-background border border-border p-6 rounded-2xl w-full max-w-md"
             >
               <h2 className="text-xl font-bold text-foreground mb-4">Create Campaign (Promo)</h2>
               <form onSubmit={handleCreatePromo} className="space-y-4">
@@ -240,7 +240,7 @@ export default function MarketingPage() {
                     required
                     value={newPromo.code}
                     onChange={e => setNewPromo({...newPromo, code: e.target.value.toUpperCase()})}
-                    className="w-full bg-card border border-white/10 rounded-lg p-2.5 text-foreground"
+                    className="w-full bg-card border border-border rounded-lg p-2.5 text-foreground"
                     placeholder="e.g. SUMMER20"
                   />
                 </div>
@@ -250,7 +250,7 @@ export default function MarketingPage() {
                     <select
                       value={newPromo.discount_type}
                       onChange={e => setNewPromo({...newPromo, discount_type: e.target.value})}
-                      className="w-full bg-card border border-white/10 rounded-lg p-2.5 text-foreground"
+                      className="w-full bg-card border border-border rounded-lg p-2.5 text-foreground"
                     >
                       <option value="percentage">Percentage Off</option>
                       <option value="fixed">Fixed Amount Off</option>
@@ -265,7 +265,7 @@ export default function MarketingPage() {
                         type="number"
                         value={newPromo.discount_value}
                         onChange={e => setNewPromo({...newPromo, discount_value: e.target.value})}
-                        className="w-full bg-card border border-white/10 rounded-lg p-2.5 text-foreground"
+                        className="w-full bg-card border border-border rounded-lg p-2.5 text-foreground"
                         placeholder={newPromo.discount_type === 'percentage' ? '10' : '500'}
                       />
                     </div>
@@ -278,7 +278,7 @@ export default function MarketingPage() {
                       type="number"
                       value={newPromo.min_order_value}
                       onChange={e => setNewPromo({...newPromo, min_order_value: e.target.value})}
-                      className="w-full bg-card border border-white/10 rounded-lg p-2.5 text-foreground"
+                      className="w-full bg-card border border-border rounded-lg p-2.5 text-foreground"
                       placeholder="e.g. 5000 (Optional)"
                     />
                   </div>
@@ -288,7 +288,7 @@ export default function MarketingPage() {
                       type="number"
                       value={newPromo.max_uses}
                       onChange={e => setNewPromo({...newPromo, max_uses: e.target.value})}
-                      className="w-full bg-card border border-white/10 rounded-lg p-2.5 text-foreground"
+                      className="w-full bg-card border border-border rounded-lg p-2.5 text-foreground"
                       placeholder="Unlimited (Optional)"
                     />
                   </div>
@@ -298,7 +298,7 @@ export default function MarketingPage() {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-foreground font-medium"
+                    className="flex-1 px-4 py-2 bg-card hover:bg-card rounded-xl text-foreground font-medium"
                   >
                     Cancel
                   </button>

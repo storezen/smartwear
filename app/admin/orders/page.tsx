@@ -29,7 +29,7 @@ const STATUS_STYLES: Record<string, string> = {
   'Out For Return': 'bg-orange-500/10 text-orange-400 border-orange-500/20',
   Returned: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
   'Delivery Under Review': 'bg-pink-500/10 text-pink-400 border-pink-500/20',
-  'Un-Assigned By Me': 'bg-white/10 text-foreground/40 border-white/10',
+  'Un-Assigned By Me': 'bg-card text-foreground/40 border-border',
   Lost: 'bg-red-500/10 text-red-400 border-red-500/20',
   Stolen: 'bg-red-500/10 text-red-400 border-red-500/20',
   Damage: 'bg-red-500/10 text-red-400 border-red-500/20',
@@ -37,7 +37,7 @@ const STATUS_STYLES: Record<string, string> = {
 }
 
 function statusStyle(status: string): string {
-  return STATUS_STYLES[status] || 'bg-white/10 text-foreground/60 border-border'
+  return STATUS_STYLES[status] || 'bg-card text-foreground/60 border-border'
 }
 
 export default function AdminOrdersPage() {
@@ -272,18 +272,18 @@ export default function AdminOrdersPage() {
             <input 
               type="text" 
               placeholder="Search ORD-..." 
-              className="bg-white/5 border border-white/10 text-foreground rounded-lg pl-8 pr-3 py-1.5 text-[12px] focus:outline-none focus:border-[#B8860B] transition-colors"
+              className="bg-card border border-border text-foreground rounded-lg pl-8 pr-3 py-1.5 text-[12px] focus:outline-none focus:border-[#B8860B] transition-colors"
             />
           </div>
           <button 
             onClick={() => window.open('/api/admin/export', '_blank')}
-            className="flex items-center gap-1.5 bg-white/5 border border-white/10 text-foreground px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors text-[11px] font-medium"
+            className="flex items-center gap-1.5 bg-card border border-border text-foreground px-3 py-1.5 rounded-lg hover:bg-card transition-colors text-[11px] font-medium"
           >
             Export CSV
           </button>
           <button 
             onClick={handleSelectAll}
-            className="flex items-center gap-1.5 bg-white/5 border border-white/10 text-foreground px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors text-[11px] font-medium"
+            className="flex items-center gap-1.5 bg-card border border-border text-foreground px-3 py-1.5 rounded-lg hover:bg-card transition-colors text-[11px] font-medium"
           >
             Select All
           </button>
@@ -291,7 +291,7 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1.5 border-b border-white/10 pb-3 overflow-x-auto">
+      <div className="flex gap-1.5 border-b border-border pb-3 overflow-x-auto">
         {['All', ...ALL_STATUSES].map(tab => {
           const count = (orders || []).filter(o => o.status === tab).length
           return (
@@ -301,11 +301,11 @@ export default function AdminOrdersPage() {
               className={`px-3 py-1.5 rounded-full text-[10px] font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
                 activeTab === tab 
                 ? 'bg-[#B8860B] text-foreground shadow-[0_0_12px_rgba(184,134,11,0.3)]' 
-                : 'bg-white/5 text-foreground/60 hover:bg-white/10 hover:text-foreground'
+                : 'bg-card text-foreground/60 hover:bg-card hover:text-foreground'
               }`}
             >
               {tab}
-              {count > 0 && <span className={`px-1 py-0.5 rounded-full text-[9px] ${activeTab === tab ? 'bg-card' : 'bg-white/10'}`}>{count}</span>}
+              {count > 0 && <span className={`px-1 py-0.5 rounded-full text-[9px] ${activeTab === tab ? 'bg-card' : 'bg-card'}`}>{count}</span>}
             </button>
           )
         })}
@@ -324,7 +324,7 @@ export default function AdminOrdersPage() {
               <button 
                 key={status}
                 onClick={() => handleBulkStatusUpdate(status)}
-                className="bg-white/10 hover:bg-card text-foreground text-[10px] px-2 py-1 rounded-lg transition-colors"
+                className="bg-card hover:bg-card text-foreground text-[10px] px-2 py-1 rounded-lg transition-colors"
               >
                 {status}
               </button>
@@ -360,7 +360,7 @@ export default function AdminOrdersPage() {
                   <div className={`w-3.5 h-3.5 rounded border transition-colors flex items-center justify-center ${
                     selectedOrders.includes(order.id) 
                       ? 'bg-white text-black border-border' 
-                      : 'border-border bg-white/5 hover:border-border0'
+                      : 'border-border bg-card hover:border-border0'
                   }`}>
                     {selectedOrders.includes(order.id) && <CheckCircle2 className="w-2.5 h-2.5 text-black" />}
                   </div>
@@ -376,7 +376,7 @@ export default function AdminOrdersPage() {
               {/* Middle Section: Customer & Location */}
               <div className="flex-1 min-w-[200px]">
                 <p className="text-sm text-foreground/& font-medium truncate flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-foreground/70 font-bold uppercase">
+                  <div className="w-5 h-5 rounded-full bg-card flex items-center justify-center text-[10px] text-foreground/70 font-bold uppercase">
                     {order.customer_name?.charAt(0) || '?'}
                   </div>
                   {order.customer_name}
@@ -415,9 +415,9 @@ export default function AdminOrdersPage() {
       {/* Order Detail Modal */}
       {sheetOpen && selectedOrder && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background/80 backdrop-blur-sm" onClick={() => setSheetOpen(false)}>
-          <div className="bg-background border border-white/10 rounded-2xl w-full max-w-5xl mx-4 max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-background border border-border rounded-2xl w-full max-w-5xl mx-4 max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
             {/* Header */}
-            <div className="sticky top-0 z-20 bg-background border-b border-white/10 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+            <div className="sticky top-0 z-20 bg-background border-b border-border px-6 py-4 flex items-center justify-between rounded-t-2xl">
               <div className="flex items-center gap-3">
                 <div>
                   <h2 className="text-xl font-bold text-foreground flex items-center gap-3">
@@ -430,7 +430,7 @@ export default function AdminOrdersPage() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={() => setSheetOpen(false)} className="text-foreground/40 hover:text-foreground/70 bg-white/5 p-2 rounded-lg transition-colors">
+                <button onClick={() => setSheetOpen(false)} className="text-foreground/40 hover:text-foreground/70 bg-card p-2 rounded-lg transition-colors">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -443,15 +443,15 @@ export default function AdminOrdersPage() {
                 <div className="lg:col-span-2 space-y-6">
 
                   {/* Items */}
-                  <div className="bg-card border border-white/5 rounded-xl overflow-hidden">
-                    <div className="p-4 border-b border-white/5 bg-card flex items-center gap-2">
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-border bg-card flex items-center gap-2">
                       <Package className="w-4 h-4 text-foreground/50" />
                       <h3 className="font-semibold text-foreground/&">Order Items</h3>
                     </div>
                     <div className="divide-y divide-white/5">
                       {selectedOrder.items?.map((item: any, i: number) => (
                         <div key={i} className="p-4 flex items-center gap-4">
-                          <div className="w-14 h-14 bg-muted rounded-lg border border-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center relative">
+                          <div className="w-14 h-14 bg-muted rounded-lg border border-border overflow-hidden flex-shrink-0 flex items-center justify-center relative">
                             {item.image ? <Image src={item.image} alt="" fill sizes="56px" className="object-cover"/> : <Package className="w-5 h-5 text-foreground/20" />}
                             <span className="absolute -top-2 -right-2 bg-[#B8860B] text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">{item.quantity}</span>
                           </div>
@@ -468,7 +468,7 @@ export default function AdminOrdersPage() {
                     </div>
 
                     {/* Payment Summary */}
-                    <div className="p-4 border-t border-white/5 bg-card space-y-2">
+                    <div className="p-4 border-t border-border bg-card space-y-2">
                       <div className="flex justify-between text-sm text-foreground/60">
                         <span>Subtotal</span>
                         <span>₨ {selectedOrder.subtotal?.toLocaleString() || selectedOrder.total.toLocaleString()}</span>
@@ -483,7 +483,7 @@ export default function AdminOrdersPage() {
                           <span>- ₨ {selectedOrder.discount.toLocaleString()}</span>
                         </div>
                       )}
-                      <div className="flex justify-between text-base font-medium text-foreground pt-2 border-t border-white/5 mt-2">
+                      <div className="flex justify-between text-base font-medium text-foreground pt-2 border-t border-border mt-2">
                         <span>Total</span>
                         <span>₨ {selectedOrder.total.toLocaleString()}</span>
                       </div>
@@ -495,28 +495,28 @@ export default function AdminOrdersPage() {
                   </div>
 
                   {/* Customer & Address */}
-                  <div className="bg-card border border-white/5 rounded-xl overflow-hidden">
-                    <div className="p-4 border-b border-white/5 bg-card flex items-center gap-2">
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-border bg-card flex items-center gap-2">
                       <User className="w-4 h-4 text-foreground/50" />
                       <h3 className="font-semibold text-foreground/&">Customer Details</h3>
                     </div>
                     <div className="p-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-card p-3 rounded-lg border border-white/5">
+                        <div className="bg-card p-3 rounded-lg border border-border">
                           <p className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1">Name</p>
                           <p className="text-sm font-medium text-foreground/&">{selectedOrder.customer_name}</p>
                         </div>
-                        <div className="bg-card p-3 rounded-lg border border-white/5">
+                        <div className="bg-card p-3 rounded-lg border border-border">
                           <p className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1">Phone</p>
                           <p className="text-sm font-medium text-foreground/&">{selectedOrder.phone}</p>
                         </div>
                         {selectedOrder.email && (
-                          <div className="bg-card p-3 rounded-lg border border-white/5">
+                          <div className="bg-card p-3 rounded-lg border border-border">
                             <p className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1">Email</p>
                             <p className="text-sm font-medium text-foreground/& truncate">{selectedOrder.email}</p>
                           </div>
                         )}
-                        <div className="md:col-span-2 bg-card p-3 rounded-lg border border-white/5">
+                        <div className="md:col-span-2 bg-card p-3 rounded-lg border border-border">
                           <p className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" /> Shipping Address</p>
                           <p className="text-sm text-foreground/&">{selectedOrder.shipping_address?.address_line1}</p>
                           {selectedOrder.shipping_address?.city && (
@@ -540,8 +540,8 @@ export default function AdminOrdersPage() {
                 <div className="space-y-6">
 
                   {/* Status Update */}
-                  <div className="bg-card border border-white/5 rounded-xl overflow-hidden">
-                    <div className="p-4 border-b border-white/5 bg-card">
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-border bg-card">
                       <h3 className="font-semibold text-foreground/&">Update Status</h3>
                     </div>
                     <div className="p-4 max-h-[280px] overflow-y-auto space-y-1">
@@ -553,7 +553,7 @@ export default function AdminOrdersPage() {
                           className={`w-full px-3 py-2 rounded-lg text-xs font-medium border transition-colors text-left ${
                             selectedOrder.status === status 
                               ? 'bg-muted border-border text-foreground cursor-default' 
-                              : 'bg-transparent border-transparent text-foreground/60 hover:bg-white/5 hover:text-foreground'
+                              : 'bg-transparent border-transparent text-foreground/60 hover:bg-card hover:text-foreground'
                           }`}
                         >
                           {selectedOrder.status === status ? (
@@ -565,8 +565,8 @@ export default function AdminOrdersPage() {
                   </div>
 
                   {/* PostEx Tracking */}
-                  <div className="bg-card border border-white/5 rounded-xl overflow-hidden">
-                    <div className="p-4 border-b border-white/5 bg-card flex items-center justify-between">
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-border bg-card flex items-center justify-between">
                       <h3 className="font-semibold text-foreground/& flex items-center gap-2"><Truck className="w-4 h-4 text-foreground/50"/> PostEx</h3>
                       <button onClick={refreshOrderStatus} className="text-foreground/40 hover:text-foreground transition-colors" title="Refresh status">
                         <RotateCw className="w-3.5 h-3.5" />
@@ -587,14 +587,14 @@ export default function AdminOrdersPage() {
                                 { label: "Upfront Payment", key: "upfrontPayment", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
                                 { label: "Balance Payment", key: "balancePayment", format: (v: number) => `Rs. ${v?.toLocaleString()}` },
                               ].filter(({ key }) => selectedOrder.postex_charges[key] != null).map(({ label, key, format }) => (
-                                <div key={key} className="bg-white/5 rounded-lg p-2.5">
+                                <div key={key} className="bg-card rounded-lg p-2.5">
                                   <p className="text-[9px] text-foreground/40 uppercase tracking-wider mb-0.5">{label}</p>
                                   <p className="text-sm font-mono text-foreground/&">{format(selectedOrder.postex_charges[key])}</p>
                                 </div>
                               ))}
                             </div>
                           )}
-                          <a href={`https://postex.pk/track?tracking=${selectedOrder.postex}`} target="_blank" rel="noopener noreferrer" className="block w-full text-center bg-white/5 hover:bg-white/10 border border-white/10 text-foreground py-2 rounded-lg text-xs font-medium transition-colors">
+                          <a href={`https://postex.pk/track?tracking=${selectedOrder.postex}`} target="_blank" rel="noopener noreferrer" className="block w-full text-center bg-card hover:bg-card border border-border text-foreground py-2 rounded-lg text-xs font-medium transition-colors">
                             Track on PostEx →
                           </a>
                         </div>
@@ -610,12 +610,12 @@ export default function AdminOrdersPage() {
                   </div>
 
                   {/* Timeline */}
-                  <div className="bg-card border border-white/5 rounded-xl overflow-hidden">
-                    <div className="p-4 border-b border-white/5 bg-card">
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-border bg-card">
                       <h3 className="font-semibold text-foreground/& flex items-center gap-2"><History className="w-4 h-4 text-foreground/50"/> Timeline</h3>
                     </div>
                     <div className="p-4 max-h-[300px] overflow-y-auto">
-                      <div className="space-y-4 pl-2 border-l-2 border-white/10 ml-2">
+                      <div className="space-y-4 pl-2 border-l-2 border-border ml-2">
                         {selectedOrder.history?.map((event: any, i: number) => (
                           <div key={i} className="relative pl-5">
                             <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-[#B8860B] border-2 border-[#D4A017]" />
@@ -632,13 +632,13 @@ export default function AdminOrdersPage() {
                   </div>
 
                   {/* Internal Notes */}
-                  <div className="bg-card border border-white/5 rounded-xl overflow-hidden">
-                    <div className="p-4 border-b border-white/5 bg-card">
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-border bg-card">
                       <h3 className="font-semibold text-foreground/& flex items-center gap-2"><MessageSquare className="w-4 h-4 text-foreground/50"/> Internal Notes</h3>
                     </div>
                     <div className="p-4">
                       {selectedOrder.notes ? (
-                        <div className="bg-card p-3 rounded-lg text-sm text-foreground/& whitespace-pre-wrap mb-3 border border-white/5 max-h-[150px] overflow-y-auto">
+                        <div className="bg-card p-3 rounded-lg text-sm text-foreground/& whitespace-pre-wrap mb-3 border border-border max-h-[150px] overflow-y-auto">
                           {selectedOrder.notes}
                         </div>
                       ) : (
@@ -649,9 +649,9 @@ export default function AdminOrdersPage() {
                           value={newNote}
                           onChange={e => setNewNote(e.target.value)}
                           placeholder="Add a note..."
-                          className="w-full bg-card border border-white/10 rounded-lg p-3 text-sm focus:outline-none focus:border-border resize-none min-h-[60px]"
+                          className="w-full bg-card border border-border rounded-lg p-3 text-sm focus:outline-none focus:border-border resize-none min-h-[60px]"
                         />
-                        <button onClick={handleAddNote} className="bg-white/10 hover:bg-card py-2 px-4 rounded-lg text-foreground text-sm font-medium transition-colors">
+                        <button onClick={handleAddNote} className="bg-card hover:bg-card py-2 px-4 rounded-lg text-foreground text-sm font-medium transition-colors">
                           Save Note
                         </button>
                       </div>
@@ -669,8 +669,8 @@ export default function AdminOrdersPage() {
       {/* PostEx Confirmation Modal */}
       {showPostexModal && selectedOrder && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background/80 backdrop-blur-sm p-0 sm:p-4">
-          <div className="bg-background border border-white/10 rounded-none sm:rounded-2xl w-full max-w-4xl mx-0 sm:mx-4 overflow-hidden shadow-2xl flex flex-col max-h-screen sm:max-h-[90vh]">
-            <div className="sticky top-0 z-10 bg-background border-b border-white/5 px-4 sm:px-6 py-4 flex items-center justify-between shrink-0">
+          <div className="bg-background border border-border rounded-none sm:rounded-2xl w-full max-w-4xl mx-0 sm:mx-4 overflow-hidden shadow-2xl flex flex-col max-h-screen sm:max-h-[90vh]">
+            <div className="sticky top-0 z-10 bg-background border-b border-border px-4 sm:px-6 py-4 flex items-center justify-between shrink-0">
               <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
                 <Package className="w-4 h-4 text-[#B8860B]" /> Review & Verify — PostEx Booking
               </h2>
@@ -681,7 +681,7 @@ export default function AdminOrdersPage() {
 
             <div className="flex flex-col lg:flex-row flex-1 min-h-0">
               {/* ===== LEFT: Order Summary (read-only reference) ===== */}
-              <div className="lg:w-[280px] shrink-0 border-b lg:border-b-0 lg:border-r border-white/5 overflow-y-auto bg-black/20">
+              <div className="lg:w-[280px] shrink-0 border-b lg:border-b-0 lg:border-r border-border overflow-y-auto bg-black/20">
                 <div className="p-4 sm:p-5 space-y-4">
 
                   {/* Customer */}
@@ -714,7 +714,7 @@ export default function AdminOrdersPage() {
                     </h4>
                     <div className="space-y-2">
                       {selectedOrder.items?.map((item: any, i: number) => (
-                        <div key={i} className="flex items-center gap-2.5 bg-white/5 rounded-lg px-2.5 py-2">
+                        <div key={i} className="flex items-center gap-2.5 bg-card rounded-lg px-2.5 py-2">
                           <span className="text-[9px] font-bold text-[#B8860B] bg-[#B8860B]/10 w-4 h-4 flex items-center justify-center rounded shrink-0">
                             {item.quantity}
                           </span>
@@ -728,7 +728,7 @@ export default function AdminOrdersPage() {
                   </div>
 
                   {/* Order Totals */}
-                  <div className="bg-white/5 rounded-lg px-3 py-2.5 space-y-1">
+                  <div className="bg-card rounded-lg px-3 py-2.5 space-y-1">
                     <div className="flex justify-between text-[11px]">
                       <span className="text-foreground/50">Subtotal</span>
                       <span className="text-foreground/&">Rs. {Number(selectedOrder.subtotal || selectedOrder.total || 0).toLocaleString()}</span>
@@ -737,7 +737,7 @@ export default function AdminOrdersPage() {
                       <span className="text-foreground/50">Shipping</span>
                       <span className="text-foreground/&">Rs. {Number(selectedOrder.shipping || 0).toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between text-[11px] font-medium border-t border-white/5 pt-1 mt-1">
+                    <div className="flex justify-between text-[11px] font-medium border-t border-border pt-1 mt-1">
                       <span className="text-foreground/70">Total</span>
                       <span className="text-[#B8860B]">Rs. {Number(selectedOrder.total || 0).toLocaleString()}</span>
                     </div>
@@ -758,11 +758,11 @@ export default function AdminOrdersPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 block">Customer Name</label>
-                      <input type="text" value={postexForm.customerName} onChange={e => setPostexForm(p => ({ ...p, customerName: e.target.value }))} className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
+                      <input type="text" value={postexForm.customerName} onChange={e => setPostexForm(p => ({ ...p, customerName: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
                     </div>
                     <div>
                       <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 block">Phone</label>
-                      <input type="text" value={postexForm.phone} onChange={e => setPostexForm(p => ({ ...p, phone: e.target.value }))} className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
+                      <input type="text" value={postexForm.phone} onChange={e => setPostexForm(p => ({ ...p, phone: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
                     </div>
                   </div>
 
@@ -770,7 +770,7 @@ export default function AdminOrdersPage() {
                     <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 flex items-center gap-1">
                       <MapPin className="w-3 h-3" /> Delivery Address <span className="text-foreground/20">(edit or verify with map)</span>
                     </label>
-                    <textarea value={postexForm.address} onChange={e => setPostexForm(p => ({ ...p, address: e.target.value }))} className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors resize-none min-h-[60px]" />
+                    <textarea value={postexForm.address} onChange={e => setPostexForm(p => ({ ...p, address: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors resize-none min-h-[60px]" />
                   </div>
 
                   <AddressMap
@@ -796,14 +796,14 @@ export default function AdminOrdersPage() {
                     </div>
                     <div>
                       <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 block">Province</label>
-                      <input type="text" value={postexForm.province} onChange={e => setPostexForm(p => ({ ...p, province: e.target.value }))} className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground/70 focus:outline-none focus:border-[#B8860B] transition-colors" />
+                      <input type="text" value={postexForm.province} onChange={e => setPostexForm(p => ({ ...p, province: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground/70 focus:outline-none focus:border-[#B8860B] transition-colors" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 block">Order Type</label>
-                      <select value={postexForm.orderType} onChange={e => setPostexForm(p => ({ ...p, orderType: e.target.value }))} className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors">
+                      <select value={postexForm.orderType} onChange={e => setPostexForm(p => ({ ...p, orderType: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors">
                         {POSTEX_ORDER_TYPES.map(type => (
                           <option key={type} value={type} className="bg-card">{type}</option>
                         ))}
@@ -811,22 +811,22 @@ export default function AdminOrdersPage() {
                     </div>
                     <div>
                       <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 block">Order Total (Rs.)</label>
-                      <input type="number" value={postexForm.amount} onChange={e => setPostexForm(p => ({ ...p, amount: Number(e.target.value) }))} className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
+                      <input type="number" value={postexForm.amount} onChange={e => setPostexForm(p => ({ ...p, amount: Number(e.target.value) }))} className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
                     </div>
                     <div>
                       <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 block">Weight (kg)</label>
-                      <input type="number" step="0.1" value={postexForm.bookingWeight} onChange={e => setPostexForm(p => ({ ...p, bookingWeight: Number(e.target.value) }))} className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
+                      <input type="number" step="0.1" value={postexForm.bookingWeight} onChange={e => setPostexForm(p => ({ ...p, bookingWeight: Number(e.target.value) }))} className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 block">Pickup Address Code</label>
-                      <input type="text" value={postexForm.pickupAddressCode} onChange={e => setPostexForm(p => ({ ...p, pickupAddressCode: e.target.value }))} className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
+                      <input type="text" value={postexForm.pickupAddressCode} onChange={e => setPostexForm(p => ({ ...p, pickupAddressCode: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
                     </div>
                     <div>
                       <label className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1 block">Order Detail</label>
-                      <input type="text" value={postexForm.orderDetail} onChange={e => setPostexForm(p => ({ ...p, orderDetail: e.target.value }))} className="w-full bg-card border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
+                      <input type="text" value={postexForm.orderDetail} onChange={e => setPostexForm(p => ({ ...p, orderDetail: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#B8860B] transition-colors" />
                     </div>
                   </div>
 
@@ -846,7 +846,7 @@ export default function AdminOrdersPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-t border-white/5 shrink-0 bg-black/30">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-t border-border shrink-0 bg-black/30">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-foreground/30">
                   Verify details before booking

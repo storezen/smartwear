@@ -85,7 +85,7 @@ export default function AdminCustomersPage() {
               placeholder="Search by name or phone..." 
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="bg-white/5 border border-white/10 text-foreground rounded-lg pl-8 pr-3 py-1.5 text-[12px] focus:outline-none focus:border-[#B8860B] transition-colors w-52"
+              className="bg-card border border-border text-foreground rounded-lg pl-8 pr-3 py-1.5 text-[12px] focus:outline-none focus:border-[#B8860B] transition-colors w-52"
             />
           </div>
         </div>
@@ -94,7 +94,7 @@ export default function AdminCustomersPage() {
       {loading ? (
         <div className="text-center py-8 text-foreground/50 text-[12px]">Loading customer data...</div>
       ) : filteredCustomers.length === 0 ? (
-        <div className="bg-card border border-white/5 rounded-xl p-6 text-center">
+        <div className="bg-card border border-border rounded-xl p-6 text-center">
           <User className="w-10 h-10 text-foreground/20 mx-auto mb-3" />
           <h3 className="text-base font-medium text-foreground mb-1">No Customers Found</h3>
           <p className="text-foreground/50 text-[12px] mb-4 max-w-md mx-auto">No customer records match your search criteria.</p>
@@ -138,7 +138,7 @@ export default function AdminCustomersPage() {
           <div className="text-center mt-4">
             <button
               onClick={() => setPage(p => p + 1)}
-              className="px-6 py-2 rounded-lg border border-white/10 text-foreground/70 hover:text-foreground hover:border-border text-[12px] transition-colors"
+              className="px-6 py-2 rounded-lg border border-border text-foreground/70 hover:text-foreground hover:border-border text-[12px] transition-colors"
             >
               Load More ({filteredCustomers.length - page * perPage} remaining)
             </button>
@@ -149,10 +149,10 @@ export default function AdminCustomersPage() {
 
       {/* Customer Detail Sheet */}
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="bg-background border-l border-white/10 text-foreground w-full sm:max-w-md overflow-y-auto z-[150] p-0">
+        <SheetContent className="bg-background border-l border-border text-foreground w-full sm:max-w-md overflow-y-auto z-[150] p-0">
           {selectedCustomer && (
             <div className="flex flex-col h-full">
-              <SheetHeader className="p-6 border-b border-white/10 bg-card">
+              <SheetHeader className="p-6 border-b border-border bg-card">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#B8860B] to-[#D4A017] flex items-center justify-center text-foreground font-bold text-3xl shadow-[0_0_20px_rgba(184,134,11,0.3)]">
@@ -171,15 +171,15 @@ export default function AdminCustomersPage() {
                 
                 {/* Metrics */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                  <div className="bg-card border border-border rounded-xl p-4">
                     <p className="text-xs text-foreground/40 mb-1">Total Orders</p>
                     <p className="text-2xl font-bold text-foreground">{selectedCustomer.total_orders}</p>
                   </div>
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                  <div className="bg-card border border-border rounded-xl p-4">
                     <p className="text-xs text-foreground/40 mb-1">Lifetime Value</p>
                     <p className="text-2xl font-bold text-[#D4A017]">₨ {selectedCustomer.total_spent.toLocaleString()}</p>
                   </div>
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-4 col-span-2">
+                  <div className="bg-card border border-border rounded-xl p-4 col-span-2">
                     <p className="text-xs text-foreground/40 mb-1 flex items-center gap-1"><MapPin className="w-3 h-3"/> Primary Address</p>
                     <p className="text-sm text-foreground/&">{selectedCustomer.address?.address_line1}, {selectedCustomer.address?.city}</p>
                   </div>
@@ -190,7 +190,7 @@ export default function AdminCustomersPage() {
                   <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2"><ShoppingBag className="w-5 h-5"/> Order History</h3>
                   <div className="space-y-3">
                     {selectedCustomer.orders.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map((order: any) => (
-                      <div key={order.id} className="bg-card border border-white/10 rounded-xl p-4 hover:border-[#B8860B]/30 transition-colors">
+                      <div key={order.id} className="bg-card border border-border rounded-xl p-4 hover:border-[#B8860B]/30 transition-colors">
                         <div className="flex justify-between items-start mb-2">
                           <div>
                             <p className="font-bold text-foreground">{order.id}</p>
@@ -209,7 +209,7 @@ export default function AdminCustomersPage() {
                         
                         <div className="flex items-center gap-2 overflow-x-auto pb-2">
                           {order.items.map((item: any, idx: number) => (
-                            <div key={idx} className="relative w-8 h-8 rounded bg-white/10 flex-shrink-0 overflow-hidden" title={item.name}>
+                            <div key={idx} className="relative w-8 h-8 rounded bg-card flex-shrink-0 overflow-hidden" title={item.name}>
                               {item.image && <Image src={item.image} alt="" fill sizes="32px" className="object-cover"/>}
                             </div>
                           ))}

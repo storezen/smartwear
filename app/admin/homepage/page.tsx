@@ -145,7 +145,7 @@ export default function AdminHomepagePage() {
             className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
               activeSection === s.key
                 ? "bg-[#B8860B] text-black"
-                : "bg-white/5 text-foreground/60 hover:bg-white/10 hover:text-foreground"
+                : "bg-card text-foreground/60 hover:bg-card hover:text-foreground"
             }`}
           >
             {s.label}
@@ -178,7 +178,7 @@ export default function AdminHomepagePage() {
               {picks[currentSection.key].map((pid, i) => {
                 const prod = allProducts.find(p => p.id === pid || p.slug === pid)
                 return (
-                  <div key={pid} className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2 group">
+                  <div key={pid} className="flex items-center gap-2 bg-card rounded-lg px-3 py-2 group">
                     <div className="flex flex-col gap-0.5">
                       <button onClick={() => moveProduct(pid, -1)} className="text-foreground/20 hover:text-foreground/60 transition-colors"><ArrowUpDown className="w-3 h-3 rotate-90" /></button>
                       <button onClick={() => moveProduct(pid, 1)} className="text-foreground/20 hover:text-foreground/60 transition-colors"><ArrowUpDown className="w-3 h-3 -rotate-90" /></button>
@@ -211,7 +211,7 @@ export default function AdminHomepagePage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search products by name, brand, or category..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-foreground text-sm placeholder-white/30 focus:outline-none focus:border-[#B8860B] transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-card border border-border text-foreground text-sm placeholder-white/30 focus:outline-none focus:border-[#B8860B] transition-all"
             />
             {search && (
               <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/60">
@@ -231,7 +231,7 @@ export default function AdminHomepagePage() {
                     key={prod.id}
                     onClick={() => toggleProduct(prod.id)}
                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-left ${
-                      isPicked ? "bg-[#B8860B]/10 border border-[#B8860B]/30" : "bg-card border border-transparent hover:bg-white/5"
+                      isPicked ? "bg-[#B8860B]/10 border border-[#B8860B]/30" : "bg-card border border-transparent hover:bg-card"
                     }`}
                   >
                     {prod.images?.[0] && (

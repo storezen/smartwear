@@ -30,7 +30,7 @@ function ShippingBar() {
 function EmptyCart() {
   return (
     <div className="py-16 md:py-24 text-center max-w-xs mx-auto">
-      <div className="w-20 h-20 rounded-[24px] border border-white/10 bg-white/5 flex items-center justify-center mx-auto mb-5">
+      <div className="w-20 h-20 rounded-[24px] border border-border bg-card flex items-center justify-center mx-auto mb-5">
         <ShoppingBag className="w-9 h-9 text-foreground/60" />
       </div>
       <h1 className="text-xl font-semibold mb-2 text-foreground" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
@@ -75,7 +75,7 @@ export default function CartPage() {
     <div className="min-h-screen bg-background text-foreground">
 
       {/* Header */}
-      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-white/5">
+      <div className="relative overflow-hidden text-foreground  pb-6 md:pt-28 md:pb-16 border-b border-border">
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -133,7 +133,7 @@ export default function CartPage() {
                 >
                   {/* Image */}
                   <Link href={`/products/${item.product.slug}`} className="shrink-0">
-                    <div className="relative overflow-hidden rounded-xl border border-white/5 w-[72px] h-[72px] sm:w-[88px] sm:h-[88px]" style={{ background: "#0F1923" }}>
+                    <div className="relative overflow-hidden rounded-xl border border-border w-[72px] h-[72px] sm:w-[88px] sm:h-[88px]" style={{ background: "#0F1923" }}>
                       <Image
                         src={item.product.images[0]}
                         alt={item.product.name}
@@ -163,7 +163,7 @@ export default function CartPage() {
 
                     <div className="flex items-center justify-between mt-3 gap-2 flex-wrap">
                       {/* Quantity */}
-                      <div className="flex items-center rounded-xl overflow-hidden border border-white/5" style={{ background: "rgba(255,255,255,0.03)" }}>
+                      <div className="flex items-center rounded-xl overflow-hidden border border-border" style={{ background: "rgba(255,255,255,0.03)" }}>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           disabled={item.quantity <= 1}
@@ -235,7 +235,7 @@ export default function CartPage() {
                     <span>Calculated at checkout</span>
                   </div>
 
-                  <div className="pt-4 mt-2 border-t border-white/5 flex items-end justify-between">
+                  <div className="pt-4 mt-2 border-t border-border flex items-end justify-between">
                     <div>
                       <p className="text-xs text-foreground/60 mb-0.5">Total</p>
                       <p className="font-bold text-2xl" style={{ color: "#B8860B" }}>{formatPrice(total)}</p>
@@ -259,7 +259,7 @@ export default function CartPage() {
 
                 {/* Payment */}
                 {paymentMethods.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-white/5">
+                <div className="mt-4 pt-4 border-t border-border">
                   {codAvailable && (
                   <div className="bg-gradient-to-r from-green-500/10 to-emerald-600/10 border border-green-500/20 rounded-xl p-3 mb-4 text-center shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                     <p className="text-green-400 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2">
@@ -272,7 +272,7 @@ export default function CartPage() {
                     {paymentMethods.filter(m => m !== 'COD').map(m => (
                       <span
                         key={m}
-                        className="text-[11px] sm:text-[10px] font-medium text-foreground/60 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10"
+                        className="text-[11px] sm:text-[10px] font-medium text-foreground/60 px-2.5 py-1 rounded-lg bg-card border border-border"
                       >
                         {m}
                       </span>
@@ -292,7 +292,7 @@ export default function CartPage() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-[90%] max-w-sm bg-card border border-white/10 rounded-2xl shadow-2xl p-6 text-center mx-auto"
+            className="w-[90%] max-w-sm bg-card border border-border rounded-2xl shadow-2xl p-6 text-center mx-auto"
           >
             <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-8 h-8 text-red-500" />
@@ -300,7 +300,7 @@ export default function CartPage() {
             <h3 className="text-xl font-bold text-foreground mb-2">Remove Item?</h3>
             <p className="text-foreground/60 text-sm mb-8">Are you sure you want to remove this beautiful timepiece from your cart?</p>
             <div className="flex gap-3 justify-center">
-              <button onClick={() => setItemToDelete(null)} className="flex-1 py-3.5 rounded-xl text-sm font-medium text-foreground/60 hover:bg-white/5 border border-transparent transition-colors">Keep It</button>
+              <button onClick={() => setItemToDelete(null)} className="flex-1 py-3.5 rounded-xl text-sm font-medium text-foreground/60 hover:bg-card border border-transparent transition-colors">Keep It</button>
               <button onClick={() => { removeFromCart(itemToDelete); setItemToDelete(null); }} className="flex-1 py-3.5 rounded-xl text-sm font-bold bg-red-500 text-foreground hover:bg-red-600 transition-colors">Remove</button>
             </div>
           </motion.div>
