@@ -171,16 +171,16 @@
    GLASSMORPHISM
    ═══════════════════════════════════════════ */
 .glass {
-  background: rgba(255,255,255,0.72);
+  background: hsl(var(--background)/0.72);
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.45);
+  border: 1px solid hsl(var(--border));
 }
 .glass-dark {
-  background: rgba(12,15,20,0.80);
+  background: hsl(var(--background)/0.80);
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid hsl(var(--border));
 }
 .glass-gold {
   background: rgba(184,134,11,0.05);
@@ -296,14 +296,14 @@
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  background: var(--navy);
-  color: #F3F4F6;
-  border: none;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .sw-btn-navy:hover {
-  background: var(--navy-mid);
+  background: hsl(var(--accent)/0.1);
   transform: translateY(-1px);
 }
 
@@ -350,8 +350,8 @@
    CARDS
    ═══════════════════════════════════════════ */
 .sw-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
@@ -360,22 +360,14 @@
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
-.dark .sw-card {
-  background: #131820;
-  border-color: rgba(255,255,255,0.06);
-}
 
 /* Admin cards */
 .admin-stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
   border-radius: 16px;
   padding: 24px;
   transition: box-shadow 0.2s ease;
-}
-.dark .admin-stat-card {
-  background: #131820;
-  border-color: rgba(255,255,255,0.06);
 }
 .admin-stat-card:hover {
   box-shadow: var(--shadow-md);
@@ -499,8 +491,8 @@
    ═══════════════════════════════════════════ */
 ::-webkit-scrollbar       { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(14,17,23,0.15); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(14,17,23,0.28); }
+::-webkit-scrollbar-thumb { background: hsl(var(--foreground)/0.15); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--foreground)/0.28); }
 .dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); }
 
 .custom-scrollbar::-webkit-scrollbar { width: 4px; }

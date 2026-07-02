@@ -3,11 +3,12 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
-import { Search, ShoppingCart, Heart, User, Menu, X, ChevronDown } from "lucide-react"
+import { Search, ShoppingCart, Heart, User, Menu, X, Sun, Moon } from "lucide-react"
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion"
 import { useCart } from "@/context/cart-context"
 import { useWishlist } from "@/context/wishlist-context"
 import { useAuth } from "@/context/auth-context"
+import { useTheme } from "@/context/theme-context"
 import { categories, products, formatPrice } from "@/lib/mock-data"
 import Image from "next/image"
 import { SmartSearch } from "@/components/store/smart-search"
@@ -46,13 +47,13 @@ function Logo({ className = "", name, tagline }: { className?: string; name?: st
       </motion.div>
       <div className="leading-none">
         <span
-          className="block text-white font-semibold group-hover:text-[#B8860B] transition-colors"
+          className="block text-foreground font-semibold group-hover:text-[#B8860B] transition-colors"
           style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif", fontSize: "1.0625rem", letterSpacing: "-0.02em" }}
         >
           {name || 'Smartwear'}
         </span>
         <span
-          className="block text-white/70 font-medium mt-0.5"
+          className="block text-foreground/70 font-medium mt-0.5"
           style={{ fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase" }}
         >
           {tagline || 'Pakistan'}
@@ -68,7 +69,7 @@ function NavLink({ href, label, isActive, gold }: { href: string, label: string,
     <Link
       href={href}
       className={`relative px-4 py-2 text-sm font-medium tracking-wide group ${
-        gold ? "text-[#B8860B]" : isActive ? "text-white" : "text-white/70 hover:text-white"
+        gold ? "text-[#B8860B]" : isActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
       } transition-colors`}
     >
       {label}
@@ -142,6 +143,7 @@ export function PremiumNavbar() {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const { itemCount } = useCart()
   const { itemCount: wCount } = useWishlist()
+  const { theme, toggleTheme } = useTheme()
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0
@@ -185,7 +187,7 @@ export function PremiumNavbar() {
         className="fixed top-0 left-0 right-0 z-50"
       >
         {/* Top Announcement Bar — news ticker */}
-        <div className="relative bg-gradient-to-r from-[#0A0B0E] via-[#1A1105] to-[#0A0B0E] border-b border-[#B8860B]/20 before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNCODI2MEIiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] before:opacity-50">
+        <div className="relative bg-gradient-to-r from-background via-accent/5 to-background border-b border-[#B8860B]/20 before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNCODI2MEIiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] before:opacity-50">
           <div className="sw-container">
             <div className="flex items-center h-9 md:h-10 px-4">
               <div className="hidden sm:flex items-center gap-2 mr-4 shrink-0">
@@ -203,9 +205,9 @@ export function PremiumNavbar() {
         </div>
 
         <div
-          className="border-b border-white/5"
+          className="border-b border-border"
           style={{
-            background: scrolled ? "rgba(12, 15, 20, 0.85)" : "rgba(12, 15, 20, 1)",
+            background: scrolled ? "hsl(var(--background)/0.85)" : "hsl(var(--background))",
             backdropFilter: scrolled ? "blur(24px) saturate(150%)" : "none",
           }}
         >
@@ -214,7 +216,7 @@ export function PremiumNavbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden p-2 -ml-2 text-white/70 hover:text-white sw-interactive"
+              className="lg:hidden p-2 -ml-2 text-foreground/70 hover:text-foreground sw-interactive"
               aria-label="Open menu"
             >
               <Menu className="w-6 h-6" />
@@ -240,21 +242,30 @@ export function PremiumNavbar() {
 
             {/* Actions */}
             <div className="flex items-center gap-1 sm:gap-2 justify-end">
+              {/* Theme Toggle */}
+              <button
+                onClick={toggleTheme}
+                className="w-11 h-11 flex items-center justify-center rounded-full text-foreground/70 hover:text-foreground hover:bg-accent/10 transition-colors sw-interactive"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+
               {/* Search */}
               <div className="relative flex items-center">
                 <button
                   onClick={() => setShowSearch(true)}
-                  className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/50 hover:text-white transition-all sw-interactive group"
+                  className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/5 hover:bg-accent/10 border border-border text-foreground/50 hover:text-foreground transition-all sw-interactive group"
                 >
                   <Search className="w-4 h-4" />
                   <span className="text-sm">Search...</span>
-                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#0C0F14] border border-white/5 text-[10px] font-mono opacity-50 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-background border border-border text-[10px] font-mono opacity-50 group-hover:opacity-100 transition-opacity">
                     <span>⌘</span><span>K</span>
                   </div>
                 </button>
                 <button
                   onClick={() => setShowSearch(true)}
-                  className="md:hidden relative z-10 w-11 h-11 flex items-center justify-center rounded-full transition-colors sw-interactive text-white/70 hover:text-white hover:bg-white/5"
+                  className="md:hidden relative z-10 w-11 h-11 flex items-center justify-center rounded-full transition-colors sw-interactive text-foreground/70 hover:text-foreground hover:bg-accent/5"
                   aria-label="Search"
                 >
                   <Search className="w-5 h-5" />
@@ -264,7 +275,7 @@ export function PremiumNavbar() {
               {/* Wishlist */}
               <Link
                 href="/wishlist"
-                className="relative w-11 h-11 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/5 transition-colors sw-interactive"
+                className="relative w-11 h-11 flex items-center justify-center rounded-full text-foreground/70 hover:text-foreground hover:bg-accent/5 transition-colors sw-interactive"
               >
                 <Heart className="w-5 h-5" />
                 <NavBadge count={wCount} />
@@ -273,7 +284,7 @@ export function PremiumNavbar() {
               {/* Cart */}
               <Link
                 href="/cart"
-                className="relative w-11 h-11 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/5 transition-colors sw-interactive"
+                className="relative w-11 h-11 flex items-center justify-center rounded-full text-foreground/70 hover:text-foreground hover:bg-accent/5 transition-colors sw-interactive"
               >
                 <ShoppingCart className="w-5 h-5" />
                 <NavBadge count={itemCount} />
@@ -291,13 +302,13 @@ export function PremiumNavbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-[#0C0F14]/95 backdrop-blur-2xl flex flex-col"
+            className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-2xl flex flex-col"
           >
             <div className="flex items-center justify-between p-6">
               <Logo name={navbarSettings?.store_name} tagline={navbarSettings?.store_tagline} />
               <button
                 onClick={() => setMobileOpen(false)}
-                className="p-2 text-white/70 hover:text-white bg-white/5 rounded-full sw-interactive"
+                className="p-2 text-foreground/70 hover:text-foreground bg-accent/5 rounded-full sw-interactive"
                 aria-label="Close menu"
               >
                 <X className="w-6 h-6" />
@@ -315,7 +326,7 @@ export function PremiumNavbar() {
                   <Link
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`text-3xl font-light tracking-wide ${link.gold ? 'text-[#B8860B]' : 'text-white'}`}
+                    className={`text-3xl font-light tracking-wide ${link.gold ? 'text-[#B8860B]' : 'text-foreground'}`}
                     style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}
                   >
                     {link.label}
@@ -323,15 +334,15 @@ export function PremiumNavbar() {
                 </motion.div>
               ))}
               
-              <div className="mt-8 pt-8 border-t border-white/10">
-                <div className="text-white/40 text-xs tracking-[0.2em] uppercase mb-4">Categories</div>
+              <div className="mt-8 pt-8 border-t border-border">
+                <div className="text-foreground/40 text-xs tracking-[0.2em] uppercase mb-4">Categories</div>
                 <div className="grid grid-cols-2 gap-2">
                   {categories.map(c => (
                     <Link
                       key={c.id}
                       href={`/products?category=${c.slug}`}
                       onClick={() => setMobileOpen(false)}
-                      className="block text-sm text-white/60 hover:text-[#B8860B] py-2 transition-colors"
+                      className="block text-sm text-foreground/60 hover:text-[#B8860B] py-2 transition-colors"
                     >
                       {c.name}
                     </Link>
@@ -339,11 +350,11 @@ export function PremiumNavbar() {
                 </div>
               </div>
 
-              <div className="border-t border-white/10 my-4" />
+              <div className="border-t border-border my-4" />
               <Link
                 href="/admin"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 text-2xl font-bold tracking-wider text-white/60 hover:text-white"
+                className="flex items-center gap-3 text-2xl font-bold tracking-wider text-foreground/60 hover:text-foreground"
               >
                 <User className="w-6 h-6" /> Admin
               </Link>

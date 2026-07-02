@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Poppins } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { ThemeProvider } from '@/context/theme-context'
 import { AuthProvider } from '@/context/auth-context'
 import { CartProvider } from '@/context/cart-context'
 import { WishlistProvider } from '@/context/wishlist-context'
@@ -86,16 +87,18 @@ export default async function RootLayout({
           />
         )}
       </head>
-      <body className="font-sans antialiased bg-[#0C0F14] text-white selection:bg-[#B8860B] selection:text-white overflow-x-hidden relative">
-        <TikTokPixelProvider pixelId={pixelId} />
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              {children}
-              <Toaster position="top-center" />
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
+      <body className="font-sans antialiased bg-background text-foreground selection:bg-[#B8860B] selection:text-white overflow-x-hidden relative">
+        <ThemeProvider>
+          <TikTokPixelProvider pixelId={pixelId} />
+          <AuthProvider>
+            <CartProvider>
+              <WishlistProvider>
+                {children}
+                <Toaster position="top-center" />
+              </WishlistProvider>
+            </CartProvider>
+          </AuthProvider>
+        </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
