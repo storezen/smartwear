@@ -14,13 +14,21 @@ const PROVINCE_MAP: Record<string, string> = {
 const CACHE_TTL = 86400000
 let cache: { data: any[]; timestamp: number } | null = null
 
-async function fetchFromGitHub() {
-  const res = await fetch(
-    'https://raw.githubusercontent.com/open-admin-data/pakistan-administrative-divisions/main/data/all-flat.json',
-    { next: { revalidate: 86400 } }
-  )
-  if (!res.ok) throw new Error('Failed to fetch city data')
-  return res.json()
+async function fetchJson(url: string) {
+  const res = await fetch(url, { next: { revalidate: 86400 } })
+  if (!res.ok) throw new Error(`Failed to fetch ${url}`)
+  const raw = await res.json()
+  return Array.isArray(raw) ? raw : (raw.data || [])
+}
+
+function extractCity(item: any) {
+  const rawProvince = item.ancestors?.[0]?.name?.en || item.parent?.name?.en || 'Unknown'
+  return {
+    name: item.name.en,
+    province: PROVINCE_MAP[rawProvince] || rawProvince,
+    lat: parseFloat(item.geo?.lat) || 0,
+    lng: parseFloat(item.geo?.lon) || 0,
+  }
 }
 
 export async function GET() {
@@ -29,24 +37,20 @@ export async function GET() {
       return NextResponse.json(cache.data)
     }
 
-    const raw = await fetchFromGitHub()
-    const items = Array.isArray(raw) ? raw : (raw.data || [])
+    const BASE = 'https://raw.githubusercontent.com/open-admin-data/pakistan-administrative-divisions/main/data'
+    const [districts, tehsils] = await Promise.all([
+      fetchJson(`${BASE}/all-district.json`),
+      fetchJson(`${BASE}/all-tehsil.json`),
+    ])
 
-    const cities = items
-      .filter((item: any) => item.level >= 2)
-      .map((item: any) => {
-        const rawProvince = item.ancestors?.[0]?.name?.en || item.parent?.name?.en || 'Unknown'
-        return {
-          name: item.name.en,
-          province: PROVINCE_MAP[rawProvince] || rawProvince,
-          lat: parseFloat(item.geo?.lat) || 0,
-          lng: parseFloat(item.geo?.lon) || 0,
-        }
-      })
-      .filter((c: any) => c.name && c.province !== 'Unknown')
+    const allItems = [...districts, ...tehsils]
+
+    const cities = allItems
+      .map(extractCity)
+      .filter((c) => c.name && c.province !== 'Unknown')
 
     const seen = new Set<string>()
-    const unique = cities.filter((c: any) => {
+    const unique = cities.filter((c) => {
       const key = `${c.name}|${c.province}`
       if (seen.has(key)) return false
       seen.add(key)
