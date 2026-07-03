@@ -18,5 +18,7 @@ CREATE TABLE public.orders (
   status TEXT DEFAULT 'Pending',
   history JSONB,
   "postexId" TEXT,
-  tiktok_capi_fired BOOLEAN DEFAULT FALSE
+  tiktok_capi_fired BOOLEAN DEFAULT FALSE,
+  campaign TEXT DEFAULT 'Direct / Organic',
+  ttclid TEXT
 );

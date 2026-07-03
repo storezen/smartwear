@@ -128,39 +128,43 @@ async function fireTikTokCAPI(orderData: any, req: Request) {
     const totalValue = Math.max(1, orderData.total > 0 ? orderData.total
       : (orderData.items || []).reduce((s: number, i: any) => s + (i.price || 0) * (i.quantity || 1), 0))
 
+    const ttclid = orderData.ttclid
+    const capiPayload: Record<string, any> = {
+      event_source_id: pixelId,
+      event_source: 'web',
+      data: [{
+        event: 'CompletePayment',
+        event_id,
+        event_time: Math.floor(Date.now() / 1000),
+        ...(testEventCode ? { test_event_code: testEventCode } : {}),
+        ...(ttclid ? { ad: { callback: ttclid } } : {}),
+        context: {
+          ip,
+          user_agent: userAgent,
+          user: {
+            email: hashSHA256(orderData.email),
+            phone_number: hashSHA256(normalizePhone(orderData.phone)),
+            external_id: hashSHA256(orderData.customer_name),
+          }
+        },
+        properties: {
+          contents: (orderData.items || []).map((i: any) => ({
+            content_id: i.id,
+            content_type: 'product',
+            content_name: i.name,
+            price: i.price,
+            quantity: i.quantity
+          })),
+          currency: 'PKR',
+          value: totalValue,
+        },
+      }]
+    }
+
     await fetch('https://business-api.tiktok.com/open_api/v1.3/event/track/', {
       method: 'POST',
       headers: { 'Access-Token': accessToken, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event_source_id: pixelId,
-        event_source: 'web',
-        data: [{
-          event: 'CompletePayment',
-          event_id,
-          event_time: Math.floor(Date.now() / 1000),
-          ...(testEventCode ? { test_event_code: testEventCode } : {}),
-          context: {
-            ip,
-            user_agent: userAgent,
-            user: {
-              email: hashSHA256(orderData.email),
-              phone_number: hashSHA256(normalizePhone(orderData.phone)),
-              external_id: hashSHA256(orderData.customer_name),
-            }
-          },
-          properties: {
-            contents: (orderData.items || []).map((i: any) => ({
-              content_id: i.id,
-              content_type: 'product',
-              content_name: i.name,
-              price: i.price,
-              quantity: i.quantity
-            })),
-            currency: 'PKR',
-            value: totalValue,
-          },
-        }]
-      }),
+      body: JSON.stringify(capiPayload),
     })
   } catch (err) {
     console.error('[TikTok CAPI] Error:', err)

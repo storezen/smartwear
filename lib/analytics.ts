@@ -142,13 +142,9 @@ export function calculateFunnel(events: AnalyticsEvent[]): FunnelStage[] {
   for (const { key } of FUNNEL_DEF) stages[key] = new Set()
 
   for (const e of events) {
-    if (e.base_event === "InitiateCheckout" || e.base_event === "Purchase" || e.base_event === "CompletePayment") {
-      stages[e.base_event]?.add(e.id)
-    } else {
-      const s = stages[e.base_event]
-      if (s) s.add(e.session_id)
-    }
-    if (e.base_event === "CompletePayment") stages["Purchase"]?.add(e.id)
+    const key = e.base_event === "CompletePayment" ? "Purchase" : e.base_event
+    const s = stages[key]
+    if (s) s.add(e.session_id)
   }
 
   const topCount = Math.max(stages["PageView"]?.size || 0, 1)
@@ -174,18 +170,19 @@ export function getAbandonmentRate(funnel: FunnelStage[]): number {
 }
 
 export function getTrafficSources(events: AnalyticsEvent[]): TrafficSource[] {
-  const map = new Map<string, number>()
+  const sessions = new Map<string, Set<string>>()
   for (const e of events) {
     const c = e.campaign || "Direct / Organic"
-    map.set(c, (map.get(c) || 0) + 1)
+    if (!sessions.has(c)) sessions.set(c, new Set())
+    sessions.get(c)!.add(e.session_id)
   }
-  const total = Array.from(map.values()).reduce((a, b) => a + b, 0)
-  return Array.from(map.entries())
-    .sort((a, b) => b[1] - a[1])
-    .map(([name, count], i) => ({
+  const total = Array.from(sessions.values()).reduce((s, ids) => s + ids.size, 0)
+  return Array.from(sessions.entries())
+    .sort((a, b) => b[1].size - a[1].size)
+    .map(([name, ids], i) => ({
       name,
-      count,
-      percentage: total > 0 ? Math.round((count / total) * 1000) / 10 : 0,
+      count: ids.size,
+      percentage: total > 0 ? Math.round((ids.size / total) * 1000) / 10 : 0,
       color: SOURCE_COLORS[name] || FALLBACK_COLORS[i % FALLBACK_COLORS.length],
     }))
 }
@@ -198,9 +195,9 @@ export function getHotProducts(events: AnalyticsEvent[]): HotProduct[] {
   for (const e of events) {
     if (e.base_event === "ViewContent" && e.item_name !== "Store Visit") {
       const t = new Date(e.timestamp).getTime()
-      if (t >= now - LAST_30_MIN) {
+      if (t >= now - LAST_2_HOURS) {
         recent.set(e.item_name, (recent.get(e.item_name) || 0) + 1)
-      } else if (t >= now - LAST_2_HOURS) {
+      } else {
         older.set(e.item_name, (older.get(e.item_name) || 0) + 1)
       }
     }
@@ -209,6 +206,8 @@ export function getHotProducts(events: AnalyticsEvent[]): HotProduct[] {
   const sorted = Array.from(recent.entries())
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
+
+  if (sorted.length === 0) return []
 
   return sorted.map(([name, views], i) => {
     const prev = older.get(name) || 0

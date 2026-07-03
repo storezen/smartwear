@@ -184,6 +184,8 @@ export default function CheckoutPage() {
 
     try {
       const idempotencyKey = `IDMP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      const ttclid = typeof window !== 'undefined' ? sessionStorage.getItem('ttclid') || '' : ''
+      const campaign = typeof window !== 'undefined' ? sessionStorage.getItem('utm_campaign') || '' : ''
       const orderPayload = {
         customer_name: guestAddress.name,
         email: guestAddress.email || 'guest@smartwear.pk',
@@ -203,6 +205,8 @@ export default function CheckoutPage() {
         total,
         idempotency_key: idempotencyKey,
         promo_code: appliedPromo?.code || undefined,
+        campaign: campaign || 'Direct / Organic',
+        ttclid: ttclid || undefined,
       }
 
       const response = await fetch('/api/orders', {
