@@ -385,9 +385,19 @@ const INITIAL_DATA = {
 
 const globalAny: any = global;
 
+let dbFileMtime = 0
+
 export async function getDb(retries = 3): Promise<any> {
-  // Return memory DB if it's already loaded (super fast)
-  if (globalAny.memoryDb) {
+  // Check if file has changed since last load
+  let currentMtime = 0
+  for (const p of DB_PATHS) {
+    try {
+      const stat = await fs.stat(p)
+      currentMtime = stat.mtimeMs
+      break
+    } catch { continue }
+  }
+  if (globalAny.memoryDb && currentMtime <= dbFileMtime) {
     return globalAny.memoryDb
   }
 
@@ -412,6 +422,7 @@ export async function getDb(retries = 3): Promise<any> {
     parsed.settings = { ...INITIAL_DATA.settings, ...parsed.settings }
     
     // Cache it in memory so future reads/writes persist across hot-reloads and Vercel serverless requests
+    dbFileMtime = currentMtime
     globalAny.memoryDb = parsed
     return parsed
   } catch (error: any) {
@@ -441,6 +452,7 @@ export async function getDb(retries = 3): Promise<any> {
 
 export async function saveDb(data: any, targetPath?: string) {
   globalAny.memoryDb = data
+  dbFileMtime = Date.now()
   const paths = targetPath ? [targetPath, TMP_DB_PATH, ...DB_PATHS] : [TMP_DB_PATH, ...DB_PATHS]
   const seen = new Set<string>()
   let wroteAny = false
