@@ -1,13 +1,45 @@
-export const dynamic = 'force-dynamic'
-
 import { NextResponse } from 'next/server'
 import { getProducts, addProduct, updateProduct, deleteProduct, bulkUpdateProducts } from '@/lib/db'
 import { ProductCreationSchema, ProductUpdateSchema } from '@/lib/validations/products'
+import { normalizeCategorySlug } from '@/lib/normalize-product'
 
-export async function GET() {
+let productsCache: { data: any[]; timestamp: number } | null = null
+const PRODUCTS_CACHE_TTL = 30000
+
+export async function GET(req: Request) {
   try {
-    const products = await getProducts()
-    return NextResponse.json(products, {
+    const url = new URL(req.url)
+    const category = url.searchParams.get('category')
+    const search = url.searchParams.get('search')
+    const limitParam = url.searchParams.get('limit')
+    const offsetParam = url.searchParams.get('offset')
+
+    let products: any[]
+    if (productsCache && Date.now() - productsCache.timestamp < PRODUCTS_CACHE_TTL) {
+      products = productsCache.data
+    } else {
+      products = await getProducts()
+      productsCache = { data: products, timestamp: Date.now() }
+    }
+
+    let filtered = products
+    if (category) {
+      const cat = normalizeCategorySlug(category)
+      filtered = filtered.filter((p: any) => normalizeCategorySlug(p.category_slug) === cat)
+    }
+    if (search) {
+      const lq = search.toLowerCase()
+      filtered = filtered.filter((p: any) =>
+        p.name?.toLowerCase().includes(lq) || p.brand?.toLowerCase().includes(lq)
+      )
+    }
+
+    // Support pagination via query params
+    const offset = parseInt(offsetParam || '0')
+    const limit = parseInt(limitParam || '0')
+    const result = (limit > 0) ? filtered.slice(offset, offset + limit) : filtered
+
+    return NextResponse.json(result, {
       headers: {
         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
       },

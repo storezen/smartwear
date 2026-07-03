@@ -464,31 +464,23 @@ export async function saveDb(data: any, targetPath?: string) {
 // --- Helper Functions ---
 
 // Products
+let productsCache: { data: any[]; timestamp: number } | null = null
+const PRODUCTS_CACHE_TTL = 30000
+
 export async function getProducts() {
   if (supabase) {
-    let allData: any[] = []
-    const PAGE_SIZE = 1000
-    let from = 0
-    let to = PAGE_SIZE - 1
-    let hasMore = true
-    while (hasMore) {
-      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false }).range(from, to)
-      if (error) {
-        console.error('Supabase getProducts error:', error)
-        break
-      }
-      if (data && data.length > 0) {
-        allData = allData.concat(data)
-        if (data.length < PAGE_SIZE) hasMore = false
-        else { from += PAGE_SIZE; to += PAGE_SIZE }
-      } else {
-        hasMore = false
-      }
+    const { data, error, count } = await supabase
+      .from('products')
+      .select('*', { count: 'exact', head: false })
+      .order('created_at', { ascending: false })
+      .limit(5000)
+    if (error) {
+      console.error('Supabase getProducts error:', error)
     }
-    if (allData.length > 0) {
+    if (data && data.length > 0) {
       const db = await getDb()
       const localMap = new Map((db.products || []).map((p: any) => [p.slug, p]))
-      return normalizeProductList(allData.map((p: any) => ({ ...(localMap.get(p.slug) || {}), ...p })))
+      return normalizeProductList(data.map((p: any) => ({ ...(localMap.get(p.slug) || {}), ...p })))
     }
   }
 
@@ -695,12 +687,16 @@ export async function getOrderById(id: string) {
 }
 
 export async function createOrder(order: any) {
-  // Deduct stock is complex in API, but for simplicity we fetch and update
   if (supabase) {
     const deductedItems: { id: string; quantity: number }[] = []
+    const itemIds = order.items.map((i: any) => i.id)
+    const { data: productsForStock } = await supabase
+      .from('products')
+      .select('id, stock, name')
+      .in('id', itemIds)
+    const stockMap = new Map((productsForStock || []).map((p: any) => [p.id, p]))
     for (const item of order.items) {
-      const { data: product, error: pError } = await supabase.from('products').select('id, stock, name').eq('id', item.id).single()
-      if (pError) { console.warn("Supabase product check failed:", pError.message); continue }
+      const product = stockMap.get(item.id)
       if (product && (product.stock || 0) >= item.quantity) {
         await supabase.from('products').update({ stock: product.stock - item.quantity }).eq('id', item.id)
         deductedItems.push({ id: item.id, quantity: item.quantity })
@@ -721,9 +717,17 @@ export async function createOrder(order: any) {
       return data
     }
     console.warn("Supabase createOrder failed, falling back to memory:", error?.message)
-    for (const item of deductedItems) {
-      const { data: product } = await supabase.from('products').select('stock').eq('id', item.id).single()
-      if (product) await supabase.from('products').update({ stock: (product.stock || 0) + item.quantity }).eq('id', item.id)
+    if (deductedItems.length > 0) {
+      const deductIds = deductedItems.map(d => d.id)
+      const { data: rollbackProducts } = await supabase
+        .from('products')
+        .select('id, stock')
+        .in('id', deductIds)
+      const rollbackMap = new Map((rollbackProducts || []).map((p: any) => [p.id, p]))
+      for (const item of deductedItems) {
+        const product = rollbackMap.get(item.id)
+        if (product) await supabase.from('products').update({ stock: (product.stock || 0) + item.quantity }).eq('id', item.id)
+      }
     }
   }
 
@@ -762,9 +766,15 @@ export async function updateOrderStatus(orderId: string, status: string, postexI
       order.history.push({ status, timestamp: new Date().toISOString(), note: note || `Status updated to ${status}` })
     }
     if (!isCancelledOrReturned(order.status)) {
-      if (isCancelledOrReturned(status)) {
+      if (isCancelledOrReturned(status) && order.items?.length > 0) {
+        const itemIds = order.items.map((i: any) => i.id)
+        const { data: restoreProducts } = await supabase
+          .from('products')
+          .select('id, stock')
+          .in('id', itemIds)
+        const restoreMap = new Map((restoreProducts || []).map((p: any) => [p.id, p]))
         for (const item of order.items) {
-          const { data: product } = await supabase.from('products').select('stock').eq('id', item.id).single()
+          const product = restoreMap.get(item.id)
           if (product) await supabase.from('products').update({ stock: (product.stock || 0) + item.quantity }).eq('id', item.id)
         }
       }

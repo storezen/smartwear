@@ -224,7 +224,7 @@ export default function ProductPage() {
 
             if (realProduct.category_slug) {
               try {
-                const catRes = await fetch(`/api/products?category=${realProduct.category_slug}`)
+                const catRes = await fetch(`/api/products?category=${realProduct.category_slug}&limit=8`)
                 if (catRes.ok) {
                   const allCat = await catRes.json()
                   const filtered = (Array.isArray(allCat) ? allCat : []).filter(

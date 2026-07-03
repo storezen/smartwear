@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
+import fs from 'fs/promises'
+import path from 'path'
 
 const PROVINCE_MAP: Record<string, string> = {
   'Gilgit Baltistan': 'Gilgit-Baltistan',
-  'Gilgit-Baltistan': 'Gilgit-Baltistan',
   'Islamabad': 'Islamabad Capital Territory',
   'Azad Kashmir': 'Azad Kashmir',
   'Punjab': 'Punjab',
@@ -12,7 +13,25 @@ const PROVINCE_MAP: Record<string, string> = {
 }
 
 const CACHE_TTL = 86400000
+const CACHE_FILE = '/tmp/cities-cache.json'
 let cache: { data: any[]; timestamp: number } | null = null
+
+async function readFileCache(): Promise<any[] | null> {
+  try {
+    const raw = await fs.readFile(CACHE_FILE, 'utf-8')
+    const parsed = JSON.parse(raw)
+    if (parsed && Array.isArray(parsed.data) && Date.now() - parsed.timestamp < CACHE_TTL) {
+      return parsed.data
+    }
+  } catch {}
+  return null
+}
+
+async function writeFileCache(data: any[]) {
+  try {
+    await fs.writeFile(CACHE_FILE, JSON.stringify({ data, timestamp: Date.now() }))
+  } catch {}
+}
 
 async function fetchJson(url: string) {
   const res = await fetch(url, { next: { revalidate: 86400 } })
@@ -60,6 +79,12 @@ export async function GET() {
       return NextResponse.json(cache.data)
     }
 
+    const fileData = await readFileCache()
+    if (fileData) {
+      cache = { data: fileData, timestamp: Date.now() }
+      return NextResponse.json(fileData)
+    }
+
     const BASE = 'https://raw.githubusercontent.com/open-admin-data/pakistan-administrative-divisions/main/data'
 
     const [districts, tehsils, townsCsv] = await Promise.all([
@@ -68,7 +93,6 @@ export async function GET() {
       fetchCsv('https://opendata.com.pk/dataset/e1e7b831-9b38-4c04-98c1-cb500a29ef76/resource/a20dc97b-5b2d-48d6-9632-ce696a744b3f/download/pakistani-cities-towns-and-villages-with-districts.csv').catch(() => ''),
     ])
 
-    // Build district → province map from open-admin districts
     const districtProvinceMap = new Map<string, string>()
     for (const d of districts) {
       const rawProvince = d.ancestors?.[0]?.name?.en || 'Unknown'
@@ -76,7 +100,6 @@ export async function GET() {
       districtProvinceMap.set(d.name.en.toLowerCase(), province)
     }
 
-    // Parse towns CSV and map to provinces
     const towns = townsCsv ? parseCsv(townsCsv) : []
     const townCities = towns
       .map((t) => ({
@@ -101,6 +124,7 @@ export async function GET() {
     })
 
     cache = { data: unique, timestamp: Date.now() }
+    writeFileCache(unique)
     return NextResponse.json(unique)
   } catch {
     return NextResponse.json({ error: 'Failed to load cities' }, { status: 500 })

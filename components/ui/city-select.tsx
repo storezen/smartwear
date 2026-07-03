@@ -17,13 +17,15 @@ export function CitySelect({ value, onChange, showCoverage = true, className = "
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState("")
   const [pos, setPos] = useState({ top: 0, left: 0, width: 0 })
-  const [grouped, setGrouped] = useState<Record<string, CityEntry[]>>({})
+  const [grouped, setGrouped] = useState<Record<string, CityEntry[]>>(() => getCitiesByProvinceSync())
   const [loading, setLoading] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const portalRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const hasFallback = Object.keys(grouped).length > 0
+    if (hasFallback) setLoading(false)
     loadCities().then(() => {
       setGrouped(getCitiesByProvinceSync())
       setLoading(false)

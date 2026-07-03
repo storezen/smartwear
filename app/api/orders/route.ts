@@ -23,15 +23,23 @@ function isCancelledOrReturned(status: string): boolean {
   return s === 'cancelled' || s === 'returned' || s === 'rto' || s === 'rto delivered' || s.includes('return to origin') || s === 'lost' || s === 'stolen' || s === 'damage'
 }
 
-// Helper to get real product prices & cost prices
-async function getRealProductPrice(productId: string): Promise<number | null> {
+// Batch load products once for price/cost lookups
+let _productMap: Map<string, any> | null = null
+async function getProductMap(): Promise<Map<string, any>> {
+  if (_productMap) return _productMap
   const products = await getProducts()
-  const p = products.find((x: any) => x.id === productId)
+  _productMap = new Map(products.map((p: any) => [p.id, p]))
+  return _productMap
+}
+
+async function getRealProductPrice(productId: string): Promise<number | null> {
+  const map = await getProductMap()
+  const p = map.get(productId)
   return p ? p.price : null
 }
 async function getProductCostPrice(productId: string): Promise<number | null> {
-  const products = await getProducts()
-  const p = products.find((x: any) => x.id === productId)
+  const map = await getProductMap()
+  const p = map.get(productId)
   return p && p.cost_price ? p.cost_price : null
 }
 
@@ -187,6 +195,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    _productMap = null
     const ip = req.headers.get('x-forwarded-for') || '127.0.0.1'
     
     // 1. Rate Limiting
@@ -263,8 +272,17 @@ export async function POST(req: Request) {
     if (isSupabaseConfigured() && supabase) {
       const orderId = `ORD-${crypto.randomUUID().slice(0, 8).toUpperCase()}`
       const deductedItems: { id: string; quantity: number }[] = []
+
+      // Batch fetch all products for stock deduction
+      const itemIds = payload.items.map((i: any) => i.id)
+      const { data: productsForStock } = await supabase
+        .from('products')
+        .select('id, stock')
+        .in('id', itemIds)
+
+      const stockMap = new Map((productsForStock || []).map((p: any) => [p.id, p]))
       for (const item of payload.items) {
-        const { data: product } = await supabase.from('products').select('id, stock').eq('id', item.id).single()
+        const product = stockMap.get(item.id)
         if (product && (product.stock || 0) >= item.quantity) {
           await supabase.from('products').update({ stock: product.stock - item.quantity }).eq('id', item.id)
           deductedItems.push({ id: item.id, quantity: item.quantity })
@@ -289,9 +307,18 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: true, order: supabaseOrder }, { status: 201 })
       } else {
         console.warn("Supabase create order failed, falling back to local DB:", error?.message)
-        for (const item of deductedItems) {
-          const { data: product } = await supabase.from('products').select('stock').eq('id', item.id).single()
-          if (product) await supabase.from('products').update({ stock: (product.stock || 0) + item.quantity }).eq('id', item.id)
+        // Rollback: fetch all products once, restore stock
+        if (deductedItems.length > 0) {
+          const deductIds = deductedItems.map(d => d.id)
+          const { data: rollbackProducts } = await supabase
+            .from('products')
+            .select('id, stock')
+            .in('id', deductIds)
+          const rollbackMap = new Map((rollbackProducts || []).map((p: any) => [p.id, p]))
+          for (const item of deductedItems) {
+            const product = rollbackMap.get(item.id)
+            if (product) await supabase.from('products').update({ stock: (product.stock || 0) + item.quantity }).eq('id', item.id)
+          }
         }
       }
     }
