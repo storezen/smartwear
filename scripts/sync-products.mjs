@@ -75,7 +75,7 @@ async function main() {
   let errors = 0
   for (let i = 0; i < products.length; i += BATCH_SIZE) {
     const batch = products.slice(i, i + BATCH_SIZE)
-    const { error } = await supabase.from('products').upsert(batch, { onConflict: 'id', ignoreDuplicates: false })
+    const { error } = await supabase.from('products').insert(batch)
     if (error) {
       console.error(`Batch ${i / BATCH_SIZE + 1} error:`, error.message)
       errors++
