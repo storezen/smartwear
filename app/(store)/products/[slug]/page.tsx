@@ -778,7 +778,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   initial="hidden" animate="show" variants={fadeUp} custom={4}
                   onClick={handleQuickBuy}
                   disabled={product.stock === 0 || isAddingToCart}
-                  className="flex-1 h-16 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_30px_rgba(184,134,11,0.3)] hover:shadow-[0_0_40px_rgba(184,134,11,0.5)] transition-all sw-interactive disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 h-16 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] relative overflow-hidden shadow-[0_0_30px_rgba(184,134,11,0.3)] hover:shadow-[0_0_40px_rgba(184,134,11,0.5)] transition-all sw-interactive disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                   <div className="relative flex flex-col items-center justify-center h-full">
@@ -1059,7 +1059,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
           <button
             onClick={handleQuickBuy}
             disabled={product.stock === 0 || isAddingToCart}
-            className="flex-1 h-14 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_20px_rgba(184,134,11,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive"
+            className="flex-1 h-14 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] relative overflow-hidden shadow-[0_0_20px_rgba(184,134,11,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive"
           >
             <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <div className="relative z-10 flex items-center justify-center gap-2 text-black font-bold uppercase tracking-widest">

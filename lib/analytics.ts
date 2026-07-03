@@ -96,8 +96,6 @@ function cleanCampaign(campaign: string): string {
   if (!cleaned || cleaned === "" || cleaned === "Direct / Organic") return "Direct / Organic"
   if (/^_{2,}[A-Z_]+_{2,}$/.test(cleaned)) return "Direct / Organic"
   if (/^\{\{.*\}\}$/.test(cleaned)) return "Direct / Organic"
-  if (/^Sales\d{14}$/.test(cleaned)) return "Direct / Organic"
-  if (/^[A-Z]\w{20,}$/.test(cleaned) && !/^[A-Z][a-z]/.test(cleaned)) return "Direct / Organic"
   return cleaned
 }
 

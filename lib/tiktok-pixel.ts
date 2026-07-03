@@ -138,16 +138,28 @@ function sendToAnalytics(event: string, meta?: AnalyticsMeta) {
     const ttclid = urlParams.get('ttclid')
     const utmCampaign = urlParams.get('utm_campaign')
     let campaign = 'Direct / Organic'
-    if (utmCampaign) {
+    if (ttclid) {
+      campaign = 'TikTok Ad'
+      sessionStorage.setItem('utm_campaign', utmCampaign || 'TikTok Ad')
+    } else if (utmCampaign) {
       campaign = utmCampaign
       sessionStorage.setItem('utm_campaign', utmCampaign)
-    } else if (ttclid) {
-      campaign = 'TikTok Ad'
-      sessionStorage.setItem('utm_campaign', 'TikTok Ad')
     } else {
       campaign = sessionStorage.getItem('utm_campaign') || 'Direct / Organic'
     }
     if (ttclid) sessionStorage.setItem('ttclid', ttclid)
+
+    // Fallback: detect TikTok from referrer (works even without ttclid/UTM)
+    if (!ttclid && !utmCampaign && campaign === 'Direct / Organic') {
+      try {
+        const ref = document.referrer || ''
+        if (ref.includes('tiktok.com') || ref.includes('tiktokcdn')) {
+          campaign = 'TikTok'
+          sessionStorage.setItem('utm_campaign', 'TikTok')
+          sessionStorage.setItem('ttclid', 'referrer-' + Date.now())
+        }
+      } catch {}
+    }
 
     const itemName = meta?.itemName || 'Store Visit'
     let sessionId = sessionStorage.getItem('live_session_id')
