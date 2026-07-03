@@ -108,13 +108,6 @@ function isInWindow(ts: string, windowMs: number): boolean {
 const ACTIVE_WINDOW_MS = 30_000
 
 export function getActiveVisitors(events: AnalyticsEvent[]): number {
-  if (typeof window === "undefined") {
-    try {
-      const { getActiveCount } = require("@/lib/presence")
-      const count = getActiveCount()
-      if (count > 0) return count
-    } catch {}
-  }
   return new Set(
     events.filter((e) => isInWindow(e.timestamp, ACTIVE_WINDOW_MS)).map((e) => e.session_id)
   ).size
@@ -131,6 +124,7 @@ export function getActiveVisitorsTrend(events: AnalyticsEvent[]): number {
       return t >= now - 2 * ACTIVE_WINDOW_MS && t < now - ACTIVE_WINDOW_MS
     }).map((e) => e.session_id)
   )
+  if (current.size === 0 && previous.size === 0) return 0
   if (previous.size === 0) return current.size > 0 ? 100 : 0
   return Math.round(((current.size - previous.size) / previous.size) * 100)
 }

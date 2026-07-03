@@ -175,7 +175,11 @@ export function useRealtimeAnalytics(
         fetchHeartbeatCount(),
       ])
       if (mountedRef.current) {
-        setSummary({ ...local, activeVisitors: heartbeat || local.activeVisitors })
+        if (heartbeat > 0) {
+          setSummary({ ...local, activeVisitors: heartbeat, activeVisitorsTrend: 0 })
+        } else {
+          setSummary(local)
+        }
       }
     }, 150)
   }, [fetchHeartbeatCount])
