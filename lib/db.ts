@@ -482,17 +482,16 @@ const PRODUCTS_CACHE_TTL = 30000
 export async function getProducts() {
   if (supabase) {
     let allData: any[] = []
-    const PAGE_SIZE = 2000
+    const PAGE_SIZE = 1000
     let from = 0
-    let to = PAGE_SIZE - 1
     let hasMore = true
     while (hasMore) {
-      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false }).range(from, to)
+      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false }).range(from, from + PAGE_SIZE - 1)
       if (error) { console.error('Supabase getProducts error:', error); break }
       if (data && data.length > 0) {
         allData = allData.concat(data)
         if (data.length < PAGE_SIZE) hasMore = false
-        else { from += PAGE_SIZE; to += PAGE_SIZE }
+        else { from += PAGE_SIZE }
       } else { hasMore = false }
     }
     if (allData.length > 0) {
