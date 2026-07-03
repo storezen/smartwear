@@ -280,6 +280,7 @@ export default function LiveAnalyticsPage() {
                   trend={summary?.activeVisitorsTrend}
                   trendLabel="vs last 5 min"
                   icon={<Users className="w-3 h-3" />}
+                  info="People actively browsing your store right now"
                   accentColor="#B8860B"
                 />
               </div>
@@ -290,14 +291,16 @@ export default function LiveAnalyticsPage() {
                   prefix="PKR "
                   decimals={0}
                   icon={<DollarSign className="w-3 h-3" />}
+                  info="Revenue from completed orders"
                   accentColor="#10B981"
                 />
               </div>
               <div className="h-full">
                 <LiveStatsCard
-                  title="Sessions"
+                  title="Visits"
                   value={summary?.totalSessions ?? 0}
                   icon={<Activity className="w-3 h-3" />}
+                  info="Total store visits (each time someone opens your store)"
                   accentColor="#6366F1"
                 />
               </div>
@@ -306,6 +309,7 @@ export default function LiveAnalyticsPage() {
                   title="Orders"
                   value={summary?.totalOrders ?? 0}
                   icon={<ShoppingCart className="w-3 h-3" />}
+                  info="Completed orders placed"
                   accentColor="#F59E0B"
                 />
               </div>
@@ -317,6 +321,7 @@ export default function LiveAnalyticsPage() {
                   trend={-(summary?.abandonmentRate ?? 0)}
                   trendLabel="cart abandonment"
                   icon={<Eye className="w-3 h-3" />}
+                  info="% of people who add to cart but don't buy. Lower is better."
                   accentColor="#EC4899"
                   isInverseTrend={true}
                 />

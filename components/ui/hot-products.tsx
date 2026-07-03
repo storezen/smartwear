@@ -2,7 +2,7 @@
 
 import { memo, useMemo } from "react"
 import { motion } from "framer-motion"
-import { TrendingUp, TrendingDown, Minus, Eye, ShoppingCart, DollarSign, Flame } from "lucide-react"
+import { TrendingUp, TrendingDown, Minus, Eye, Flame } from "lucide-react"
 
 interface HotProduct {
   name: string
@@ -107,8 +107,7 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
         {products.map((product, i) => {
           const barPct = top1Views > 0 ? Math.max((product.views / top1Views) * 100, 5) : 0
           const sharePct = totalViews > 0 ? Math.round((product.views / totalViews) * 100) : 0
-          const estCarts = Math.round(product.views * 0.12)
-          const estRevenue = estCarts * 8500
+
 
           return (
             <motion.div
@@ -129,15 +128,7 @@ export const HotProducts = memo(function HotProducts({ products }: HotProductsPr
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="flex items-center gap-0.5 text-[8px] text-foreground/60">
-                      <Eye className="w-2.5 h-2.5" /> {product.views}
-                    </span>
-                    <span className="text-[8px] text-foreground/60">•</span>
-                    <span className="flex items-center gap-0.5 text-[8px] text-foreground/60">
-                      <ShoppingCart className="w-2.5 h-2.5" /> ~{estCarts}
-                    </span>
-                    <span className="text-[8px] text-foreground/60">•</span>
-                    <span className="flex items-center gap-0.5 text-[8px] text-emerald-400/40">
-                      <DollarSign className="w-2.5 h-2.5" /> ₨{estRevenue.toLocaleString()}
+                      <Eye className="w-2.5 h-2.5" /> {product.views} {product.views === 1 ? 'view' : 'views'}
                     </span>
                   </div>
                 </div>

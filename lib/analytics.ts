@@ -81,7 +81,7 @@ export function parseEvent(raw: any): AnalyticsEvent {
     base_event: parts[0] || raw.event_name,
     item_name: parts[1] || "Store Visit",
     city: parts[2] || "PK",
-    campaign: parts[3] || "Direct / Organic",
+    campaign: cleanCampaign(parts[3] || "Direct / Organic"),
     session_id: parts[4] || raw.id,
     value: raw.value || 0,
     timestamp: raw.timestamp,
@@ -90,6 +90,16 @@ export function parseEvent(raw: any): AnalyticsEvent {
 
 const LAST_30_MIN = 30 * 60 * 1000
 const LAST_2_HOURS = 2 * 60 * 60 * 1000
+
+function cleanCampaign(campaign: string): string {
+  const cleaned = campaign.trim()
+  if (!cleaned || cleaned === "" || cleaned === "Direct / Organic") return "Direct / Organic"
+  if (/^_{2,}[A-Z_]+_{2,}$/.test(cleaned)) return "Direct / Organic"
+  if (/^\{\{.*\}\}$/.test(cleaned)) return "Direct / Organic"
+  if (/^Sales\d{14}$/.test(cleaned)) return "Direct / Organic"
+  if (/^[A-Z]\w{20,}$/.test(cleaned) && !/^[A-Z][a-z]/.test(cleaned)) return "Direct / Organic"
+  return cleaned
+}
 
 function isInWindow(ts: string, windowMs: number): boolean {
   return Date.now() - new Date(ts).getTime() <= windowMs
@@ -209,7 +219,7 @@ export function getHotProducts(events: AnalyticsEvent[]): HotProduct[] {
   return sorted.map(([name, views], i) => {
     const prev = older.get(name) || 0
     const trend: "up" | "down" | "stable" =
-      prev === 0 ? "up" : views > prev * 1.2 ? "up" : views < prev * 0.8 ? "down" : "stable"
+      prev === 0 || views <= 2 ? "stable" : views > prev * 1.2 ? "up" : views < prev * 0.8 ? "down" : "stable"
     return { name, views, rank: i + 1, trend }
   })
 }

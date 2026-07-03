@@ -1,6 +1,7 @@
 "use client"
 
-import { TrendingUp, TrendingDown } from "lucide-react"
+import { useState } from "react"
+import { TrendingUp, TrendingDown, Info } from "lucide-react"
 import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 
@@ -15,6 +16,7 @@ interface LiveStatsCardProps {
   icon?: React.ReactNode
   accentColor?: string
   isInverseTrend?: boolean
+  info?: string
 }
 
 function TrendIcon({ value: trend }: { value: number }) {
@@ -38,7 +40,9 @@ export function LiveStatsCard({
   icon,
   accentColor = "#B8860B",
   isInverseTrend = false,
+  info,
 }: LiveStatsCardProps) {
+  const [showInfo, setShowInfo] = useState(false)
   const trendColor =
     trend === undefined || trend === 0
       ? "text-foreground/40"
@@ -51,7 +55,26 @@ export function LiveStatsCard({
       <div className="flex items-start justify-between h-full">
         <div className="flex flex-col justify-between h-full min-h-[72px]">
           <div>
-            <p className="text-[9px] tracking-[1.5px] text-foreground/60 font-medium uppercase mb-1">{title}</p>
+            <div className="flex items-center gap-1">
+              <p className="text-[9px] tracking-[1.5px] text-foreground/60 font-medium uppercase mb-1">{title}</p>
+              {info && (
+                <div className="relative mb-1">
+                  <button
+                    onMouseEnter={() => setShowInfo(true)}
+                    onMouseLeave={() => setShowInfo(false)}
+                    onClick={() => setShowInfo(!showInfo)}
+                    className="text-foreground/20 hover:text-foreground/60 transition-colors"
+                  >
+                    <Info className="w-2.5 h-2.5" />
+                  </button>
+                  {showInfo && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-popover border border-border rounded-lg shadow-lg min-w-[160px] z-50">
+                      <p className="text-[9px] text-foreground/70 whitespace-normal leading-relaxed">{info}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
             <div className="flex items-baseline gap-2">
               <span className="text-xl font-bold tracking-tight text-foreground leading-none tabular-nums">
                 {prefix}<AnimatedCounter value={value} decimals={decimals} />{suffix}
