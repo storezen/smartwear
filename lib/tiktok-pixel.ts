@@ -36,13 +36,8 @@ let isInitialized = false
 export function initTikTokPixel(pixelId: string) {
   if (typeof window === 'undefined' || !pixelId || isInitialized) return
 
-  const script = document.createElement('script')
-  script.src = 'https://analytics.tiktok.com/i18n/pixel/events.js'
-  script.async = true
-  document.head.appendChild(script)
-
-  window.ttq = window.ttq || []
-  window.ttq.push(['init', pixelId])
+  // Inline script in layout.tsx already calls ttq.load(pixelId) which
+  // loads events.js and initializes the pixel. Here we only do post-init setup.
   isInitialized = true
 
   // Identify user if PII stored from previous session
@@ -50,7 +45,7 @@ export function initTikTokPixel(pixelId: string) {
   if (stored) identifyUser(stored.email, stored.phone, stored.name)
 
   if (TIKTOK_DEBUG_MODE) {
-    console.log('%c[TikTok Pixel] Initialized with ID:', 'color:#00f2fe; font-weight:bold', pixelId)
+    console.log('%c[TikTok Pixel] Provider ready with ID:', 'color:#00f2fe; font-weight:bold', pixelId)
   }
 }
 
@@ -218,7 +213,7 @@ interface TrackOptions {
 /* ── Core Track ── */
 
 export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
-  if (typeof window === 'undefined') return
+  if (typeof window === 'undefined' || !isInitialized) return
 
   const event_id = options.event_id || generateUUID()
   const testEventCode = options.test_event_code || (options._extra?.test_event_code as string | undefined)
@@ -266,7 +261,7 @@ export const TikTokEvents = {
   },
 
   pageView: () => {
-    if (typeof window !== 'undefined' && window.ttq) {
+    if (typeof window !== 'undefined' && isInitialized && window.ttq) {
       if (typeof window.ttq.page === 'function') window.ttq.page()
       else window.ttq.push(['page'])
     }
