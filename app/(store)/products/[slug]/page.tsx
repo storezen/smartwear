@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Minus, Plus, Star, Heart, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote, PackageOpen, Clock, Lock, CalendarDays } from 'lucide-react'
 import { ProductCard } from '@/components/store/premium-product-card'
 import { formatPrice } from '@/lib/mock-data'
@@ -332,10 +332,6 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
   const heroRef = useRef<HTMLDivElement>(null)
   const { addToCart } = useCart()
 
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
-  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
-
   useEffect(() => {
     setIsDesktop(window.innerWidth >= 768)
     const handleResize = () => setIsDesktop(window.innerWidth >= 768)
@@ -496,8 +492,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
             <SpotlightCard className={cn("aspect-[4/3] md:aspect-square lg:aspect-auto lg:h-[600px] xl:h-[700px] relative w-full rounded-[24px] md:rounded-[32px] overflow-hidden p-1 transition-colors duration-1000", lumeMode ? "bg-background/50 border border-emerald-500/20" : "bg-card border-border")}>
               <motion.div
                 ref={imageRef}
-                style={{ y: imageY, scale: imageScale }}
-                className={cn("relative w-full h-full rounded-[20px] md:rounded-[28px] overflow-hidden transition-shadow duration-700 transform-gpu cursor-crosshair", lumeMode ? "bg-black shadow-[0_0_80px_rgba(16,185,129,0.3)]" : "bg-background")}
+                className={cn("relative w-full h-full rounded-[20px] md:rounded-[28px] overflow-hidden transition-shadow duration-700 will-change-transform cursor-crosshair", lumeMode ? "bg-black shadow-[0_0_80px_rgba(16,185,129,0.3)]" : "bg-background")}
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => isDesktop && setIsZooming(true)}
                 onMouseLeave={() => setIsZooming(false)}
@@ -793,7 +788,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
         </div>
 
         {/* Product Details Tabs (with Reviews integrated) */}
-        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-8 lg:mt-12 pb-12 md:pb-0">
+        <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6} className="mt-8 lg:mt-12 pb-12 md:pb-0" style={{ contentVisibility: 'auto' as any, containIntrinsicSize: 'auto 600px' as any }}>
           {/* Tab Navigation */}
           <div className="p-1 rounded-2xl bg-card border border-border w-fit mb-3 md:mb-4 overflow-x-auto hide-scrollbar">
             <div className="flex items-center gap-1">
@@ -1039,7 +1034,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
       <PurchaseNotification productName={product.name} />
 
       {/* Mobile Sticky Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-t border-border p-4 md:hidden pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-t border-border p-4 md:hidden pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] will-change-transform">
         <button
           onClick={handleQuickBuy}
           disabled={product.stock === 0 || isAddingToCart}
