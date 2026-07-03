@@ -481,18 +481,24 @@ const PRODUCTS_CACHE_TTL = 30000
 
 export async function getProducts() {
   if (supabase) {
-    const { data, error, count } = await supabase
-      .from('products')
-      .select('*', { count: 'exact', head: false })
-      .order('created_at', { ascending: false })
-      .limit(5000)
-    if (error) {
-      console.error('Supabase getProducts error:', error)
+    let allData: any[] = []
+    const PAGE_SIZE = 2000
+    let from = 0
+    let to = PAGE_SIZE - 1
+    let hasMore = true
+    while (hasMore) {
+      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false }).range(from, to)
+      if (error) { console.error('Supabase getProducts error:', error); break }
+      if (data && data.length > 0) {
+        allData = allData.concat(data)
+        if (data.length < PAGE_SIZE) hasMore = false
+        else { from += PAGE_SIZE; to += PAGE_SIZE }
+      } else { hasMore = false }
     }
-    if (data && data.length > 0) {
+    if (allData.length > 0) {
       const db = await getDb()
       const localMap = new Map((db.products || []).map((p: any) => [p.slug, p]))
-      return normalizeProductList(data.map((p: any) => ({ ...(localMap.get(p.slug) || {}), ...p })))
+      return normalizeProductList(allData.map((p: any) => ({ ...(localMap.get(p.slug) || {}), ...p })))
     }
   }
 

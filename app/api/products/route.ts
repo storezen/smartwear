@@ -4,7 +4,7 @@ import { ProductCreationSchema, ProductUpdateSchema } from '@/lib/validations/pr
 import { normalizeCategorySlug } from '@/lib/normalize-product'
 
 let productsCache: { data: any[]; timestamp: number } | null = null
-const PRODUCTS_CACHE_TTL = 30000
+const PRODUCTS_CACHE_TTL = 5000
 
 export async function GET(req: Request) {
   try {
@@ -13,8 +13,10 @@ export async function GET(req: Request) {
     const search = url.searchParams.get('search')
     const limitParam = url.searchParams.get('limit')
     const offsetParam = url.searchParams.get('offset')
+    const noCache = url.searchParams.get('no-cache') === '1'
 
     let products: any[]
+    if (noCache) productsCache = null
     if (productsCache && Date.now() - productsCache.timestamp < PRODUCTS_CACHE_TTL) {
       products = productsCache.data
     } else {
