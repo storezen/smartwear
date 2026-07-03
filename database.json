@@ -1,6 +1,38 @@
 {
   "products": [
     {
+      "id": "PROD-qfhxp5uu8-1781831031131",
+      "slug": "series-11-(allow-to-open-|-cash-on-delivery)",
+      "name": "Series 11 (Allow to open | Cash on delivery)",
+      "description": "Series 11 Master Copy with premium features. HD display, Bluetooth calling, health tracking, and 7-day battery. Open box delivery available with cash on delivery.",
+      "price": 5500,
+      "compare_price": 8500,
+      "stock": 195,
+      "brand": "SMARTWEAR",
+      "category_slug": "smart-watches",
+      "images": [
+        "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&q=80",
+        "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=800&q=80",
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80"
+      ],
+      "tags": ["smartwatch", "series 11", "cod"],
+      "is_active": true,
+      "is_featured": true,
+      "status": "Active",
+      "specifications": {
+        "Display": "2.05 HD IPS",
+        "Battery": "420mAh",
+        "Bluetooth": "5.3 Calling",
+        "Water Resistant": "IP67",
+        "Case Size": "45mm"
+      },
+      "rating": 4.8,
+      "reviews_count": 33,
+      "created_at": "2026-06-19T01:03:51.131Z",
+      "colors": ["black", "silver"],
+      "upsell_accessories": []
+    },
+    {
       "id": "prod-smart-1",
       "name": "Smart Watch Pro Max (Test)",
       "slug": "smart-watch-pro-max-test",
