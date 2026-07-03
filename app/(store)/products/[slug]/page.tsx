@@ -282,6 +282,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
   const [selectedImage, setSelectedImage] = useState(0)
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description')
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
+  const { itemCount } = useCart()
   const isWishlisted = isInWishlist(product?.id || '')
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 })
@@ -629,10 +630,11 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   </div>
                 </div>
 
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="hidden md:flex items-center gap-2 text-foreground/80 bg-card border border-border w-fit px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-4">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-2 text-foreground/80 bg-card border border-border w-fit px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-4">
                   <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
                   <span className="font-bold text-foreground mr-0.5">{viewers}</span>
-                  <span className="whitespace-nowrap">people are viewing this right now</span>
+                  <span className="whitespace-nowrap hidden sm:inline">people are viewing this right now</span>
+                  <span className="whitespace-nowrap sm:hidden">viewing now</span>
                 </motion.div>
 
                 <h1 className="hidden md:block text-2xl md:text-3xl font-bold text-foreground leading-snug tracking-wide" style={{ fontFamily: "var(--font-heading),'Poppins',system-ui,sans-serif" }}>
@@ -763,6 +765,14 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                 </button>
               </motion.div>
 
+              <div className="flex items-center gap-3 text-[11px] text-foreground/60 bg-card border border-border rounded-xl px-4 py-2.5">
+                <span className="flex items-center gap-1"><Banknote className="w-3.5 h-3.5 text-emerald-400" /> COD</span>
+                <span className="text-foreground/20">|</span>
+                <span className="flex items-center gap-1"><Truck className="w-3.5 h-3.5 text-emerald-400" /> Free Delivery</span>
+                <span className="text-foreground/20 hidden xs:inline">|</span>
+                <span className="hidden xs:flex items-center gap-1"><RotateCcw className="w-3.5 h-3.5 text-emerald-400" /> 7-Day Replacement</span>
+              </div>
+
               <div className="flex gap-2">
                 <motion.button
                   initial="hidden" animate="show" variants={fadeUp} custom={4}
@@ -770,7 +780,12 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                   disabled={product.stock === 0}
                   className="flex-1 h-16 rounded-xl bg-card border border-border text-foreground font-bold text-xs uppercase tracking-widest hover:bg-card/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  <ShoppingCart className="w-5 h-5 shrink-0" />
+                  <div className="relative">
+                    <ShoppingCart className="w-5 h-5 shrink-0" />
+                    {itemCount > 0 && (
+                      <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-[#B8860B] text-[9px] font-black text-black flex items-center justify-center">{itemCount}</span>
+                    )}
+                  </div>
                   <span>Add to Cart</span>
                   <span className="text-foreground/60 text-[10px] font-medium">{formatPrice(product.price * quantity)}</span>
                 </motion.button>
@@ -1051,10 +1066,18 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
           <button
             onClick={handleAddToCart}
             disabled={product.stock === 0}
-            className="flex-1 h-14 rounded-xl bg-card border border-border text-foreground font-bold text-xs uppercase tracking-widest hover:bg-card/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 h-14 rounded-xl bg-card border border-border text-foreground font-bold text-xs uppercase tracking-widest hover:bg-card/80 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
           >
-            <ShoppingCart className="w-4 h-4 shrink-0" />
-            <span>Cart</span>
+            <div className="relative">
+              <ShoppingCart className="w-4 h-4 shrink-0" />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-[#B8860B] text-[9px] font-black text-black flex items-center justify-center">{itemCount}</span>
+              )}
+            </div>
+            <div className="flex flex-col items-start leading-tight">
+              <span>Add to Cart</span>
+              <span className="text-[10px] text-foreground/50 font-normal normal-case">{formatPrice(product.price * quantity)}</span>
+            </div>
           </button>
           <button
             onClick={handleQuickBuy}
@@ -1066,10 +1089,9 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
               {isAddingToCart ? (
                 <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
               ) : (
-                <Truck className="w-4 h-4 shrink-0" />
+                <Zap className="w-4 h-4 shrink-0" />
               )}
-              <span className="text-[11px]">{isAddingToCart ? 'Adding...' : 'Buy Now'}</span>
-              <span className="text-sm font-black">{formatPrice(product.price * quantity)}</span>
+              <span className="text-[11px]">{isAddingToCart ? 'Adding...' : 'Buy Now — COD'}</span>
             </div>
           </button>
         </div>
