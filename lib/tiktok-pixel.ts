@@ -1,3 +1,5 @@
+import { detectCity } from "@/lib/geolocation"
+
 /**
  * TikTok Pixel — Smartwear GOD MODE Implementation
  * 
@@ -147,12 +149,6 @@ function sendToAnalytics(event: string, meta?: AnalyticsMeta) {
     }
     if (ttclid) sessionStorage.setItem('ttclid', ttclid)
 
-    let city = 'PK'
-    try {
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
-      city = tz.split('/')[1]?.replace('_', ' ') || 'PK'
-    } catch {}
-
     const itemName = meta?.itemName || 'Store Visit'
     let sessionId = sessionStorage.getItem('live_session_id')
     if (!sessionId) {
@@ -160,10 +156,22 @@ function sendToAnalytics(event: string, meta?: AnalyticsMeta) {
       sessionStorage.setItem('live_session_id', sessionId)
     }
 
+    // Use cached city or detect asynchronously — default to timezone fallback immediately
+    const cachedCity = sessionStorage.getItem('sw_city')
+    const city = cachedCity || (() => {
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+        return tz.split('/')[1]?.replace(/_/g, ' ') || 'PK'
+      } catch { return 'PK' }
+    })()
+
     navigator.sendBeacon('/api/analytics', new Blob([JSON.stringify({
       event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
       value: meta?.value || 0
     })], { type: 'application/json' }))
+
+    // Kick off geo detection in background for next event
+    if (!cachedCity) detectCity()
   } catch {}
 }
 
