@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -32,6 +32,34 @@ export default function CheckoutPage() {
   const [promoCodeInput, setPromoCodeInput] = useState('')
   const [appliedPromo, setAppliedPromo] = useState<{code: string; discount: number} | null>(null)
   const [promoError, setPromoError] = useState('')
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const formRef = useRef<HTMLDivElement>(null)
+
+  const validateField = (field: string, value: string) => {
+    const phoneRegex = /^(03|\+923)[0-9]{2}[-\s]?[0-9]{7}$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    let msg = ''
+    if (field === 'name' && value.length < 3) msg = 'Please enter your full name'
+    if (field === 'phone' && !phoneRegex.test(value)) msg = 'Enter a valid Pakistani number (e.g. 0300 1234567)'
+    if (field === 'email' && value && !emailRegex.test(value)) msg = 'Enter a valid email address'
+    if (field === 'address' && value.length < 10) msg = 'Enter complete address (house, street, area)'
+    setErrors(prev => ({ ...prev, [field]: msg }))
+    return !msg
+  }
+
+  useEffect(() => {
+    try {
+      const savedPhone = sessionStorage.getItem('sw_phone')
+      const savedEmail = sessionStorage.getItem('sw_email')
+      setGuestAddress(prev => ({
+        ...prev,
+        phone: savedPhone || prev.phone,
+        email: savedEmail || prev.email,
+      }))
+    } catch {}
+  }, [])
+
   useEffect(() => {
     fetch('/api/public/settings')
       .then(r => r.json())
@@ -165,17 +193,42 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async () => {
     handleIdentifyUser()
-    if (guestAddress.name.length < 3) {
-      toast.error('Please enter your full name')
-      return
-    }
+
+    const fieldChecks: [string, string, string][] = [
+      ['name', guestAddress.name, 'Please enter your full name'],
+      ['phone', guestAddress.phone, 'Please enter a valid Pakistani phone number (e.g. 0300 1234567)'],
+      ['email', guestAddress.email, 'Please enter your email for the receipt'],
+      ['address', guestAddress.address_line1, 'Please enter your complete delivery address'],
+    ]
+
     const phoneRegex = /^(03|\+923)[0-9]{2}[-\s]?[0-9]{7}$/
-    if (!phoneRegex.test(guestAddress.phone)) {
-      toast.error('Please enter a valid Pakistani phone number (e.g. 0300 1234567)')
-      return
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    let firstError: HTMLElement | null = null
+    let hasError = false
+
+    for (const [field, value, msg] of fieldChecks) {
+      let valid = true
+      if (field === 'phone') valid = phoneRegex.test(value)
+      else if (field === 'email') valid = emailRegex.test(value)
+      else if (field === 'address') valid = value.length >= 10
+      else valid = value.length >= 3
+
+      setErrors(prev => ({ ...prev, [field]: valid ? '' : msg }))
+      if (!valid) {
+        hasError = true
+        if (!firstError) {
+          const el = document.getElementById(`field-${field}`)
+          if (el) firstError = el
+        }
+      }
     }
-    if (guestAddress.address_line1.length < 10) {
-      toast.error('Please enter your complete delivery address')
+
+    if (hasError) {
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        firstError.focus()
+      }
+      toast.error('Please fix the highlighted fields')
       return
     }
 
@@ -232,7 +285,7 @@ export default function CheckoutPage() {
       }
     } catch (e) {
       console.error('Order save failed', e)
-      toast.error('Failed to connect to database. Please check your internet connection.')
+      toast.error('Connection error — please check internet and try again.')
       setIsProcessing(false)
     }
   }
@@ -301,26 +354,39 @@ export default function CheckoutPage() {
                 <div>
                   <label className="block text-sm text-foreground/70 mb-1.5">Full Name</label>
                   <input
+                    id="field-name"
                     type="text"
                     value={guestAddress.name}
-                    onChange={(e) => setGuestAddress({ ...guestAddress, name: e.target.value })}
+                    onChange={(e) => {
+                      setGuestAddress({ ...guestAddress, name: e.target.value })
+                      if (errors.name) validateField('name', e.target.value)
+                    }}
+                    onBlur={(e) => validateField('name', e.target.value)}
                     placeholder="e.g. Ahmad Raza"
-                    className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
+                    autoComplete="name"
+                    className={`w-full bg-card border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none transition-colors min-h-[44px] ${errors.name ? 'border-red-400/50 focus:border-red-400' : 'border-border focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)]'}`}
                   />
+                  {errors.name && <p className="text-[11px] text-red-400/80 mt-1.5">{errors.name}</p>}
                 </div>
 
                 <div>
                   <label className="block text-sm text-foreground/70 mb-1.5">Phone Number</label>
                   <input
+                    id="field-phone"
                     type="tel"
+                    inputMode="numeric"
+                    autoComplete="tel"
                     value={guestAddress.phone}
                     onChange={(e) => {
                       setGuestAddress({ ...guestAddress, phone: e.target.value })
                       sessionStorage.setItem('sw_phone', e.target.value)
+                      if (errors.phone) validateField('phone', e.target.value)
                     }}
+                    onBlur={(e) => validateField('phone', e.target.value)}
                     placeholder="0300 1234567"
-                    className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
+                    className={`w-full bg-card border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none transition-colors min-h-[44px] ${errors.phone ? 'border-red-400/50 focus:border-red-400' : 'border-border focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)]'}`}
                   />
+                  {errors.phone && <p className="text-[11px] text-red-400/80 mt-1.5">{errors.phone}</p>}
                   <p className="text-[11px] sm:text-[10px] text-foreground/40 mt-1.5 flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
                     Courier will call this number before delivery
@@ -328,32 +394,44 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-foreground/70 mb-1.5">Email (for receipt)</label>
+                  <label className="block text-sm text-foreground/70 mb-1.5">Email <span className="text-foreground/30">(for receipt)</span></label>
                   <input
+                    id="field-email"
                     type="email"
+                    autoComplete="email"
                     value={guestAddress.email}
                     onChange={(e) => {
                       setGuestAddress({ ...guestAddress, email: e.target.value })
                       sessionStorage.setItem('sw_email', e.target.value)
+                      if (errors.email) validateField('email', e.target.value)
                     }}
+                    onBlur={(e) => validateField('email', e.target.value)}
                     placeholder="ahmad@example.com"
-                    className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px]"
+                    className={`w-full bg-card border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none transition-colors min-h-[44px] ${errors.email ? 'border-red-400/50 focus:border-red-400' : 'border-border focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)]'}`}
                   />
+                  {errors.email && <p className="text-[11px] text-red-400/80 mt-1.5">{errors.email}</p>}
                   <p className="text-[11px] sm:text-[10px] text-foreground/40 mt-1.5 flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
-                    Order receipt aur tracking link yahan bhejein ge
+                    Receipt aur tracking link yahan bhejein ge
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-sm text-foreground/70 mb-1.5">Delivery Address</label>
                   <textarea
+                    id="field-address"
                     value={guestAddress.address_line1}
-                    onChange={(e) => setGuestAddress({ ...guestAddress, address_line1: e.target.value })}
+                    onChange={(e) => {
+                      setGuestAddress({ ...guestAddress, address_line1: e.target.value })
+                      if (errors.address) validateField('address', e.target.value)
+                    }}
+                    onBlur={(e) => validateField('address', e.target.value)}
                     placeholder="House 4, Street 5, Phase 6, DHA"
                     rows={3}
-                    className="w-full bg-card border border-border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)] transition-colors min-h-[44px] resize-none"
+                    autoComplete="street-address"
+                    className={`w-full bg-card border rounded-xl px-4 py-3 text-foreground text-base md:text-sm focus:outline-none transition-colors min-h-[44px] resize-none ${errors.address ? 'border-red-400/50 focus:border-red-400' : 'border-border focus:border-[#B8860B] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)]'}`}
                   />
+                  {errors.address && <p className="text-[11px] text-red-400/80 mt-1.5">{errors.address}</p>}
                   <p className="text-[11px] sm:text-[10px] text-foreground/40 mt-1.5 flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#B8860B] mt-[1px]" />
                     Makaan number, Street, aur Area laazmi likhein
@@ -414,6 +492,15 @@ export default function CheckoutPage() {
                   </div>
                 </div>
               </div>
+
+              {!codAvailable && (
+                <div className="mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+                  <div className="flex items-center gap-2.5">
+                    <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                    <p className="text-[12px] text-red-300 font-medium">Cash on Delivery is currently unavailable in your area</p>
+                  </div>
+                </div>
+              )}
 
               {/* Place Order Button */}
               <button

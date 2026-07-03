@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Minus, Plus, Star, Heart, Shield, Truck, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote, PackageOpen, Clock, Lock, CalendarDays } from 'lucide-react'
+import { Minus, Plus, Star, Heart, Shield, Truck, ShoppingCart, RotateCcw, ChevronRight, Zap, CheckCircle2, Banknote, PackageOpen, Clock, Lock, CalendarDays } from 'lucide-react'
 import { ProductCard } from '@/components/store/premium-product-card'
 import { formatPrice } from '@/lib/mock-data'
 import type { Review } from '@/types'
@@ -763,26 +763,38 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
                 </button>
               </motion.div>
 
-              <motion.button
-                initial="hidden" animate="show" variants={fadeUp} custom={4}
-                onClick={handleQuickBuy}
-                disabled={product.stock === 0 || isAddingToCart}
-                className="group relative w-full h-16 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_30px_rgba(184,134,11,0.3)] hover:shadow-[0_0_40px_rgba(184,134,11,0.5)] transition-all sw-interactive disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                <div className="relative flex flex-col items-center justify-center h-full">
-                  <div className="flex items-center gap-3 text-black font-bold text-base uppercase tracking-widest">
-                    {isAddingToCart ? (
-                      <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Adding...</>
-                    ) : (
-                      <><Truck className="w-5 h-5" /> Quick Buy — Pay on Delivery</>
-                    )}
+              <div className="flex gap-2">
+                <motion.button
+                  initial="hidden" animate="show" variants={fadeUp} custom={4}
+                  onClick={handleAddToCart}
+                  disabled={product.stock === 0}
+                  className="flex-1 h-16 rounded-xl bg-card border border-border text-foreground font-bold text-xs uppercase tracking-widest hover:bg-card/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  <ShoppingCart className="w-5 h-5 shrink-0" />
+                  <span>Add to Cart</span>
+                  <span className="text-foreground/60 text-[10px] font-medium">{formatPrice(product.price * quantity)}</span>
+                </motion.button>
+                <motion.button
+                  initial="hidden" animate="show" variants={fadeUp} custom={4}
+                  onClick={handleQuickBuy}
+                  disabled={product.stock === 0 || isAddingToCart}
+                  className="flex-1 h-16 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_30px_rgba(184,134,11,0.3)] hover:shadow-[0_0_40px_rgba(184,134,11,0.5)] transition-all sw-interactive disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  <div className="relative flex flex-col items-center justify-center h-full">
+                    <div className="flex items-center gap-3 text-black font-bold text-xs uppercase tracking-widest">
+                      {isAddingToCart ? (
+                        <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Adding...</>
+                      ) : (
+                        <><Truck className="w-5 h-5" /> Buy Now — COD</>
+                      )}
+                    </div>
+                    <span className="text-black/70 text-[10px] font-medium tracking-widest uppercase mt-0.5">
+                      {formatPrice(product.price * quantity)}
+                    </span>
                   </div>
-                  <span className="text-black/70 text-[10px] font-medium tracking-widest uppercase mt-0.5">
-                    {formatPrice(product.price * quantity)}
-                  </span>
-                </div>
-              </motion.button>
+                </motion.button>
+              </div>
             </div>
           </div>
         </div>
@@ -1035,29 +1047,32 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
 
       {/* Mobile Sticky Action Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-t border-border p-4 md:hidden pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] will-change-transform">
-        <button
-          onClick={handleQuickBuy}
-          disabled={product.stock === 0 || isAddingToCart}
-          className="group relative w-full h-14 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_20px_rgba(184,134,11,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive"
-        >
-          <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          <div className="relative z-10 flex items-center justify-center gap-2 sm:hidden text-black font-bold uppercase tracking-widest">
-            {isAddingToCart ? (
-              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-            ) : (
-              <Truck className="w-4 h-4 shrink-0" />
-            )}
-            <span className="text-[13px]">{isAddingToCart ? 'Adding...' : 'Quick Buy — COD'}</span>
-            <span className="text-sm font-black ml-auto">{formatPrice(product.price * quantity)}</span>
-          </div>
-          <div className="relative z-10 hidden sm:flex items-center justify-center gap-3 text-black font-bold text-xs uppercase tracking-widest">
-            {isAddingToCart ? (
-              <><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Adding...</>
-            ) : (
-              <><Truck className="w-4 h-4" /><span>Quick Buy — Pay on Delivery</span><span className="text-sm font-black">{formatPrice(product.price * quantity)}</span></>
-            )}
-          </div>
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleAddToCart}
+            disabled={product.stock === 0}
+            className="flex-1 h-14 rounded-xl bg-card border border-border text-foreground font-bold text-xs uppercase tracking-widest hover:bg-card/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            <ShoppingCart className="w-4 h-4 shrink-0" />
+            <span>Cart</span>
+          </button>
+          <button
+            onClick={handleQuickBuy}
+            disabled={product.stock === 0 || isAddingToCart}
+            className="flex-1 h-14 rounded-xl bg-gradient-to-r from-[#B8860B] to-[#D4A017] overflow-hidden shadow-[0_0_20px_rgba(184,134,11,0.3)] disabled:opacity-50 flex items-center justify-center sw-interactive"
+          >
+            <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <div className="relative z-10 flex items-center justify-center gap-2 text-black font-bold uppercase tracking-widest">
+              {isAddingToCart ? (
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+              ) : (
+                <Truck className="w-4 h-4 shrink-0" />
+              )}
+              <span className="text-[11px]">{isAddingToCart ? 'Adding...' : 'Buy Now'}</span>
+              <span className="text-sm font-black">{formatPrice(product.price * quantity)}</span>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   )

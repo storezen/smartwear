@@ -7,7 +7,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Product } from "@/types"
 import { formatPrice } from "@/lib/mock-data"
 import { TikTokEvents } from "@/lib/tiktok-pixel"
-import { Loader2, Truck } from "lucide-react"
+import { Loader2, Truck, AlertCircle } from "lucide-react"
+import { toast } from "sonner"
+import { CitySelect } from "@/components/ui/city-select"
+import { detectProvince } from "@/lib/address-validator"
 
 interface QuickBuyModalProps {
   product: Product | null
@@ -19,6 +22,7 @@ interface QuickBuyModalProps {
 export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickBuyModalProps) {
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -44,6 +48,16 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const phoneRegex = /^(03|\+923)[0-9]{2}[-\s]?[0-9]{7}$/
+    const fieldErrors: Record<string, string> = {}
+    if (formData.name.length < 3) fieldErrors.name = 'Please enter your full name'
+    if (!phoneRegex.test(formData.phone)) fieldErrors.phone = 'Enter valid Pakistani number (0300 1234567)'
+    if (formData.address.length < 10) fieldErrors.address = 'Enter complete delivery address'
+    if (formData.city.length < 2) fieldErrors.city = 'Select your city'
+    setErrors(fieldErrors)
+    if (Object.keys(fieldErrors).length > 0) return
+
     setIsProcessing(true)
 
     try {
@@ -87,7 +101,7 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
       router.push(`/checkout/success?order=${serverOrderId}&total=${total}`)
     } catch (error) {
       console.error("Quick buy failed:", error)
-      alert("Error: Order creation failed. Please check your details and try again.")
+      toast.error("Could not place order. Please check details and try again.")
     } finally {
       setIsProcessing(false)
     }
@@ -129,21 +143,42 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
               required
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
-              className="w-full h-12 bg-card border border-border rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-card outline-none transition-all"
+              onChange={(e) => {
+                setFormData(p => ({ ...p, name: e.target.value }))
+                if (errors.name) setErrors(prev => ({ ...prev, name: '' }))
+              }}
+              onBlur={(e) => {
+                if (!e.target.value || e.target.value.length < 3) {
+                  setErrors(prev => ({ ...prev, name: 'Please enter your full name' }))
+                }
+              }}
+              className={`w-full h-12 bg-card border rounded-xl px-4 text-foreground focus:outline-none transition-all ${errors.name ? 'border-red-400/50 focus:border-red-400' : 'border-border focus:border-[#B8860B] focus:bg-card'}`}
               placeholder="e.g. Ali Khan"
             />
+            {errors.name && <p className="text-[10px] text-red-400/80 mt-1">{errors.name}</p>}
           </div>
           <div>
             <label className="text-xs text-foreground/70 uppercase tracking-widest mb-1.5 block">Phone Number</label>
             <input
               required
               type="tel"
+              inputMode="numeric"
+              autoComplete="tel"
               value={formData.phone}
-              onChange={(e) => setFormData(p => ({ ...p, phone: e.target.value }))}
-              className="w-full h-12 bg-card border border-border rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-card outline-none transition-all"
+              onChange={(e) => {
+                setFormData(p => ({ ...p, phone: e.target.value }))
+                if (errors.phone) setErrors(prev => ({ ...prev, phone: '' }))
+              }}
+              onBlur={(e) => {
+                const phoneRegex = /^(03|\+923)[0-9]{2}[-\s]?[0-9]{7}$/
+                if (e.target.value && !phoneRegex.test(e.target.value)) {
+                  setErrors(prev => ({ ...prev, phone: 'Enter valid Pakistani number (0300 1234567)' }))
+                }
+              }}
+              className={`w-full h-12 bg-card border rounded-xl px-4 text-foreground focus:outline-none transition-all ${errors.phone ? 'border-red-400/50 focus:border-red-400' : 'border-border focus:border-[#B8860B] focus:bg-card'}`}
               placeholder="0300 1234567"
             />
+            {errors.phone && <p className="text-[10px] text-red-400/80 mt-1">{errors.phone}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
@@ -152,21 +187,30 @@ export function QuickBuyModal({ product, isOpen, onClose, quantity = 1 }: QuickB
                 required
                 type="text"
                 value={formData.address}
-                onChange={(e) => setFormData(p => ({ ...p, address: e.target.value }))}
-                className="w-full h-12 bg-card border border-border rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-card outline-none transition-all"
+                onChange={(e) => {
+                  setFormData(p => ({ ...p, address: e.target.value }))
+                  if (errors.address) setErrors(prev => ({ ...prev, address: '' }))
+                }}
+                onBlur={(e) => {
+                  if (e.target.value && e.target.value.length < 10) {
+                    setErrors(prev => ({ ...prev, address: 'Enter complete address (house, street, area)' }))
+                  }
+                }}
+                className={`w-full h-12 bg-card border rounded-xl px-4 text-foreground focus:outline-none transition-all ${errors.address ? 'border-red-400/50 focus:border-red-400' : 'border-border focus:border-[#B8860B] focus:bg-card'}`}
                 placeholder="House, Street, Area"
               />
+              {errors.address && <p className="text-[10px] text-red-400/80 mt-1">{errors.address}</p>}
             </div>
             <div className="col-span-2">
               <label className="text-xs text-foreground/70 uppercase tracking-widest mb-1.5 block">City</label>
-              <input
-                required
-                type="text"
+              <CitySelect
                 value={formData.city}
-                onChange={(e) => setFormData(p => ({ ...p, city: e.target.value }))}
-                className="w-full h-12 bg-card border border-border rounded-xl px-4 text-foreground focus:border-[#B8860B] focus:bg-card outline-none transition-all"
-                placeholder="Karachi, Lahore, Islamabad..."
+                onChange={(city) => {
+                  setFormData(p => ({ ...p, city }))
+                  if (errors.city) setErrors(prev => ({ ...prev, city: '' }))
+                }}
               />
+              {errors.city && <p className="text-[10px] text-red-400/80 mt-1">{errors.city}</p>}
             </div>
           </div>
 
