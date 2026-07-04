@@ -221,22 +221,37 @@ export function getHotProducts(events: AnalyticsEvent[], rangeFrom?: string, ran
 }
 
 export function getTimeline(events: AnalyticsEvent[], rangeFrom?: string, rangeTo?: string): TimelinePoint[] {
+  if (events.length === 0) return []
+
   const now = Date.now()
   const fallbackCutoff = now - LAST_2_HOURS
-  const totalMs = rangeFrom && rangeTo
-    ? new Date(rangeTo).getTime() - new Date(rangeFrom).getTime()
-    : LAST_2_HOURS
   const cutoff = rangeFrom
     ? new Date(rangeFrom).getTime()
     : fallbackCutoff
-  const timeSpan = Math.max(totalMs, LAST_2_HOURS)
-  const bucketCount = Math.min(120, Math.max(10, Math.round(timeSpan / 60000)))
-  const bucketMs = timeSpan / bucketCount
+
+  let minTs = Infinity, maxTs = 0
+  for (const e of events) {
+    const t = new Date(e.timestamp).getTime()
+    if (t >= cutoff) {
+      if (t < minTs) minTs = t
+      if (t > maxTs) maxTs = t
+    }
+  }
+  if (minTs === Infinity) return []
+
+  const dataSpan = Math.max(maxTs - minTs, LAST_2_HOURS)
+  const pad = dataSpan * 0.05
+  const startTs = minTs - pad
+  const endTs = maxTs + pad
+  const span = endTs - startTs
+
+  const bucketCount = Math.min(120, Math.max(10, Math.round(span / 60000)))
+  const bucketMs = span / bucketCount
   const countBuckets = new Map<number, number>()
   const sessionBuckets = new Map<number, Set<string>>()
 
   for (let i = 0; i < bucketCount; i++) {
-    const key = cutoff + i * bucketMs
+    const key = startTs + i * bucketMs
     countBuckets.set(key, 0)
     sessionBuckets.set(key, new Set())
   }
@@ -244,15 +259,15 @@ export function getTimeline(events: AnalyticsEvent[], rangeFrom?: string, rangeT
   for (const e of events) {
     const t = new Date(e.timestamp).getTime()
     if (t >= cutoff) {
-      const idx = Math.min(Math.floor((t - cutoff) / bucketMs), bucketCount - 1)
-      const key = cutoff + idx * bucketMs
+      const idx = Math.min(Math.floor((t - startTs) / bucketMs), bucketCount - 1)
+      const key = startTs + idx * bucketMs
       countBuckets.set(key, (countBuckets.get(key) || 0) + 1)
       sessionBuckets.get(key)?.add(e.session_id)
     }
   }
 
   const fmt = (ts: number) => {
-    if (timeSpan > 86400000) {
+    if (span > 86400000) {
       return new Date(ts).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
     }
     return new Date(ts).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })
