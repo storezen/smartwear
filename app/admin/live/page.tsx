@@ -122,7 +122,7 @@ export default function LiveAnalyticsPage() {
     reconnecting,
     lastUpdated,
   } = useRealtimeAnalytics({
-    pollInterval: isLive ? 1500 : 0,
+    pollInterval: isLive ? 10000 : 0,
     from: dateRange.from.toISOString(),
     to: dateRange.to.toISOString(),
   })

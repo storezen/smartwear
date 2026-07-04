@@ -17,38 +17,18 @@ export async function GET(req: Request) {
 
     const sb = supabaseAdmin || supabase
     if (sb) {
-      const PAGE_SIZE = 1000
-      const allData: any[] = []
-      let page = 0
-      let hasMore = true
+      const { data, error } = await sb
+        .from("analytics")
+        .select("*")
+        .gte("timestamp", fromDate)
+        .lte("timestamp", toDate)
+        .order("timestamp", { ascending: false })
+        .limit(200)
 
-      while (hasMore) {
-        const fromRow = page * PAGE_SIZE
-        const toRow = fromRow + PAGE_SIZE - 1
-        const { data, error } = await sb
-          .from("analytics")
-          .select("*")
-          .gte("timestamp", fromDate)
-          .lte("timestamp", toDate)
-          .order("timestamp", { ascending: false })
-          .range(fromRow, toRow)
-
-        if (error) {
-          console.warn("Supabase Analytics GET Error at page", page, error?.message)
-          break
-        }
-
-        if (!data || data.length === 0) break
-
-        allData.push(...data)
-        if (data.length < PAGE_SIZE) break
-        page++
+      if (!error && data) {
+        return NextResponse.json(data.map(parseEvent))
       }
-
-      if (allData.length > 0) {
-        return NextResponse.json(allData.map(parseEvent))
-      }
-      console.warn("Supabase Analytics GET returned no data, falling back to memory")
+      console.warn("Supabase Analytics GET Error (falling back to memory):", error?.message)
     }
     const fromTs = new Date(fromDate).getTime()
     const toTs = new Date(toDate).getTime()
