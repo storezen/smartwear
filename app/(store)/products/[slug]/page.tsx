@@ -416,7 +416,7 @@ function ProductContent({ product, relatedProducts, slug }: { product: any; rela
     addToCart(product, quantity, selectedColor || undefined)
     setTimeout(() => {
       router.push('/checkout')
-    }, 300)
+    }, 800)
   }
 
   const handleAddToCart = () => {

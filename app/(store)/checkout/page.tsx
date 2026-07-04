@@ -89,16 +89,19 @@ export default function CheckoutPage() {
   }, [])
 
   useEffect(() => {
-    if (items.length > 0)     TikTokEvents.initiateCheckout(
-      items.map(item => ({
-        id: item.product.id,
-        name: item.product.name,
-        price: item.product.price,
-        quantity: item.quantity,
-        category: item.product.category?.name || '',
-      })),
-      subtotal
-    )
+    if (items.length > 0 && !sessionStorage.getItem('sw_ic_fired')) {
+      sessionStorage.setItem('sw_ic_fired', '1')
+      TikTokEvents.initiateCheckout(
+        items.map(item => ({
+          id: item.product.id,
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          category: item.product.category?.name || '',
+        })),
+        subtotal
+      )
+    }
   }, [items.length, subtotal])
 
   // Store PII & identify user for TikTok Advanced Matching when user fills form

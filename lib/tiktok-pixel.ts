@@ -177,10 +177,15 @@ function sendToAnalytics(event: string, meta?: AnalyticsMeta) {
       } catch { return 'PK' }
     })()
 
-    navigator.sendBeacon('/api/analytics', new Blob([JSON.stringify({
-      event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
-      value: meta?.value || 0
-    })], { type: 'application/json' }))
+    fetch('/api/analytics', {
+      method: 'POST',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_name: `${event}::${itemName}::${city}::${campaign}::${sessionId}`,
+        value: meta?.value || 0
+      })
+    })
 
     // Kick off geo detection in background for next event
     if (!cachedCity) detectCity()
@@ -234,6 +239,14 @@ interface TrackOptions {
 
 export function trackTikTokEvent(event: string, options: TrackOptions = {}) {
   if (typeof window === 'undefined' || !isInitialized) return
+
+  const funnelDupKey = `sw_funnel_${event}`
+  if (['AddToCart', 'InitiateCheckout', 'CompletePayment'].includes(event)) {
+    try {
+      if (sessionStorage.getItem(funnelDupKey)) return
+      sessionStorage.setItem(funnelDupKey, '1')
+    } catch {}
+  }
 
   const event_id = options.event_id || generateUUID()
   const testEventCode = options.test_event_code || (options._extra?.test_event_code as string | undefined)
