@@ -10,6 +10,12 @@ export const supabase = supabaseUrl && supabaseAnonKey
   ? createClient(supabaseUrl, supabaseAnonKey) 
   : null
 
+// Server-side admin client using the service key (bypasses 1000-row limit).
+// Only import this on the server (API routes, server components).
+export const supabaseAdmin = supabaseUrl && env.SUPABASE_SERVICE_KEY
+  ? createClient(supabaseUrl, env.SUPABASE_SERVICE_KEY)
+  : null
+
 export const isSupabaseConfigured = () => {
   return supabase !== null
 }

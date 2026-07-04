@@ -1,8 +1,7 @@
 export const dynamic = "force-dynamic"
 
 import { NextResponse } from "next/server"
-import { env } from "@/lib/env"
-import { supabase } from "@/lib/supabase"
+import { supabase, supabaseAdmin } from "@/lib/supabase"
 import { parseEvent } from "@/lib/analytics"
 
 const globalAny: any = global
@@ -16,16 +15,17 @@ export async function GET(req: Request) {
     const fromDate = from ? new Date(from).toISOString() : new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
     const toDate = to ? new Date(to).toISOString() : new Date().toISOString()
 
-    if (supabase) {
+    const sb = supabaseAdmin || supabase
+    if (sb) {
       const PAGE_SIZE = 1000
-      let allData: any[] = []
+      const allData: any[] = []
       let page = 0
       let hasMore = true
 
       while (hasMore) {
         const fromRow = page * PAGE_SIZE
         const toRow = fromRow + PAGE_SIZE - 1
-        const { data, error } = await supabase
+        const { data, error } = await sb
           .from("analytics")
           .select("*")
           .gte("timestamp", fromDate)
