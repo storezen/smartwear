@@ -45,7 +45,7 @@ export async function GET(req: Request) {
         .map(parseEvent)
     }
 
-    const summary = computeSummary(events)
+    const summary = computeSummary(events, fromDate, toDate)
     return NextResponse.json(summary)
   } catch (error) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })

@@ -185,15 +185,20 @@ export function getTrafficSources(events: AnalyticsEvent[]): TrafficSource[] {
     }))
 }
 
-export function getHotProducts(events: AnalyticsEvent[]): HotProduct[] {
+export function getHotProducts(events: AnalyticsEvent[], rangeFrom?: string, rangeTo?: string): HotProduct[] {
   const now = Date.now()
+  const totalMs = rangeFrom && rangeTo
+    ? new Date(rangeTo).getTime() - new Date(rangeFrom).getTime()
+    : LAST_2_HOURS
+  const splitPoint = Math.max(totalMs * 0.5, LAST_2_HOURS)
+  const recentCutoff = Math.min(now, (rangeTo ? new Date(rangeTo).getTime() : now)) - splitPoint
   const recent = new Map<string, number>()
   const older = new Map<string, number>()
 
   for (const e of events) {
     if (e.base_event === "ViewContent" && e.item_name !== "Store Visit") {
       const t = new Date(e.timestamp).getTime()
-      if (t >= now - LAST_2_HOURS) {
+      if (t >= recentCutoff) {
         recent.set(e.item_name, (recent.get(e.item_name) || 0) + 1)
       } else {
         older.set(e.item_name, (older.get(e.item_name) || 0) + 1)
@@ -215,14 +220,23 @@ export function getHotProducts(events: AnalyticsEvent[]): HotProduct[] {
   })
 }
 
-export function getTimeline(events: AnalyticsEvent[]): TimelinePoint[] {
+export function getTimeline(events: AnalyticsEvent[], rangeFrom?: string, rangeTo?: string): TimelinePoint[] {
   const now = Date.now()
-  const cutoff = now - LAST_2_HOURS
+  const fallbackCutoff = now - LAST_2_HOURS
+  const totalMs = rangeFrom && rangeTo
+    ? new Date(rangeTo).getTime() - new Date(rangeFrom).getTime()
+    : LAST_2_HOURS
+  const cutoff = rangeFrom
+    ? new Date(rangeFrom).getTime()
+    : fallbackCutoff
+  const timeSpan = Math.max(totalMs, LAST_2_HOURS)
+  const bucketCount = Math.min(120, Math.max(10, Math.round(timeSpan / 60000)))
+  const bucketMs = timeSpan / bucketCount
   const countBuckets = new Map<number, number>()
   const sessionBuckets = new Map<number, Set<string>>()
 
-  for (let i = 0; i < 120; i++) {
-    const key = cutoff + i * 60000
+  for (let i = 0; i < bucketCount; i++) {
+    const key = cutoff + i * bucketMs
     countBuckets.set(key, 0)
     sessionBuckets.set(key, new Set())
   }
@@ -230,15 +244,19 @@ export function getTimeline(events: AnalyticsEvent[]): TimelinePoint[] {
   for (const e of events) {
     const t = new Date(e.timestamp).getTime()
     if (t >= cutoff) {
-      const idx = Math.floor((t - cutoff) / 60000)
-      const key = cutoff + idx * 60000
+      const idx = Math.min(Math.floor((t - cutoff) / bucketMs), bucketCount - 1)
+      const key = cutoff + idx * bucketMs
       countBuckets.set(key, (countBuckets.get(key) || 0) + 1)
       sessionBuckets.get(key)?.add(e.session_id)
     }
   }
 
-  const fmt = (ts: number) =>
-    new Date(ts).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })
+  const fmt = (ts: number) => {
+    if (timeSpan > 86400000) {
+      return new Date(ts).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
+    }
+    return new Date(ts).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })
+  }
 
   return Array.from(countBuckets.entries()).map(([ts, count]) => ({
     time: fmt(ts),
@@ -258,7 +276,7 @@ export function getLocationBreakdown(events: AnalyticsEvent[]): { city: string; 
     .map(([city, count]) => ({ city, count }))
 }
 
-export function computeSummary(events: AnalyticsEvent[]): LiveSummary {
+export function computeSummary(events: AnalyticsEvent[], rangeFrom?: string, rangeTo?: string): LiveSummary {
   const activeVisitors = getActiveVisitors(events)
   const activeVisitorsTrend = getActiveVisitorsTrend(events)
   const totalSessions = new Set(events.map((e) => e.session_id)).size
@@ -270,8 +288,8 @@ export function computeSummary(events: AnalyticsEvent[]): LiveSummary {
   const funnel = calculateFunnel(events)
   const abandonmentRate = getAbandonmentRate(funnel)
   const trafficSources = getTrafficSources(events)
-  const hotProducts = getHotProducts(events)
-  const timeline = getTimeline(events)
+  const hotProducts = getHotProducts(events, rangeFrom, rangeTo)
+  const timeline = getTimeline(events, rangeFrom, rangeTo)
   const locationBreakdown = getLocationBreakdown(events)
 
   return {

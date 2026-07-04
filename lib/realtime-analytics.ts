@@ -39,6 +39,9 @@ export function useRealtimeAnalytics(
   const maxReconnectDelay = 30000
   const mountedRef = useRef(true)
   const statusRef = useRef<ConnectionStatus>(status)
+  const fromRef = useRef(from)
+  const toRef = useRef(to)
+  const debouncedRef = useRef<(events: AnalyticsEvent[]) => Promise<void>>(undefined)
 
   useEffect(() => {
     statusRef.current = status
@@ -47,6 +50,14 @@ export function useRealtimeAnalytics(
   useEffect(() => {
     eventsRef.current = events
   }, [events])
+
+  useEffect(() => {
+    fromRef.current = from
+  }, [from])
+
+  useEffect(() => {
+    toRef.current = to
+  }, [to])
 
   const fetchData = useCallback(async () => {
     try {
@@ -106,13 +117,15 @@ export function useRealtimeAnalytics(
         (payload: any) => {
           const parsed = parseEvent(payload.new)
           const ts = new Date(parsed.timestamp).getTime()
-          const fromTs = from ? new Date(from).getTime() : 0
-          const toTs = to ? new Date(to).getTime() : Infinity
+          const curFrom = fromRef.current
+          const curTo = toRef.current
+          const fromTs = curFrom ? new Date(curFrom).getTime() : 0
+          const toTs = curTo ? new Date(curTo).getTime() : Infinity
           if (ts < fromTs || ts > toTs) return
           const updated = [parsed, ...eventsRef.current.filter(e => e.id !== parsed.id)].slice(0, 500)
           eventsRef.current = updated
           setEvents(updated)
-          debouncedSetSummary(updated)
+          debouncedRef.current?.(updated)
           setLastUpdated(new Date())
           setError(null)
           reconnectAttemptRef.current = 0
@@ -171,17 +184,20 @@ export function useRealtimeAnalytics(
   const summaryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const debouncedSetSummary = useCallback(async (updated: AnalyticsEvent[]) => {
+    debouncedRef.current = debouncedSetSummary
     if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current)
     summaryTimeoutRef.current = setTimeout(async () => {
       if (!mountedRef.current) return
-      const fromTs = from ? new Date(from).getTime() : 0
-      const toTs = to ? new Date(to).getTime() : Infinity
+      const curFrom = fromRef.current
+      const curTo = toRef.current
+      const fromTs = curFrom ? new Date(curFrom).getTime() : 0
+      const toTs = curTo ? new Date(curTo).getTime() : Infinity
       const filtered = updated.filter(e => {
         const ts = new Date(e.timestamp).getTime()
         return ts >= fromTs && ts <= toTs
       })
       const [local, heartbeat] = await Promise.all([
-        Promise.resolve(computeSummary(filtered)),
+        Promise.resolve(computeSummary(filtered, curFrom || undefined, curTo || undefined)),
         fetchHeartbeatCount(),
       ])
       if (mountedRef.current) {
@@ -192,7 +208,7 @@ export function useRealtimeAnalytics(
         }
       }
     }, 150)
-  }, [fetchHeartbeatCount, from, to])
+  }, [fetchHeartbeatCount])
 
   useEffect(() => {
     mountedRef.current = true
