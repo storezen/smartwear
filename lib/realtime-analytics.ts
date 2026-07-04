@@ -105,7 +105,11 @@ export function useRealtimeAnalytics(
         },
         (payload: any) => {
           const parsed = parseEvent(payload.new)
-          const updated = [parsed, ...eventsRef.current].slice(0, 500)
+          const ts = new Date(parsed.timestamp).getTime()
+          const fromTs = from ? new Date(from).getTime() : 0
+          const toTs = to ? new Date(to).getTime() : Infinity
+          if (ts < fromTs || ts > toTs) return
+          const updated = [parsed, ...eventsRef.current.filter(e => e.id !== parsed.id)].slice(0, 500)
           eventsRef.current = updated
           setEvents(updated)
           debouncedSetSummary(updated)
@@ -170,8 +174,14 @@ export function useRealtimeAnalytics(
     if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current)
     summaryTimeoutRef.current = setTimeout(async () => {
       if (!mountedRef.current) return
+      const fromTs = from ? new Date(from).getTime() : 0
+      const toTs = to ? new Date(to).getTime() : Infinity
+      const filtered = updated.filter(e => {
+        const ts = new Date(e.timestamp).getTime()
+        return ts >= fromTs && ts <= toTs
+      })
       const [local, heartbeat] = await Promise.all([
-        Promise.resolve(computeSummary(updated)),
+        Promise.resolve(computeSummary(filtered)),
         fetchHeartbeatCount(),
       ])
       if (mountedRef.current) {
@@ -182,7 +192,7 @@ export function useRealtimeAnalytics(
         }
       }
     }, 150)
-  }, [fetchHeartbeatCount])
+  }, [fetchHeartbeatCount, from, to])
 
   useEffect(() => {
     mountedRef.current = true
