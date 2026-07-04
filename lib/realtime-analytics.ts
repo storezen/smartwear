@@ -184,7 +184,6 @@ export function useRealtimeAnalytics(
   const summaryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const debouncedSetSummary = useCallback(async (updated: AnalyticsEvent[]) => {
-    debouncedRef.current = debouncedSetSummary
     if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current)
     summaryTimeoutRef.current = setTimeout(async () => {
       if (!mountedRef.current) return
@@ -210,6 +209,11 @@ export function useRealtimeAnalytics(
     }, 150)
   }, [fetchHeartbeatCount])
 
+  // Expose debouncedSetSummary to Realtime handler via ref (avoids stale closure)
+  useEffect(() => {
+    debouncedRef.current = debouncedSetSummary
+  }, [debouncedSetSummary])
+
   useEffect(() => {
     mountedRef.current = true
     reconnectAttemptRef.current = 0
@@ -218,31 +222,19 @@ export function useRealtimeAnalytics(
 
     const channel = subscribe()
 
-    if (channel) {
-      const channelErrorTimeout = setTimeout(() => {
-        if (mountedRef.current && statusRef.current !== "connected") {
-          startPolling()
-          setStatus("degraded")
-        }
-      }, 5000)
-
-      return () => {
-        mountedRef.current = false
-        clearTimeout(channelErrorTimeout)
-        if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current)
-        supabase?.removeChannel(channel)
-        stopPolling()
-      }
+    // Always start polling when pollInterval > 0 (Live mode),
+    // regardless of Realtime status. Realtime is supplementary.
+    if (pollInterval > 0) {
+      startPolling()
     }
-
-    startPolling()
-    setStatus("disconnected")
 
     return () => {
       mountedRef.current = false
+      if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current)
+      if (channel) supabase?.removeChannel(channel)
       stopPolling()
     }
-  }, [fetchData, subscribe, startPolling, stopPolling])
+  }, [fetchData, subscribe, startPolling, stopPolling, pollInterval])
 
   const retry = useCallback(async () => {
     setReconnecting(true)
