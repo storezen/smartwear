@@ -17,18 +17,38 @@ export async function GET(req: Request) {
     const toDate = to ? new Date(to).toISOString() : new Date().toISOString()
 
     if (supabase) {
-      const { data, error } = await supabase
-        .from("analytics")
-        .select("*")
-        .gte("timestamp", fromDate)
-        .lte("timestamp", toDate)
-        .order("timestamp", { ascending: false })
-        .limit(5000)
+      const PAGE_SIZE = 1000
+      let allData: any[] = []
+      let page = 0
+      let hasMore = true
 
-      if (!error && data) {
-        return NextResponse.json(data.map(parseEvent))
+      while (hasMore) {
+        const fromRow = page * PAGE_SIZE
+        const toRow = fromRow + PAGE_SIZE - 1
+        const { data, error } = await supabase
+          .from("analytics")
+          .select("*")
+          .gte("timestamp", fromDate)
+          .lte("timestamp", toDate)
+          .order("timestamp", { ascending: false })
+          .range(fromRow, toRow)
+
+        if (error) {
+          console.warn("Supabase Analytics GET Error at page", page, error?.message)
+          break
+        }
+
+        if (!data || data.length === 0) break
+
+        allData.push(...data)
+        if (data.length < PAGE_SIZE) break
+        page++
       }
-      console.warn("Supabase Analytics GET Error (falling back to memory):", error?.message)
+
+      if (allData.length > 0) {
+        return NextResponse.json(allData.map(parseEvent))
+      }
+      console.warn("Supabase Analytics GET returned no data, falling back to memory")
     }
     const fromTs = new Date(fromDate).getTime()
     const toTs = new Date(toDate).getTime()

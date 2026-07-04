@@ -19,18 +19,31 @@ export async function GET(req: Request) {
     let events: any[] = []
 
     if (supabase) {
-      const { data, error } = await supabase
-        .from("analytics")
-        .select("*")
-        .gte("timestamp", fromDate)
-        .lte("timestamp", toDate)
-        .order("timestamp", { ascending: false })
-        .limit(5000)
+      const PAGE_SIZE = 1000
+      let page = 0
+      let hasMore = true
 
-      if (!error && data) {
-        events = data.map(parseEvent)
-      } else {
-        console.warn("Supabase summary error, using memory:", error?.message)
+      while (hasMore) {
+        const fromRow = page * PAGE_SIZE
+        const toRow = fromRow + PAGE_SIZE - 1
+        const { data, error } = await supabase
+          .from("analytics")
+          .select("*")
+          .gte("timestamp", fromDate)
+          .lte("timestamp", toDate)
+          .order("timestamp", { ascending: false })
+          .range(fromRow, toRow)
+
+        if (error) {
+          console.warn("Supabase summary error at page", page, error?.message)
+          break
+        }
+
+        if (!data || data.length === 0) break
+
+        events.push(...data.map(parseEvent))
+        if (data.length < PAGE_SIZE) break
+        page++
       }
     }
 
